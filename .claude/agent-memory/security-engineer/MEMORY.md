@@ -1,0 +1,2 @@
+- [Repo settings review checklist](review_checklist_repo_settings.md): re-verify live gh api at review, CODEOWNERS vs owners.json, Actions perms, env quirks
+- [Signed commits paused](signed_commits_paused.md): R-107 rule removed from ruleset; issue #33, ADR 0014 (PR #34); check at each gate
