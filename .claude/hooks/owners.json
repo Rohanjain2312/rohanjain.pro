@@ -17,7 +17,7 @@
     "package.json", "package-lock.json"
   ],
   "app-data-engineer": [
-    "src/lib/**", "src/content/**", "scripts/**",
+    "src/lib/**", "src/content/**", "src/content.config.ts", "scripts/**",
     "!scripts/lint-docs.mjs", "!scripts/autopilot.sh", "!scripts/phase-gate.mjs", "!scripts/verify.mjs", "!scripts/lint-copy.mjs",
     "tests/unit/**", "package.json", "package-lock.json"
   ],
@@ -26,7 +26,8 @@
     "eslint.config.*", ".prettierrc*", ".prettierignore", ".stylelintrc*", "commitlint.config.*", "lighthouserc.*",
     "release-please-config.json", ".release-please-manifest.json", "wrangler.toml",
     "public/_redirects", "public/robots.txt", "public/.well-known/**", "docs/runbooks/**",
-    "scripts/lint-docs.mjs", "scripts/autopilot.sh", "scripts/phase-gate.mjs", "scripts/verify.mjs"
+    "scripts/lint-docs.mjs", "scripts/autopilot.sh", "scripts/phase-gate.mjs", "scripts/verify.mjs",
+    "playwright.config.*", "vitest.config.*", ".lintstagedrc*", ".npmrc", ".editorconfig", ".gitattributes", "src/env.d.ts"
   ],
   "security-engineer": [
     "docs/security/**", "SECURITY.md", "public/_headers", ".gitleaks.toml"
