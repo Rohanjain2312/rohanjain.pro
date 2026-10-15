@@ -17,3 +17,4 @@ Format: context, decision, consequences, alternatives. New ADRs take the next nu
 | [0011](0011-autonomous-phases.md) | Autonomous phase progression with usage-aware session control |
 | [0012](0012-progressive-disclosure.md) | Instructions by progressive disclosure |
 | [0013](0013-bootstrap-empty-main.md) | Bootstrap main with an empty root commit |
+| [0014](0014-signed-commit-rule-paused.md) | Pause the signed-commit rule until the signing key is uploaded |

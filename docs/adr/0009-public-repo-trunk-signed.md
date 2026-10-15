@@ -6,7 +6,7 @@ Status: accepted · Date: 2026-10-15 · Issue: #4
 The repo itself is evidence of how Rohan works, and the client chose public visibility (client decision 6). Several agents share one GitHub account.
 
 ## Decision
-The repo is public from day one. Trunk-based: short-lived branches `<role>/<issue>-<slug>`, one issue per PR, squash merges only into `main` (R-101 to R-111). A GitHub ruleset on `main` blocks deletion and force pushes, requires PRs, linear history and signed commits, and allows squash only. Local commits are signed with SSH; squash merges are signed by GitHub. Secret scanning, push protection and Dependabot alerts are on.
+The repo is public from day one. Trunk-based: short-lived branches `<role>/<issue>-<slug>`, one issue per PR, squash merges only into `main` (R-101 to R-111). A GitHub ruleset on `main` blocks deletion and force pushes, requires PRs, linear history and signed commits (paused by ADR-0014 until the signing key is uploaded), and allows squash only. Local commits are signed with SSH; squash merges are signed by GitHub. Secret scanning, push protection and Dependabot alerts are on.
 
 ## Consequences
 - Every change is reviewable and attributable through PRs and `Agent-Role` trailers.
