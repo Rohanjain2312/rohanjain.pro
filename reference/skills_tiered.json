@@ -1,0 +1,3503 @@
+{
+ "sources": [
+  "https://365datascience.com/career-advice/career-guides/machine-learning-engineer-skills/",
+  "https://axialsearch.com/insights/ml-engineering-jobs",
+  "https://365datascience.com/career-advice/data-scientist-job-market/",
+  "https://www.interviewquery.com/p/data-scientist-skills-2026",
+  "https://agentic-engineering-jobs.com/ai-agent-frameworks-job-market-2026",
+  "https://presenc.ai/research/agent-engineer-career-guide-2026",
+  "https://theprint.in/ani-press-releases/the-ai-engineer-in-2026-what-the-role-actually-requires/2961016/"
+ ],
+ "skills": [
+  {
+   "name": "Python",
+   "category": "Programming Languages & Core Programming",
+   "tier": "shipped",
+   "evidence": [
+    "shca",
+    "loan",
+    "fc",
+    "mr",
+    "med",
+    "gb",
+    "tariff",
+    "settle",
+    "cua",
+    "goldman"
+   ],
+   "roles": [
+    "ai",
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "SQL",
+   "category": "Programming Languages & Core Programming",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "goldman"
+   ],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "Pandas",
+   "category": "Programming Languages & Core Programming",
+   "tier": "shipped",
+   "evidence": [
+    "mr",
+    "settle",
+    "goldman"
+   ],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "R",
+   "category": "Programming Languages & Core Programming",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Package management",
+   "category": "Programming Languages & Core Programming",
+   "tier": "shipped",
+   "evidence": [
+    "gb"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "REST APIs",
+   "category": "Software Engineering",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "System design",
+   "category": "Software Engineering",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml",
+    "ai"
+   ]
+  },
+  {
+   "name": "Pydantic",
+   "category": "Software Engineering",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Modular architecture",
+   "category": "Software Engineering",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "goldman"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Git",
+   "category": "Version Control, Testing & Development Practices",
+   "tier": "shipped",
+   "evidence": [
+    "shca",
+    "loan",
+    "fc",
+    "mr",
+    "settle",
+    "tariff"
+   ],
+   "roles": [
+    "ai",
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "GitHub",
+   "category": "Version Control, Testing & Development Practices",
+   "tier": "shipped",
+   "evidence": [
+    "shca",
+    "loan",
+    "fc",
+    "mr",
+    "settle",
+    "tariff",
+    "gb"
+   ],
+   "roles": [
+    "ai",
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "GitHub Actions",
+   "category": "Version Control, Testing & Development Practices",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "fc",
+    "settle"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "CI/CD",
+   "category": "Version Control, Testing & Development Practices",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "fc",
+    "settle"
+   ],
+   "roles": [
+    "ml",
+    "ai"
+   ]
+  },
+  {
+   "name": "Unit testing",
+   "category": "Version Control, Testing & Development Practices",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "settle"
+   ],
+   "roles": [
+    "ml",
+    "ai"
+   ]
+  },
+  {
+   "name": "Model testing",
+   "category": "Version Control, Testing & Development Practices",
+   "tier": "shipped",
+   "evidence": [
+    "settle"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "ML pipeline testing",
+   "category": "Version Control, Testing & Development Practices",
+   "tier": "shipped",
+   "evidence": [
+    "settle"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Deployment automation",
+   "category": "Version Control, Testing & Development Practices",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Technical documentation",
+   "category": "Version Control, Testing & Development Practices",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "Probability",
+   "category": "Mathematics & Statistics",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "Statistical inference",
+   "category": "Mathematics & Statistics",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Descriptive statistics",
+   "category": "Mathematics & Statistics",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Hypothesis testing",
+   "category": "Mathematics & Statistics",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Regression analysis",
+   "category": "Mathematics & Statistics",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Statistical modeling",
+   "category": "Mathematics & Statistics",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Regularization",
+   "category": "Mathematics & Statistics",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "SciPy",
+   "category": "Mathematics & Statistics",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Gradient descent",
+   "category": "Mathematics & Statistics",
+   "tier": "shipped",
+   "evidence": [
+    "mr",
+    "fc"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Supervised learning",
+   "category": "Machine Learning",
+   "tier": "shipped",
+   "evidence": [
+    "settle",
+    "mr",
+    "goldman"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Classification",
+   "category": "Machine Learning",
+   "tier": "shipped",
+   "evidence": [
+    "settle",
+    "mr",
+    "fc",
+    "tariff",
+    "goldman"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Unsupervised learning",
+   "category": "Machine Learning",
+   "tier": "shipped",
+   "evidence": [
+    "mr"
+   ],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "Train / validation / test splits",
+   "category": "Machine Learning",
+   "tier": "shipped",
+   "evidence": [
+    "mr",
+    "settle"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Cross-validation",
+   "category": "Machine Learning",
+   "tier": "shipped",
+   "evidence": [
+    "settle"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Time-series cross-validation",
+   "category": "Machine Learning",
+   "tier": "shipped",
+   "evidence": [
+    "settle",
+    "mr"
+   ],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "Feature engineering",
+   "category": "Machine Learning",
+   "tier": "shipped",
+   "evidence": [
+    "settle",
+    "mr"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Hyperparameter tuning",
+   "category": "Machine Learning",
+   "tier": "shipped",
+   "evidence": [
+    "settle"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Logistic regression",
+   "category": "Machine Learning",
+   "tier": "shipped",
+   "evidence": [
+    "settle"
+   ],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "Linear regression",
+   "category": "Machine Learning",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Baseline models",
+   "category": "Machine Learning",
+   "tier": "shipped",
+   "evidence": [
+    "mr",
+    "settle"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Gradient boosting",
+   "category": "Machine Learning",
+   "tier": "shipped",
+   "evidence": [
+    "settle"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "XGBoost",
+   "category": "Machine Learning",
+   "tier": "shipped",
+   "evidence": [
+    "settle"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Random forests",
+   "category": "Machine Learning",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "Support Vector Machines",
+   "category": "Machine Learning",
+   "tier": "shipped",
+   "evidence": [
+    "settle",
+    "goldman"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Clustering",
+   "category": "Machine Learning",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Anomaly detection",
+   "category": "Machine Learning",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "Experiment tracking",
+   "category": "Machine Learning",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Ablation studies",
+   "category": "Machine Learning",
+   "tier": "shipped",
+   "evidence": [
+    "fc",
+    "tariff",
+    "shca"
+   ],
+   "roles": [
+    "ml",
+    "ai"
+   ]
+  },
+  {
+   "name": "Reproducibility",
+   "category": "Machine Learning",
+   "tier": "shipped",
+   "evidence": [
+    "settle",
+    "fc"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Model selection",
+   "category": "Machine Learning",
+   "tier": "shipped",
+   "evidence": [
+    "settle",
+    "mr"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Data cleaning",
+   "category": "Data Preprocessing & Feature Engineering",
+   "tier": "shipped",
+   "evidence": [
+    "mr",
+    "goldman"
+   ],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "Data validation",
+   "category": "Data Preprocessing & Feature Engineering",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "settle",
+    "goldman"
+   ],
+   "roles": [
+    "ds",
+    "ml",
+    "ai"
+   ]
+  },
+  {
+   "name": "Data quality",
+   "category": "Data Preprocessing & Feature Engineering",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Imbalanced-data handling",
+   "category": "Data Preprocessing & Feature Engineering",
+   "tier": "shipped",
+   "evidence": [
+    "settle",
+    "mr",
+    "goldman"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "SMOTE",
+   "category": "Data Preprocessing & Feature Engineering",
+   "tier": "shipped",
+   "evidence": [
+    "settle",
+    "goldman"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Feature importance",
+   "category": "Data Preprocessing & Feature Engineering",
+   "tier": "shipped",
+   "evidence": [
+    "settle"
+   ],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "Temporal features",
+   "category": "Data Preprocessing & Feature Engineering",
+   "tier": "shipped",
+   "evidence": [
+    "mr",
+    "settle"
+   ],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "Benchmarking",
+   "category": "Model Evaluation",
+   "tier": "shipped",
+   "evidence": [
+    "fc",
+    "gb",
+    "shca",
+    "mr"
+   ],
+   "roles": [
+    "ml",
+    "ai"
+   ]
+  },
+  {
+   "name": "Threshold selection",
+   "category": "Model Evaluation",
+   "tier": "shipped",
+   "evidence": [
+    "mr",
+    "settle"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Precision",
+   "category": "Model Evaluation",
+   "tier": "shipped",
+   "evidence": [
+    "settle",
+    "mr"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Recall",
+   "category": "Model Evaluation",
+   "tier": "shipped",
+   "evidence": [
+    "settle",
+    "mr"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "F1",
+   "category": "Model Evaluation",
+   "tier": "shipped",
+   "evidence": [
+    "mr",
+    "fc"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "PR-AUC",
+   "category": "Model Evaluation",
+   "tier": "shipped",
+   "evidence": [
+    "settle"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "ROC-AUC",
+   "category": "Model Evaluation",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Calibration",
+   "category": "Model Evaluation",
+   "tier": "shipped",
+   "evidence": [
+    "settle"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Accuracy",
+   "category": "Model Evaluation",
+   "tier": "shipped",
+   "evidence": [
+    "mr",
+    "ieee",
+    "goldman"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "PyTorch",
+   "category": "Deep Learning",
+   "tier": "shipped",
+   "evidence": [
+    "fc",
+    "mr",
+    "med"
+   ],
+   "roles": [
+    "ml",
+    "ai"
+   ]
+  },
+  {
+   "name": "Transformers",
+   "category": "Deep Learning",
+   "tier": "shipped",
+   "evidence": [
+    "mr",
+    "fc",
+    "med"
+   ],
+   "roles": [
+    "ml",
+    "ai"
+   ]
+  },
+  {
+   "name": "Embeddings",
+   "category": "Deep Learning",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "gb",
+    "goldman"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "scikit-learn",
+   "category": "Deep Learning",
+   "tier": "shipped",
+   "evidence": [
+    "settle"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Neural networks",
+   "category": "Deep Learning",
+   "tier": "shipped",
+   "evidence": [
+    "mr",
+    "fc",
+    "ieee"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Attention",
+   "category": "Deep Learning",
+   "tier": "shipped",
+   "evidence": [
+    "mr",
+    "fc"
+   ],
+   "roles": [
+    "ml",
+    "ai"
+   ]
+  },
+  {
+   "name": "TensorFlow",
+   "category": "Deep Learning",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Hugging Face Transformers",
+   "category": "Deep Learning",
+   "tier": "shipped",
+   "evidence": [
+    "fc",
+    "med"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Transfer learning",
+   "category": "Deep Learning",
+   "tier": "shipped",
+   "evidence": [
+    "fc",
+    "med"
+   ],
+   "roles": [
+    "ml",
+    "ai"
+   ]
+  },
+  {
+   "name": "Natural language processing",
+   "category": "NLP & Information Retrieval",
+   "tier": "shipped",
+   "evidence": [
+    "fc",
+    "med",
+    "gb",
+    "tariff"
+   ],
+   "roles": [
+    "ai",
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Information retrieval",
+   "category": "NLP & Information Retrieval",
+   "tier": "shipped",
+   "evidence": [
+    "gb",
+    "tariff",
+    "loan"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Semantic search",
+   "category": "NLP & Information Retrieval",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "goldman"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Hybrid search",
+   "category": "NLP & Information Retrieval",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Re-ranking",
+   "category": "NLP & Information Retrieval",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Text classification",
+   "category": "NLP & Information Retrieval",
+   "tier": "shipped",
+   "evidence": [
+    "fc",
+    "tariff"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Sentiment analysis",
+   "category": "NLP & Information Retrieval",
+   "tier": "shipped",
+   "evidence": [
+    "fc"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Information extraction",
+   "category": "NLP & Information Retrieval",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "BERT-style models",
+   "category": "NLP & Information Retrieval",
+   "tier": "shipped",
+   "evidence": [
+    "fc"
+   ],
+   "roles": [
+    "ml",
+    "ai"
+   ]
+  },
+  {
+   "name": "Hugging Face",
+   "category": "Generative AI & LLMs",
+   "tier": "shipped",
+   "evidence": [
+    "fc",
+    "med",
+    "shca",
+    "settle"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "LangChain",
+   "category": "Generative AI & LLMs",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "LangGraph",
+   "category": "Generative AI & LLMs",
+   "tier": "shipped",
+   "evidence": [
+    "shca",
+    "loan"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Large Language Models",
+   "category": "Generative AI & LLMs",
+   "tier": "shipped",
+   "evidence": [
+    "shca",
+    "loan",
+    "med",
+    "tariff",
+    "cua",
+    "goldman"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Generative AI",
+   "category": "Generative AI & LLMs",
+   "tier": "shipped",
+   "evidence": [
+    "shca",
+    "loan",
+    "med",
+    "tariff",
+    "goldman"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "LLM integration",
+   "category": "Generative AI & LLMs",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "shca",
+    "tariff",
+    "cua",
+    "goldman"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Evaluation/evals design",
+   "category": "Generative AI & LLMs",
+   "tier": "shipped",
+   "evidence": [
+    "tariff",
+    "shca",
+    "med"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "OpenAI API",
+   "category": "Generative AI & LLMs",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "goldman"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Anthropic API",
+   "category": "Generative AI & LLMs",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "shca",
+    "cua",
+    "tariff"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Model routing",
+   "category": "Generative AI & LLMs",
+   "tier": "shipped",
+   "evidence": [
+    "shca",
+    "loan"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Agent cost optimization",
+   "category": "Generative AI & LLMs",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "shca"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Secure tool execution",
+   "category": "Generative AI & LLMs",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "tariff"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Self-hosting models",
+   "category": "Generative AI & LLMs",
+   "tier": "shipped",
+   "evidence": [
+    "med"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Prompt engineering",
+   "category": "Prompt Engineering & Structured LLM Applications",
+   "tier": "shipped",
+   "evidence": [
+    "shca",
+    "loan",
+    "tariff",
+    "med",
+    "goldman"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Structured outputs",
+   "category": "Prompt Engineering & Structured LLM Applications",
+   "tier": "shipped",
+   "evidence": [
+    "med",
+    "loan"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Tool calling",
+   "category": "Prompt Engineering & Structured LLM Applications",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "tariff",
+    "shca",
+    "goldman"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Guardrails",
+   "category": "Prompt Engineering & Structured LLM Applications",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Few-shot prompting",
+   "category": "Prompt Engineering & Structured LLM Applications",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Prompt injection defense",
+   "category": "Prompt Engineering & Structured LLM Applications",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "JSON Schema",
+   "category": "Prompt Engineering & Structured LLM Applications",
+   "tier": "shipped",
+   "evidence": [
+    "tariff",
+    "loan"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "RAG",
+   "category": "RAG & Retrieval Systems",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "tariff",
+    "gb",
+    "goldman"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Chunking",
+   "category": "RAG & Retrieval Systems",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "goldman"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Document parsing",
+   "category": "RAG & Retrieval Systems",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Vector databases",
+   "category": "RAG & Retrieval Systems",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "goldman"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "pgvector",
+   "category": "RAG & Retrieval Systems",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "goldman"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Retrieval evaluation",
+   "category": "RAG & Retrieval Systems",
+   "tier": "shipped",
+   "evidence": [
+    "gb",
+    "tariff"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Citation / source grounding",
+   "category": "RAG & Retrieval Systems",
+   "tier": "shipped",
+   "evidence": [
+    "tariff"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "GraphRAG",
+   "category": "RAG & Retrieval Systems",
+   "tier": "shipped",
+   "evidence": [
+    "gb"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Embedding models",
+   "category": "RAG & Retrieval Systems",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "goldman"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "AI agents",
+   "category": "Agentic AI",
+   "tier": "shipped",
+   "evidence": [
+    "shca",
+    "loan",
+    "tariff",
+    "cua",
+    "goldman"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Multi-agent systems",
+   "category": "Agentic AI",
+   "tier": "shipped",
+   "evidence": [
+    "shca",
+    "loan",
+    "tariff"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Agent orchestration",
+   "category": "Agentic AI",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "shca"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "State management",
+   "category": "Agentic AI",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "shca"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Human-in-the-loop",
+   "category": "Agentic AI",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "goldman"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Agent evaluation",
+   "category": "Agentic AI",
+   "tier": "shipped",
+   "evidence": [
+    "tariff",
+    "shca"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Agent observability",
+   "category": "Agentic AI",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Agent memory",
+   "category": "Agentic AI",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Critic / reviewer patterns",
+   "category": "Agentic AI",
+   "tier": "shipped",
+   "evidence": [
+    "shca",
+    "tariff"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Agent reliability",
+   "category": "Agentic AI",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "shca"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "MCP (Model Context Protocol)",
+   "category": "Agentic AI",
+   "tier": "shipped",
+   "evidence": [
+    "tariff"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "MCP servers",
+   "category": "Agentic AI",
+   "tier": "shipped",
+   "evidence": [
+    "tariff"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "A2A (Agent2Agent) protocols",
+   "category": "Agentic AI",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Workflow orchestration",
+   "category": "Agentic AI",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "goldman"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Synthetic data generation",
+   "category": "LLM Fine-Tuning & Post-Training",
+   "tier": "shipped",
+   "evidence": [
+    "med",
+    "settle"
+   ],
+   "roles": [
+    "ai",
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Knowledge distillation",
+   "category": "LLM Fine-Tuning & Post-Training",
+   "tier": "shipped",
+   "evidence": [
+    "fc"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Evaluation datasets",
+   "category": "LLM Fine-Tuning & Post-Training",
+   "tier": "shipped",
+   "evidence": [
+    "tariff",
+    "med"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Supervised fine-tuning",
+   "category": "LLM Fine-Tuning & Post-Training",
+   "tier": "shipped",
+   "evidence": [
+    "med"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "PEFT",
+   "category": "LLM Fine-Tuning & Post-Training",
+   "tier": "shipped",
+   "evidence": [
+    "med"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "LoRA",
+   "category": "LLM Fine-Tuning & Post-Training",
+   "tier": "shipped",
+   "evidence": [
+    "med"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "QLoRA",
+   "category": "LLM Fine-Tuning & Post-Training",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "RLHF",
+   "category": "LLM Fine-Tuning & Post-Training",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "DPO",
+   "category": "LLM Fine-Tuning & Post-Training",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Model quantization",
+   "category": "Model Optimization & Inference",
+   "tier": "shipped",
+   "evidence": [
+    "fc",
+    "med"
+   ],
+   "roles": [
+    "ml",
+    "ai"
+   ]
+  },
+  {
+   "name": "Post-training quantization (PTQ)",
+   "category": "Model Optimization & Inference",
+   "tier": "shipped",
+   "evidence": [
+    "fc"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Quantization-aware training (QAT)",
+   "category": "Model Optimization & Inference",
+   "tier": "shipped",
+   "evidence": [
+    "fc"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Structured pruning",
+   "category": "Model Optimization & Inference",
+   "tier": "shipped",
+   "evidence": [
+    "fc"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "GGUF",
+   "category": "Model Optimization & Inference",
+   "tier": "shipped",
+   "evidence": [
+    "med"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "vLLM",
+   "category": "Model Optimization & Inference",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Distributed training",
+   "category": "Model Optimization & Inference",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Latency optimization",
+   "category": "Model Optimization & Inference",
+   "tier": "shipped",
+   "evidence": [
+    "fc"
+   ],
+   "roles": [
+    "ml",
+    "ai"
+   ]
+  },
+  {
+   "name": "LLM-as-a-judge",
+   "category": "AI / LLM Evaluation",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Benchmark design",
+   "category": "AI / LLM Evaluation",
+   "tier": "shipped",
+   "evidence": [
+    "gb",
+    "tariff"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Hallucination detection",
+   "category": "AI / LLM Evaluation",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Data pipelines",
+   "category": "Data Engineering & Data Platforms",
+   "tier": "shipped",
+   "evidence": [
+    "mr",
+    "loan",
+    "goldman"
+   ],
+   "roles": [
+    "ml",
+    "ds",
+    "ai"
+   ]
+  },
+  {
+   "name": "ETL",
+   "category": "Data Engineering & Data Platforms",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "Apache Spark",
+   "category": "Data Engineering & Data Platforms",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Data lakes",
+   "category": "Data Engineering & Data Platforms",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Airflow",
+   "category": "Data Engineering & Data Platforms",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Databricks",
+   "category": "Data Engineering & Data Platforms",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "dbt",
+   "category": "Data Engineering & Data Platforms",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Data ingestion",
+   "category": "Data Engineering & Data Platforms",
+   "tier": "shipped",
+   "evidence": [
+    "mr",
+    "goldman"
+   ],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "SQL CTEs",
+   "category": "Databases, Storage & Data Formats",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Parquet",
+   "category": "Databases, Storage & Data Formats",
+   "tier": "shipped",
+   "evidence": [
+    "settle"
+   ],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "PostgreSQL",
+   "category": "Databases, Storage & Data Formats",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "goldman"
+   ],
+   "roles": [
+    "ai",
+    "ds"
+   ]
+  },
+  {
+   "name": "Snowflake",
+   "category": "Databases, Storage & Data Formats",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "BigQuery",
+   "category": "Databases, Storage & Data Formats",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "AWS",
+   "category": "Cloud Computing",
+   "tier": "shipped",
+   "evidence": [
+    "tariff"
+   ],
+   "roles": [
+    "ml",
+    "ai"
+   ]
+  },
+  {
+   "name": "GKE",
+   "category": "Cloud Computing",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Bedrock",
+   "category": "Cloud Computing",
+   "tier": "shipped",
+   "evidence": [
+    "tariff"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Vertex AI",
+   "category": "Cloud Computing",
+   "tier": "shipped",
+   "evidence": [
+    "tariff"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "SageMaker",
+   "category": "Cloud Computing",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Azure OpenAI",
+   "category": "Cloud Computing",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Docker",
+   "category": "Containers, Orchestration & Infrastructure",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ml",
+    "ai"
+   ]
+  },
+  {
+   "name": "Kubernetes",
+   "category": "Containers, Orchestration & Infrastructure",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Docker images",
+   "category": "Containers, Orchestration & Infrastructure",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Deployments",
+   "category": "Containers, Orchestration & Infrastructure",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "MLOps",
+   "category": "MLOps & ML Platform Engineering",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "fc",
+    "settle"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Model deployment",
+   "category": "MLOps & ML Platform Engineering",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "med",
+    "settle",
+    "fc"
+   ],
+   "roles": [
+    "ml",
+    "ai"
+   ]
+  },
+  {
+   "name": "Model serving",
+   "category": "MLOps & ML Platform Engineering",
+   "tier": "shipped",
+   "evidence": [
+    "med",
+    "settle"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "MLflow",
+   "category": "MLOps & ML Platform Engineering",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Model monitoring",
+   "category": "MLOps & ML Platform Engineering",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Drift detection",
+   "category": "MLOps & ML Platform Engineering",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Training pipelines",
+   "category": "MLOps & ML Platform Engineering",
+   "tier": "shipped",
+   "evidence": [
+    "mr",
+    "fc",
+    "settle"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Inference pipelines",
+   "category": "MLOps & ML Platform Engineering",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "fc"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "LangSmith",
+   "category": "Observability & AI Operations",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Agent tracing",
+   "category": "Observability & AI Operations",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Data analysis",
+   "category": "Data Science & Analytics",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Exploratory data analysis",
+   "category": "Data Science & Analytics",
+   "tier": "shipped",
+   "evidence": [
+    "mr",
+    "settle",
+    "goldman"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Statistical analysis",
+   "category": "Data Science & Analytics",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Predictive modeling",
+   "category": "Data Science & Analytics",
+   "tier": "shipped",
+   "evidence": [
+    "settle",
+    "mr",
+    "goldman"
+   ],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "SQL window functions",
+   "category": "Data Science & Analytics",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "KPI definition",
+   "category": "Data Science & Analytics",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Business metrics",
+   "category": "Data Science & Analytics",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "statsmodels",
+   "category": "Data Science & Analytics",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Causal inference",
+   "category": "Data Science & Analytics",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Forecasting",
+   "category": "Data Science & Analytics",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Tableau",
+   "category": "Data Science & Analytics",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Jupyter / notebook-based workflows",
+   "category": "Data Science & Analytics",
+   "tier": "shipped",
+   "evidence": [
+    "settle",
+    "fc",
+    "mr"
+   ],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "Data storytelling",
+   "category": "Data Science & Analytics",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "A/B testing",
+   "category": "Experimentation & A/B Testing",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Experimental design",
+   "category": "Experimentation & A/B Testing",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Power analysis",
+   "category": "Experimentation & A/B Testing",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Time-series analysis",
+   "category": "Time Series & Forecasting",
+   "tier": "shipped",
+   "evidence": [
+    "mr"
+   ],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "Knowledge graphs",
+   "category": "Graph & Knowledge Systems",
+   "tier": "shipped",
+   "evidence": [
+    "gb"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Graph neural networks",
+   "category": "Graph & Knowledge Systems",
+   "tier": "shipped",
+   "evidence": [
+    "gb"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "OCR",
+   "category": "Multimodal & Document AI",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Document AI",
+   "category": "Multimodal & Document AI",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Reinforcement learning",
+   "category": "Reinforcement Learning & Bandits",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml",
+    "ai"
+   ]
+  },
+  {
+   "name": "SHAP",
+   "category": "Security, Privacy & Responsible AI",
+   "tier": "shipped",
+   "evidence": [
+    "settle"
+   ],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "Explainability",
+   "category": "Security, Privacy & Responsible AI",
+   "tier": "shipped",
+   "evidence": [
+    "settle"
+   ],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "Workflow automation",
+   "category": "Enterprise AI Integration",
+   "tier": "shipped",
+   "evidence": [
+    "goldman",
+    "cua"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "AI agents integrated with enterprise systems",
+   "category": "Enterprise AI Integration",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "cua",
+    "goldman"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Translating business problems into ML/AI problems",
+   "category": "Product & Business Skills",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds",
+    "ai"
+   ]
+  },
+  {
+   "name": "Stakeholder management",
+   "category": "Product & Business Skills",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Technical writing",
+   "category": "Research & Applied Science",
+   "tier": "shipped",
+   "evidence": [
+    "ieee"
+   ],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "Mentoring",
+   "category": "Professional & Collaboration Skills",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds",
+    "ml"
+   ]
+  },
+  {
+   "name": "Idempotent tool operations",
+   "category": "Emerging AI Engineering Skills",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Golden datasets",
+   "category": "Version Control, Testing & Development Practices",
+   "tier": "shipped",
+   "evidence": [
+    "tariff"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Evaluation regression tests",
+   "category": "Version Control, Testing & Development Practices",
+   "tier": "shipped",
+   "evidence": [
+    "settle"
+   ],
+   "roles": [
+    "ml",
+    "ai",
+    "ds"
+   ]
+  },
+  {
+   "name": "Integration testing",
+   "category": "Version Control, Testing & Development Practices",
+   "tier": "shipped",
+   "evidence": [
+    "cua",
+    "loan"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Error analysis",
+   "category": "Machine Learning",
+   "tier": "shipped",
+   "evidence": [
+    "tariff",
+    "mr"
+   ],
+   "roles": [
+    "ai",
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Model comparison",
+   "category": "Machine Learning",
+   "tier": "shipped",
+   "evidence": [
+    "settle",
+    "fc",
+    "mr"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Hyperparameter tuning frameworks",
+   "category": "MLOps & ML Platform Engineering",
+   "tier": "shipped",
+   "evidence": [
+    "settle"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Offline evaluation",
+   "category": "Model Evaluation",
+   "tier": "shipped",
+   "evidence": [
+    "tariff",
+    "settle"
+   ],
+   "roles": [
+    "ai",
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "FinBERT",
+   "category": "NLP & Information Retrieval",
+   "tier": "shipped",
+   "evidence": [
+    "fc"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Mistral 7B",
+   "category": "Generative AI & LLMs",
+   "tier": "shipped",
+   "evidence": [
+    "med"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Claude Sonnet",
+   "category": "Generative AI & LLMs",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "GPT-4o-mini",
+   "category": "Generative AI & LLMs",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Claude Code",
+   "category": "Generative AI & LLMs",
+   "tier": "shipped",
+   "evidence": [
+    "settle",
+    "tariff"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Function calling",
+   "category": "Prompt Engineering & Structured LLM Applications",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "tariff"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "System prompts",
+   "category": "Prompt Engineering & Structured LLM Applications",
+   "tier": "shipped",
+   "evidence": [
+    "shca",
+    "loan",
+    "tariff"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "JSON outputs",
+   "category": "Prompt Engineering & Structured LLM Applications",
+   "tier": "shipped",
+   "evidence": [
+    "med",
+    "loan"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Structured-output / JSON-mode design",
+   "category": "Generative AI & LLMs",
+   "tier": "shipped",
+   "evidence": [
+    "med",
+    "loan"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Tool-calling schema design",
+   "category": "Generative AI & LLMs",
+   "tier": "shipped",
+   "evidence": [
+    "tariff",
+    "loan"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Agentic workflow design",
+   "category": "Emerging AI Engineering Skills",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "shca",
+    "tariff"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "AI workflow automation",
+   "category": "Emerging AI Engineering Skills",
+   "tier": "shipped",
+   "evidence": [
+    "cua",
+    "goldman"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Agent routing",
+   "category": "Agentic AI",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Tool use",
+   "category": "Agentic AI",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "tariff",
+    "shca"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Agent guardrails",
+   "category": "Agentic AI",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Document ingestion",
+   "category": "RAG & Retrieval Systems",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "goldman"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Vector search",
+   "category": "RAG & Retrieval Systems",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Similarity search",
+   "category": "RAG & Retrieval Systems",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Groundedness",
+   "category": "RAG & Retrieval Systems",
+   "tier": "shipped",
+   "evidence": [
+    "tariff"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Knowledge retrieval",
+   "category": "RAG & Retrieval Systems",
+   "tier": "shipped",
+   "evidence": [
+    "tariff"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Data curation",
+   "category": "LLM Fine-Tuning & Post-Training",
+   "tier": "shipped",
+   "evidence": [
+    "med"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Instruction tuning",
+   "category": "LLM Fine-Tuning & Post-Training",
+   "tier": "shipped",
+   "evidence": [
+    "med"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Parameter-efficient fine-tuning",
+   "category": "LLM Fine-Tuning & Post-Training",
+   "tier": "shipped",
+   "evidence": [
+    "med"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Post-training",
+   "category": "LLM Fine-Tuning & Post-Training",
+   "tier": "shipped",
+   "evidence": [
+    "med"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "INT8",
+   "category": "Model Optimization & Inference",
+   "tier": "shipped",
+   "evidence": [
+    "fc"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "CPU optimization",
+   "category": "Model Optimization & Inference",
+   "tier": "shipped",
+   "evidence": [
+    "fc"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Cost optimization",
+   "category": "Model Optimization & Inference",
+   "tier": "shipped",
+   "evidence": [
+    "tariff",
+    "loan"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Batch inference",
+   "category": "Model Optimization & Inference",
+   "tier": "shipped",
+   "evidence": [
+    "tariff"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Cost evaluation",
+   "category": "AI / LLM Evaluation",
+   "tier": "shipped",
+   "evidence": [
+    "tariff"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Latency evaluation",
+   "category": "AI / LLM Evaluation",
+   "tier": "shipped",
+   "evidence": [
+    "fc"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Tool-use evaluation",
+   "category": "AI / LLM Evaluation",
+   "tier": "shipped",
+   "evidence": [
+    "tariff"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Dockerfiles",
+   "category": "Containers, Orchestration & Infrastructure",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Model registry",
+   "category": "MLOps & ML Platform Engineering",
+   "tier": "shipped",
+   "evidence": [
+    "fc",
+    "med"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Prompt tracing",
+   "category": "Observability & AI Operations",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Interpretability",
+   "category": "Security, Privacy & Responsible AI",
+   "tier": "shipped",
+   "evidence": [
+    "settle"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Third-party API integration",
+   "category": "Enterprise AI Integration",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "tariff"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Database integration",
+   "category": "Enterprise AI Integration",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Tradeoff analysis",
+   "category": "Product & Business Skills",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "fc"
+   ],
+   "roles": [
+    "ai",
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Idempotency",
+   "category": "Software Engineering",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Data validation testing",
+   "category": "Version Control, Testing & Development Practices",
+   "tier": "shipped",
+   "evidence": [
+    "settle"
+   ],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Tokenization",
+   "category": "NLP & Information Retrieval",
+   "tier": "shipped",
+   "evidence": [
+    "fc",
+    "med"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Dense retrieval",
+   "category": "NLP & Information Retrieval",
+   "tier": "shipped",
+   "evidence": [
+    "loan"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "LLM APIs",
+   "category": "Generative AI & LLMs",
+   "tier": "shipped",
+   "evidence": [
+    "loan",
+    "tariff"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Macroeconomic indicators",
+   "category": "Time Series & Forecasting",
+   "tier": "shipped",
+   "evidence": [
+    "mr"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Document processing",
+   "category": "RAG & Retrieval Systems",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Root-cause analysis",
+   "category": "Data Science & Analytics",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Executive presentation",
+   "category": "Data Science & Analytics",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Business analytics",
+   "category": "Data Science & Analytics",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Metric design",
+   "category": "Data Science & Analytics",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "pytesseract",
+   "category": "Multimodal & Document AI",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Document intelligence",
+   "category": "Multimodal & Document AI",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "PII handling",
+   "category": "Security, Privacy & Responsible AI",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ai",
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Enterprise AI integration",
+   "category": "Enterprise AI Integration",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Requirements gathering",
+   "category": "Product & Business Skills",
+   "tier": "work",
+   "evidence": [
+    "goldman"
+   ],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "LlamaIndex",
+   "category": "Generative AI & LLMs",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Microsoft Agent Framework",
+   "category": "Generative AI & LLMs",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "FAISS",
+   "category": "RAG & Retrieval Systems",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Pinecone",
+   "category": "RAG & Retrieval Systems",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "Elasticsearch",
+   "category": "RAG & Retrieval Systems",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "BM25",
+   "category": "NLP & Information Retrieval",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "FSDP",
+   "category": "Model Optimization & Inference",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Ray",
+   "category": "Model Optimization & Inference",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "PySpark",
+   "category": "Data Engineering & Data Platforms",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Kafka",
+   "category": "Data Engineering & Data Platforms",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Redis",
+   "category": "Databases, Storage & Data Formats",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "MongoDB",
+   "category": "Databases, Storage & Data Formats",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "S3",
+   "category": "Cloud Computing",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai",
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Lambda",
+   "category": "Cloud Computing",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Terraform",
+   "category": "Containers, Orchestration & Infrastructure",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Data drift",
+   "category": "MLOps & ML Platform Engineering",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Feature stores",
+   "category": "MLOps & ML Platform Engineering",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml"
+   ]
+  },
+  {
+   "name": "Real-time inference",
+   "category": "Model Serving & Production AI",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "REST inference APIs",
+   "category": "Model Serving & Production AI",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Monitoring",
+   "category": "Observability & AI Operations",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "OpenTelemetry",
+   "category": "Generative AI & LLMs",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Online experimentation",
+   "category": "Experimentation & A/B Testing",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ds"
+   ]
+  },
+  {
+   "name": "Recommendation systems",
+   "category": "Recommendation Systems",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Multimodal AI",
+   "category": "Multimodal & Document AI",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Responsible AI",
+   "category": "Security, Privacy & Responsible AI",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai",
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Data privacy",
+   "category": "Security, Privacy & Responsible AI",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai",
+    "ml",
+    "ds"
+   ]
+  },
+  {
+   "name": "Data structures",
+   "category": "Software Engineering",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "Algorithms",
+   "category": "Software Engineering",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai",
+    "ml"
+   ]
+  },
+  {
+   "name": "API development",
+   "category": "Software Engineering",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ai"
+   ]
+  },
+  {
+   "name": "LightGBM",
+   "category": "Machine Learning",
+   "tier": "studied",
+   "evidence": [],
+   "roles": [
+    "ml",
+    "ds"
+   ]
+  }
+ ]
+}

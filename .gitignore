@@ -1,0 +1,31 @@
+# Dependencies and build output
+node_modules/
+dist/
+.astro/
+coverage/
+reports/
+.stryker-tmp/
+playwright-report/
+test-results/
+
+# Claude Code local state (hook log, compaction snapshot, verify stamp, audit lists)
+.claude/state/
+.claude/settings.local.json
+.claude/worktrees/
+CLAUDE.local.md
+
+# Reader Advocate screenshots
+.shots/
+
+# Never commit secrets or job descriptions (R-501, R-508)
+.env
+.env.*
+*.pem
+*.key
+postings/
+*.jd.txt
+
+# Local application log for reply-rate tracking
+apps.local.json
+
+.DS_Store

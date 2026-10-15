@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Run crashed · 404</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F4F1E8}
+a{color:#1B1A17;text-decoration-color:#5E5A50;text-underline-offset:3px}a:hover{color:#5E5A50}
+a:focus-visible{outline:2px solid #5E5A50;outline-offset:2px}
+</style>
+</helmet>
+<div style="min-height: 100vh; box-sizing: border-box; padding: 64px 24px; color: #1B1A17; font-family: 'Newsreader', Georgia, serif; background-color: #F4F1E8; background-image: linear-gradient(#E7E2D4 1px, transparent 1px), linear-gradient(90deg, #E7E2D4 1px, transparent 1px); background-size: 24px 24px">
+<div style="max-width: 860px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px">
+<span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #5E5A50">step 404</span>
+<h1 style="margin: 0; font-size: 56px; line-height: 1.05; font-weight: 500">Run crashed. Loss is NaN.</h1>
+<pre style="margin: 0; padding: 20px; background: #1B1A17; color: #EDE9DD; font-family: 'IBM Plex Mono', monospace; font-size: 14px; line-height: 1.7; white-space: pre-wrap; overflow-x: auto">Traceback (most recent call last):
+  File "site/router.py", line 404, in resolve
+    page = routes[path]
+KeyError: the page you asked for
+
+During handling of the above exception:
+  File "site/train.py", line 1, in step
+    loss.backward()
+<span style="color: #F08A84">RuntimeError: run crashed, loss is NaN</span></pre>
+<p style="margin: 0; font-family: 'Rohan Hand', 'Newsreader', Georgia, serif; font-style: italic; font-size: 22px; color: #B42B25; transform: rotate(-1deg)">not your fault. probably a bad link on my end.</p>
+<a href="Main.dc.html" style="font-family: 'IBM Plex Mono', monospace; font-size: 16px; align-self: flex-start; min-height: 44px; display: inline-flex; align-items: center">← restart from the last checkpoint</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1280,"height":820}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
