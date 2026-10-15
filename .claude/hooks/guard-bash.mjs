@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// PreToolUse guard for Bash. Enforces: R-101 R-102 R-103 R-106 R-110 R-111 R-116 R-202 R-203 R-210 R-501 R-509 R-510
+// PreToolUse guard for Bash. Enforces: R-101 R-102 R-103 R-106 R-109 R-110 R-111 R-116 R-202 R-203 R-207 R-210 R-501 R-509 R-510
 import { join, isAbsolute, resolve } from 'node:path';
 import { readInput, roleOf, PREFIX, LABEL_ROLE, tokenize, segments, currentBranch, headSha, gitTop, readIfExists, deny, allow, projectDir } from './lib.mjs';
 
@@ -33,6 +33,22 @@ function msgOf(t) {
     else if (t[i] === '-F' || t[i] === '--file') { const f = t[i + 1] || ''; parts.push(readIfExists(isAbsolute(f) ? f : resolve(cwd, f))); }
   }
   return parts.join('\n');
+}
+
+function checkReview(body) {
+  const r = (body.match(/^Reviewer:\s*(\S+)/m) || [])[1];
+  if (!r) deny(input, 'R-202', 'A review needs a "Reviewer: <role>" line.');
+  if (r !== role) deny(input, 'R-203', `You are "${role}" and may not post a review as "${r}".`);
+  if (!/^Head:\s*[0-9a-f]{7,40}\b/m.test(body)) deny(input, 'R-202', 'A review needs a "Head: <sha>" line.');
+  if (!/^Checked:/m.test(body)) deny(input, 'R-207', 'A review needs a "Checked:" section.');
+}
+function checkLabels(labels) {
+  for (const raw of labels) {
+    const label = String(raw).trim();
+    const m = label.match(/^approved:(\w+)$/);
+    if (m && LABEL_ROLE[role] !== m[1]) deny(input, 'R-203', `You are "${role}" and may not set ${label}.`);
+    if (label === 'size:approved' && role !== 'supervisor') deny(input, 'R-109', 'Only the Supervisor sets size:approved.');
+  }
 }
 
 const segs = segments(cmd);
@@ -123,11 +139,12 @@ for (const seg of segs) {
     }
   }
 
-  if (verb === 'gh' && t[1] === 'pr') {
+  if (verb === 'gh' && (t[1] === 'pr' || t[1] === 'issue')) {
+    const kind = t[1];
     const sub = t[2];
     const args = t.slice(3);
 
-    if (sub === 'merge') {
+    if (kind === 'pr' && sub === 'merge') {
       if (role !== 'supervisor') deny(input, 'R-111', 'Only the Supervisor merges.');
       if (args.includes('--admin')) deny(input, 'R-111', 'Admin override is blocked.');
       if (args.includes('--merge') || args.includes('--rebase') || args.includes('-m') || args.includes('-r')) deny(input, 'R-111', 'Use --squash.');
@@ -135,9 +152,9 @@ for (const seg of segs) {
       if (!args.includes('--delete-branch') && !args.includes('-d')) deny(input, 'R-111', 'Add --delete-branch.');
     }
 
-    if (sub === 'review') deny(input, 'R-202', 'Post reviews with gh pr comment in the format from the run-review skill. GitHub does not allow approving your own PR.');
+    if (kind === 'pr' && sub === 'review') deny(input, 'R-202', 'Post reviews with gh pr comment in the format from the run-review skill. GitHub does not allow approving your own PR.');
 
-    if (sub === 'ready') {
+    if (kind === 'pr' && sub === 'ready') {
       const top = gitTop(cwd) || cwd;
       const pkg = readIfExists(join(top, 'package.json'));
       if (/"verify"\s*:/.test(pkg)) {
@@ -149,23 +166,73 @@ for (const seg of segs) {
     if (sub === 'comment') {
       const body = bodyOf(args);
       if (/^\s*REVIEW:/m.test(body)) {
-        const r = (body.match(/^Reviewer:\s*(\S+)/m) || [])[1];
-        if (!r) deny(input, 'R-202', 'A review needs a "Reviewer: <role>" line.');
-        if (r !== role) deny(input, 'R-203', `You are "${role}" and may not post a review as "${r}".`);
-        if (!/^Head:\s*[0-9a-f]{7,40}\b/m.test(body)) deny(input, 'R-202', 'A review needs a "Head: <sha>" line.');
-        if (!/^Checked:/m.test(body)) deny(input, 'R-207', 'A review needs a "Checked:" section.');
+        if (kind === 'issue') deny(input, 'R-202', 'Post reviews with gh pr comment.');
+        checkReview(body);
       }
     }
 
-    if (sub === 'edit') {
+    if (sub === 'edit' || sub === 'create') {
+      const labelFlags = sub === 'create' ? ['--label', '-l'] : ['--add-label', '--remove-label'];
       for (let i = 0; i < args.length; i++) {
-        if (args[i] === '--add-label' || args[i] === '--remove-label') {
-          for (const label of String(args[i + 1] || '').split(',')) {
-            const m = label.trim().match(/^approved:(\w+)$/);
-            if (m && LABEL_ROLE[role] !== m[1]) deny(input, 'R-203', `You are "${role}" and may not set ${label.trim()}.`);
-            if (label.trim() === 'size:approved' && role !== 'supervisor') deny(input, 'R-109', 'Only the Supervisor sets size:approved.');
-          }
-        }
+        if (labelFlags.includes(args[i])) checkLabels(String(args[i + 1] || '').split(','));
+        for (const f of labelFlags) if (f.startsWith('--') && args[i].startsWith(f + '=')) checkLabels(args[i].slice(f.length + 1).split(','));
+      }
+    }
+  }
+
+  // gh api: the same rules for raw API writes (R-111, R-202, R-203, R-101, R-102).
+  if (verb === 'gh' && t[1] === 'api') {
+    const args = t.slice(2);
+    const VALUE_FLAGS = ['-X', '--method', '-f', '-F', '--field', '--raw-field', '--input', '-H', '--header', '--jq', '-q', '-t', '--template', '--hostname', '--cache', '-p', '--preview'];
+    let method = '';
+    let endpoint = '';
+    const fields = [];
+    let hasInput = false;
+    for (let i = 0; i < args.length; i++) {
+      const a = args[i];
+      if (a === '-X' || a === '--method') { method = String(args[i + 1] || '').toUpperCase(); i++; continue; }
+      if (a.startsWith('--method=')) { method = a.slice(9).toUpperCase(); continue; }
+      if (/^-X[A-Za-z]+$/.test(a)) { method = a.slice(2).toUpperCase(); continue; }
+      if (['-f', '-F', '--field', '--raw-field'].includes(a)) { fields.push(String(args[i + 1] || '')); i++; continue; }
+      if (/^--(raw-)?field=/.test(a)) { fields.push(a.slice(a.indexOf('=') + 1)); continue; }
+      if (a === '--input') { hasInput = true; i++; continue; }
+      if (a.startsWith('--input=')) { hasInput = true; continue; }
+      if (VALUE_FLAGS.includes(a)) { i++; continue; }
+      if (!a.startsWith('-') && !endpoint) endpoint = a;
+    }
+    const path = endpoint.replace(/^https?:\/\/[^/]+/, '').replace(/^\//, '').split('?')[0];
+    const write = (method && method !== 'GET') || (!method && (fields.length > 0 || hasInput));
+    if (path === 'graphql') {
+      const q = [...fields, cmd].join('\n');
+      if (/\bmutation\b/.test(q) && /(merge|label|ruleset|branchprotection|review|comment|ref\b|refs?\(|updateRef|createRef|deleteRef|automerge)/i.test(q)) {
+        deny(input, 'R-203', 'GraphQL mutations on merges, labels, reviews, comments, refs or rulesets are blocked. Use the gh pr commands.');
+      }
+    } else if (write) {
+      if (/(^|\/)pulls\/\d+\/merge$/.test(path)) deny(input, 'R-111', 'Merge with gh pr merge <n> --squash --delete-branch, not gh api.');
+      if (/(^|\/)pulls\/\d+\/reviews(\/|$)/.test(path)) deny(input, 'R-202', 'Post reviews with gh pr comment in the format from the run-review skill.');
+      if (/(^|\/)rulesets(\/|$)/.test(path) || /(^|\/)branches\/[^/]+\/protection(\/|$)/.test(path)) {
+        if (role !== 'supervisor') deny(input, 'R-111', 'Only the Supervisor changes rulesets or branch protection.');
+        if (method === 'DELETE') deny(input, 'R-111', 'Deleting a ruleset or branch protection is blocked.');
+      }
+      if (/(^|\/)git\/refs(\/|$)/.test(path)) {
+        if (role !== 'supervisor') deny(input, 'R-101', 'Only the Supervisor writes git refs through the API.');
+        if (/heads\/(main|master)$/.test(path) && method === 'DELETE') deny(input, 'R-102', 'Deleting main is blocked.');
+        if (/heads\/(main|master)$/.test(path) || fields.some((f) => /^ref=refs\/heads\/(main|master)$/.test(f))) deny(input, 'R-101', 'Moving main through the API is blocked. Merge a PR.');
+      }
+      if (/(^|\/)issues\/\d+\/labels(\/|$)/.test(path)) {
+        if (hasInput) deny(input, 'R-203', 'Add labels with -f labels[]=<label> so the role check can read them.');
+        const tail = decodeURIComponent(path.split(/\/labels\/?/)[1] || '');
+        const labels = fields.filter((f) => /^labels(\[\])?=/.test(f)).map((f) => f.slice(f.indexOf('=') + 1));
+        checkLabels(tail ? [tail, ...labels] : labels);
+      }
+      if (/(^|\/)issues\/\d+$/.test(path) || /(^|\/)issues$/.test(path)) {
+        if (hasInput) deny(input, 'R-203', 'Edit issues with -f fields so the role check can read labels.');
+        checkLabels(fields.filter((f) => /^labels(\[\])?=/.test(f)).map((f) => f.slice(f.indexOf('=') + 1)));
+      }
+      if (/(^|\/)(issues|pulls)\/(\d+\/)?comments(\/|$)/.test(path)) {
+        if (hasInput) deny(input, 'R-202', 'Post comments with gh pr comment so reviews can be checked.');
+        const body = fields.filter((f) => /^body=/.test(f)).map((f) => f.slice(5)).join('\n');
+        if (/^\s*REVIEW:/m.test(body)) deny(input, 'R-202', 'Post reviews with gh pr comment.');
       }
     }
   }
