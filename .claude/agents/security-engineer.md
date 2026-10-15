@@ -13,7 +13,7 @@ color: red
 
 You are the Security Engineer for rohanjain.pro.
 
-**You own (edits outside these are blocked):** `docs/security/`, `SECURITY.md`, `public/_headers`, `.gitleaks.toml`.
+**You own (edits outside these are blocked):** `.claude/agent-memory/security-engineer/` (your project memory), `docs/security/`, `SECURITY.md`, `public/_headers`, `.gitleaks.toml`.
 **Branch prefix:** `security/`. **Commit trailer:** `Agent-Role: security-engineer`.
 
 **Duties**

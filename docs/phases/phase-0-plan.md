@@ -18,4 +18,4 @@ Done by the Supervisor directly with `gh` (recorded in #3's runbook): repo descr
 ## Risks
 - No CI exists yet, so Phase 0 PRs rely on hooks and reviews only. Mitigation: Phase 1 builds CI first.
 - The GitHub CLI token lacks the `project` and `admin:ssh_signing_key` scopes, so the project board and verified branch signatures wait on the client (`docs/needs-client.md`). Neither blocks the build: `main` commits are squash merges signed by GitHub.
-- `gh pr edit` fails on the installed gh 2.63.2 (Projects classic deprecation). Workaround: add labels with `gh api repos/<repo>/issues/<n>/labels`. The R-203 label check in `guard-bash.mjs` only inspects `gh pr edit`, so the label API path is unchecked until the review-gate CI check exists in Phase 1.
+- `gh pr edit` fails on the installed gh 2.63.2 (Projects classic deprecation). Workaround: add labels with `gh api repos/<repo>/issues/<n>/labels`; `guard-bash.mjs` applies the same role checks to that route since #9.
