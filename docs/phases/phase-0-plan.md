@@ -13,7 +13,7 @@
 | #7 Phase 0 plan and Phase 1 backlog | supervisor | This file, Phase 1 issues, `docs/needs-client.md` update, path ownership for Phase 1 configs |
 | #8 Probe test after Phase 0 | qa-engineer | `docs/qa/probe-results.md` |
 
-Done by the Supervisor directly with `gh` (recorded in #3's runbook): repo description, topics, homepage, merge settings (squash only, delete branch on merge), ruleset "main protection" (no deletion, no force push, linear history, PR required, squash only, no bypass; its signed-commit rule is removed until #33, see ADR-0014), secret scanning and push protection, Dependabot alerts and security fixes, private vulnerability reporting, labels, milestones Phase 0 to 6, repo-local SSH commit signing.
+Done by the Supervisor directly with `gh` (recorded in #3's runbook): repo description, topics, homepage, merge settings (squash only, delete branch on merge), ruleset "main protection" (no deletion, no force push, linear history, PR required, squash only, no bypass; its signed-commit rule was paused under ADR-0014 and restored on 2026-10-16 by PR #68, #33), secret scanning and push protection, Dependabot alerts and security fixes, private vulnerability reporting, labels, milestones Phase 0 to 6, repo-local SSH commit signing.
 
 ## Risks
 - No CI exists yet, so Phase 0 PRs rely on hooks and reviews only. Mitigation: Phase 1 builds CI first.

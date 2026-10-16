@@ -2,12 +2,12 @@
 
 Resume pointer. Updated after every issue (R-802). Read at every session start.
 
-- **Phase:** 0 (in progress)
-- **Last merged issues:** #1 (PR #2), #32 (PR #37), #7 (PR #35), #46 (PR #52), #45 with #60 and #61 (PR #53), #44 with #62 (PR #55), #3 (PR #36), #6 (PR #48), #4 with #38 (PR #34)
-- **Next:** merge this PR (#50); merge #49 (threat model, #5); land the Phase 0 security review log (#39, PR #40, plus branches `security/9-review-pr2`, `security/39-review-pr52`, `security/39-review-pr53`, PR #59) and agent memory notes in one Security PR; run #8 probe test; Phase 0 gate.
-- **Open PRs:** #50 this PR; #49 threat model; #40 and #59 review log (draft, to consolidate)
-- **Open findings:** no Medium or higher. Low: #42, #47, #51, #54, #56, #58, #63.
-- **Blocked on client:** #33 (signed-commit rule) and the project board wait on `gh auth refresh` (`docs/needs-client.md`).
-- **Notes for the gate:** memory notes waiting to land: Security `escaped_hook_path_traversal.md` (scratchpad), the hook-review checklist from the PR #53 review, and the CI-leak note on PR #49's branch. Agent memory written on worktree branches only reaches `main` through that role's PR; raise at the retro.
+- **Phase:** 0 complete (gate passed 2026-10-16, `docs/gates/phase-0.md`). Phase 1 not started.
+- **Last merged issues:** #1 (PR #2), #32 (PR #37), #7 (PR #35), #46 (PR #52), #45, #60, #61 (PR #53), #44, #62 (PR #55), #3 (PR #36), #6 (PR #48), #4, #38 (PR #34), #50 (PR #65), #66 (PR #67), #5 (PR #49), #33 (PR #68), #70 (PR #71), #39 (PR #40), #8 (PR #76), #69 (this PR)
+- **Next:** Start Phase 1 in a fresh session: skill phase-gate "Starting phase N" (plan exists: `docs/phases/phase-1-plan.md`), then wave 1: #10 Astro scaffold (platform), #19 design spec (design-lead), #30 README (supervisor). Apply the Phase 0 retro process change.
+- **Open PRs:** none
+- **Open findings:** no Medium or higher. Low: #42, #47, #51, #54, #56, #58, #63 (Phase 1), #72 (Phase 7).
+- **Blocked on client:** nothing. Optional: `brew upgrade gh`.
+- **Process:** set the subagent model per task (haiku or sonnet unless hook or security code needs opus). Follow the Phase 0 retro process change (run-review to the letter).
 - **Interrupted work:** none
-- **Average usage per issue:** unknown (one usage-limit stop this session; record after the gate)
+- **Average usage per issue:** unknown; two usage-limit stops in Phase 0 (about 20 issues). Record after Phase 1's first 3 issues.
