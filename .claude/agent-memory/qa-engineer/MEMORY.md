@@ -14,3 +14,5 @@
 - [Verify on rebased merge](feedback_verify_on_rebased_merge.md): before approving, trial-merge current main and re-run verify; a green head can fail after main gains gates
 - [Escaped-defect log](defects-escaped-review.md): defects that got past review rounds, with the round that caught them
 - [Gate state](project_gate_state.md): which QA gates exist on main (lint-copy, lychee, format) and which are missing as of 2026-10-16
+- [Read the issue before the PR body](feedback-r705-issue-before-body.md): R-705 ordering; the PR body is the builder's report, so leave it out of the first fetch.
+- [Stylelint token rules](reference-stylelint-token-rules.md): rgb() is banned in every file, including tokens.css; what the token override really exempts.
