@@ -3,8 +3,6 @@
 The only things Claude Code cannot do itself. Each item has exact steps. Claude Code keeps working on everything else meanwhile (R-003).
 
 ## Open
-- [ ] Remove the signing-key permission again, now that the signed-commit rule is back on (#33). Every agent shares this login. In Terminal run:
-  `gh auth refresh -h github.com -r write:ssh_signing_key`
 - [ ] Update the GitHub CLI (the installed 2.63.2 cannot edit PR labels): `brew upgrade gh`
 
 ## Optional (accepted risk, ADR-0018)
@@ -16,6 +14,7 @@ The only things Claude Code cannot do itself. Each item has exact steps. Claude 
   After this, Claude Code cannot change repository settings or the project board. When it needs one of those, it adds the exact command to this file for you to run.
 
 ## Done
+- [x] Signing-key permission removed again (2026-10-16, verified with `gh auth status`).
 - [x] Passkey or 2FA turned on for GitHub (2026-10-16).
 - [x] GitHub CLI given the `project` and `write:ssh_signing_key` permissions (2026-10-16). Claude Code uploaded the signing key, created the project board and turned the signed-commit rule back on.
 - [x] Moved `_claude` to `.claude` (2026-10-15).
