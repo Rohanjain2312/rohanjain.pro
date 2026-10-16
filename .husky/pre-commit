@@ -1,0 +1,1 @@
+node .husky/checks/pre-commit.mjs && npx --no-install lint-staged
