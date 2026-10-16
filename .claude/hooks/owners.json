@@ -18,15 +18,15 @@
   ],
   "app-data-engineer": [
     ".claude/agent-memory/app-data-engineer/**", "src/lib/**", "src/content/**", "src/content.config.ts", "scripts/**",
-    "!scripts/lint-docs.mjs", "!scripts/autopilot.sh", "!scripts/phase-gate.mjs", "!scripts/verify.mjs", "!scripts/lint-copy.mjs",
-    "tests/unit/**", "package.json", "package-lock.json"
+    "!scripts/lint-docs.mjs", "!scripts/autopilot.sh", "!scripts/preview.mjs", "!scripts/phase-gate.mjs", "!scripts/verify.mjs", "!scripts/lint-copy.mjs",
+    "tests/unit/**", "!tests/unit/preview.test.*", "package.json", "package-lock.json"
   ],
   "platform-engineer": [
     ".claude/agent-memory/platform-engineer/**", ".github/**", ".husky/**", "package.json", "package-lock.json", "astro.config.*", "tsconfig*.json", ".nvmrc", ".gitignore",
     "eslint.config.*", ".prettierrc*", ".prettierignore", ".stylelintrc*", "commitlint.config.*", "lighthouserc.*",
     "release-please-config.json", ".release-please-manifest.json", "wrangler.toml",
     "public/_redirects", "public/robots.txt", "public/.well-known/**", "docs/runbooks/**",
-    "scripts/lint-docs.mjs", "scripts/autopilot.sh", "scripts/phase-gate.mjs", "scripts/verify.mjs",
+    "scripts/lint-docs.mjs", "scripts/autopilot.sh", "scripts/phase-gate.mjs", "scripts/verify.mjs", "scripts/preview.mjs", "tests/unit/preview.test.*",
     "playwright.config.*", "vitest.config.*", ".lintstagedrc*", ".npmrc", ".editorconfig", ".gitattributes", "src/env.d.ts"
   ],
   "security-engineer": [

@@ -3,7 +3,7 @@ name: design-lead
 description: Creative director. Writes the design spec and tokens, and reviews every visible PR for visual quality and anti-slop. Use for design decisions, design reviews, OG image, icons, PDF and brief layouts.
 tools: Read, Grep, Glob, Bash, Edit, Write
 disallowedTools: Agent
-model: opus
+model: sonnet
 effort: high
 isolation: worktree
 maxTurns: 40

@@ -3,7 +3,7 @@ name: security-engineer
 description: Owns the threat model, security headers policy and security reviews, and holds launch veto. Use to review any PR touching .claude, workflows, dependencies, scripts, user input, the fit check or embeds, and for security assessments.
 tools: Read, Grep, Glob, Bash, Edit, Write, WebFetch
 disallowedTools: Agent
-model: opus
+model: sonnet
 effort: high
 isolation: worktree
 maxTurns: 40

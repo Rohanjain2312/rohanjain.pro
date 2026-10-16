@@ -23,3 +23,4 @@ Format: context, decision, consequences, alternatives. New ADRs take the next nu
 | [0017](0017-r511-fix-prs.md) | PRs that close open findings may merge under R-511 |
 | [0018](0018-hooks-are-tripwires.md) | Hooks are tripwires; input controls and token scope are the boundary |
 | [0019](0019-license-scope.md) | License scope: site copy is reserved, repository docs are MIT |
+| [0020](0020-faster-reviews.md) | Faster reviews: sonnet reviewers, parallel review order |
