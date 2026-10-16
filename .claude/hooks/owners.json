@@ -8,34 +8,35 @@
     "docs/architecture.md", "docs/content-guide.md"
   ],
   "design-lead": [
-    "docs/design/**", "src/styles/tokens.css", "public/favicon*", "public/og*", "src/assets/brand/**"
+    ".claude/agent-memory/design-lead/**", "docs/design/**", "src/styles/tokens.css", "public/favicon*", "public/og*", "src/assets/brand/**"
   ],
   "frontend-engineer": [
-    "src/components/**", "src/layouts/**", "src/pages/**", "src/styles/**", "!src/styles/tokens.css",
+    ".claude/agent-memory/frontend-engineer/**", "src/components/**", "src/layouts/**", "src/pages/**", "src/styles/**", "!src/styles/tokens.css",
     "src/assets/**", "!src/assets/brand/**", "public/fonts/**",
     "tests/visual/**", "tests/a11y/**", "tests/component/**",
     "package.json", "package-lock.json"
   ],
   "app-data-engineer": [
-    "src/lib/**", "src/content/**", "scripts/**",
+    ".claude/agent-memory/app-data-engineer/**", "src/lib/**", "src/content/**", "src/content.config.ts", "scripts/**",
     "!scripts/lint-docs.mjs", "!scripts/autopilot.sh", "!scripts/phase-gate.mjs", "!scripts/verify.mjs", "!scripts/lint-copy.mjs",
     "tests/unit/**", "package.json", "package-lock.json"
   ],
   "platform-engineer": [
-    ".github/**", ".husky/**", "package.json", "package-lock.json", "astro.config.*", "tsconfig*.json", ".nvmrc", ".gitignore",
+    ".claude/agent-memory/platform-engineer/**", ".github/**", ".husky/**", "package.json", "package-lock.json", "astro.config.*", "tsconfig*.json", ".nvmrc", ".gitignore",
     "eslint.config.*", ".prettierrc*", ".prettierignore", ".stylelintrc*", "commitlint.config.*", "lighthouserc.*",
     "release-please-config.json", ".release-please-manifest.json", "wrangler.toml",
     "public/_redirects", "public/robots.txt", "public/.well-known/**", "docs/runbooks/**",
-    "scripts/lint-docs.mjs", "scripts/autopilot.sh", "scripts/phase-gate.mjs", "scripts/verify.mjs"
+    "scripts/lint-docs.mjs", "scripts/autopilot.sh", "scripts/phase-gate.mjs", "scripts/verify.mjs",
+    "playwright.config.*", "vitest.config.*", ".lintstagedrc*", ".npmrc", ".editorconfig", ".gitattributes", "src/env.d.ts"
   ],
   "security-engineer": [
-    "docs/security/**", "SECURITY.md", "public/_headers", ".gitleaks.toml"
+    ".claude/agent-memory/security-engineer/**", "docs/security/**", "SECURITY.md", "public/_headers", ".gitleaks.toml"
   ],
   "qa-engineer": [
-    "tests/e2e/**", "tests/property/**", "tests/fixtures/**", "docs/qa/**", "stryker.config.*", "scripts/lint-copy.mjs",
+    ".claude/agent-memory/qa-engineer/**", "tests/e2e/**", "tests/property/**", "tests/fixtures/**", "docs/qa/**", "stryker.config.*", "scripts/lint-copy.mjs",
     "package.json", "package-lock.json"
   ],
   "reader-advocate": [
-    "docs/reader/**", "docs/validation/**"
+    ".claude/agent-memory/reader-advocate/**", "docs/reader/**", "docs/validation/**"
   ]
 }

@@ -13,7 +13,7 @@ color: blue
 
 You are the Frontend Engineer for rohanjain.pro.
 
-**You own (edits outside these are blocked):** `src/components/`, `src/layouts/`, `src/pages/`, `src/styles/` (not `tokens.css`), `src/assets/` (not `brand/`), `public/fonts/`, `tests/visual/`, `tests/a11y/`, `tests/component/`, `package.json`, `package-lock.json`.
+**You own (edits outside these are blocked):** `.claude/agent-memory/frontend-engineer/` (your project memory), `src/components/`, `src/layouts/`, `src/pages/`, `src/styles/` (not `tokens.css`), `src/assets/` (not `brand/`), `public/fonts/`, `tests/visual/`, `tests/a11y/`, `tests/component/`, `package.json`, `package-lock.json`.
 **Branch prefix:** `frontend/`. **Commit trailer:** `Agent-Role: frontend-engineer`.
 
 **Duties**

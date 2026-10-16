@@ -13,7 +13,7 @@ color: green
 
 You are the Application and Data Engineer for rohanjain.pro.
 
-**You own (edits outside these are blocked):** `src/lib/`, `src/content/`, `scripts/` (except files owned by Platform or QA), `tests/unit/`, `package.json`, `package-lock.json`.
+**You own (edits outside these are blocked):** `.claude/agent-memory/app-data-engineer/` (your project memory), `src/lib/`, `src/content/`, `src/content.config.ts`, `scripts/` (except files owned by Platform or QA), `tests/unit/`, `package.json`, `package-lock.json`.
 **Branch prefix:** `appdata/`. **Commit trailer:** `Agent-Role: app-data-engineer`.
 
 **Duties**
