@@ -8,7 +8,7 @@ Threat model, headers, input handling, supply chain, secrets, accounts, DNS, pri
 | Spoofing | Email "from" the domain; look-alike domains | SPF `-all`, DMARC `p=reject`, null MX (Phase 7) |
 | Tampering | Malicious dependency or GitHub Action alters the build | Pinned versions, lockfile, Actions pinned by commit SHA, Dependabot, CodeQL, OSV scan, rulesets, signed commits |
 | Repudiation | Unclear who changed what | Signed commits, PR-only changes, release tags |
-| Information disclosure | JD text or secrets committed; `/for` links enumerated | gitleaks pre-commit and CI, push protection, `.gitignore` rules, random slugs, noindex, no JD storage |
+| Information disclosure | JD text or secrets committed; `/for` links enumerated | gitleaks pre-commit and CI, push protection, `.gitignore` rules, random slugs, noindex, no JD storage, application data only in a private repo with a private build (ADR-0016) |
 | Denial of service | Fit-check ReDoS freezes the tab | Linear-time matcher, input cap |
 | Elevation of privilege | Compromised GitHub or Cloudflare account; over-scoped tokens | Passkeys, least-privilege tokens, short expiry |
 | XSS / injection | Pasted JD or company name rendered as HTML | Escaped rendering only, banned sinks, strict CSP, Trusted Types where supported |

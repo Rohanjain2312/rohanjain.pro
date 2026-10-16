@@ -57,7 +57,7 @@ Stack, repository layout, content model, engine and generator specs, and the ADR
 │  ├─ content/
 │  │  ├─ claims.json  projects.json  skills.json  roles.json
 │  │  ├─ figures.json  samples.json  resume.json  site.json
-│  │  └─ applications/       # one result file per /for page (no JD text)
+│  │  └─ applications/       # .gitkeep only; result files live in a private repo (ADR-0016)
 │  ├─ lib/
 │  │  ├─ fitcheck/           # engine, matcher, scorer, types
 │  │  └─ format/
@@ -86,7 +86,7 @@ Stack, repository layout, content model, engine and generator specs, and the ADR
 - `figures.json`: `{ id, projectId, kind: "image"|"bars", src?, alt, bars?, axisLabel, caption, note, claimIds[] }`.
 - `resume.json`: header, education, skills groups, experience bullets, projects, publication; each bullet references claim IDs.
 - `site.json`: name, location ("New York, NY"), availability ("available now"), email, phone, profile links (LinkedIn, GitHub, Hugging Face, Medium), `showPhoto: false`.
-- `applications/<slug>.json`: `{ slug, company, roleTitle, createdOn, expiresOn, verdict, provenSkills[], gaps[], evidenceRows[], roleFamily }`. Never contains job description text.
+- `applications/<slug>.json` (in the private `APPLICATIONS_DIR`, ADR-0016): `{ slug, company, roleTitle, createdOn, expiresOn, verdict, provenSkills[], gaps[], evidenceRows[], roleFamily }`. Never contains job description text.
 
 ### 5.4 Fit-check engine specification (App/Data Engineer)
 - Pure function `analyze(text, skills, extras, evidence) -> Report`. No DOM, no network, no storage, no randomness, no time dependence.
@@ -98,8 +98,8 @@ Stack, repository layout, content model, engine and generator specs, and the ADR
 - Rendering: text nodes or framework-escaped templates only. `innerHTML` and similar are banned by lint rule. (R-405)
 
 ### 5.5 Per-application pages (`/for/<slug>`)
-- `npm run for -- --company "Acme" --role "ML Engineer" --jd ./posting.txt [--expires 90]` runs the engine locally and writes `src/content/applications/<slug>.json`.
-- Slug format: `<company-kebab>-<6 random base32 chars>`, so pages cannot be guessed or enumerated.
+- `npm run for -- --company "Acme" --role "ML Engineer" --jd ./posting.txt [--expires 90]` runs the engine locally and writes `<slug>.json` to `APPLICATIONS_DIR`, a private repo outside this one (ADR-0016). Result files are never committed here.
+- Slug format: `<company-kebab>-<6 random base32 chars>`, so live pages cannot be guessed. The list of applications stays private because the data is not in this repo (ADR-0016).
 - The job description file is read, analyzed and discarded. It is never written to the repo. `postings/` and `*.jd.txt` are in `.gitignore` and blocked by a pre-commit hook. (R-501, R-502)
 - Pages are excluded from the sitemap and carry `noindex, nofollow` (meta tag and `X-Robots-Tag`).
 - Expired pages show a short notice with a link to the main site; a monthly job removes them.

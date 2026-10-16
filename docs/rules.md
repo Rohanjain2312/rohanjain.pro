@@ -70,7 +70,7 @@ Every "must" and "never" in this project lives here, with exactly one home. 86 r
 | **R-508** | No secrets in the repo. | here | gitleaks pre-commit and CI; GitHub push protection | phase-0 |
 | **R-509** | Claude Code never reads .env files, keys, or postings. | here | settings deny; guard-bash and guard-read hooks | active |
 | **R-510** | No piping downloads into a shell; no recursive deletes outside the repo. | here | guard-bash hook | active |
-| **R-511** ★ | No merge or launch while a Medium or higher security finding is open. | here | phase-gate script checks open severity labels; Security veto | phase-1 |
+| **R-511** ★ | No merge or launch while a Medium or higher security finding is open. | here | phase-gate script checks open severity labels; Security veto; fix-PR terms in ADR-0017 | phase-1 |
 | **R-512** | Third-party embeds are only *.hf.space, loaded on click, sandboxed. | here | CSP test; e2e test | phase-5 |
 | **R-601** ★ | Colors come only from tokens; red is only for margin notes; no gradients, box shadows or emoji. | here | Stylelint rules; copy lint | phase-1 |
 | R-602 | Every visible PR passes the anti-slop checklist. | `.claude/agents/design-lead.md` | judgment | prose |
