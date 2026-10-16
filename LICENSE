@@ -28,10 +28,13 @@ Copyright (c) 2026 Rohan Jain. All rights reserved.
 
 The MIT License above does not cover the following, which may not be copied,
 modified or redistributed without written permission:
-- all written copy, wherever it appears, including text in .astro
-  templates and the content and data in src/content/;
+- the copy the site shows to readers, wherever it is stored, including
+  src/content/, text in .astro templates and components, and page metadata;
 - the résumé text and the résumé PDFs generated from it;
 - everything in reference/, including the mockups, figures and résumé;
 - the briefs and per-application pages the site generates.
 
-Everything else in this repository is code and is covered by the MIT License.
+Everything else in this repository, including the code and the repository's
+documentation and agent instructions (README.md, CONTRIBUTING.md, plan.md,
+CLAUDE.md, docs/ and .claude/), is covered by the MIT License. See
+docs/adr/0019-license-scope.md.

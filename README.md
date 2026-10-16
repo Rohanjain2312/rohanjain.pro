@@ -14,7 +14,7 @@ What the finished site will offer:
 ## How it was built
 A team of Claude Code agents is building the site, working like a small engineering organization: a Supervisor, a Design Lead, Frontend, App/Data, Platform, Security, QA and a Reader Advocate who judges only the rendered pages. Each piece of work is a GitHub Issue, a branch and a reviewed pull request. Rules are enforced by hooks in `.claude/hooks/`, and by CI once it lands (issue #13). The full plan starts at [`plan.md`](plan.md); progress is in [`docs/status.md`](docs/status.md).
 
-Stack: [Astro](https://astro.build) with static output, TypeScript in strict mode, Vitest and Playwright. No server code and no tracking at runtime.
+Stack: [Astro](https://astro.build) with static output, TypeScript in strict mode, Vitest and Playwright. No server code at runtime. No tracking cookies and no third-party tracking scripts; cookieless analytics after launch (ADR-0008).
 
 ## Run it locally
 Requirements: Node.js at the version in [`.nvmrc`](.nvmrc), and npm.
@@ -50,4 +50,4 @@ npm run dev
 | `reference/` | Read-only source material: mockups, figures, résumé |
 
 ## Contributing and license
-Workflow: [`CONTRIBUTING.md`](CONTRIBUTING.md). Code is MIT licensed; site content and résumé text are all rights reserved. See [`LICENSE`](LICENSE).
+Workflow: [`CONTRIBUTING.md`](CONTRIBUTING.md). Code and repository docs are MIT licensed; the site's copy, the résumé and `reference/` are all rights reserved. See [`LICENSE`](LICENSE).

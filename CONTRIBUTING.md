@@ -9,7 +9,7 @@ This site is built by a team of Claude Code agents under a Supervisor. The rules
 4. Reviewers check the pull request and post review comments. The Supervisor merges.
 
 ## Branches
-`<role>/<issue>-<slug>`, for example `frontend/14-hero-section` (R-103). The role prefix must match the agent creating the branch: `supervisor`, `design`, `frontend`, `appdata`, `platform`, `security`, `qa`, `reader`. Nobody pushes to `main` (R-101) or force-pushes (R-102).
+`<role>/<issue>-<slug>`, for example `frontend/14-hero-section` (R-103). The role prefix must match the agent creating the branch: `supervisor`, `design`, `frontend`, `appdata`, `platform`, `security`, `qa`, `reader`. Nobody pushes to `main` (R-101). Force-push only with `--force-with-lease` on your own branch (R-102).
 
 ## Commits
 - Conventional Commits with the issue number, for example `feat(hero): add results strip (#14)` (R-105).
@@ -29,7 +29,7 @@ This site is built by a team of Claude Code agents under a Supervisor. The rules
 - Only the Supervisor merges, by squash, deleting the branch (R-111).
 
 ## Definition of done
-The acceptance criteria are met, tests are added and green, `npm run verify` passes, required reviews are recorded, and `docs/status.md` is updated. The full list is in [`docs/spec/03-workflow.md`](docs/spec/03-workflow.md).
+A pull request is done when it meets all eight items listed in [`docs/spec/03-workflow.md`](docs/spec/03-workflow.md).
 
 ## Content
 Every number on the site traces to a source in the Evidence Ledger ([`docs/spec/05-evidence-ledger.md`](docs/spec/05-evidence-ledger.md)). Never invent numbers, dates, claims or copy (R-005).
