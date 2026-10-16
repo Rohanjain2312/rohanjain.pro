@@ -1,6 +1,6 @@
 # ADR-0014: Pause the ruleset's signed-commit rule until the signing key is uploaded
 
-Status: accepted (temporary, restore in #33) · Date: 2026-10-15 · Issue: #4
+Status: superseded on 2026-10-16: the signing key is uploaded and the rule is back on (#33) · Date: 2026-10-15 · Issue: #4
 
 ## Context
 The `main protection` ruleset had `required_signatures`. GitHub applies it to every commit in a PR, not only to the squash commit it creates. Branch commits are signed locally with SSH but show "unknown key" until the key is uploaded to GitHub, which needs the `write:ssh_signing_key` scope. Only the client can grant that scope (`docs/needs-client.md`). PR #2 was blocked with "base branch policy prohibits the merge".
