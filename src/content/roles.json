@@ -1,0 +1,20 @@
+[
+  {
+    "id": "ai",
+    "title": "AI Engineer",
+    "summary": "AI Engineer with 3.5+ years production experience building multi-agent LLM systems and agentic infrastructure. Specialized in LangGraph orchestration, heterogeneous LLM routing, RAG pipelines, and LLM fine-tuning, deployed at production scale.",
+    "pdfFile": "Rohan-Jain-AI-Engineer.pdf"
+  },
+  {
+    "id": "ml",
+    "title": "ML Engineer",
+    "summary": "ML Engineer with 3.5+ years production experience deploying agentic systems, fine-tuned LLMs, and scalable ML pipelines. Specialized in multi-agent LangGraph architectures, model compression, and time-series classification, shipped end-to-end from data pipeline to production deployment.",
+    "pdfFile": "Rohan-Jain-ML-Engineer.pdf"
+  },
+  {
+    "id": "ds",
+    "title": "Data Scientist",
+    "summary": "Data Scientist with 3.5+ years production experience building statistical models and ML pipelines at scale. Specialized in classification modeling, time-series forecasting, and KPI analytics frameworks, translating data into measurable business decisions.",
+    "pdfFile": "Rohan-Jain-Data-Scientist.pdf"
+  }
+]

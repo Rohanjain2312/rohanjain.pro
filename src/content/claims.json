@@ -1,0 +1,711 @@
+[
+  {
+    "id": "goldman-tenure",
+    "value": "Jan 2021 to Jun 2024",
+    "display": "~4 years, Jan 2021 to Jun 2024",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "goldman-tenure-years",
+    "value": 4,
+    "display": "~4 years",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "goldman-roles",
+    "value": "STEM Intern to Data Analyst to Data Scientist",
+    "display": "STEM Intern to Data Analyst to Data Scientist, Asset Management, Bengaluru",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "production-experience-years",
+    "value": 3.5,
+    "display": "3.5+ years of production experience",
+    "source": "Client's role descriptions",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "settlement-pending-trades-reduction",
+    "value": 40,
+    "display": "40% fewer pending trades",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "settlement-penalty-savings",
+    "value": "~$65k a quarter",
+    "display": "~$65k a quarter less in regulatory penalties",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "loan-v1-models",
+    "value": "GPT-4 and GPT-3.5-turbo",
+    "display": "GPT-4 and GPT-3.5-turbo",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "loan-v1-pipeline-modules",
+    "value": 10,
+    "display": "10-module pipeline",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "loan-v1-tools",
+    "value": 7,
+    "display": "7 tools",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "loan-v1-approvals",
+    "value": 2,
+    "display": "2 human approvals",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "loan-v1-checks",
+    "value": 14,
+    "display": "14 checks",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "loan-v1-hours-saved",
+    "value": 40,
+    "display": "saved 40 hours a month",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "loan-v1-rag",
+    "value": "pgvector",
+    "display": "RAG with pgvector",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "loan-v1-db-writes",
+    "value": "eliminated",
+    "display": "eliminated erroneous database writes",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "kyc-ocr-accuracy",
+    "value": 96,
+    "display": "96% accuracy",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "kyc-ocr-teams",
+    "value": 4,
+    "display": "4 additional teams",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "kpi-pipeline-systems",
+    "value": "10+",
+    "display": "10+ systems",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "kpi-pipeline-ftes",
+    "value": 3,
+    "display": "equivalent of 3 FTEs",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "workflows-before",
+    "value": 4,
+    "display": "4 automated workflows",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "workflows-after",
+    "value": 18,
+    "display": "18 automated workflows",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "workflows-increase",
+    "value": 350,
+    "display": "350% increase",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "workflows-hours-saved",
+    "value": "180+",
+    "display": "180+ hours a quarter saved",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "interns-offers",
+    "value": 3,
+    "display": "3 mentored to full-time offers",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "interns-program",
+    "value": "division-wide",
+    "display": "program adopted division-wide",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "loan-v2-agents",
+    "value": 10,
+    "display": "10 agents",
+    "source": "Résumé; repo loan-servicing-agent",
+    "sourceUrl": "https://github.com/Rohanjain2312/loan-servicing-agent",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "loan-v2-subgraphs",
+    "value": 2,
+    "display": "2 parallel subgraphs",
+    "source": "Résumé; repo loan-servicing-agent",
+    "sourceUrl": "https://github.com/Rohanjain2312/loan-servicing-agent",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "loan-v2-tools",
+    "value": 15,
+    "display": "15 tools",
+    "source": "Résumé; repo loan-servicing-agent",
+    "sourceUrl": "https://github.com/Rohanjain2312/loan-servicing-agent",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "loan-v2-approvals",
+    "value": 4,
+    "display": "4 human approvals",
+    "source": "Résumé; repo loan-servicing-agent",
+    "sourceUrl": "https://github.com/Rohanjain2312/loan-servicing-agent",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "loan-v2-checks",
+    "value": 22,
+    "display": "22 checks",
+    "source": "Résumé; repo loan-servicing-agent",
+    "sourceUrl": "https://github.com/Rohanjain2312/loan-servicing-agent",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "loan-v2-routing",
+    "value": "Claude Sonnet + GPT-4o-mini",
+    "display": "Claude Sonnet + GPT-4o-mini routing by cost and quality",
+    "source": "Résumé; repo loan-servicing-agent",
+    "sourceUrl": "https://github.com/Rohanjain2312/loan-servicing-agent",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "loan-v2-deploy",
+    "value": "Docker on GKE Autopilot via GitHub Actions",
+    "display": "Docker on GKE Autopilot via GitHub Actions, A2A",
+    "source": "Résumé; repo loan-servicing-agent",
+    "sourceUrl": "https://github.com/Rohanjain2312/loan-servicing-agent",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "loan-v2-dates",
+    "value": "Apr to Aug 2026",
+    "display": "Apr to Aug 2026",
+    "source": "Résumé; repo loan-servicing-agent",
+    "sourceUrl": "https://github.com/Rohanjain2312/loan-servicing-agent",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "settle-trades",
+    "value": "3.1M",
+    "display": "3.1M synthetic trades",
+    "source": "Résumé; repo trade-settlement-fail-predictor, figures fig3 and fig4",
+    "sourceUrl": "https://github.com/Rohanjain2312/trade-settlement-fail-predictor",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "settle-fail-rate",
+    "value": "~3%",
+    "display": "~3% fail rate",
+    "source": "Résumé; repo trade-settlement-fail-predictor, figures fig3 and fig4",
+    "sourceUrl": "https://github.com/Rohanjain2312/trade-settlement-fail-predictor",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "settle-features",
+    "value": 20,
+    "display": "20 features",
+    "source": "Résumé; repo trade-settlement-fail-predictor, figures fig3 and fig4",
+    "sourceUrl": "https://github.com/Rohanjain2312/trade-settlement-fail-predictor",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "settle-variants",
+    "value": 12,
+    "display": "12 model variants",
+    "source": "Résumé; repo trade-settlement-fail-predictor, figures fig3 and fig4",
+    "sourceUrl": "https://github.com/Rohanjain2312/trade-settlement-fail-predictor",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "settle-pr-auc",
+    "value": 0.333,
+    "display": "XGBoost PR-AUC 0.333",
+    "source": "Résumé; repo trade-settlement-fail-predictor, figures fig3 and fig4",
+    "sourceUrl": "https://github.com/Rohanjain2312/trade-settlement-fail-predictor",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "settle-pr-auc-random",
+    "value": 0.045,
+    "display": "random 0.045",
+    "source": "Résumé; repo trade-settlement-fail-predictor, figures fig3 and fig4",
+    "sourceUrl": "https://github.com/Rohanjain2312/trade-settlement-fail-predictor",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "settle-pr-auc-lift",
+    "value": "~7x",
+    "display": "~7x",
+    "source": "Résumé; repo trade-settlement-fail-predictor, figures fig3 and fig4",
+    "sourceUrl": "https://github.com/Rohanjain2312/trade-settlement-fail-predictor",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "settle-brier-before",
+    "value": 0.213,
+    "display": "Brier 0.213",
+    "source": "Résumé; repo trade-settlement-fail-predictor, figures fig3 and fig4",
+    "sourceUrl": "https://github.com/Rohanjain2312/trade-settlement-fail-predictor",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "settle-brier-after",
+    "value": 0.035,
+    "display": "Brier 0.035",
+    "source": "Résumé; repo trade-settlement-fail-predictor, figures fig3 and fig4",
+    "sourceUrl": "https://github.com/Rohanjain2312/trade-settlement-fail-predictor",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "settle-shap-correlation",
+    "value": 0.96,
+    "display": "SHAP rank correlation 0.96",
+    "source": "Résumé; repo trade-settlement-fail-predictor, figures fig3 and fig4",
+    "sourceUrl": "https://github.com/Rohanjain2312/trade-settlement-fail-predictor",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "settle-dates",
+    "value": "Oct 2026",
+    "display": "Oct 2026",
+    "source": "Résumé; repo trade-settlement-fail-predictor, figures fig3 and fig4",
+    "sourceUrl": "https://github.com/Rohanjain2312/trade-settlement-fail-predictor",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "cua-capabilities",
+    "value": 2,
+    "display": "2 capabilities",
+    "source": "Repo computer-use-automation README",
+    "sourceUrl": "https://github.com/Rohanjain2312/computer-use-automation",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "cua-discovery-calls",
+    "value": 22,
+    "display": "22 model calls to discover",
+    "source": "Repo computer-use-automation README",
+    "sourceUrl": "https://github.com/Rohanjain2312/computer-use-automation",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "cua-replay-seconds",
+    "value": "~10 s",
+    "display": "~10 s per replay with no model",
+    "source": "Repo computer-use-automation README",
+    "sourceUrl": "https://github.com/Rohanjain2312/computer-use-automation",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "cua-tests",
+    "value": 137,
+    "display": "137 tests with no model calls",
+    "source": "Repo computer-use-automation README",
+    "sourceUrl": "https://github.com/Rohanjain2312/computer-use-automation",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "cua-dates",
+    "value": "Sep 2026",
+    "display": "Sep 2026",
+    "source": "Repo computer-use-automation README",
+    "sourceUrl": "https://github.com/Rohanjain2312/computer-use-automation",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "fc-size-ratio",
+    "value": "9.1x",
+    "display": "9.1x smaller",
+    "source": "Résumé, client-confirmed; repo FinCompress",
+    "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "fc-size-before",
+    "value": "437.9 MB",
+    "display": "437.9 MB",
+    "source": "Résumé, client-confirmed; repo FinCompress",
+    "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "fc-size-after",
+    "value": "47.7 MB",
+    "display": "47.7 MB",
+    "source": "Résumé, client-confirmed; repo FinCompress",
+    "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "fc-variants",
+    "value": 7,
+    "display": "7 variants",
+    "source": "Résumé, client-confirmed; repo FinCompress",
+    "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "fc-latency-before",
+    "value": "286.9 ms",
+    "display": "CPU latency 286.9 ms",
+    "source": "Résumé, client-confirmed; repo FinCompress",
+    "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "fc-latency-after",
+    "value": "19.8 ms",
+    "display": "19.8 ms",
+    "source": "Résumé, client-confirmed; repo FinCompress",
+    "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "fc-latency-ratio",
+    "value": "14.5x",
+    "display": "14.5x",
+    "source": "Résumé, client-confirmed; repo FinCompress",
+    "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "fc-pruning-heads",
+    "value": 50,
+    "display": "pruning 50% of attention heads",
+    "source": "Résumé, client-confirmed; repo FinCompress",
+    "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
+    "verifiedOn": "2026-10-15",
+    "note": "Repo note: chart peak at 29.2%. Client chose the résumé value."
+  },
+  {
+    "id": "fc-pruning-f1-gain",
+    "value": "+0.9 points",
+    "display": "improved val Macro F1 by +0.9 points",
+    "source": "Résumé, client-confirmed; repo FinCompress",
+    "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
+    "verifiedOn": "2026-10-15",
+    "note": "Repo note: chart peak at 29.2%. Client chose the résumé value."
+  },
+  {
+    "id": "fc-dates",
+    "value": "Feb to Mar 2026",
+    "display": "Feb to Mar 2026",
+    "source": "Résumé, client-confirmed; repo FinCompress",
+    "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "tariff-exact-match",
+    "value": 82.5,
+    "display": "82.5% exact 10-digit",
+    "source": "Repo customs-court README",
+    "sourceUrl": "https://github.com/Rohanjain2312/customs-court",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "tariff-rulings-eval",
+    "value": 40,
+    "display": "40 rulings dated after 2026-07-01",
+    "source": "Repo customs-court README",
+    "sourceUrl": "https://github.com/Rohanjain2312/customs-court",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "tariff-zero-shot",
+    "value": 15,
+    "display": "15.0% zero-shot",
+    "source": "Repo customs-court README",
+    "sourceUrl": "https://github.com/Rohanjain2312/customs-court",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "tariff-rulings-corpus",
+    "value": "44,139",
+    "display": "44,139 CBP rulings",
+    "source": "Repo customs-court README",
+    "sourceUrl": "https://github.com/Rohanjain2312/customs-court",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "tariff-mcp-tools",
+    "value": 8,
+    "display": "8 MCP tools",
+    "source": "Repo customs-court README",
+    "sourceUrl": "https://github.com/Rohanjain2312/customs-court",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "tariff-dates",
+    "value": "Sep 2026",
+    "display": "Sep 2026",
+    "source": "Repo customs-court README",
+    "sourceUrl": "https://github.com/Rohanjain2312/customs-court",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "shca-first-try",
+    "value": 3,
+    "display": "3 of 8 tasks first try",
+    "source": "Repo Self-Healing-Code-Agent README",
+    "sourceUrl": "https://github.com/Rohanjain2312/Self-Healing-Code-Agent",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "shca-after-repair",
+    "value": 7,
+    "display": "7 of 8 after self-repair",
+    "source": "Repo Self-Healing-Code-Agent README",
+    "sourceUrl": "https://github.com/Rohanjain2312/Self-Healing-Code-Agent",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "shca-benchmark-tasks",
+    "value": 8,
+    "display": "its own 8-task benchmark",
+    "source": "Repo Self-Healing-Code-Agent README",
+    "sourceUrl": "https://github.com/Rohanjain2312/Self-Healing-Code-Agent",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "shca-dates",
+    "value": "Feb to Aug 2026",
+    "display": "Feb to Aug 2026",
+    "source": "Repo Self-Healing-Code-Agent README",
+    "sourceUrl": "https://github.com/Rohanjain2312/Self-Healing-Code-Agent",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "mr-accuracy",
+    "value": 81.78,
+    "display": "81.78% accuracy",
+    "source": "Résumé, client-confirmed; repo transformer-market-regime",
+    "sourceUrl": "https://github.com/Rohanjain2312/transformer-market-regime",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "mr-mcc",
+    "value": 0.48,
+    "display": "0.480 MCC",
+    "source": "Résumé, client-confirmed; repo transformer-market-regime",
+    "sourceUrl": "https://github.com/Rohanjain2312/transformer-market-regime",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "mr-baselines",
+    "value": 6,
+    "display": "outperforming 6 baseline architectures",
+    "source": "Résumé, client-confirmed; repo transformer-market-regime",
+    "sourceUrl": "https://github.com/Rohanjain2312/transformer-market-regime",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "mr-f1",
+    "value": 88.4,
+    "display": "88.4% F1 with optimized thresholds",
+    "source": "Résumé, client-confirmed; repo transformer-market-regime",
+    "sourceUrl": "https://github.com/Rohanjain2312/transformer-market-regime",
+    "verifiedOn": "2026-10-15",
+    "note": "Repo note: README F1 72.70%. Client chose the résumé value."
+  },
+  {
+    "id": "mr-imbalance",
+    "value": "68/32",
+    "display": "68/32 class imbalance",
+    "source": "Résumé, client-confirmed; repo transformer-market-regime",
+    "sourceUrl": "https://github.com/Rohanjain2312/transformer-market-regime",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "mr-years",
+    "value": 24,
+    "display": "24 years of S&P 500 data",
+    "source": "Résumé, client-confirmed; repo transformer-market-regime",
+    "sourceUrl": "https://github.com/Rohanjain2312/transformer-market-regime",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "mr-dates",
+    "value": "Nov to Dec 2025",
+    "display": "Nov to Dec 2025",
+    "source": "Résumé, client-confirmed; repo transformer-market-regime",
+    "sourceUrl": "https://github.com/Rohanjain2312/transformer-market-regime",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "med-base",
+    "value": "Mistral 7B",
+    "display": "Mistral 7B",
+    "source": "Repo medical-llm-finetuning",
+    "sourceUrl": "https://github.com/Rohanjain2312/medical-llm-finetuning",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "med-lora-params",
+    "value": 1.14,
+    "display": "LoRA on 1.14% of parameters",
+    "source": "Repo medical-llm-finetuning",
+    "sourceUrl": "https://github.com/Rohanjain2312/medical-llm-finetuning",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "med-format-tuned",
+    "value": 100,
+    "display": "100% format adherence",
+    "source": "Repo medical-llm-finetuning",
+    "sourceUrl": "https://github.com/Rohanjain2312/medical-llm-finetuning",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "med-format-base",
+    "value": 0,
+    "display": "0% base",
+    "source": "Repo medical-llm-finetuning",
+    "sourceUrl": "https://github.com/Rohanjain2312/medical-llm-finetuning",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "med-prompts",
+    "value": 10,
+    "display": "10-prompt check",
+    "source": "Repo medical-llm-finetuning",
+    "sourceUrl": "https://github.com/Rohanjain2312/medical-llm-finetuning",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "med-dates",
+    "value": "Jan 2026",
+    "display": "Jan 2026",
+    "source": "Repo medical-llm-finetuning",
+    "sourceUrl": "https://github.com/Rohanjain2312/medical-llm-finetuning",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "gb-gnn-rag-em",
+    "value": 5,
+    "display": "GNN-RAG 5.0% exact match",
+    "source": "Repo graphbench README",
+    "sourceUrl": "https://github.com/Rohanjain2312/graphbench",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "gb-graphrag-em",
+    "value": 3.2,
+    "display": "GraphRAG 3.2% exact match",
+    "source": "Repo graphbench README",
+    "sourceUrl": "https://github.com/Rohanjain2312/graphbench",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "gb-questions",
+    "value": 500,
+    "display": "500 HotpotQA questions",
+    "source": "Repo graphbench README",
+    "sourceUrl": "https://github.com/Rohanjain2312/graphbench",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "gb-package",
+    "value": "graphbench-kg",
+    "display": "pip graphbench-kg",
+    "source": "Repo graphbench README",
+    "sourceUrl": "https://github.com/Rohanjain2312/graphbench",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "gb-dates",
+    "value": "Mar to Aug 2026",
+    "display": "Mar to Aug 2026",
+    "source": "Repo graphbench README",
+    "sourceUrl": "https://github.com/Rohanjain2312/graphbench",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "ieee-model",
+    "value": "MLP-ELM",
+    "display": "MLP-ELM",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "ieee-accuracy",
+    "value": 95,
+    "display": "95% accuracy",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "ieee-scans",
+    "value": "6,400+",
+    "display": "6,400+ MRI scans",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "ieee-improvement",
+    "value": 17,
+    "display": "17% better than baselines",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "edu-umd",
+    "value": "Aug 2024 to May 2026",
+    "display": "MS Applied ML, University of Maryland, Aug 2024 to May 2026",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "edu-pes",
+    "value": "Aug 2017 to May 2021",
+    "display": "B.Tech ECE, PES University, Aug 2017 to May 2021",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-15"
+  }
+]
