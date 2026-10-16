@@ -1,0 +1,213 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions: read-all
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# Every job is required for merge (docs/spec/10-cicd.md 10.1). Each failing step names its rule ID.
+# Jobs whose inputs do not exist yet pass trivially and say so in the log.
+jobs:
+  policy:
+    name: policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      - name: Action pins and read-only permissions (R-504)
+        run: node .github/scripts/ci-checks.mjs pins
+      - name: No private applications tracked (R-501)
+        run: node .github/scripts/ci-checks.mjs applications
+      - name: Docs lint (R-806)
+        run: node scripts/lint-docs.mjs
+      - name: Hook tests (R-807)
+        run: node .claude/hooks/test-hooks.mjs
+      - name: Phase gate and CI check self-tests (R-504, R-511, R-804)
+        run: node --test .github/lint-fixtures/ci-gates.test.mjs
+
+  static:
+    name: static
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install (R-507)
+        run: npm ci --ignore-scripts
+      - name: Format check
+        run: npm run format:check
+      - name: ESLint (R-401, R-405)
+        run: npm run lint
+      - name: Stylelint (R-601, R-608)
+        run: npm run lint:css
+      - name: Lint rule self-test
+        run: npm run lint:selftest
+      - name: Git hook tests (R-101, R-105, R-106, R-501)
+        run: npm run hooks:test
+      - name: astro check and tsc
+        run: npm run check
+
+  content:
+    name: content
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install (R-507)
+        run: npm ci --ignore-scripts
+      - name: Content validation
+        run: npm run validate:content
+      - name: Claims check (R-301)
+        run: |
+          if ls scripts/check-claims.* >/dev/null 2>&1; then
+            node scripts/check-claims.*
+          else
+            echo "R-301: scripts/check-claims is not present yet (issue #26). Passing trivially."
+          fi
+      - name: Copy lint, source (R-007, R-008, R-010, R-601, R-603)
+        run: npm run lint:copy
+      - name: Copy lint self-test
+        run: node --test tests/fixtures/copy/lint-copy.test.mjs
+
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install (R-507)
+        run: npm ci --ignore-scripts
+      - name: Unit tests with 90% line coverage on src/lib (R-703)
+        run: npm run test:coverage
+
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install (R-507)
+        run: npm ci --ignore-scripts
+      - name: Build
+        run: npm run build
+      - name: Copy lint, build output (R-007, R-008, R-010, R-601, R-603)
+        run: npm run lint:copy -- --require-dist
+      - name: html-validate on build output
+        run: node .github/scripts/html-validate.mjs
+      - name: Link check on build output (lychee, offline)
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: --offline --no-progress --root-dir "${{ github.workspace }}/dist" --include-fragments "dist/**/*.html"
+          fail: true
+          failIfEmpty: false
+      - name: Link check on README and CONTRIBUTING (lychee)
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2.9.0
+        with:
+          args: --no-progress README.md CONTRIBUTING.md
+          fail: true
+      - name: Headers test (R-505)
+        run: |
+          if ls tests/e2e/headers* >/dev/null 2>&1; then
+            echo "Headers test runs in the e2e job."
+          else
+            echo "R-505: tests/e2e/headers test is not present yet (issue #29). Passing trivially."
+          fi
+      - name: Upload built site
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: site
+          path: dist
+          if-no-files-found: error
+          retention-days: 14
+
+  e2e:
+    name: e2e
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install (R-507)
+        run: npm ci --ignore-scripts
+      - name: Build
+        run: npm run build
+      - name: Playwright browsers
+        run: |
+          if find tests/e2e -name '*.spec.*' 2>/dev/null | grep -q .; then
+            npm run browsers:install
+          else
+            echo "No e2e specs yet. Skipping browser install."
+          fi
+      - name: e2e, accessibility and visual tests (R-505, R-605, R-606)
+        run: npm run test:e2e
+      - name: Lighthouse CI (R-607)
+        run: |
+          echo "R-607: Lighthouse budgets arrive in Phase 2 (no lighthouserc yet). Passing trivially."
+
+  security:
+    name: security
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install (R-507)
+        run: npm ci --ignore-scripts
+      - name: npm audit, production dependencies, high severity (R-507)
+        run: npm audit --omit=dev --audit-level=high
+      - name: npm audit, dev toolchain (report only)
+        run: npm audit --audit-level=high || echo "Dev-toolchain findings reported above. Tracked in the PR; they do not ship in the site."
+      - name: Secret scan (R-508)
+        uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: OSV-Scanner (R-507)
+        uses: google/osv-scanner-action/osv-scanner-action@b1d267aea5211fa648d9d442fa64b90dbdcbdd36 # v2.7.0
+        with:
+          scan-args: |-
+            --lockfile=package-lock.json
