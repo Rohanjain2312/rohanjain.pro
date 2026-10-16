@@ -5,6 +5,8 @@ The only things Claude Code cannot do itself. Each item has exact steps. Claude 
 ## Open
 - [ ] Update the GitHub CLI (the installed 2.63.2 cannot edit PR labels): `brew upgrade gh`
 
+- [ ] Confirm the availability line the site shows. `src/content/site.json` says "Available now", taken from the mockup; no source states it (R-005). Reply with the exact text you want, or "none" to hide it.
+
 ## Optional (speed)
 - [ ] To let the build resume on its own after usage limits (`scripts/autopilot.sh`, #116), install the Claude Code command-line tool. In Terminal run `brew install --cask claude-code`, then `claude --version` to check. The desktop app's copy cannot run from Terminal.
 
