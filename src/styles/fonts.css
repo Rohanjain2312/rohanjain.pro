@@ -1,0 +1,70 @@
+/*
+  Self-hosted fonts (ADR-0006, design spec section 2). Latin subsets, WOFF2, font-display: swap.
+  Source: Fontsource packages (OFL). Newsreader roman is the variable opsz font instanced to
+  wght 400 to 600 and opsz 14 to 72 (fontTools instancer, then pyftsubset). Other files are the
+  Fontsource Latin 400 italic and Plex Mono 400/500/600, re-subset. Subset: U+0020-007E, U+00A0,
+  U+00A9, U+00B7, U+00D7, U+00E9, U+2013-2014, U+2018-201D, U+2022, U+2026, U+2192, U+2197,
+  U+25CF, U+25CB. Total 93472 bytes (budget 120 KB).
+  The fallback faces are metric-matched to the web fonts so the swap does not shift layout.
+  Fallback values were measured from advance widths of English text and the hhea metrics:
+  Georgia width 0.4508 em vs Newsreader 0.4136 em; Courier New width 0.6000 em vs Plex Mono 0.6000 em.
+*/
+
+@font-face {
+  font-family: Newsreader;
+  src: url('/fonts/newsreader-roman.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Newsreader;
+  src: url('/fonts/newsreader-italic-400.woff2') format('woff2');
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/fonts/ibm-plex-mono-400.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/fonts/ibm-plex-mono-500.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  src: url('/fonts/ibm-plex-mono-600.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+}
+
+/* Metric-matched fallbacks (Q-10). Local fonts only: no network request. */
+@font-face {
+  font-family: 'Newsreader Fallback';
+  src: local('Georgia');
+  size-adjust: 91.75%;
+  ascent-override: 80.1%;
+  descent-override: 28.9%;
+  line-gap-override: 0%;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono Fallback';
+  src: local('Courier New');
+  size-adjust: 100%;
+  ascent-override: 102.5%;
+  descent-override: 27.5%;
+  line-gap-override: 0%;
+}
