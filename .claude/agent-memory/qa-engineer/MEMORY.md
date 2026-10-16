@@ -18,3 +18,4 @@
 - [Stylelint token rules](reference-stylelint-token-rules.md): rgb() is banned in every file, including tokens.css; what the token override really exempts.
 - [Git hooks gaps (PR #109)](project-git-hooks-pr109.md): case-sensitive R-501, merge/fixup ignores, gitleaks unrun; how to probe hooks e2e
 - [Write tool and unicode escapes](feedback-write-tool-unicode-escapes.md): backslash-u in Write content trips R-008; build chars from code points
+- [Skill alias review (PR #119)](project-skills-alias-review-pr119.md): common-word aliases slipped past schema checks; rerun alias audit on skills.json changes
