@@ -21,4 +21,6 @@ Checks to run on every review, learned from past reviews:
 
 5. **A review log must be built from the posted comments of every PR**, one PR at a time, not from memory. The first Phase 0 log (PR #40) held only PR #36.
 
+6. **Schema PRs (PR #83, 2026-10-16):** probe the maximum accepted size of privacy-bound records (R-502 files reached 48 KB), regex-only date fields (`2000-13-45` passes; use `z.iso.date()`), nested `.strict()` coverage, and what error messages echo. For new dev dependencies, compare lock `integrity` with `npm view <pkg> dist.integrity` and check install scripts. Rated Low, approved.
+
 Related: [[tooling-quirks]], [[escaped-defects]]
