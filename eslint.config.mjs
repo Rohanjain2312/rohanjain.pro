@@ -103,19 +103,46 @@ export default tseslint.config(
     languageOptions: { globals: { ...globals.browser, ...globals.node } },
     rules: {
       // Noisy on plain indexed access; the R-405 sinks above are the XSS defense.
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { varsIgnorePattern: '^_', argsIgnorePattern: '^_', ignoreRestSiblings: true },
+      ],
       'security/detect-object-injection': 'off',
       'astro/no-set-html-directive': 'off', // replaced by the R-405 selector
       'no-restricted-syntax': ['error', ...r405],
     },
   },
   {
-    // Build-time Node code reads paths it computes; the fs and regexp rules are for runtime code.
-    files: ['scripts/**', '*.config.{js,mjs,ts}', '.stylelintrc.mjs', '.github/**'],
+    // The fs rule fires on every computed path. Node-side code (loaders, scripts, tests) reads paths it builds;
+    // browser code has no fs. Config files may build regexes.
+    files: [
+      'scripts/**',
+      'tests/**',
+      '*.config.{js,mjs,ts}',
+      '.stylelintrc.mjs',
+      '.github/**',
+      'src/lib/content/**',
+    ],
     rules: {
       'security/detect-non-literal-fs-filename': 'off',
       'security/detect-non-literal-regexp': 'off',
-      'security/detect-unsafe-regex': 'off',
     },
+  },
+  {
+    // The slug patterns are linear (fixed delimiters); the unsafe-regex heuristic is a false positive there.
+    files: [
+      'scripts/**',
+      '*.config.{js,mjs,ts}',
+      '.stylelintrc.mjs',
+      '.github/**',
+      'src/lib/content/schemas.ts',
+    ],
+    rules: { 'security/detect-unsafe-regex': 'off' },
+  },
+  {
+    // Tests build deliberately invalid data.
+    files: ['tests/**'],
+    rules: { '@typescript-eslint/no-explicit-any': 'off' },
   },
   {
     files: ['src/lib/fitcheck/**/*.{js,mjs,ts}'],
