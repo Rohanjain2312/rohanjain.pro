@@ -7,6 +7,8 @@ The only things Claude Code cannot do itself. Each item has exact steps. Claude 
 - [ ] Give the GitHub CLI two more permissions (project board and commit-signature upload). In Terminal run the command below, then approve in the browser:
   `gh auth refresh -h github.com -s project,write:ssh_signing_key`
   After that Claude Code creates the project board, uploads the signing key and turns the signed-commit rule back on (#33, ADR-0014).
+  When Claude Code reports that #33 is closed, remove the signing-key permission again (every agent shares this token):
+  `gh auth refresh -h github.com -r write:ssh_signing_key`
 - [ ] Update the GitHub CLI (the installed 2.63.2 cannot edit PR labels): `brew upgrade gh`
 
 ## Done
