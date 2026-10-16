@@ -81,6 +81,9 @@ function checkLabels(labels) {
   }
 }
 
+const THIS_REPO = 'rohanjain2312/rohanjain.pro';
+const READ_SUBS = new Set(['view', 'list', 'diff', 'checks', 'status', 'search']);
+
 const segs = segments(cmd);
 
 // R-210: the Reader Advocate may run only an allowlist.
@@ -134,7 +137,10 @@ for (let t of segs.flatMap((s) => expand(s))) {
       }
     }
 
+    if (sub === 'remote' && ['add', 'set-url', 'rename', 'remove', 'rm'].includes(args[0]) && role !== 'supervisor') deny(input, 'R-509', 'Only the Supervisor changes git remotes.');
     if (sub === 'push') {
+      const remote = args.filter((a) => !a.startsWith('-'))[0];
+      if (remote && remote !== 'origin') deny(input, 'R-509', `Push only to origin (${THIS_REPO}), not "${remote}".`);
       if (args.some((a) => a === '--force' || a === '-f' || /^\+/.test(a) || /^-[a-zA-Z]*f/.test(a) && !a.startsWith('--'))) deny(input, 'R-102', 'Force push is blocked. Use --force-with-lease on your own branch if you must.');
       if (args.includes('--delete') || args.includes('-d') || args.some((a) => /^:/.test(a))) {
         if (args.some((a) => /(^|:)(refs\/heads\/)?(main|master)$/.test(a))) deny(input, 'R-102', 'Deleting main is blocked.');
@@ -165,6 +171,23 @@ for (let t of segs.flatMap((s) => expand(s))) {
         if (!ROLE_RE.test(newBranch)) deny(input, 'R-103', `Branch "${newBranch}" must be <role>/<issue>-<slug>, for example ${PREFIX[role] || 'frontend'}/14-hero-section.`);
         if (newBranch.split('/')[0] !== PREFIX[role]) deny(input, 'R-103', `As ${role} your branches start with "${PREFIX[role]}/".`);
       }
+    }
+  }
+
+  if (verb === 'gh') {
+    // Untrusted input can steer agents; keep the token and other repos out of reach (#45).
+    if (t[1] === 'auth' && (t[2] === 'token' || t.includes('--show-token') || t.includes('-t'))) deny(input, 'R-509', 'Printing the GitHub token is blocked.');
+    if (t[1] === 'auth' && ['login', 'logout', 'refresh', 'setup-git', 'switch'].includes(t[2])) deny(input, 'R-509', 'Changing GitHub CLI auth is a client-only step (docs/needs-client.md).');
+    if (t[1] === 'repo' && ['delete', 'rename', 'archive', 'unarchive', 'create', 'fork', 'set-default', 'deploy-key'].includes(t[2])) deny(input, 'R-509', `gh repo ${t[2]} is blocked.`);
+    if (t[1] === 'repo' && t[2] === 'edit') {
+      const target = t.slice(3).find((a) => !a.startsWith('-') && a.includes('/'));
+      if (role !== 'supervisor') deny(input, 'R-111', 'Only the Supervisor edits repository settings.');
+      if (target && target.toLowerCase() !== THIS_REPO) deny(input, 'R-509', `Only ${THIS_REPO} may be edited.`);
+    }
+    if (['secret', 'variable', 'ssh-key', 'gpg-key', 'extension', 'alias', 'config'].includes(t[1]) && !['list', 'view', 'get'].includes(t[2]) && role !== 'supervisor') deny(input, 'R-509', `gh ${t[1]} ${t[2] || ''} is Supervisor-only.`);
+    for (let i = 0; i < t.length; i++) {
+      const v = t[i] === '-R' || t[i] === '--repo' ? t[i + 1] : t[i].startsWith('--repo=') ? t[i].slice(7) : null;
+      if (v != null && String(v).replace(/^https:\/\/github\.com\//, '').toLowerCase() !== THIS_REPO && !READ_SUBS.has(t[2])) deny(input, 'R-509', `Write commands may target only ${THIS_REPO}.`);
     }
   }
 
@@ -235,6 +258,10 @@ for (let t of segs.flatMap((s) => expand(s))) {
       if (!a.startsWith('-') && !endpoint) endpoint = a;
     }
     const path = endpoint.replace(/^https?:\/\/[^/]+/, '').replace(/^\//, '').split('?')[0];
+    const writeEarly = (method && method !== 'GET') || (!method && (fields.length > 0 || hasInput));
+    const m = path.match(/^repos\/([^/]+\/[^/]+)/);
+    if (writeEarly && m && m[1].toLowerCase() !== THIS_REPO && !/^\{owner\}\/\{repo\}$/.test(m[1])) deny(input, 'R-509', `API writes may target only ${THIS_REPO}.`);
+    if (writeEarly && /^(user|orgs|users|authorizations|applications|gists)(\/|$)/.test(path)) deny(input, 'R-509', 'API writes outside this repository are blocked.');
     const write = (method && method !== 'GET') || (!method && (fields.length > 0 || hasInput));
     if (path === 'graphql') {
       const q = [...fields, inputText, cmd].join('\n');
