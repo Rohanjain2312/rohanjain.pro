@@ -9,7 +9,7 @@ The `main protection` ruleset had `required_signatures`. GitHub applies it to ev
 Remove `required_signatures` from the ruleset until the key is uploaded, then add it back (#33). All other rules stay: no deletion, no force push, linear history, PR required, squash only, no bypass.
 
 ## Consequences
-- R-107 (commits on `main` are signed) still holds: every commit on `main` is a squash merge that GitHub signs (`web-flow`, verified on 9a325a0). The Supervisor checks this at each phase gate until #33 closes.
+- R-107 (commits on `main` are signed) still holds for every content commit: each is a squash merge that GitHub signs (`web-flow`, verified on 9a325a0). The one exception is the empty root commit 4d29441 (ADR-0013), which is unsigned and holds no files; the gate check for R-107 starts after it (#38). The Supervisor checks this at each phase gate until #33 closes.
 - For a short period the ruleset does not reject an unsigned push to `main`. Pushes to `main` are already blocked by the ruleset's PR requirement and by the guard-bash hook (R-101).
 
 ## Alternatives

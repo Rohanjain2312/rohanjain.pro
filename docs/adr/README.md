@@ -18,3 +18,6 @@ Format: context, decision, consequences, alternatives. New ADRs take the next nu
 | [0012](0012-progressive-disclosure.md) | Instructions by progressive disclosure |
 | [0013](0013-bootstrap-empty-main.md) | Bootstrap main with an empty root commit |
 | [0014](0014-signed-commit-rule-paused.md) | Pause the signed-commit rule until the signing key is uploaded |
+| [0016](0016-applications-data-private.md) | Keep per-application data out of the public repo |
+| [0017](0017-r511-fix-prs.md) | PRs that close open findings may merge under R-511 |
+| [0018](0018-hooks-are-tripwires.md) | Hooks are tripwires; input controls and token scope are the boundary |
