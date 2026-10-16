@@ -11,3 +11,6 @@
 - [QA tooling gaps](project-qa-tooling-gaps.md): lychee (#13) and copy lint (#27) are not run yet; substitutes, owners and verify limits.
 - [Link and copy lint pending](project_link_and_copy_lint_pending.md): lychee (#13) and copy lint (#27) not built yet; substitute checks and flag them
 - [Tooling gotchas](reference-tooling-gotchas.md): worktree git guard, gh label add workaround, shared dev-server ports, prettier scope
+- [Verify on rebased merge](feedback_verify_on_rebased_merge.md): before approving, trial-merge current main and re-run verify; a green head can fail after main gains gates
+- [Escaped-defect log](defects-escaped-review.md): defects that got past review rounds, with the round that caught them
+- [Gate state](project_gate_state.md): which QA gates exist on main (lint-copy, lychee, format) and which are missing as of 2026-10-16

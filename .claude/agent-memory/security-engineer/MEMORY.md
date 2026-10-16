@@ -11,3 +11,5 @@
 - [Signed commits](signed_commits_paused.md): R-107 rule paused in Phase 0, restored by PR #68; scope removed by the client, RR-8 closed
 - [Dependency review](dependency_review_checklist.md): R-506 PRs: release age vs cooldown (#79), signatures, provenance, OSV batch, telemetry
 - [Inline rule and JSON-LD](project_inline_rule_jsonld.md): PR #82 ruling, test conditions, follow-ups for #18 and #29
+- [Stop hook review](stop_hook_review_pr106.md): PR #106, git() trims porcelain output; probe tracked edits, renames, quoting
+- [Inline build config](project_inline_build_config.md): no CSP hashes now; Astro must be set to emit no inline style or script (#18, #29)
