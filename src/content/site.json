@@ -1,0 +1,14 @@
+{
+  "name": "Rohan Jain",
+  "location": "New York, NY",
+  "availability": "Available now",
+  "email": "rohanjain2312@gmail.com",
+  "phone": "+1 240 495 9682",
+  "profiles": {
+    "linkedin": "https://www.linkedin.com/in/jaroh23",
+    "github": "https://github.com/Rohanjain2312",
+    "huggingface": "https://huggingface.co/rohanjain2312",
+    "medium": "https://medium.com/@rohanjain2312"
+  },
+  "showPhoto": false
+}
