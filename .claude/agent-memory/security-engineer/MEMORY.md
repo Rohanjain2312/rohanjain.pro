@@ -1,0 +1,2 @@
+- [Severity calibration](severity-calibration.md): hook gaps Low, unbacked or far-reaching gaps Medium; existing findings #9 #32 #44-#47
+- [Tooling quirks](tooling-quirks.md): gh issue view needs --json, gh pr edit broken, worktree guard rejects variable operands
