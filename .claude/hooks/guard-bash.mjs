@@ -140,6 +140,7 @@ for (let t of segs.flatMap((s) => expand(s))) {
     if (sub === 'add') {
       if (args.some((a) => a === '-f' || a === '--force')) deny(input, 'R-116', 'Force-adding ignored files is blocked.');
       if (args.some((a) => /(^|\/)postings\//.test(a) || /\.jd\.txt$/.test(a))) deny(input, 'R-501', 'Job description files are never committed.');
+      if (args.some((a) => /(^|\/)src\/content\/applications\/(?!\.gitkeep$)./.test(a))) deny(input, 'R-501', 'Application result files live in the private APPLICATIONS_DIR, never in this repo (ADR-0016).');
     }
 
     if (sub === 'commit') {
