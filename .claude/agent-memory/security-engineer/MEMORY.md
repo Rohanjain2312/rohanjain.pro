@@ -1,3 +1,4 @@
-- [Severity calibration](severity-calibration.md): hook gaps Low, unbacked or far-reaching gaps Medium; existing findings #9 #32 #44-#47
+- [Severity calibration](severity-calibration.md): ADR-0018 rating rule and 53-I3 exception; past findings and their state
+- [Stale register statuses](review-stale-status.md): check statuses against current main and live gh api, list every ADR-accepted risk
 - [Public-repo CI leaks](public-repo-ci-leaks.md): private data near public Actions, check logs, artifacts, secret scope, previews (#62)
 - [Tooling quirks](tooling-quirks.md): gh issue view needs --json, gh pr edit broken, worktree guard rejects variable operands
