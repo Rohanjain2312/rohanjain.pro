@@ -2,6 +2,8 @@
 # Every role is the same GitHub account, so all owners resolve to @Rohanjain2312.
 # Later patterns take precedence. Excluded paths (leading "!" in owners.json) are
 # listed after the broader pattern that contains them.
+# package.json and package-lock.json are shared by platform-engineer, frontend-engineer,
+# app-data-engineer and qa-engineer. They are listed once, under platform-engineer.
 
 # supervisor
 /CLAUDE.md @Rohanjain2312
@@ -25,25 +27,23 @@
 /docs/architecture.md @Rohanjain2312
 /docs/content-guide.md @Rohanjain2312
 
-# design-lead
-/docs/design/ @Rohanjain2312
-/src/styles/tokens.css @Rohanjain2312
-/public/favicon* @Rohanjain2312
-/public/og* @Rohanjain2312
-/src/assets/brand/ @Rohanjain2312
-
 # frontend-engineer
 /src/components/ @Rohanjain2312
 /src/layouts/ @Rohanjain2312
 /src/pages/ @Rohanjain2312
 /src/styles/ @Rohanjain2312
-/src/styles/tokens.css @Rohanjain2312
 /src/assets/ @Rohanjain2312
-/src/assets/brand/ @Rohanjain2312
 /public/fonts/ @Rohanjain2312
 /tests/visual/ @Rohanjain2312
 /tests/a11y/ @Rohanjain2312
 /tests/component/ @Rohanjain2312
+
+# design-lead (after frontend-engineer so tokens.css and brand assets resolve to design-lead)
+/docs/design/ @Rohanjain2312
+/src/styles/tokens.css @Rohanjain2312
+/public/favicon* @Rohanjain2312
+/public/og* @Rohanjain2312
+/src/assets/brand/ @Rohanjain2312
 
 # app-data-engineer
 /src/lib/ @Rohanjain2312
