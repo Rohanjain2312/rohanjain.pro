@@ -1,6 +1,6 @@
 # Security reviews: Phase 0
 
-Owner: security-engineer · Issue: #39 · Written 2026-10-16 against `main` 5560169
+Owner: security-engineer · Issue: #39 · Written 2026-10-16 against `main` a3eb096
 
 This file has one entry per Security review comment posted on a Phase 0 PR, in PR order, with re-reviews under their PR. Dates are the UTC time of the comment. Finding IDs are `<PR>-<severity letter><n>`. Status is the state when the PR merged unless it says otherwise. Supervisor and Design reviews are not Security reviews and are not listed. PR #68 is the last Phase 0 PR with a Security review.
 
@@ -15,7 +15,7 @@ This file has one entry per Security review comment posted on a Phase 0 PR, in P
 | #35 | 5d80799 APPROVED, 1dc7af8 CHANGES REQUESTED, 7796922 APPROVED | APPROVED | 2026-10-16 |
 | #36 | abac347 CHANGES REQUESTED, 60b2f1f CHANGES REQUESTED, a269397 APPROVED | APPROVED | 2026-10-16 |
 | #37 | e343c1a APPROVED | APPROVED | 2026-10-16 |
-| #40 | 3d04a71 CHANGES REQUESTED | in review (this PR) | open |
+| #40 | 3d04a71 CHANGES REQUESTED, 2218461 CHANGES REQUESTED | in review (this PR) | open |
 | #48 | 6723187 APPROVED | APPROVED | 2026-10-16 |
 | #49 | d82a431 CHANGES REQUESTED, d8e47ef APPROVED | APPROVED | 2026-10-16 |
 | #52 | 916bb1c APPROVED | APPROVED | 2026-10-16 |
@@ -34,10 +34,10 @@ Each merged PR was merged at the head that holds the last Security APPROVED (che
 | Critical | 0 | 0 |
 | High | 0 | 0 |
 | Medium | 7 | 0 |
-| Low | 43 in PR reviews (a finding raised again in a re-review counts once) | 7 |
+| Low | 47 in PR reviews (a finding raised again in a re-review counts once) | 8 |
 | Info | listed in each entry, not totalled | not applicable |
 
-Low findings per PR: #2: 1, #34: 3, #35: 5, #36: 4, #37: 4, #40: 1, #48: 2, #49: 4, #52: 2, #53: 5, #55: 7, #65: 2, #68: 3. Medium findings #44, #45 and #46 came from the threat model (issue #5, `docs/security/threat-model.md`), not from a PR review. #9, #60, #61 and #62 came from PR reviews.
+Low findings per PR: #2: 1, #34: 3, #35: 5, #36: 4, #37: 4, #40: 5, #48: 2, #49: 4, #52: 2, #53: 5, #55: 7, #65: 2, #68: 3. Medium findings #44, #45 and #46 came from the threat model (issue #5, `docs/security/threat-model.md`), not from a PR review. #9, #60, #61 and #62 came from PR reviews.
 
 ### Medium findings and how each was closed
 
@@ -66,10 +66,9 @@ From `gh issue list --label severity:low --state open` on 2026-10-16.
 | #56 | Design spec drops the 80-character cap on fit-check company and role fields | 2026-10-29 (Phase 1) |
 | #58 | No hook blocks turning npm install scripts back on | before the Phase 1 gate, with #47 |
 | #63 | Hook and client-step follow-ups from PR #53 (keychain reads, `gh alias`, clone-dir targeting, token step wording) | Phase 1 |
+| #72 | Phase 7: keep the Cloudflare token in the private repo and keep `/for` routes out of deploy logs (55-L7) | Phase 7 deploy issue |
 
-#51 sits in the Phase 0 milestone and is still open. It is Low, so it does not block the gate under R-511, but the Supervisor should move it or fix it. Two more Low findings have no issue of their own: 53-L3 is a requirement on #16 (open), and 55-L7 (Phase 7 token placement) is recorded only in the PR #55 comments. The Phase 7 deploy issue does not exist yet. Create it with the 55-L7 criteria, or open a Low issue with a target date (spec 8.9).
-
-Open client item that affects a Security control: RR-8 in the threat model. The shared gh token still holds `write:ssh_signing_key` until the client runs `gh auth refresh -h github.com -r write:ssh_signing_key` (`docs/needs-client.md`). Verified live on 2026-10-16: `gh auth status` still lists the scope, and the account has one signing key.
+#51 sits in the Phase 0 milestone and is still open. It is Low, so it does not block the gate under R-511, but the Supervisor should move it or fix it. One more Low finding has no issue of its own: 53-L3 is a requirement on #16 (open).
 
 ### Escaped defects
 
@@ -83,6 +82,7 @@ Defects that Security missed in a review and that someone found later. Each has 
 | ADR-0014 asked for `admin:ssh_signing_key`, which brought back the issue fixed in #43 (34-L2); "Closes #38" while #38 criterion 2 was not done (34-L3) | PR #34 approval at d519405 | Security re-review at 83a8970 | `feedback_review_checklist.md` |
 | Threat model statuses described closed findings as open, and old live settings (49-L1 to 49-L4) | PR #49 as written by Security | independent Security review of PR #49 | `review-stale-status.md` |
 | This log recorded only PR #36 (40-L1) | PR #40 as first written | independent Security review of PR #40 | `escaped_defects.md` |
+| This log kept stale statuses: RR-8 and the "open client item" after the client removed the scope (40-L2), 55-L7 "no issue" after #72 existed (40-L3), 68-L1 and 68-L2 "fixed in #69" with no fix on `main` (40-L4), and a PR title naming only PR #36 (40-L5) | PR #40 at 2218461 | independent Security review of PR #40 | `review-stale-status.md` |
 | `docs/status.md` named the issue (#50) instead of the PR (#65) | PR #65 review | Design review | none (Info, no security effect) |
 
 ## PR #2: bootstrap repository (issue #1)
@@ -262,6 +262,22 @@ Defects that Security missed in a review and that someone found later. Each has 
 | 40-I3 | Info | PR #40 changes `.claude/**` and needs `needs:security-review` (R-209). | label added by hand |
 | 40-I4 | Info | Two nits in the memory file: one of the four platform files is `autopilot.sh`, and the label tip should use `-f 'labels[]=<label>'`. | fixed in this PR |
 
+### Review at `2218461da537d97a4c98653fa6eaeb8b81518a41`
+
+- Date: 2026-10-16 07:36
+- Result: CHANGES REQUESTED
+- Comment: https://github.com/Rohanjain2312/rohanjain.pro/pull/40#issuecomment-6210520548
+- Checks: 11 files, all security-owned (R-112); lint 0 errors; no U+2014. The log was compared with the posted comments of all 14 PRs: all 25 comment IDs, UTC times, heads and results match, and the Low total matched. All 7 Mediums are closed with matching times. Merged heads equal the last APPROVED heads. Ruleset includes `required_signatures`. Memory files hold no secrets and no overrides, and `MEMORY.md` indexes every file.
+
+| ID | Severity | Finding | Status |
+|---|---|---|---|
+| 40-L2 | Low | RR-8, the "open client item" paragraph here and `signed_commits_paused.md` said the shared token still holds `write:ssh_signing_key`. Live scopes no longer include it. | fixed in this PR |
+| 40-L3 | Low | The open-Low tables listed 7 issues; #72 (55-L7) was created after the head commit. 55-L7 said "no issue yet". | fixed in this PR (8 open, 55-L7 open #72) |
+| 40-L4 | Low | 68-L1 and 68-L2 were marked "fixed in #69", but `main` still had the runbook line 44 and the ADR index title. | fixed in this PR (marked in progress: PR #73 and a Platform runbook PR) |
+| 40-L5 | Low | The PR title and body named only PR #36. | fixed in this PR (retitled, body rewritten) |
+| 40-I5 | Info | The log said "against `main` 5560169"; `main` had moved to a3eb096. | fixed in this PR (rebased) |
+| 40-I6 | Info | This review had to be added to the #40 entry and tables. | fixed in this PR |
+
 ## PR #48: design spec outline (issue #6)
 
 ### Review at `6723187b86c81885259030d473c3d751a0251e0c`
@@ -387,7 +403,7 @@ Defects that Security missed in a review and that someone found later. Each has 
 
 | ID | Severity | Finding | Status |
 |---|---|---|---|
-| 55-L7 | Low | 08-security §8.5 and 11-phases describe one Cloudflare API token without naming the repo. Keep the token in the private repo's `production` environment; drop or decide the PR preview deploys here by ADR; add the "no `/for/` route in logs, no `/for/` artifact" check to the Phase 7 deploy issue. | open, no issue yet (Phase 7 deploy issue does not exist) |
+| 55-L7 | Low | 08-security §8.5 and 11-phases describe one Cloudflare API token without naming the repo. Keep the token in the private repo's `production` environment; drop or decide the PR preview deploys here by ADR; add the "no `/for/` route in logs, no `/for/` artifact" check to the Phase 7 deploy issue. | open #72 (Phase 7) |
 | 55-I1 | Info | The remaining hook bypass forms depend on #10 and #13, which ADR-0016 already requires before the generator. | known |
 | 55-I2 | Info | Protect release tags in the Phase 7 ruleset, because the private build checks out this repo at a tag. | Phase 7 |
 
@@ -437,9 +453,9 @@ Defects that Security missed in a review and that someone found later. Each has 
 
 | ID | Severity | Finding | Status |
 |---|---|---|---|
-| 68-L1 | Low | `docs/runbooks/repo-settings.md` still says `required_signatures` is removed. A later agent could remove it to match. | fixed in #69 (Supervisor) |
-| 68-L2 | Low | `docs/status.md`, `docs/phases/phase-0-plan.md`, ADR-0009 and the ADR index still say the rule is paused. | fixed in #69 (Supervisor) |
+| 68-L1 | Low | `docs/runbooks/repo-settings.md` still says `required_signatures` is removed. A later agent could remove it to match. | in progress: PR #73 (ADR index, phase-0-plan, ADR-0009) and a Platform runbook PR for `repo-settings.md` line 44 |
+| 68-L2 | Low | `docs/status.md`, `docs/phases/phase-0-plan.md`, ADR-0009 and the ADR index still say the rule is paused. | in progress: PR #73 (ADR index, phase-0-plan, ADR-0009) and a Platform runbook PR for `repo-settings.md` line 44 |
 | 68-L3 | Low | Threat model row 3.4 and RR-8 still show the rule paused and #33 open. | fixed in this PR |
-| 68-I1 | Info | While `write:ssh_signing_key` stays on the shared token, an agent could add a second signing key. This is the standing exposure of the pending client step (RR-8). | open client item |
+| 68-I1 | Info | While `write:ssh_signing_key` stays on the shared token, an agent could add a second signing key. This was the standing exposure of the pending client step (RR-8). | closed: the client removed the scope (verified 2026-10-16: scopes are gist, project, read:org, repo, workflow) |
 | 68-I2 | Info | The PR body says `Closes #33` while the last criterion (client removes the scope) is open. The client item keeps it tracked. | accepted |
 | 68-I3 | Info | The `project` scope stays on the token until the optional token step. | no action |
