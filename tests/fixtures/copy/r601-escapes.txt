@@ -1,0 +1,3 @@
+Entity &#x1F600; here
+Braced \u{1F600} here
+Pair \ud83d\ude00 here
