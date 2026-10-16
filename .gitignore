@@ -25,6 +25,10 @@ CLAUDE.local.md
 postings/
 *.jd.txt
 
+# Private application results (ADR-0016); only the placeholder is tracked
+src/content/applications/*
+!src/content/applications/.gitkeep
+
 # Local application log for reply-rate tracking
 apps.local.json
 
