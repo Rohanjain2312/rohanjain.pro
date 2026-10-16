@@ -23,7 +23,12 @@ Policy of record for `public/_headers`. Source: `docs/spec/08-security.md` 8.2. 
 
 The build must emit no inline script and no inline style. The one exception is the JSON-LD block, `<script type="application/ld+json">`. It is a data block. Browsers do not execute it, and `script-src` does not apply to it, so it needs no hash.
 
-Consequence for the build: Astro inlines small stylesheets by default (`build.inlineStylesheets: 'auto'`). That would emit `<style>` and break `style-src 'self'`. Platform must set `build.inlineStylesheets: 'never'` in `astro.config.mjs`. The site uses no hydrated islands, so Astro emits no inline hydration scripts. The QA headers/HTML test (#29) fails on any inline `<script>` that is not JSON-LD, any `<style>`, and any `style=`.
+Consequence for the build: Astro 7.4.0 inlines small stylesheets by default (`build.inlineStylesheets: 'auto'`) and inlines small bundled scripts through Vite's asset inline limit. Either would emit inline `<style>` or `<script>` and break `style-src 'self'` or `script-src 'self'`. Platform must set both in `astro.config.mjs`:
+
+- `build.inlineStylesheets: 'never'`
+- `vite.build.assetsInlineLimit: 0`
+
+Both are Platform-owned; Security does not edit `astro.config.mjs`. Any other inline script, such as one that Astro emits for a client directive, is also a violation. The QA headers/HTML test (#29) fails on any inline `<script>` that is not JSON-LD, any `<style>`, and any `style=`.
 
 ## Other headers (all routes)
 
@@ -44,6 +49,8 @@ Consequence for the build: Astro inlines small stylesheets by default (`build.in
 | `/for/*`   | `Cache-Control: no-store`         | Keeps these pages out of shared and browser caches.                            |
 | `/print/*` | `X-Robots-Tag: noindex, nofollow` | Print views duplicate the main pages.                                          |
 
+`/for` and `/print` (no trailing slash) have their own rules with the same headers, because `/for/*` does not match the bare path.
+
 Résumé PDFs stay indexable (client decision). The `/*` rule and the path rules both apply. The path headers do not overlap the `/*` set, so nothing is joined.
 
 ## Deferred to Phase 7
@@ -52,6 +59,8 @@ Résumé PDFs stay indexable (client decision). The `/*` rule and the path rules
 - Cloudflare Web Analytics origins in `script-src` and `connect-src`.
 
 Both are noted in a comment at the top of `public/_headers`.
+
+HSTS is expected only from Phase 7. The headers test (#29) must not require `Strict-Transport-Security` before then.
 
 ## Open points
 

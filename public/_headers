@@ -18,9 +18,16 @@
   Cross-Origin-Opener-Policy: same-origin
   Cross-Origin-Resource-Policy: same-origin
 
+/for
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+
 /for/*
   X-Robots-Tag: noindex, nofollow
   Cache-Control: no-store
+
+/print
+  X-Robots-Tag: noindex, nofollow
 
 /print/*
   X-Robots-Tag: noindex, nofollow
