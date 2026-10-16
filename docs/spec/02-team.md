@@ -6,12 +6,12 @@ Who does what, how independent the reviewers really are, and the RACI. Roles wer
 | Role | Agent file | Model | Veto |
 |---|---|---|---|
 | Supervisor | main session (`CLAUDE.md`) | session model | none over others' vetoes |
-| Design Lead | `.claude/agents/design-lead.md` | opus (fallback sonnet) | visible PRs failing R-602 |
+| Design Lead | `.claude/agents/design-lead.md` | sonnet (ADR-0020) | visible PRs failing R-602 |
 | Frontend Engineer | `.claude/agents/frontend-engineer.md` | sonnet | none |
 | App/Data Engineer | `.claude/agents/app-data-engineer.md` | sonnet | none |
 | Platform Engineer | `.claude/agents/platform-engineer.md` | sonnet | none (red CI already blocks) |
-| Security Engineer | `.claude/agents/security-engineer.md` | opus (fallback sonnet) | open Medium+ finding (R-511) |
-| QA Engineer | `.claude/agents/qa-engineer.md` | opus (fallback sonnet) | failing acceptance tests, mutation below threshold, unverified claims |
+| Security Engineer | `.claude/agents/security-engineer.md` | sonnet (ADR-0020) | open Medium+ finding (R-511) |
+| QA Engineer | `.claude/agents/qa-engineer.md` | sonnet (ADR-0020) | failing acceptance tests, mutation below threshold, unverified claims |
 | Reader Advocate | `.claude/agents/reader-advocate.md` | sonnet, no CLAUDE.md, output-only access | hero, results, selected work, contact on a failed 5-second test |
 
 Duties, owned paths, branch prefixes and handback formats live in each agent file. Owned paths are enforced from `.claude/hooks/owners.json` (R-112).
