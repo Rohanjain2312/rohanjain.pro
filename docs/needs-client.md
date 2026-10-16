@@ -8,6 +8,9 @@ The only things Claude Code cannot do itself. Each item has exact steps. Claude 
 ## Optional (speed)
 - [ ] To let the build resume on its own after usage limits (`scripts/autopilot.sh`, #116), install the Claude Code command-line tool. In Terminal run `brew install --cask claude-code`, then `claude --version` to check. The desktop app's copy cannot run from Terminal.
 
+## Accepted risks (no action needed)
+- Dev-only `braces` advisory GHSA-vfj7-8cjw-p6xm is waived in CI until 2027-01-15 or until a fix ships (ADR-0021). It does not reach the published site.
+
 ## Optional (accepted risk, ADR-0018)
 - [ ] The accepted risk in one sentence: text planted in a public page or issue could, in a rare case, trick an agent into using your GitHub login on your other repositories. Do this only after every item under "Open" is done, because a later `gh auth refresh` replaces the token below with a full login again. To limit the agents to this repository only:
   1. Create a fine-grained token at https://github.com/settings/personal-access-tokens/new. Expiration: 90 days. Repository access: only `Rohanjain2312/rohanjain.pro`. Permissions: Contents, Issues, Pull requests, Actions and Workflows read and write; Administration read only (write would let the token delete the repository).
