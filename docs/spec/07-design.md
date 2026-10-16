@@ -13,7 +13,7 @@ Paper `#F6F3EB`, card `#FBF9F3`, ink `#1B1A17`, ink-2 `#2C2A25`, muted `#5E5A50`
 - Scale: H1 88 px desktop, ~52 px at 390 px; H2 38 px; body 18 px; captions 13 to 15 px; use `clamp()`.
 - Red is reserved for margin notes. No gradients, no emoji, no drop-shadow cards, no glassmorphism.
 - Graph-paper background only inside the figures section, drawn with an SVG tile (no gradients). The 404 page uses plain paper (ADR-0015).
-- No inline `style` attributes; dynamic sizes use classes or SVG generated at build time (R-505, ADR-0015).
+- No inline styles or scripts: no `style` attributes, no inline `<style>` and no inline `<script>`; dynamic sizes use classes or SVG generated at build time (R-505, ADR-0015).
 - One solid button style; everything else is a text link.
 - Folding uses native `<details>` with a rotating "+" marker.
 - No dark mode in v1 (the paper aesthetic is the identity).
