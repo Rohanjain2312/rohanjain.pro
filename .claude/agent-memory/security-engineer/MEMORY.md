@@ -13,3 +13,4 @@
 - [Inline rule and JSON-LD](project_inline_rule_jsonld.md): PR #82 ruling, test conditions, follow-ups for #18 and #29
 - [Stop hook review](stop_hook_review_pr106.md): PR #106, git() trims porcelain output; probe tracked edits, renames, quoting
 - [Inline build config](project_inline_build_config.md): no CSP hashes now; Astro must be set to emit no inline style or script (#18, #29)
+- [Git hooks review](git_hooks_review.md): PR #109 lessons: commitlint parser hang, lint-staged stash, time-box probes (issue #111)
