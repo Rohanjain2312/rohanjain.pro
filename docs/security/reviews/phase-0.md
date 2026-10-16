@@ -18,4 +18,16 @@
 | 36-I4 | Info | Owner role in the issue template is free text, not a dropdown. | recommendation |
 | 36-I5 | Info | Until Phase 1 there are no required status checks, so merges are enforced only by the hooks. | known, tracked by Phase 1 |
 
+### Re-review at `60b2f1ffdbecf2aaf740a6970d21a3894923136a`
+
+- Date: 2026-10-15
+- Result: CHANGES REQUESTED
+- Comment: https://github.com/Rohanjain2312/rohanjain.pro/pull/36#issuecomment-6206649945
+- 36-L1, 36-L2, 36-L3: fixed and verified with `gh api`. 36-I1 to 36-I4: done (`sha_pinning_required` is now true).
+
+| ID | Severity | Finding | Status |
+|---|---|---|---|
+| 36-L4 | Low | `src/styles/tokens.css` and `src/assets/brand/` are listed again under the frontend-engineer heading, after the broader patterns. With last match wins, they map to frontend-engineer instead of design-lead. I missed this in the first review. | open, fix in PR |
+| 36-I6 | Info | `package.json` and its lockfile are shared by four roles but listed only under platform-engineer. | recommendation |
+
 Related, outside this PR: the signed-commit rule (R-107) is removed from the ruleset. This is tracked by issue #33 and ADR 0014 (PR #34). For the risk acceptance to be valid, the ADR must be listed in `docs/needs-client.md`.

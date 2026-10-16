@@ -2,5 +2,6 @@
 - [Stale register statuses](review-stale-status.md): check statuses against current main and live gh api, list every ADR-accepted risk
 - [Public-repo CI leaks](public-repo-ci-leaks.md): private data near public Actions, check logs, artifacts, secret scope, previews (#62)
 - [Tooling quirks](tooling-quirks.md): gh issue view needs --json, gh pr edit broken, worktree guard rejects variable operands
+- [Escaped defects](escaped_defects.md): read before every review; CODEOWNERS exclusion misread in PR #36, check mappings by script
 - [Repo settings review checklist](review_checklist_repo_settings.md): re-verify live gh api at review, CODEOWNERS vs owners.json, Actions perms, env quirks
 - [Signed commits paused](signed_commits_paused.md): R-107 rule removed from ruleset; issue #33, ADR 0014 (PR #34); check at each gate
