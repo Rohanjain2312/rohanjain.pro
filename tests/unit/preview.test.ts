@@ -1,5 +1,8 @@
+import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { headersFor, parseHeaders } from '../../scripts/preview.mjs';
+import { canonicalPath, headersFor, lookupFile, parseHeaders } from '../../scripts/preview.mjs';
 
 const fixture = `# fixture
 /*
@@ -40,5 +43,29 @@ describe('_headers parser', () => {
     const r = parseHeaders('/a/:id/b\n  X-P: 1\n');
     expect(headersFor(r, '/a/9/b')).toEqual([['X-P', '1']]);
     expect(headersFor(r, '/a/b')).toEqual([]);
+  });
+});
+
+describe('canonical path (120-L1)', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'pv-'));
+  mkdirSync(join(dir, 'for', 'x'), { recursive: true });
+  writeFileSync(join(dir, 'for', 'x', 'index.html'), 'x');
+
+  it('decodes once so encoded letters get the /for headers', () => {
+    const c = canonicalPath('/%66or/x');
+    expect(c).toBe('/for/x');
+    expect(Object.fromEntries(headersFor(rules, c ?? ''))['Cache-Control']).toBe('no-store');
+    expect(canonicalPath('/%70rint/x')).toBe('/print/x');
+  });
+  it('rejects encoded slashes, backslashes, NUL, traversal and bad escapes', () => {
+    for (const p of ['/for%2fx', '/for%2Fx', '/for%5cx', '/a%00', '/%2e%2e/x', '/%zz', '/..%2f']) {
+      expect(canonicalPath(p)).toBeNull();
+    }
+    expect(canonicalPath('/a/../../x')).toBeNull();
+  });
+  it('looks files up case-sensitively', () => {
+    expect(lookupFile(dir, '/for/x')).toBe(join(dir, 'for', 'x', 'index.html'));
+    expect(lookupFile(dir, '/FOR/x')).toBeNull();
+    expect(lookupFile(dir, '/for/X')).toBeNull();
   });
 });
