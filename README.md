@@ -1,15 +1,18 @@
 # rohanjain.pro
 
-The portfolio site of Rohan Jain, an ML Engineer, AI Engineer and Data Scientist based in New York, NY. It will be served at `rohanjain.pro`. Until launch it runs locally.
+The portfolio site of Rohan Jain, an ML Engineer, AI Engineer and Data Scientist based in New York, NY. It will be served at `rohanjain.pro`.
+
+**Status:** under construction and not yet launched. The features below are planned; what exists today is tracked in [`docs/status.md`](docs/status.md).
 
 ## For recruiters and hiring managers
-- The site shows what Rohan built, with a link to the source of every number: a repo, a demo, a figure or the résumé.
-- A fit check compares a job posting with Rohan's evidence and gives an honest verdict, including "Not a strong fit", plus a one-page brief you can forward.
-- The résumé is available on the site as text and as PDFs.
+What the finished site will offer:
+- What Rohan built, with a link to the source of every number: a repo, a demo, a figure or the résumé.
+- A fit check that compares a job posting with Rohan's evidence and gives an honest verdict, including "Not a strong fit", plus a one-page brief you can forward.
+- The résumé on the site as text and as PDFs.
 - This repository is public so you can check how the site was built and tested.
 
 ## How it was built
-A team of Claude Code agents built the site, working like a small engineering organization: a Supervisor, a Design Lead, Frontend, App/Data, Platform, Security, QA and a Reader Advocate who judges only the rendered pages. Each piece of work is a GitHub Issue, a branch and a reviewed pull request. Rules are enforced by hooks in `.claude/hooks/` and by CI. The full plan starts at [`plan.md`](plan.md); progress is in [`docs/status.md`](docs/status.md).
+A team of Claude Code agents is building the site, working like a small engineering organization: a Supervisor, a Design Lead, Frontend, App/Data, Platform, Security, QA and a Reader Advocate who judges only the rendered pages. Each piece of work is a GitHub Issue, a branch and a reviewed pull request. Rules are enforced by hooks in `.claude/hooks/`, and by CI once it lands (issue #13). The full plan starts at [`plan.md`](plan.md); progress is in [`docs/status.md`](docs/status.md).
 
 Stack: [Astro](https://astro.build) with static output, TypeScript in strict mode, Vitest and Playwright. No server code and no tracking at runtime.
 
@@ -33,12 +36,12 @@ npm run dev
 | `npm run check` | `astro check` and `tsc --noEmit` |
 | `npm test` | Unit tests (Vitest) |
 | `npm run test:e2e` | End-to-end tests (Playwright) |
-| `npm run verify` | Everything CI runs; required before a pull request is marked ready |
+| `npm run verify` | Every check CI will run; required before a pull request is marked ready |
 
 ## Repository map
 | Path | Holds |
 |---|---|
-| `src/` | Site source: pages, components, styles, content and the fit-check engine |
+| `src/` | Site source (pages, components, styles, content and the fit-check engine as they are built) |
 | `docs/spec/` | The specification |
 | `docs/adr/` | Architecture decision records |
 | `docs/design/` | The design spec |

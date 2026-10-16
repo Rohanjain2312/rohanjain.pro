@@ -28,7 +28,8 @@ Copyright (c) 2026 Rohan Jain. All rights reserved.
 
 The MIT License above does not cover the following, which may not be copied,
 modified or redistributed without written permission:
-- the site's written content and data in src/content/;
+- all written copy, wherever it appears, including text in .astro
+  templates and the content and data in src/content/;
 - the résumé text and the résumé PDFs generated from it;
 - everything in reference/, including the mockups, figures and résumé;
 - the briefs and per-application pages the site generates.

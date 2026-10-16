@@ -18,7 +18,7 @@ This site is built by a team of Claude Code agents under a Supervisor. The rules
 
 ## Pull requests
 - Title: `[<role>] <type>(<scope>): <summary> (#<issue>)` (R-108).
-- Body: contains `Closes #<issue>`, what changed, and the test plan with its output (R-104).
+- Body: contains `Closes #<issue>` (R-104), what changed, and the test plan with its output.
 - Size: under 600 changed lines unless the Supervisor adds `size:approved` with a reason (R-109).
 - A new dependency needs a justification in the pull request and a Security review (R-506).
 
