@@ -49,7 +49,7 @@ Review this file at every phase gate and whenever a trust boundary changes (new 
  issues, comments,  --B2-> agents + hooks --B1-> shell, files, gh token --B3-> repo, ruleset --B5-> Actions CI --B9-> Pages, DNS
  fork PRs, web pages,        |                                                  ^      ^              |                  |
  postings, reference/        +--> npm install --B4-> npm registry               |      +-- Dependabot +-- release tag --+
-                             +--> npm run for (posting file) --B8-> applications/*.json -> commit (public)            |
+                             +--> npm run for (posting file) --B8-> APPLICATIONS_DIR (private repo, private build)     |
                                                                                                                        v
                                                             [Visitor browser] <--B6-- static HTML, PDFs, headers <-----+
                                                               fit check input --B7-> in-page engine (no network)
@@ -65,7 +65,7 @@ Review this file at every phase gate and whenever a trust boundary changes (new 
 | B5 | CI | Workflow runs (PRs, forks, schedules, Dependabot) to repo writes and the deploy secret |
 | B6 | Static site in the browser | Served files and headers to visitor browsers; third-party iframe |
 | B7 | Fit check input | Pasted JD text to the in-page engine and DOM |
-| B8 | `/for` pages | Local posting file to generator, result file, public repo and public URL |
+| B8 | `/for` pages | Local posting file to generator, result file in the private applications repo, private build, public URL |
 | B9 | Cloudflare and domain | Release artifact and token to Pages; Porkbun registrar to Cloudflare DNS |
 
 Data flows:
@@ -75,7 +75,7 @@ Data flows:
 - DF4 `status.yml` fetches demo URLs and public repo dates daily, writes `public/status.json`, opens an automated PR (B5).
 - DF5 Visitor loads pages, PDFs and fonts from the same origin; clicks to load a Hugging Face demo (B6).
 - DF6 Visitor pastes JD text; the engine scores it in memory and renders text nodes (B7).
-- DF7 Client runs `npm run for --jd ./posting.txt`; the result JSON is written, the posting is discarded (B8).
+- DF7 Client runs `npm run for --jd ./posting.txt`; the result JSON is written to `APPLICATIONS_DIR` in the private repo, the posting is discarded; the private repo builds, deploys and cleans up (B8, ADR-0016).
 
 ## 5. STRIDE by boundary
 
@@ -117,7 +117,7 @@ Status key: active, phase-N (check built then), gap (finding open), accepted (re
 | 3.3 | T | Ruleset edited or disabled through the API | Hook denies non-Supervisor ruleset writes and all deletes | R-111 guard-bash | active; Supervisor or a raw `curl` can still change it (RR-2) |
 | 3.4 | T, R | Unsigned commits reach `main` | Squash merges are signed by GitHub; signed-commit rule paused | R-107, ADR-0014, #33; root commit exception #38 | phase-0 |
 | 3.5 | I | Secrets or JD text committed | `.gitignore`, hook on `git add`, gitleaks, push protection (enabled) | R-501, R-508 | active / phase-0 / phase-1 (#12) |
-| 3.6 | I | `/for` data and slugs readable in the public repo | See B8 | none today | gap #44 (Medium) |
+| 3.6 | I | `/for` data and slugs readable in the public repo | See B8 (8.3) | ADR-0016 | fix in PR #55 |
 | 3.7 | S | Fake review comment posted by an outside user | review-gate counts only OWNER-authored comments plus `approved:<role>` labels (outsiders cannot label) | R-201 review-gate | phase-1 (#14), requirement from #45 |
 
 ### B4 Build and supply chain
@@ -171,10 +171,10 @@ Status key: active, phase-N (check built then), gap (finding open), accepted (re
 |---|---|---|---|---|---|
 | 8.1 | I | JD text committed | Posting read and discarded; `postings/` and `*.jd.txt` ignored and blocked; schema rejects extra fields | R-501, R-502 | active / phase-4 |
 | 8.2 | I | Pages found through search | `noindex, nofollow` meta and header; out of sitemap; `Cache-Control: no-store` | R-503, §8.2 | phase-4 |
-| 8.3 | I | Slugs, companies, verdicts and gaps enumerated from the public repo and its history | Keep application data out of the public repo, or accept by ADR | none today | gap #44 (Medium) |
+| 8.3 | I | Slugs, companies, verdicts and gaps enumerated from the public repo, its history, or its Actions logs and artifacts | Application data only in the private repo `rohanjain.pro-applications`; `.gitignore`, guard-bash on `add`/`stage`/`mv`, CI tracked-file check; production build, deploy and cleanup run in the private repo; this repo's CI and previews use fixtures only | ADR-0016, R-501; #10, #13, #22 | fix in PR #55 (#44, #62); phase-1 / phase-4 / phase-7 |
 | 8.4 | I | Slug guessed over HTTP | 6 random base32 characters (30 bits) | R-503 | phase-4 |
-| 8.5 | I | Expired page stays live | Expiry notice; monthly `cleanup.yml` | §5.5 | phase-4 |
-| 8.6 | I | Preview deployments expose `/for` pages and unreleased content on `*.pages.dev` | Verify previews send `noindex`; restrict previews if not | Phase 7 checks | phase-7 |
+| 8.5 | I | Expired page stays live | Expiry notice; monthly cleanup in the private repo | §5.5, ADR-0016 | phase-4 |
+| 8.6 | I, T | Preview deployments expose unreleased content on `*.pages.dev`; a Pages token in this repo could push a production deploy | Previews build from fixtures only (ADR-0016); verify previews send `noindex`; keep the single Cloudflare token in the private repo's `production` environment, or decide previews by ADR | Phase 7 checks | phase-7 |
 
 ### B9 Cloudflare and domain
 
@@ -238,7 +238,7 @@ All seven roles and the Supervisor act as `Rohanjain2312`. Consequences:
 
 | ID | Severity | Finding | Issue | Owner | Target |
 |---|---|---|---|---|---|
-| TM-1 | Medium | `/for` application files in the public repo expose every application, verdict and gap; random slugs and noindex do not prevent enumeration | #44 | supervisor (ADR), app-data, platform | ADR before the Phase 0 gate |
+| TM-1 | Medium | `/for` application files in the public repo expose every application, verdict and gap; random slugs and noindex do not prevent enumeration | #44, #62 | supervisor (ADR-0016), app-data, platform | Fix in PR #55 (ADR-0016): result files live only in the private repo `rohanjain.pro-applications`; `.gitignore` (#10), guard-bash (R-501) and a CI tracked-file check (#13) keep them out of this repo; production build, logs and artifacts are private. Residual: a person with a `/for` link sees that one page. |
 | TM-2 | Medium | Public GitHub content can steer agents; the agents' token reaches all client repos and the hook does not restrict it | #45 | supervisor | Phase 0 gate |
 | TM-3 | Medium | Local npm installs run install scripts on the client machine; Dependabot patch auto-merge has no cooldown | #46 | platform, supervisor | Before or with the first `package.json` (#10) |
 | TM-4 | Low | Hook gaps: R-116 via `HUSKY=0` and `core.hooksPath`, R-509 via interpreters, globs, `git show` and home-directory keys, R-112 via shell writes | #47 | supervisor, platform | 2026-10-29 |
