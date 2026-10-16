@@ -14,3 +14,7 @@ Check mappings mechanically with a script, not by eye.
 - Run the script in the first review, not only in the re-review.
 
 Related: [[review-checklist-repo-settings]]
+
+## Log completeness (PR #40, 2026-10-16)
+
+The first Phase 0 log recorded only PR #36. An independent review caught it (40-L1). Build the log from the REVIEW comments of every PR in scope, one PR at a time, and list the PRs checked. See [[review-checklist-escaped-defects]]. Hook-specific misses: [[escaped-hook-path-traversal]], [[hook-review-checklist]].

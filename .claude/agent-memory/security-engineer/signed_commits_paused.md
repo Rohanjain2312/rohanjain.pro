@@ -5,7 +5,9 @@ metadata:
   type: project
 ---
 
-As of 2026-10-15, the `required_signatures` rule is not in ruleset "main protection" (id 25204664). The plan is to restore it once the client uploads a signing key. Issue #33 tracks this. ADR 0014 is in PR #34, which was still open on that date. `docs/needs-client.md` on main did not mention it yet.
+UPDATE 2026-10-16: PR #68 restored `required_signatures` in ruleset 25204664 and #33 is closed. Still open: the client must drop the `write:ssh_signing_key` scope from the shared token (`docs/needs-client.md`, threat model RR-8). At each gate run `gh auth status` and confirm the scope is gone.
+
+History: as of 2026-10-15, the `required_signatures` rule was not in ruleset "main protection" (id 25204664). The plan is to restore it once the client uploads a signing key. Issue #33 tracks this. ADR 0014 is in PR #34, which was still open on that date. `docs/needs-client.md` on main did not mention it yet.
 
 **Why:** The threat model (spec 8.1, Tampering and Repudiation) relies on signed commits. Under R-511, a risk can be accepted only through an ADR that is listed in `docs/needs-client.md`.
 
