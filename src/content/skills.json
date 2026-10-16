@@ -517,7 +517,7 @@
     "tier": "shipped",
     "evidence": ["fc", "mr", "med"],
     "roles": ["ml", "ai"],
-    "aliases": ["torch"]
+    "aliases": []
   },
   {
     "name": "Transformers",
@@ -533,7 +533,7 @@
     "tier": "shipped",
     "evidence": ["loan", "gb", "goldman"],
     "roles": ["ai", "ml"],
-    "aliases": ["embedding"]
+    "aliases": []
   },
   {
     "name": "scikit-learn",
@@ -1181,7 +1181,7 @@
     "tier": "studied",
     "evidence": [],
     "roles": ["ml", "ds"],
-    "aliases": ["spark"]
+    "aliases": []
   },
   {
     "name": "Data lakes",
@@ -1501,7 +1501,7 @@
     "tier": "studied",
     "evidence": [],
     "roles": ["ds"],
-    "aliases": ["time series forecasting"]
+    "aliases": []
   },
   {
     "name": "Tableau",
@@ -1741,7 +1741,7 @@
     "tier": "shipped",
     "evidence": ["med"],
     "roles": ["ai", "ml"],
-    "aliases": ["mistral"]
+    "aliases": []
   },
   {
     "name": "Claude Sonnet",
