@@ -52,6 +52,10 @@
 /tests/unit/ @Rohanjain2312
 
 # platform-engineer
+/scripts/lint-docs.mjs @Rohanjain2312
+/scripts/autopilot.sh @Rohanjain2312
+/scripts/phase-gate.mjs @Rohanjain2312
+/scripts/verify.mjs @Rohanjain2312
 /.github/ @Rohanjain2312
 /.husky/ @Rohanjain2312
 /package.json @Rohanjain2312

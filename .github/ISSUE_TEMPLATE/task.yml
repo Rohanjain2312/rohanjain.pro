@@ -2,11 +2,19 @@ name: Task
 description: One unit of work for one owner role (docs/spec/03-workflow.md).
 title: "<summary>"
 body:
-  - type: input
+  - type: dropdown
     id: owner
     attributes:
       label: Owner role
-      description: One of supervisor, design-lead, frontend-engineer, app-data-engineer, platform-engineer, security-engineer, qa-engineer, reader-advocate.
+      options:
+        - supervisor
+        - design-lead
+        - frontend-engineer
+        - app-data-engineer
+        - platform-engineer
+        - security-engineer
+        - qa-engineer
+        - reader-advocate
     validations:
       required: true
   - type: textarea

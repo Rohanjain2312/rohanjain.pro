@@ -18,6 +18,5 @@ Closes #<issue>
 
 ## New dependencies
 
-<!-- A new dependency needs a justification here and a Security review (R-506). Otherwise write "none". -->
+<!-- A new dependency needs a justification here and a Security review (R-506). Leave empty if there are none. -->
 
-none

@@ -37,12 +37,11 @@ Target: default branch. Enforcement: active. Bypass actors: none.
 | deletion | blocked |
 | non_fast_forward | blocked (no force push) |
 | required_linear_history | on |
-| pull_request | 0 required approvals, stale reviews dismissed on push, squash only |
-| required_signatures | paused (see below) |
+| pull_request | 0 required approvals, stale reviews dismissed on push, squash only, `require_extra_approval_for_unattributed_changes` true |
 
 Approvals are `approved:<role>` labels checked by `review-gate`, because GitHub does not let an account approve its own PR (docs/spec/03-workflow.md).
 
-Required signatures are paused per `docs/adr/0014` (PR #34) and issue #33. Do not re-enable the rule without reading the ADR.
+The `required_signatures` rule is removed from the ruleset (not paused). See issue #33 and PR #34 (`docs/adr/0014`). Do not add it back without reading the ADR.
 
 Required status checks are not yet in the ruleset. They are added once the Phase 1 workflows exist.
 
@@ -57,9 +56,20 @@ Required status checks are not yet in the ruleset. They are added once the Phase
 | Secret scanning non-provider patterns | disabled |
 | Secret scanning validity checks | disabled |
 | Private vulnerability reporting | enabled |
-| Actions | enabled, all actions allowed, SHA pinning not enforced by GitHub |
+
+## Actions controls
+
+| Control | Value |
+|---|---|
+| Actions | enabled, all actions allowed |
+| Default workflow permissions | read |
+| Actions can approve PRs | no |
+| Fork PR approval | required for first-time contributors |
+| `sha_pinning_required` | true (actions must be pinned to a full commit SHA) |
 
 ## Labels
+
+All 50 labels, from `gh label list --limit 100`:
 
 - Phase: `phase-0` to `phase-8`.
 - Role: `role:design-lead`, `role:supervisor`, `role:app-data-engineer`, `role:frontend-engineer`, `role:platform-engineer`, `role:qa-engineer`, `role:security-engineer`, `role:reader-advocate`.
@@ -67,12 +77,12 @@ Required status checks are not yet in the ruleset. They are added once the Phase
 - Review needed (R-209): `needs:design-review`, `needs:security-review`, `needs:qa-review`, `needs:reader-review`.
 - Approved (R-202): `approved:supervisor`, `approved:design`, `approved:security`, `approved:qa`, `approved:reader`.
 - Severity: `severity:critical`, `severity:high`, `severity:medium`, `severity:low`, `severity:info`.
-- Other: `size:approved` (Supervisor approved a PR over 600 lines).
+- Other: `size:approved` (Supervisor approved a PR over 600 lines), `accessibility` (barrier affecting people with disabilities).
 - GitHub defaults kept: `bug`, `documentation`, `duplicate`, `enhancement`, `good first issue`, `help wanted`, `invalid`, `question`, `wontfix`.
 
 ## Milestones
 
-`Phase 0` to `Phase 6`, all open, no due dates. `Phase 7` and `Phase 8` do not exist yet. Create them when those phases are planned.
+`Phase 0` to `Phase 8`, all open, no due dates.
 
 ## Known gh issue
 
@@ -87,6 +97,9 @@ gh api -X POST repos/Rohanjain2312/rohanjain.pro/issues/<n>/labels -f 'labels[]=
 ```
 gh api repos/Rohanjain2312/rohanjain.pro
 gh api repos/Rohanjain2312/rohanjain.pro/rulesets/25204664
+gh api repos/Rohanjain2312/rohanjain.pro/actions/permissions
+gh api repos/Rohanjain2312/rohanjain.pro/actions/permissions/workflow
+gh api repos/Rohanjain2312/rohanjain.pro/actions/permissions/fork-pr-contributor-approval
 gh api repos/Rohanjain2312/rohanjain.pro/vulnerability-alerts -i
 gh api repos/Rohanjain2312/rohanjain.pro/private-vulnerability-reporting
 gh label list --limit 100
