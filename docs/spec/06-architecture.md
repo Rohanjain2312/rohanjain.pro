@@ -57,7 +57,7 @@ Stack, repository layout, content model, engine and generator specs, and the ADR
 │  ├─ content/
 │  │  ├─ claims.json  projects.json  skills.json  roles.json
 │  │  ├─ figures.json  samples.json  resume.json  site.json
-│  │  └─ applications/       # one result file per /for page (no JD text)
+│  │  └─ applications/       # .gitkeep only; result files live in a private repo (ADR-0016)
 │  ├─ lib/
 │  │  ├─ fitcheck/           # engine, matcher, scorer, types
 │  │  └─ format/
@@ -86,7 +86,7 @@ Stack, repository layout, content model, engine and generator specs, and the ADR
 - `figures.json`: `{ id, projectId, kind: "image"|"bars", src?, alt, bars?, axisLabel, caption, note, claimIds[] }`.
 - `resume.json`: header, education, skills groups, experience bullets, projects, publication; each bullet references claim IDs.
 - `site.json`: name, location ("New York, NY"), availability ("available now"), email, phone, profile links (LinkedIn, GitHub, Hugging Face, Medium), `showPhoto: false`.
-- `applications/<slug>.json`: `{ slug, company, roleTitle, createdOn, expiresOn, verdict, provenSkills[], gaps[], evidenceRows[], roleFamily }`. Never contains job description text.
+- `applications/<slug>.json` (in the private `APPLICATIONS_DIR`, ADR-0016): `{ slug, company, roleTitle, createdOn, expiresOn, verdict, provenSkills[], gaps[], evidenceRows[], roleFamily }`. Never contains job description text.
 
 ### 5.4 Fit-check engine specification (App/Data Engineer)
 - Pure function `analyze(text, skills, extras, evidence) -> Report`. No DOM, no network, no storage, no randomness, no time dependence.

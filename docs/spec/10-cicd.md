@@ -16,7 +16,7 @@ Pipelines and the checks that enforce the rules in `docs/rules.md`. Owned by the
 All jobs required for merge.
 
 ### 10.2 Other workflows
-`review-gate.yml`, `branch-name.yml`, `pr-hygiene.yml` and `labeler.yml` (PR process checks, section 3.5), `codeql.yml` (PRs and weekly), `scorecard.yml` (weekly), `status.yml` (daily), `release.yml` (release-please, tags, changelog, SBOM), `cleanup.yml` (monthly expired `/for` removal), `deploy.yml` (Phase 7: deploy to Cloudflare Pages on release, preview deploys on PRs).
+`review-gate.yml`, `branch-name.yml`, `pr-hygiene.yml` and `labeler.yml` (PR process checks, section 3.5), `codeql.yml` (PRs and weekly), `scorecard.yml` (weekly), `status.yml` (daily), `release.yml` (release-please, tags, changelog, SBOM), `deploy.yml` (preview deploys on PRs, fixtures only). Production build, deploy and the monthly expired `/for` cleanup run in the private applications repo (ADR-0016).
 
 ### 10.3 Environments
 - Local: `npm run dev` and `npm run preview` (production build with emulated headers).
