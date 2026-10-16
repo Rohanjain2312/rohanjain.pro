@@ -33,4 +33,4 @@ Issues in a wave can run in parallel; each depends only on earlier waves.
 ## Risks
 - `package.json` is shared by Platform, Frontend, App/Data and QA. Mitigation: Platform lands the scaffold first; later PRs rebase and keep script changes small.
 - Until #14 lands, review approvals are checked only by hooks. Mitigation: #14 is the first issue in wave 4 and updates the ruleset's required checks.
-- The résumé links the settlement demo to a local file path (Security review of PR #2). Mitigation: `resume.json` uses the public https URL; logged for #25.
+- The résumé links the settlement demo to a local file path (Security review of PR #2). Mitigation: `resume.json` uses the public https URL; noted on #25.
