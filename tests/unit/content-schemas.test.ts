@@ -1,6 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
-  applicationSchema, claimSchema, figureSchema, projectSchema, resumeSchema, roleSchema, siteSchema, skillSchema,
+  applicationSchema,
+  claimSchema,
+  figureSchema,
+  projectSchema,
+  resumeSchema,
+  roleSchema,
+  siteSchema,
+  skillSchema,
 } from '../../src/lib/content/schemas.ts';
 import { validContent, validApplication } from './content-fixtures.ts';
 
@@ -27,7 +34,9 @@ describe.each(cases)('%s schema', (_name, schema, valid) => {
     expect(r.success).toBe(false);
   });
   it('rejects a missing required key', () => {
-    const first = Object.keys(valid).find((k) => !['sourceUrl', 'note', 'demo', 'src', 'bars', 'publication'].includes(k))!;
+    const first = Object.keys(valid).find(
+      (k) => !['sourceUrl', 'note', 'demo', 'src', 'bars', 'publication'].includes(k),
+    )!;
     const { [first]: _drop, ...rest } = valid as Record<string, unknown>;
     expect(schema.safeParse(rest).success).toBe(false);
   });
@@ -36,7 +45,9 @@ describe.each(cases)('%s schema', (_name, schema, valid) => {
 describe('field rules', () => {
   it('rejects bad dates and non-https URLs', () => {
     expect(claimSchema.safeParse({ ...c.claims[0], verifiedOn: '01/01/2000' }).success).toBe(false);
-    expect(claimSchema.safeParse({ ...c.claims[1], sourceUrl: 'http://example.com' }).success).toBe(false);
+    expect(claimSchema.safeParse({ ...c.claims[1], sourceUrl: 'http://example.com' }).success).toBe(
+      false,
+    );
   });
   it('rejects an unknown tier and role', () => {
     expect(skillSchema.safeParse({ ...c.skills[0], tier: 'expert' }).success).toBe(false);
@@ -50,8 +61,14 @@ describe('field rules', () => {
     expect(siteSchema.safeParse({ ...c.site, showPhoto: true }).success).toBe(false);
   });
   it('rejects job-description-sized application text (R-502)', () => {
-    expect(applicationSchema.safeParse({ ...validApplication(), roleTitle: 'x'.repeat(201) }).success).toBe(false);
-    expect(applicationSchema.safeParse({ ...validApplication(), jobDescription: 'text' }).success).toBe(false);
-    expect(applicationSchema.safeParse({ ...validApplication(), slug: 'fakeco' }).success).toBe(false);
+    expect(
+      applicationSchema.safeParse({ ...validApplication(), roleTitle: 'x'.repeat(201) }).success,
+    ).toBe(false);
+    expect(
+      applicationSchema.safeParse({ ...validApplication(), jobDescription: 'text' }).success,
+    ).toBe(false);
+    expect(applicationSchema.safeParse({ ...validApplication(), slug: 'fakeco' }).success).toBe(
+      false,
+    );
   });
 });

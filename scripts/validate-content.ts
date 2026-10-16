@@ -14,7 +14,8 @@ const problems: Problem[] = [];
 try {
   if (strict) {
     for (const k of ['claims', 'projects', 'skills', 'roles', 'figures', 'resume', 'site']) {
-      if (!existsSync(join(dir, `${k}.json`))) problems.push({ file: `${k}.json`, field: '(file)', message: 'file is missing' });
+      if (!existsSync(join(dir, `${k}.json`)))
+        problems.push({ file: `${k}.json`, field: '(file)', message: 'file is missing' });
     }
   }
   problems.push(...validateContent(loadRawContent(dir)));

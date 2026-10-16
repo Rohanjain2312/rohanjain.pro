@@ -74,7 +74,8 @@ export const figureSchema = z
   })
   .strict()
   .superRefine((f, ctx) => {
-    if (f.kind === 'image' && !f.src) ctx.addIssue({ code: 'custom', path: ['src'], message: 'image figures need src' });
+    if (f.kind === 'image' && !f.src)
+      ctx.addIssue({ code: 'custom', path: ['src'], message: 'image figures need src' });
     if (f.kind === 'bars' && (!f.bars || f.bars.length === 0)) {
       ctx.addIssue({ code: 'custom', path: ['bars'], message: 'bars figures need bars' });
     }
@@ -86,10 +87,23 @@ const bulletSchema = z.object({ text: nonEmpty, claimIds: z.array(slug) }).stric
 export const resumeSchema = z
   .object({
     header: z
-      .object({ name: nonEmpty, location: nonEmpty, email: z.email(), phone: nonEmpty, links: z.array(linkSchema) })
+      .object({
+        name: nonEmpty,
+        location: nonEmpty,
+        email: z.email(),
+        phone: nonEmpty,
+        links: z.array(linkSchema),
+      })
       .strict(),
     education: z.array(
-      z.object({ school: nonEmpty, degree: nonEmpty, dateRange: nonEmpty, details: z.array(nonEmpty) }).strict(),
+      z
+        .object({
+          school: nonEmpty,
+          degree: nonEmpty,
+          dateRange: nonEmpty,
+          details: z.array(nonEmpty),
+        })
+        .strict(),
     ),
     skillGroups: z.array(z.object({ label: nonEmpty, skills: z.array(nonEmpty) }).strict()),
     experience: z.array(
@@ -115,7 +129,9 @@ export const siteSchema = z
     availability: nonEmpty,
     email: z.email(),
     phone: nonEmpty,
-    profiles: z.object({ linkedin: httpsUrl, github: httpsUrl, huggingface: httpsUrl, medium: httpsUrl }).strict(),
+    profiles: z
+      .object({ linkedin: httpsUrl, github: httpsUrl, huggingface: httpsUrl, medium: httpsUrl })
+      .strict(),
     showPhoto: z.literal(false),
   })
   .strict();
@@ -124,16 +140,31 @@ export const siteSchema = z
 const shortText = z.string().trim().min(1).max(200);
 export const applicationSchema = z
   .object({
-    slug: z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*-[a-z2-7]{6}$/, 'expected <company-kebab>-<6 base32 chars>'),
+    slug: z
+      .string()
+      .regex(/^[a-z0-9]+(-[a-z0-9]+)*-[a-z2-7]{6}$/, 'expected <company-kebab>-<6 base32 chars>'),
     company: shortText,
     roleTitle: shortText,
     createdOn: isoDate,
     expiresOn: isoDate,
-    verdict: z.enum(['Strong fit', 'Good fit, with gaps', 'Not a strong fit', 'Not enough to go on']),
+    verdict: z.enum([
+      'Strong fit',
+      'Good fit, with gaps',
+      'Not a strong fit',
+      'Not enough to go on',
+    ]),
     provenSkills: z.array(shortText).max(100),
     gaps: z.array(shortText).max(100),
     evidenceRows: z
-      .array(z.object({ title: shortText, claimIds: z.array(slug).max(20), tags: z.array(shortText).max(8) }).strict())
+      .array(
+        z
+          .object({
+            title: shortText,
+            claimIds: z.array(slug).max(20),
+            tags: z.array(shortText).max(8),
+          })
+          .strict(),
+      )
       .max(4),
     roleFamily,
   })

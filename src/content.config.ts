@@ -15,7 +15,16 @@ const contentDir = new URL('./content', import.meta.url).pathname;
 
 type ListKey = 'claims' | 'projects' | 'skills' | 'roles' | 'figures';
 
-function list(key: ListKey, schema: typeof claimSchema | typeof projectSchema | typeof skillSchema | typeof roleSchema | typeof figureSchema, idKey: string) {
+function list(
+  key: ListKey,
+  schema:
+    | typeof claimSchema
+    | typeof projectSchema
+    | typeof skillSchema
+    | typeof roleSchema
+    | typeof figureSchema,
+  idKey: string,
+) {
   return defineCollection({
     schema,
     loader: {

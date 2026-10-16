@@ -12,6 +12,10 @@ const stamp = join(stateDir, 'verify-ok');
 
 const steps = [
   ['docs lint (R-806)', 'npm', ['run', 'docs:lint']],
+  ['format check', 'npm', ['run', 'format:check']],
+  ['eslint (R-401, R-405)', 'npm', ['run', 'lint']],
+  ['stylelint (R-601, R-608)', 'npm', ['run', 'lint:css']],
+  ['lint rule self-test', 'npm', ['run', 'lint:selftest']],
   ['type check (N-08)', 'npm', ['run', 'check']],
   ['unit tests (N-08)', 'npm', ['test']],
   ['build (N-09)', 'npm', ['run', 'build']],
@@ -36,7 +40,9 @@ for (const [name, cmd, args] of steps) {
 const git = (args) => spawnSync('git', args, { cwd, encoding: 'utf8' });
 const dirty = git(['status', '--porcelain']).stdout.trim();
 if (dirty) {
-  console.error('\nverify passed, but the working tree has uncommitted changes. Commit them and run verify again (R-110). No stamp written.');
+  console.error(
+    '\nverify passed, but the working tree has uncommitted changes. Commit them and run verify again (R-110). No stamp written.',
+  );
   process.exit(1);
 }
 const sha = git(['rev-parse', 'HEAD']).stdout.trim();

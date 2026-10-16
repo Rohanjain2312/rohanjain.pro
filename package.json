@@ -17,17 +17,34 @@
     "browsers:install": "npx --no-install playwright install chromium",
     "validate:content": "node scripts/validate-content.ts",
     "docs:lint": "node scripts/lint-docs.mjs",
-    "verify": "node scripts/verify.mjs"
+    "verify": "node scripts/verify.mjs",
+    "lint": "eslint . --max-warnings 0",
+    "lint:css": "stylelint \"src/**/*.{css,astro,html}\" --allow-empty-input",
+    "lint:selftest": "node --test .github/lint-fixtures/lint-rules.test.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
   },
   "dependencies": {
     "astro": "7.4.0"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
+    "@eslint/js": "9.39.5",
     "@playwright/test": "1.64.1",
     "@types/node": "26.6.5",
     "@vitest/coverage-v8": "5.0.5",
+    "eslint": "9.39.5",
+    "eslint-plugin-astro": "1.7.0",
+    "eslint-plugin-jsx-a11y": "6.10.2",
+    "eslint-plugin-security": "4.2.0",
+    "globals": "17.13.0",
+    "postcss-html": "2.0.0",
+    "prettier": "3.9.9",
+    "prettier-plugin-astro": "1.1.0",
+    "stylelint": "17.16.0",
+    "stylelint-config-standard": "40.0.0",
     "typescript": "5.9.3",
+    "typescript-eslint": "8.71.1",
     "vitest": "5.0.5"
   }
 }

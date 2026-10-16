@@ -21,18 +21,63 @@ describe('validateContent', () => {
     ['duplicate project id', (d) => d.projects.push(d.projects[0]), 'projects.json', '1.id'],
     ['duplicate skill', (d) => d.skills.push(d.skills[0]), 'skills.json', '1.name'],
     ['duplicate figure', (d) => d.figures.push(d.figures[0]), 'figures.json', '2.id'],
-    ['project headline claim', (d) => (d.projects[0].headlineClaimId = 'nope'), 'projects.json', '0.headlineClaimId'],
-    ['project context claim', (d) => (d.projects[0].contextClaimIds = ['nope']), 'projects.json', '0.contextClaimIds.0'],
+    [
+      'project headline claim',
+      (d) => (d.projects[0].headlineClaimId = 'nope'),
+      'projects.json',
+      '0.headlineClaimId',
+    ],
+    [
+      'project context claim',
+      (d) => (d.projects[0].contextClaimIds = ['nope']),
+      'projects.json',
+      '0.contextClaimIds.0',
+    ],
     ['figure project', (d) => (d.figures[0].projectId = 'nope'), 'figures.json', '0.projectId'],
     ['figure claim', (d) => (d.figures[0].claimIds = ['nope']), 'figures.json', '0.claimIds.0'],
     ['skill evidence', (d) => (d.skills[0].evidence = ['nope']), 'skills.json', '0.evidence.0'],
-    ['resume experience claim', (d) => (d.resume.experience[0].bullets[0].claimIds = ['nope']), 'resume.json', 'experience.0.bullets.0.claimIds.0'],
-    ['resume project id', (d) => (d.resume.projects[0].projectId = 'nope'), 'resume.json', 'projects.0.projectId'],
-    ['resume project claim', (d) => (d.resume.projects[0].bullets[0].claimIds = ['nope']), 'resume.json', 'projects.0.bullets.0.claimIds.0'],
-    ['application claim', (d) => (d.applications['fakeco-abc234.json'].evidenceRows[0].claimIds = ['nope']), 'applications/fakeco-abc234.json', 'evidenceRows.0.claimIds.0'],
-    ['application slug mismatch', (d) => (d.applications['fakeco-abc234.json'].slug = 'other-abc234'), 'applications/fakeco-abc234.json', 'slug'],
-    ['application dates', (d) => (d.applications['fakeco-abc234.json'].expiresOn = '1999-01-01'), 'applications/fakeco-abc234.json', 'expiresOn'],
-    ['application extra field', (d) => (d.applications['fakeco-abc234.json'].jd = 'text'), 'applications/fakeco-abc234.json', '(root)'],
+    [
+      'resume experience claim',
+      (d) => (d.resume.experience[0].bullets[0].claimIds = ['nope']),
+      'resume.json',
+      'experience.0.bullets.0.claimIds.0',
+    ],
+    [
+      'resume project id',
+      (d) => (d.resume.projects[0].projectId = 'nope'),
+      'resume.json',
+      'projects.0.projectId',
+    ],
+    [
+      'resume project claim',
+      (d) => (d.resume.projects[0].bullets[0].claimIds = ['nope']),
+      'resume.json',
+      'projects.0.bullets.0.claimIds.0',
+    ],
+    [
+      'application claim',
+      (d) => (d.applications['fakeco-abc234.json'].evidenceRows[0].claimIds = ['nope']),
+      'applications/fakeco-abc234.json',
+      'evidenceRows.0.claimIds.0',
+    ],
+    [
+      'application slug mismatch',
+      (d) => (d.applications['fakeco-abc234.json'].slug = 'other-abc234'),
+      'applications/fakeco-abc234.json',
+      'slug',
+    ],
+    [
+      'application dates',
+      (d) => (d.applications['fakeco-abc234.json'].expiresOn = '1999-01-01'),
+      'applications/fakeco-abc234.json',
+      'expiresOn',
+    ],
+    [
+      'application extra field',
+      (d) => (d.applications['fakeco-abc234.json'].jd = 'text'),
+      'applications/fakeco-abc234.json',
+      '(root)',
+    ],
   ];
   it.each(defects)('reports %s', (_n, mutate, file, field) => {
     const d = clone();
@@ -65,7 +110,10 @@ describe('loading and CLI', () => {
     }
   };
   const cli = (...args: string[]) =>
-    spawnSync('node', ['scripts/validate-content.ts', ...args], { encoding: 'utf8', env: { ...process.env, APPLICATIONS_DIR: '' } });
+    spawnSync('node', ['scripts/validate-content.ts', ...args], {
+      encoding: 'utf8',
+      env: { ...process.env, APPLICATIONS_DIR: '' },
+    });
 
   it('applications collection is empty when the directory does not exist', () => {
     const dir = temp();

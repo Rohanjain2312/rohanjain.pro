@@ -22,13 +22,19 @@ function readJson(path: string, label: string): unknown {
 }
 
 /** Directory holding application results, or undefined when it does not exist. */
-export function applicationsDir(contentDir: string, env: NodeJS.ProcessEnv = process.env): string | undefined {
+export function applicationsDir(
+  contentDir: string,
+  env: NodeJS.ProcessEnv = process.env,
+): string | undefined {
   const configured = env['APPLICATIONS_DIR'];
   const dir = configured ? resolve(configured) : join(contentDir, 'applications');
   return existsSync(dir) ? dir : undefined;
 }
 
-export function loadRawContent(contentDir: string, env: NodeJS.ProcessEnv = process.env): RawContent {
+export function loadRawContent(
+  contentDir: string,
+  env: NodeJS.ProcessEnv = process.env,
+): RawContent {
   const raw: Record<string, unknown> = {};
   for (const key of SINGLE) {
     const path = join(contentDir, `${key}.json`);
@@ -37,7 +43,9 @@ export function loadRawContent(contentDir: string, env: NodeJS.ProcessEnv = proc
   const applications: Record<string, unknown> = {};
   const appDir = applicationsDir(contentDir, env);
   if (appDir) {
-    for (const name of readdirSync(appDir).filter((n) => n.endsWith('.json')).sort()) {
+    for (const name of readdirSync(appDir)
+      .filter((n) => n.endsWith('.json'))
+      .sort()) {
       applications[name] = readJson(join(appDir, name), `applications/${name}`);
     }
   }
