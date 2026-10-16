@@ -13,3 +13,5 @@ metadata:
 - Worktrees can disappear between sessions. Check `git worktree list` and recreate from `origin/main` if needed.
 
 Related: [[severity-calibration]].
+- The R-008 Write hook rejects a literal em dash, even inside a grep pattern in a review body. Write the pattern as `grep -nP "\x{2014}"`.
+- `RAW_DENY` matches the whole command text, so a `git commit -m` that mentions a blocked command is denied. Write the message to a file and use `git commit -F <path>`.

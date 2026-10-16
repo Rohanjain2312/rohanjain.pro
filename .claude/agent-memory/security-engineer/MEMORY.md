@@ -1,4 +1,11 @@
 - [Severity calibration](severity-calibration.md): ADR-0018 rating rule and 53-I3 exception; past findings and their state
 - [Stale register statuses](review-stale-status.md): check statuses against current main and live gh api, list every ADR-accepted risk
 - [Public-repo CI leaks](public-repo-ci-leaks.md): private data near public Actions, check logs, artifacts, secret scope, previews (#62)
-- [Tooling quirks](tooling-quirks.md): gh issue view needs --json, gh pr edit broken, worktree guard rejects variable operands
+- [Tooling quirks](tooling-quirks.md): gh issue view needs --json, gh pr edit broken, worktree guard, em dash and commit message hooks
+- [Escaped defects](escaped_defects.md): read before every review; CODEOWNERS misread in PR #36, check mappings by script, log completeness
+- [Hook path traversal](escaped_hook_path_traversal.md): R-112 bypass with '..' in worktree paths, missed in PR #2 (issue #51)
+- [Hook review checklist](hook_review_checklist.md): bypass classes to probe on any hook change (substitution, VAR= prefixes, flags, graphql, cwd)
+- [Review checklist](feedback_review_checklist.md): closing keywords, regressed findings, live GitHub checks, stale approvals
+- [Repo settings checklist](review_checklist_repo_settings.md): re-verify live gh api at review, CODEOWNERS vs owners.json, Actions perms
+- [Token step review](token_step_review.md): check step interaction (gh auth refresh) and fine-grained permissions in needs-client.md
+- [Signed commits](signed_commits_paused.md): R-107 rule paused in Phase 0, restored by PR #68; scope removed by the client, RR-8 closed

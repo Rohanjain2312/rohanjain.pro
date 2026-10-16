@@ -1,6 +1,6 @@
 # Threat model
 
-Owner: security-engineer · Issue: #5 · Date: 2026-10-15 · Status: Phase 0, checked against `main` 989cc69
+Owner: security-engineer · Issue: #5 · Date: 2026-10-15 · Status: Phase 0, checked against `main` 989cc69; row 3.4 and RR-8 updated against `main` a3eb096 and the live token scopes (2026-10-16)
 Expands `docs/spec/08-security.md` §8.1. Sources: `docs/spec/06-architecture.md`, `docs/spec/10-cicd.md`, `docs/rules.md`, `.claude/hooks/`, `.claude/settings.json`, `.claude/skills/`, ADR-0001 to ADR-0014 and ADR-0016 to ADR-0018 (all on `main`), and live repo settings read through `gh api` on 2026-10-15.
 
 Review this file at every phase gate and whenever a trust boundary changes (new workflow, new secret, new third-party origin, new agent tool). Changes need Security review. Check every status against current `origin/main` and live `gh api` settings, not against a PR's base.
@@ -114,7 +114,7 @@ Data flows:
 | 3.1 | E | Account takeover of `Rohanjain2312` | Passkey or 2FA, recovery codes offline | `docs/needs-client.md` | client item open |
 | 3.2 | S | One account means GitHub cannot tell roles apart; a role can self-approve | Labels plus comments with role, head SHA and agent ID; hook checks; QA review audit | R-201, R-202, R-203, R-206, R-208 | active / phase-1; accepted (RR-2) |
 | 3.3 | T | Ruleset edited or disabled through the API | Hook denies non-Supervisor ruleset writes and all deletes | R-111 guard-bash | active; Supervisor or interpreter indirection can still change it (RR-2, RR-11) |
-| 3.4 | T, R | Unsigned commits reach `main` | Squash merges are signed by GitHub; signed-commit rule paused; root commit `4d29441` is the one allowed exception | R-107, ADR-0013, ADR-0014, skill `phase-gate` | active (closed #38); rule restore open #33 |
+| 3.4 | T, R | Unsigned commits reach `main` | Ruleset `required_signatures` is on again (PR #68); squash merges are signed by GitHub; root commit `4d29441` is the one allowed exception | R-107, ADR-0013, ADR-0014, skill `phase-gate` | active (closed #38, closed #33 via PR #68); the `write:ssh_signing_key` scope is gone from the shared token (verified 2026-10-16), so no agent can add a second signing key (RR-8 closed) |
 | 3.5 | I | Secrets or JD text committed | `.gitignore`, hook on `git add`, gitleaks, push protection (enabled, verified) | R-501, R-508 | active; gitleaks phase-1 (#12) |
 | 3.6 | I | `/for` data and slugs readable in the public repo | See 8.3 | ADR-0016 | closed #44, #62 (PR #55) |
 | 3.7 | S | Fake review comment posted by an outside user | Interaction limit stops outside comments; review-gate counts only OWNER-authored comments plus `approved:<role>` labels (outsiders cannot label) | repo settings; R-201 review-gate | active (limit); review-gate phase-1 (#14) |
@@ -265,7 +265,7 @@ No Medium or higher finding from this threat model is open. Medium findings bloc
 | RR-5 | Phone number exposed to scrapers | Client decision for reachability; mitigated by keeping it out of structured data | client (accepted), security-engineer monitors | Phase 6 |
 | RR-6 | Look-alike domains and phishing in the client's name | Not preventable at reasonable cost | client, security-engineer | Phase 7 |
 | RR-7 | Third-party Hugging Face demo content can change at any time | Outside our control; sandboxed, click to load, own origin | frontend-engineer, security-engineer | Phase 5 and 6 |
-| RR-8 | Signed-commit rule paused on the ruleset | Waiting on the client's SSH signing key upload; `4d29441` is the one allowed unsigned commit (closed #38) | supervisor | #33 |
+| RR-8 | Closed 2026-10-16. The signed-commit rule (R-107) is back on (PR #68, #33 closed) and the client removed `write:ssh_signing_key` from the shared token (scopes: gist, project, read:org, repo, workflow). Kept as history: `4d29441` stays the one allowed unsigned commit (closed #38) | none | supervisor | each phase gate: `gh auth status` must not list the scope |
 | RR-9 | Interaction limit expires 2027-04-16 (six months at most) | GitHub offers no permanent setting for public repos | supervisor | renewed at each phase gate (skill `phase-gate`, ADR-0018); gate fails if lapsed |
 | RR-10 | Agents run in the client's user account with network access | Claude Code sandbox mode with a network allowlist not yet evaluated | supervisor | Phase 1 retro (ADR-0018) |
 | RR-11 | A steered agent can reach the all-repo gh token through interpreter indirection (`node -e`, `python3 -c`) | A command denylist cannot be complete; accepted by ADR-0018. Mitigation available to the client: the optional repo-scoped fine-grained token in `docs/needs-client.md` (step corrections tracked in #63) | supervisor; client informed via `docs/needs-client.md` | Phase 1 retro (sandbox decision), each phase gate |
