@@ -1,6 +1,6 @@
 # Contributing
 
-This site is built by a team of Claude Code agents under a Supervisor. The rules below apply to every change. Each has an ID in [`docs/rules.md`](docs/rules.md); most are enforced by hooks in `.claude/hooks/` and by CI. If a check blocks you, its message names the rule. Fix the cause; never work around a check.
+This site is built by a team of Claude Code agents under a Supervisor. The rules below apply to every change. Each has an ID in [`docs/rules.md`](docs/rules.md); many are caught by hooks in `.claude/hooks/` (tripwires for common violations, ADR-0018), and CI will check them on every pull request (issue #13). If a check blocks you, its message names the rule. Fix the cause; never work around a check.
 
 ## Workflow
 1. Every unit of work is a GitHub Issue with an owner role, acceptance criteria and a phase milestone.

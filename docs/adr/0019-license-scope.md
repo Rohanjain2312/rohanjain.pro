@@ -3,7 +3,7 @@
 Status: accepted · Date: 2026-10-16 · Issues: #30
 
 ## Context
-`docs/spec/03-workflow.md` asks for a LICENSE with code under MIT and "content and résumé text all rights reserved". It does not say whether the repository's own docs (README, `docs/`, `.claude/`) count as content. The QA review of PR #84 found the first LICENSE draft either too narrow (path-based) or too broad ("all written copy, wherever it appears").
+`docs/spec/03-workflow.md` asks for a LICENSE with code under MIT and "content and résumé text all rights reserved". It does not say whether the repository's own docs (README, `docs/`, `.claude/`) count as content. A path-based scope (only `src/content/`) leaves copy in templates under MIT, and "all written copy, wherever it appears" also covers the repository's own docs.
 
 ## Decision
 1. **All rights reserved:** the copy the site shows to readers, wherever it is stored (`src/content/`, text in `.astro` templates and components, metadata such as titles and descriptions); the résumé text and PDFs; everything in `reference/`; the briefs and per-application pages the site generates.

@@ -12,7 +12,7 @@ What the finished site will offer:
 - This repository is public so you can check how the site was built and tested.
 
 ## How it was built
-A team of Claude Code agents is building the site, working like a small engineering organization: a Supervisor, a Design Lead, Frontend, App/Data, Platform, Security, QA and a Reader Advocate who judges only the rendered pages. Each piece of work is a GitHub Issue, a branch and a reviewed pull request. Rules are enforced by hooks in `.claude/hooks/`, and by CI once it lands (issue #13). The full plan starts at [`plan.md`](plan.md); progress is in [`docs/status.md`](docs/status.md).
+A team of Claude Code agents is building the site, working like a small engineering organization: a Supervisor, a Design Lead, Frontend, App/Data, Platform, Security, QA and a Reader Advocate who judges only the rendered pages. Each piece of work is a GitHub Issue, a branch and a reviewed pull request. Hooks in `.claude/hooks/` catch common rule violations (they are tripwires, see ADR-0018), and CI will check every pull request once it lands (issue #13). The full plan starts at [`plan.md`](plan.md); progress is in [`docs/status.md`](docs/status.md).
 
 Stack: [Astro](https://astro.build) with static output, TypeScript in strict mode, Vitest and Playwright. No server code at runtime. No tracking cookies and no third-party tracking scripts; cookieless analytics after launch (ADR-0008).
 
@@ -26,7 +26,7 @@ npm run browsers:install
 npm run dev
 ```
 
-`npm ci` runs with install scripts turned off (`.npmrc`), so the Playwright browser is installed by its own script.
+`npm ci` runs with install scripts turned off (`.npmrc`), so the Playwright browser is installed by its own script. Until the first page lands (issue #21), the dev server returns 404 at `/`.
 
 | Script | What it does |
 |---|---|
