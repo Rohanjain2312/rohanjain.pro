@@ -184,6 +184,19 @@ console.log(`${st.decision === 'deny' ? 'PASS' : 'FAIL'}  R-803 Stop blocked wit
 const st2 = run('stop-check.mjs', { cwd: feat, stop_hook_active: true });
 console.log(`${st2.decision === 'allow' ? 'PASS' : 'FAIL'}  R-803 no loop when stop_hook_active`); if (st2.decision !== 'allow') fail++;
 
+// R-803 memory exception (#104): a subagent may end with changes only in its own agent-memory folder.
+const swt = join(repo, 'wt-stop'); g('worktree', 'add', '-q', '-b', 'qa/104-stop', swt);
+const memFile = (r, f) => { mkdirSync(join(swt, '.claude', 'agent-memory', r), { recursive: true }); writeFileSync(join(swt, '.claude', 'agent-memory', r, f), 'x'); };
+const stopAs = (agent) => run('stop-check.mjs', { cwd: swt, hook_event_name: agent ? 'SubagentStop' : 'Stop', ...(agent ? { agent_type: agent } : {}) }).decision;
+const stopCases = [];
+memFile('qa-engineer', 'note.md');
+stopCases.push(['R-803 subagent ends with own memory only', stopAs('qa-engineer'), 'allow']);
+stopCases.push(['R-803 supervisor with memory only is blocked', stopAs(), 'deny']);
+stopCases.push(['R-803 other role memory is blocked', stopAs('security-engineer'), 'deny']);
+writeFileSync(join(swt, 'other.txt'), 'x');
+stopCases.push(['R-803 own memory plus another file is blocked', stopAs('qa-engineer'), 'deny']);
+for (const [name, got, want] of stopCases) { const ok = got === want; if (!ok) fail++; console.log(`${ok ? 'PASS' : 'FAIL'}  ${name}  (got ${got}, want ${want})`); }
+
 rmSync(repo, { recursive: true, force: true });
-console.log(`\n${fail === 0 ? 'ALL PASSED' : fail + ' FAILED'} (${cases.length + 4} checks)`);
+console.log(`\n${fail === 0 ? 'ALL PASSED' : fail + ' FAILED'} (${cases.length + 4 + stopCases.length} checks)`);
 process.exit(fail ? 1 : 0);
