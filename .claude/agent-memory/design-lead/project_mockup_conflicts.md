@@ -1,16 +1,15 @@
 ---
 name: mockup-vs-rules-conflicts
-description: Known conflicts between the approved mockups and hard rules (R-601 gradients/red, R-505 CSP inline styles, R-006 questions, N-04 overflow at 320), logged as Q-nn in docs/design/spec.md
+description: How the mockup-vs-rule conflicts (gradients, inline styles, extra colors, question headings, 320 px overflow) were closed; ADR-0015 plus docs/design/spec.md sections 0 to 14
 metadata:
   type: project
 ---
 
-The mockups in `reference/mockup/` are "the approved spec" (01-product §1.4) but break several hard rules. As of 2026-10-15 these are open questions in `docs/design/spec.md` (PR for issue #6):
-- Graph paper is drawn with `linear-gradient` (R-601 bans gradients); 404 uses full-page graph paper (07-design limits it to figures); 404 traceback uses red `#F08A84` (red reserved for margin notes).
-- Inline `style=""` everywhere; CSP is `style-src 'self'` (R-505), so dynamic widths/fills need classes or SVG.
-- About 19 colors in the mockup are not among the 10 tokens in 07-design §7.2.
-- Headings "Hiring? Paste the job description." and "Have a role in mind?" are questions (R-006, R-602 item 2).
-- At 320 px the figure grid (minmax 280) and contact email button overflow (N-04).
+The mockups in `reference/mockup/` are "the approved spec" (01-product §1.4) but broke several hard rules. As of 2026-10-16 all are closed in `docs/design/spec.md` (issue #19) and ADR-0015:
+- Graph paper: SVG tile used as a CSS mask, token color `--grid-line` `#E9E4D6`, figures section only. 404 is plain paper.
+- Inline styles: full rule is no `style` attribute, no inline `<style>`, no inline `<script>` (spec 0.1). Only open point: JSON-LD block, Security to confirm.
+- Extra colors: 9 added tokens, the rest mapped (spec 1.2, 1.3). 404 red dropped; error line uses weight 600.
+- Question headings kept (ADR item 12). 320 px overflow fixed by `min(280px, 100%)`, contact padding 24, `<wbr>` after `@`, wrapping résumé tabs.
 
-**Why:** Reviews against the mockup alone would approve rule violations.
-**How to apply:** In R-602 reviews, check these spots first and check whether the spec's Q-nn has been closed (by spec edit or ADR) before judging.
+**Why:** Reviews against the mockup alone would approve rule violations, and spec departures from the mockup are deliberate.
+**How to apply:** In R-602 reviews, judge against the spec first, then the mockup. A spec departure is listed in 0.2, 1.3 or marked DL; anything else that differs from the mockup is a finding.
