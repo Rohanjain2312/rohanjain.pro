@@ -41,7 +41,7 @@ Target: default branch. Enforcement: active. Bypass actors: none.
 
 Approvals are `approved:<role>` labels checked by `review-gate`, because GitHub does not let an account approve its own PR (docs/spec/03-workflow.md).
 
-The `required_signatures` rule is removed from the ruleset (not paused). See issue #33 and PR #34 (`docs/adr/0014`). Do not add it back without reading the ADR.
+The `required_signatures` rule is active. It was restored on 2026-10-16 by PR #68, which closed issue #33. ADR-0014, which removed the rule, is superseded.
 
 Required status checks are not yet in the ruleset. They are added once the Phase 1 workflows exist.
 
