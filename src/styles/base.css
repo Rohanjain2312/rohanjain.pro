@@ -60,6 +60,7 @@ h3 {
 a {
   color: var(--ink);
   text-decoration-color: var(--rule-strong);
+
   /* No spacing token fits a 3 px underline offset (the 4 px token is for use inside components). */
   text-underline-offset: 3px;
 }

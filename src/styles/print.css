@@ -1,7 +1,7 @@
 /* Print base (design spec section 12): black on white, no navigation. Tokens only. */
 
 @page {
-  size: Letter;
+  size: letter;
   margin: 18mm;
 }
 
