@@ -21,5 +21,6 @@ Steps:
 4. Write `docs/demos/phase-N.md` (screenshots, what changed), `docs/retros/phase-N.md` (went well, went badly, one process change), and run skill `context-audit`.
 5. Write `docs/gates/phase-N.md`: the gate criteria from `docs/spec/11-phases.md`, each with a link to evidence.
 6. Run `node scripts/phase-gate.mjs N`. It fails on missing records or open `severity:medium|high|critical` issues (R-511).
-7. Merge the release-please PR (tags `v0.N.0`).
-8. If the gate passes, start the next phase when usage allows (skill `session-protocol`). Never wait for the client.
+7. Renew the interaction limit: `gh api -X PUT repos/Rohanjain2312/rohanjain.pro/interaction-limits -f limit=collaborators_only -f expiry=six_months` (ADR-0018).
+8. Merge the release-please PR (tags `v0.N.0`).
+9. If the gate passes, start the next phase when usage allows (skill `session-protocol`). Never wait for the client.
