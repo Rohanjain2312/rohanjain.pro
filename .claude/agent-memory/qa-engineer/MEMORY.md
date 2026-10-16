@@ -1,0 +1,1 @@
+- [Review mechanics](reference_review_mechanics.md): label name approved:qa, clean-clone verification, sandbox command limits
