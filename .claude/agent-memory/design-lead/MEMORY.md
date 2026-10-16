@@ -1,0 +1,2 @@
+- [Mockup citations](feedback_mockup_citations.md): grep exact mockup line numbers before citing; sandbox rejects git+loop shell commands
+- [Mockup vs rules conflicts](project_mockup_conflicts.md): gradients, inline styles, extra colors, question headings, 320 px overflow
