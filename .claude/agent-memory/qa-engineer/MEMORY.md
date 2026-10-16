@@ -16,3 +16,4 @@
 - [Gate state](project_gate_state.md): which QA gates exist on main (lint-copy, lychee, format) and which are missing as of 2026-10-16
 - [Read the issue before the PR body](feedback-r705-issue-before-body.md): R-705 ordering; the PR body is the builder's report, so leave it out of the first fetch.
 - [Stylelint token rules](reference-stylelint-token-rules.md): rgb() is banned in every file, including tokens.css; what the token override really exempts.
+- [Git hooks gaps (PR #109)](project-git-hooks-pr109.md): case-sensitive R-501, merge/fixup ignores, gitleaks unrun; how to probe hooks e2e
