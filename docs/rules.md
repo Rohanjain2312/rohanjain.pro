@@ -89,7 +89,7 @@ Every "must" and "never" in this project lives here, with exactly one home. 86 r
 | R-705 | QA writes acceptance tests from the issue's criteria without reading the builder's report. | `.claude/agents/qa-engineer.md` | judgment | prose |
 | R-801 | Check usage before each phase and each issue; start a phase only if it fits in the remaining usage. | `.claude/skills/session-protocol/SKILL.md` | judgment | prose |
 | R-802 ★ | After each issue: commit, push, merge if green, update docs/status.md. | `.claude/skills/session-protocol/SKILL.md` | Stop hook warns on uncommitted work | active |
-| **R-803** ★ | Never end a session with uncommitted work; push a draft PR instead. | here | Stop hook | active |
+| **R-803** ★ | Never end a session with uncommitted work; push a draft PR instead. A subagent may leave only its own agent-memory notes uncommitted; the Supervisor collects them. | here | Stop hook | active |
 | R-804 ★ | A phase closes only when its plan, demo, retro and gate records exist. | `.claude/skills/phase-gate/SKILL.md` | phase-gate script | phase-1 |
 | R-805 ★ | Tasks live in GitHub Issues and progress in docs/status.md; plan.md and docs/spec/ hold intent only. | `CLAUDE.md` | docs lint rejects task checklists in docs/spec/ | active |
 | **R-806** ★ | Instruction files stay within token budgets, and every rule has exactly one home. | here | docs lint | active |

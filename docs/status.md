@@ -3,10 +3,10 @@
 Resume pointer. Updated after every issue (R-802). Read at every session start.
 
 - **Phase:** 1 in progress (started 2026-10-16, plan `docs/phases/phase-1-plan.md`).
-- **Last merged issues:** #1 (PR #2), #32 (PR #37), #7 (PR #35), #46 (PR #52), #45, #60, #61 (PR #53), #44, #62 (PR #55), #3 (PR #36), #6 (PR #48), #4, #38 (PR #34), #50 (PR #65), #66 (PR #67), #5 (PR #49), #33 (PR #68), #70 (PR #71), #39 (PR #40), #8 (PR #76), #69 (PR #73), #10 (PR #77), #78 (PR #81), #19 (PR #82), #87 (this PR)
-- **Next:** finish reviews: #83 (#22, Security), #84 (#30, QA), #85 (#11, QA then Security). Then wave 2: #12, #17 (platform, one at a time: shared package.json), #20 tokens (design), #27 copy lint (qa).
-- **Open PRs:** #83, #84, #85 in review. Agent-memory drafts #80, #86, #88: merge as one consolidation PR.
-- **Open findings:** no Medium or higher. Low: #42, #47, #51, #54, #56, #58, #63, #79 (Phase 1), #72 (Phase 7).
+- **Last merged issues:** #1 (PR #2), #32 (PR #37), #7 (PR #35), #46 (PR #52), #45, #60, #61 (PR #53), #44, #62 (PR #55), #3 (PR #36), #6 (PR #48), #4, #38 (PR #34), #50 (PR #65), #66 (PR #67), #5 (PR #49), #33 (PR #68), #70 (PR #71), #39 (PR #40), #8 (PR #76), #69 (PR #73), #10 (PR #77), #78 (PR #81), #19 (PR #82), #22 (PR #83), #11 (PR #85), #87 (PR #89), #93 (PR #94), #104 (this PR)
+- **Next:** merge #84 (#30) after QA. Wave 2: #12, #17 (platform, one at a time: shared package.json), #20 tokens (design), #27 copy lint (qa). Then wave 3.
+- **Open PRs:** #84 (#30, QA re-review). Memory drafts #103, #105: fold into the phase memory PR. #80: Security's phase-1 review log; drop its memory files (merged in #94) when Security next updates it. Dependabot #97 to #101: TypeScript 7 and ESLint 10 majors are blocked by `@astrojs/check` and the lint plugins (#77, #85); handle with #15.
+- **Open findings:** no Medium or higher. Low: #42, #47, #51, #54, #56, #58, #63, #79, #91, #95 (Phase 1), #72 (Phase 7). Spec follow-ups: #96 SECURITY.md (security).
 - **Blocked on client:** nothing. Optional: `brew upgrade gh`.
 - **Process:** subagents on sonnet (haiku for chores), never opus; at most two in parallel (client, 2026-10-16). Run `npm ci` in the main checkout after a merge that changes the lockfile: nested worktrees resolve its `tsconfig.json`, and `astro check` fails without its `node_modules`. Run `gh pr ready` from the PR's worktree (R-110 checks the cwd's HEAD). Follow the Phase 0 retro process change (run-review to the letter).
 - **Interrupted work:** none
