@@ -238,8 +238,10 @@ for (let t of segs.flatMap((s) => expand(s))) {
       const top = gitTop(cwd) || cwd;
       const pkg = readIfExists(join(top, 'package.json'));
       if (/"verify"\s*:/.test(pkg)) {
-        const stamp = readIfExists(join(projectDir(input), '.claude', 'state', 'verify-ok')).trim();
-        if (stamp !== headSha(cwd)) deny(input, 'R-110', 'Run npm run verify on this HEAD before marking the PR ready.');
+        // verify.mjs stamps CLAUDE_PROJECT_DIR or its cwd, so accept either tree; the SHA match is the check (#78).
+        const head = headSha(cwd);
+        const stamped = [top, projectDir(input)].some((d) => readIfExists(join(d, '.claude', 'state', 'verify-ok')).trim() === head);
+        if (!head || !stamped) deny(input, 'R-110', 'Run npm run verify on this HEAD before marking the PR ready.');
       }
     }
 
