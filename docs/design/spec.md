@@ -82,16 +82,16 @@ These are content fixes owned by App/Data and the Supervisor. They are listed so
 | `--diff-del-fg` | `#E3C9C4` | L460 | text on removed diff lines |
 | `--diff-add-fg` | `#D3E6C8` | L460 | text on added diff lines |
 | `--grid-line` | `#E9E4D6` | L150 | graph-paper line (1.3) |
-| `--overlay` | `rgb(27 26 23 / 0.62)` | L275, L338 | dialog backdrop (ink at 62%) |
-| `--print-paper` | `#FFFFFF` | L126, L166, L288 | résumé and brief sheet; print background (ADR 2) |
+| `--overlay` | `#1B1A179E` | L275, L338 | dialog backdrop (ink at 62%; the mockup writes `rgb(27 26 23 / 0.62)`, but Stylelint bans `rgb()` outside the token file, so the token is the hex8 form, DL) |
+| `--print-paper` | `#FFFFFF` | L126, L166, L169, L288, L344 | résumé and brief sheet; print background (ADR 2) |
 
 ### 1.3 Aliases (no new value) and mapped colors
-Aliases: `--well` = `--print-paper` (image and bar wells, demo stage; L126, L166, L169); `--verdict-strong` = `--ink`; `--verdict-good` = `--ink-3`; `--verdict-none` = `--muted`; `--focus` = `--ink`, re-mapped to `--paper` inside any ink surface (9.1).
+Aliases: `--well` = `--print-paper` (image and bar wells, demo stage; L126, L166, L169). The other `#FFFFFF` uses are the résumé and brief sheets (L288, L344), which are `--print-paper` itself, and the solid-button hover text (L19), which maps to `--paper` below; `--verdict-strong` = `--ink`; `--verdict-good` = `--ink-3`; `--verdict-none` = `--muted`; `--focus` = `--ink`, re-mapped to `--paper` inside any ink surface (9.1).
 
 Mapped onto existing tokens (ADR 1, near-duplicates):
 | Mockup value | Where | Becomes | Reason |
 |---|---|---|---|
-| `#3D3A33` | L58, L151, L192, L202 | `--ink-2` | Same role; 12.93 on paper instead of 10.23 |
+| `#3D3A33` | L58, L62, L66, L128, L151, L192, L202, L238, L291, L348 | `--ink-2` | Same role; 12.93 on paper instead of 10.23 |
 | `#EDE9DD` | L93, L215, 404 L23 | `--paper` | Higher contrast on `#6B6559` (5.22 instead of 4.76) |
 | `#D9D4C7` | L262 | `--on-ink-muted` | One secondary tone on ink instead of two |
 | `#000000` | L15 | `--ink` | Hover changes the underline, not the text |
@@ -352,7 +352,7 @@ Mono `--fs-xs` `--muted`; IEEE, MS, interns. Wraps. Numbers (3 interns) from `cl
   - Dialog column 860. Toolbar (sticky, as 7.13): project name in mono `--fs-sm` `--paper` on the left, "live demo ↗" text link (direct link fallback) and "Close" outlined control on the right.
   - Sheet: `--well` fill, 1.5 px `--ink` border (L126). Row 1: the Space host and path in mono `--fs-xs` `--muted`, padding 8 8, 1 px `--rule` bottom (L127). Row 2: the stage, `height: min(72vh, 560px)`, which holds the same box in both states so nothing shifts. Row 3: one line of description from the mockup (L464, L465), `--fs-base` `--ink-2`.
   - Static state: a screenshot of the Space (`object-fit: contain`) if one exists; until then the description text centered in the stage, as the mockup does (L128). A solid "Load live demo" button under the stage, and the wake note (copy: Supervisor, section 14.3) in `--fs-sm` `--muted` beside it.
-  - Loaded state: the iframe replaces the stage content (`*.hf.space` only, sandboxed, `loading="lazy"`, with a `title`). While it wakes the stage shows the wake note and nothing animates. No spinner, no skeleton.
+  - Loaded state: the iframe replaces the stage content (`*.hf.space` only, sandboxed, `loading="lazy"`, with a `title`; the sandbox flags, `referrerpolicy` and the rest of the embed attributes are in `docs/spec/06-architecture.md` §5.6, not repeated here). While it wakes the stage shows the wake note and nothing animates. No spinner, no skeleton.
   - Down state (from `status.json`): the trigger is replaced by the "live demo ↗" text link and a mono `--fs-xs` `--muted` line with the check date. No colored dots. Copy: Supervisor.
 
 ### 7.7 More projects (L134 to L146; data L481 to L487)
@@ -367,7 +367,7 @@ Fold, count 5. Rows: flex wrap, gap 4 24 (2 and 20 snap), padding 8 0 (10 snaps)
   - Without JS (Q-28): entries are plain anchor links that jump to the first matching tile; no highlight; all tiles are equal.
 - **Tiles:** 6 images (`reference/figures/`, mapping in `reference/README.md`) and 4 bar tiles, each on its own axis (F-08). Tile metrics in section 6. Selected tile (Q-27): `outline: 2px solid var(--ink); outline-offset: -2px` so the box does not change size.
 - **Image well:** 184 high (180 snaps to 184), `--well`, 1 px `--rule-faint`, `object-fit: contain`, explicit `width` and `height` attributes, lazy-loaded. Failure shows the alt text in the well.
-- **Bar tile (ADR 5):** the well is 184 high with padding 16, gap 16, content centered. Each bar is a label row (label left, value right, mono `--fs-xs`) over an inline SVG generated at build time: `viewBox="0 0 100 16"`, `preserveAspectRatio="none"`, `width: 100%`, height 16, `aria-hidden`; a track rect (100 wide, `--rule-faint`) and a fill rect whose `width` is value divided by the axis maximum. Fill: `--ink` for the strong bar, `--muted` for the weak one (Q-05). Under the bars, the axis line in mono `--fs-xs` `--muted`. The values are text, so the SVG carries no information alone. A 0% bar is a track with no fill rect.
+- **Bar tile (ADR 5):** the well is 184 high with padding 16, gap 16, content centered. Each bar is a label row (label left, value right, mono `--fs-xs`) over an inline SVG generated at build time: `viewBox="0 0 100 16"`, `preserveAspectRatio="none"`, `width: 100%`, height 16 (the mockup's track is 12, L173; 16 is **DL**: on the 8 px rhythm; 12 is not a scale value), `aria-hidden`; a track rect (100 wide, `--rule-faint`) and a fill rect whose `width` is value divided by the axis maximum. Fill: `--ink` for the strong bar, `--muted` for the weak one (Q-05). Under the bars, the axis line in mono `--fs-xs` `--muted`. The values are text, so the SVG carries no information alone. A 0% bar is a track with no fill rect.
 
 ### 7.9 03 · Check fit (L189 to L247; logic L416 to L449; samples L408 to L414)
 - Column, gap 16. Label; H2 "Hiring? Paste the job description." (ADR 12 keeps it); intro `--measure-read` `--ink-2` (L192).

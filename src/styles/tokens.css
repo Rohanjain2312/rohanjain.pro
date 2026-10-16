@@ -1,0 +1,129 @@
+/*
+  Design tokens. Source: docs/spec/07-design.md sections 7.2 and 7.3, and docs/design/spec.md
+  (section numbers in comments point there). This file is the only place a color value is written
+  (R-601). Everything else uses var(--token).
+
+  Not here, on purpose:
+  - No gradients, shadows or dark mode tokens (07-design 7.3). The paper look is the identity.
+  - No breakpoint tokens. A custom property cannot be read in a media query. The one layout break is
+    @media (min-width: 48em), which is 768 px and follows text zoom (spec section 5).
+  - Sizes are in rem at a 16 px root, as the spec writes them. Rule weights and the focus ring are px.
+*/
+
+:root {
+  color-scheme: light;
+
+  /* 1.1 Core colors (07-design 7.2) */
+  --paper: #f6f3eb; /* page background; text on ink */
+  --card: #fbf9f3; /* chips, textarea, inputs, figure tiles */
+  --ink: #1b1a17; /* text, 1.5 px rules, solid button, dark bands */
+  --ink-2: #2c2a25; /* lede and body prose */
+  --muted: #5e5a50; /* labels, dates, captions; weak bar fill */
+  --rule: #cfc8b6; /* 1 px dividers, chip and tile borders */
+  --rule-faint: #e2dccc; /* list rows in folds, image frames, bar track */
+  --note: #b42b25; /* RED: margin notes only, never a state or accent */
+  --diff-del-bg: #3a2422; /* removed lines in the v1 to v2 diff */
+  --diff-add-bg: #22331f; /* added lines in the v1 to v2 diff */
+
+  /*
+    1.2 Added colors (ADR-0015 items 1 and 2). Each carries a distinct state or surface.
+    --overlay is --ink at 62% (0x9E of 0xFF). It is hex because rgb() is banned outside this file.
+  */
+  --rule-strong: #8a8474; /* link underline; dashed gap chip; timeline underline */
+  --ink-3: #3a3833; /* solid-button hover fill; "Good fit, with gaps" fill */
+  --verdict-weak: #6b6559; /* "Not a strong fit" fill */
+  --on-ink-muted: #b8b2a3; /* secondary text on ink */
+  --diff-del-fg: #e3c9c4; /* text on removed diff lines */
+  --diff-add-fg: #d3e6c8; /* text on added diff lines */
+  --grid-line: #e9e4d6; /* graph-paper line, figures section only */
+  --overlay: #1b1a179e; /* dialog backdrop */
+  --print-paper: #fff; /* resume and brief sheet; print background */
+
+  /*
+    1.3 Aliases (no new value).
+    --focus is --ink. Inside an ink surface (contact band, dialog toolbars, /for top bar,
+    traceback) the component sets --focus: var(--paper) (spec 9.1).
+  */
+  --well: var(--print-paper); /* image and bar wells, demo stage */
+  --verdict-strong: var(--ink);
+  --verdict-good: var(--ink-3);
+  --verdict-none: var(--muted);
+  --focus: var(--ink);
+
+  /*
+    2. Type families. Serif for prose and headings (italic in --note for margin notes).
+    Mono for numbers, labels, navigation, buttons and code. Metric-matched fallbacks are set
+    with the font files.
+  */
+  --font-serif: 'Newsreader', 'Georgia', serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-strong: 600;
+
+  /* 2.1 Size ladder. The floor is 13 px: nothing on the site is smaller. */
+  --fs-xs: 0.8125rem; /* 13 */
+  --fs-sm: 0.875rem; /* 14 */
+  --fs-md: 0.9375rem; /* 15 */
+  --fs-base: 1rem; /* 16 */
+  --fs-body: 1.125rem; /* 18 */
+  --fs-h3: 1.375rem; /* 22 */
+
+  /*
+    2.2 Fluid sizes. Each is linear in viewport width between 390 and 1280 px, so the value at
+    390 is the smallest design size. The minimum is the value at 320 px rounded down to an even
+    px. Comments give px at 320 / 390 / 768 / 1280.
+  */
+  --fs-h1: clamp(3rem, 2.264rem + 4.045vw, 5.5rem); /* 49 52 67 88: home H1 */
+  --fs-page: clamp(2.375rem, 1.843rem + 2.697vw, 4rem); /* 38 40 50 64: /for H1 */
+  --fs-compact: clamp(2.125rem, 1.702rem + 2.247vw, 3.5rem); /* 34 36 45 56: 404 H1 */
+  --fs-h2: clamp(1.625rem, 1.476rem + 1.124vw, 2.375rem); /* 27 28 32 38: H2 */
+  --fs-verdict: clamp(1.625rem, 1.586rem + 0.674vw, 2.125rem); /* 28 28 31 34 */
+  --fs-figure: clamp(1.875rem, 1.836rem + 0.674vw, 2.375rem); /* 32 32 35 38 */
+  --fs-lede: clamp(1.125rem, 1.14rem + 0.449vw, 1.5rem); /* 20 20 22 24: lede */
+  --fs-h2-sub: 1.75rem; /* 28 fixed: /for topics H2 */
+  --leading-body: 1.55;
+  --tracking-h1: -0.03em; /* home H1 */
+  --tracking-page: -0.02em; /* /for H1 */
+  --tracking-label: 0.08em; /* uppercase mono labels */
+
+  /* 3. Spacing on the 8 px rhythm. 4 is for use inside a component only. */
+  --space-4: 0.25rem;
+  --space-8: 0.5rem;
+  --space-16: 1rem;
+  --space-24: 1.5rem;
+  --space-32: 2rem;
+  --space-40: 2.5rem;
+  --space-48: 3rem;
+  --space-56: 3.5rem;
+  --space-64: 4rem;
+  --space-72: 4.5rem;
+
+  /* Hit areas. Boxed controls are 48; text-only links keep a 44 minimum (R-606). */
+  --control-height: 3rem;
+  --target-min: 2.75rem;
+
+  /* 4. Layout. One column, centered, with gutters outside the container. */
+  --container: 70rem; /* 1120 */
+  --gutter: 1.5rem; /* 24 */
+  --measure-narrow: 35rem; /* 560: contact line */
+  --measure-lede: 38.75rem; /* 620: hero lede */
+  --measure-read: 43.75rem; /* 700: reading text */
+  --measure-wide: 47.5rem; /* 760: production summary */
+
+  /* Rule weights. These are borders, not spacing. */
+  --rule-w: 1px; /* dividers, chip and tile borders */
+  --rule-w-strong: 1.5px; /* starts a major block; inputs; outlined controls */
+  --focus-w: 2px; /* focus ring and selected-tile outline */
+  --focus-offset: 2px;
+
+  /* 10. Motion. The fold marker is the only motion on the site (R-608: 200 ms at most). */
+  --motion-fold: 150ms;
+}
+
+/* Reduced motion: the fold marker still turns, with no transition. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fold: 0ms;
+  }
+}
