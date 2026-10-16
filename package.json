@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
+    "preview": "node scripts/preview.mjs",
     "check": "astro check && tsc --noEmit",
     "test": "vitest run --passWithNoTests",
     "test:coverage": "vitest run --coverage --coverage.include=src/lib/**/*.ts --coverage.thresholds.lines=90",
