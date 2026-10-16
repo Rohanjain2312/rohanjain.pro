@@ -16,3 +16,8 @@ One entry at the start and end of each session (skill `session-protocol`).
 - Done since last time: Phase 0 gate passed. Removed a stale #39 worktree whose edits PR #40 had superseded.
 - Doing now: Phase 1 wave 1 (#10, #19, #30) and wave 2 (#11, #22). Fixing #78 (R-110 stamp path) found while building #10.
 - Blockers: none. #75 (headless probe re-run) needs a logged-in `claude` CLI, which agent shells lack.
+
+## 2026-10-16 end (Phase 1)
+- Done: #10 scaffold, #19 design spec, #30 README/CONTRIBUTING/LICENSE (ADR-0019), #11 lint gates, #22 content schemas, #20 tokens, #27 copy lint, #12 git hooks. Process fixes: #78 (R-110 stamp path), #104 (Stop hook lets subagents leave memory uncommitted), #87 (JSON-LD exemption), #93 (memory consolidation).
+- Next: #17, then wave 3 (#13, #16, #18, #21, #23, #24).
+- Blockers: none. Client: nothing required. Optional: `brew upgrade gh`.

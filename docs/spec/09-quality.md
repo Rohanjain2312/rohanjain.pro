@@ -12,7 +12,7 @@ Test strategy, budgets, golden postings, mutation and property tests. Owned by Q
 | Acceptance | Playwright, written from acceptance criteria | QA | Each issue's criteria, independent of the builder |
 | Mutation | StrykerJS (Vitest runner) | QA | Tests actually catch bugs in `src/lib/` (§9.5) |
 | Property | fast-check | QA | Fit-check invariants (§9.5) |
-| Copy lint | `scripts/lint-copy.ts` | QA | No em dashes, banned hype words, work-authorization terms, or inconsistent location, titles and years across site and PDFs |
+| Copy lint | `scripts/lint-copy.mjs` | QA | No em dashes, banned hype words, work-authorization terms, or inconsistent location, titles and years across site and PDFs |
 | Component | Vitest + Astro container API | Frontend | Cards, folds, report, brief |
 | End-to-end | Playwright | Frontend + B | Home, folds, each sample, brief, résumé tabs and PDFs, keyboard-only path, `/for` page, 404 |
 | Visual regression | Playwright screenshots | Frontend, baselines approved by Design Lead | 390, 768, 1280 px |
