@@ -150,6 +150,18 @@ const cases = [
   ['R-610 md in pages', write('src/pages/notes.md', 'x', 'frontend-engineer'), 'deny'],
 ];
 
+// R-110: the verify stamp may sit in the worktree or in the project dir; only a HEAD match passes (#78).
+const vwt = join(repo, 'wt-verify'); g('worktree', 'add', '-q', '-b', 'platform/78-stamp', vwt);
+writeFileSync(join(vwt, 'package.json'), '{"scripts":{"verify":"node scripts/verify.mjs"}}');
+const vhead = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: vwt, encoding: 'utf8' }).trim();
+const stampAt = (dir, sha) => { mkdirSync(join(dir, '.claude', 'state'), { recursive: true }); writeFileSync(join(dir, '.claude', 'state', 'verify-ok'), sha + '\n'); };
+const unstamp = (dir) => rmSync(join(dir, '.claude', 'state', 'verify-ok'), { force: true });
+const ready = () => bash('gh pr ready 9', 'platform-engineer', vwt);
+cases.push(['R-110 no stamp', ready(), 'deny']);
+stampAt(vwt, vhead); cases.push(['R-110 worktree stamp matches HEAD', ready(), 'allow']); unstamp(vwt);
+stampAt(repo, vhead); cases.push(['R-110 project-dir stamp matches HEAD', ready(), 'allow']);
+stampAt(repo, 'f'.repeat(40)); stampAt(vwt, 'e'.repeat(40)); cases.push(['R-110 stale stamps', ready(), 'deny']); unstamp(vwt); unstamp(repo);
+
 let fail = 0;
 for (const [name, res, want] of cases) {
   const ok = res.decision === want;
