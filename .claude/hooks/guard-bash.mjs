@@ -16,13 +16,43 @@ if (/\brm\s+(-[a-zA-Z]*r[a-zA-Z]*f|-[a-zA-Z]*f[a-zA-Z]*r)[a-zA-Z]*\s+(\/|~|\$HOM
 const SECRET = /(^|[\s'"=\/])(\.env(\.[\w.-]+)?|[\w.-]+\.(pem|key)|postings\/[^\s'"]*|[\w.-]+\.jd\.txt)(?=$|[\s'"])/;
 const ROLE_RE = /^(design|frontend|appdata|platform|security|qa|reader|supervisor)\/\d+-[a-z0-9][a-z0-9-]*$/;
 
+function fileText(f) { return readIfExists(isAbsolute(f) ? f : resolve(cwd, f)); }
+// Comment body as the hook can see it. Bodies it cannot see (stdin without a heredoc,
+// command substitution without a heredoc) are denied so reviews are always checkable (R-202).
 function bodyOf(t) {
+  let body = null;
+  let file = null;
   for (let i = 0; i < t.length; i++) {
-    if (t[i] === '--body' || t[i] === '-b') return t[i + 1] || '';
-    if (t[i].startsWith('--body=')) return t[i].slice(7);
-    if (t[i] === '--body-file' || t[i] === '-F') { const f = t[i + 1] || ''; return readIfExists(isAbsolute(f) ? f : resolve(cwd, f)); }
+    if (t[i] === '--body' || t[i] === '-b') body = t[i + 1] || '';
+    else if (t[i].startsWith('--body=')) body = t[i].slice(7);
+    else if (t[i] === '--body-file' || t[i] === '-F') file = t[i + 1] || '';
+    else if (t[i].startsWith('--body-file=')) file = t[i].slice(12);
   }
-  return '';
+  if (file === '-') {
+    if (!/<</.test(cmd)) deny(input, 'R-202', 'Use --body text or --body-file <path> so the comment can be checked.');
+    return cmd;
+  }
+  if (file !== null) return fileText(file);
+  if (body !== null && /\$\(|`/.test(body) && !/<</.test(body)) deny(input, 'R-202', 'Command substitution in a comment body hides it from checks. Use --body text or --body-file <path>.');
+  return body || '';
+}
+// Unwrap env/command/exec/nohup/time prefixes, VAR=value assignments and sh -c strings.
+const WRAPPERS = new Set(['env', 'command', 'exec', 'nohup', 'time', 'builtin', 'xargs']);
+function expand(seg, depth = 0) {
+  let t = tokenize(seg);
+  while (t.length) {
+    if (WRAPPERS.has(t[0])) { t = t.slice(1); while (t.length && /^-/.test(t[0])) t = t.slice(1); continue; }
+    if (/^[A-Za-z_][A-Za-z0-9_]*=/.test(t[0])) { t = t.slice(1); continue; }
+    break;
+  }
+  if (/^(sh|bash|zsh|dash)$/.test(t[0] || '')) {
+    const i = t.findIndex((a) => /^-[a-z]*c$/.test(a));
+    if (i >= 0 && t[i + 1] !== undefined) {
+      if (depth > 3) deny(input, 'R-203', 'Nested shell wrappers are blocked.');
+      return segments(t[i + 1]).flatMap((s) => expand(s, depth + 1));
+    }
+  }
+  return [t];
 }
 function msgOf(t) {
   const parts = [];
@@ -59,8 +89,7 @@ if (role === 'reader-advocate') {
   for (const s of segs) if (!ok.some((r) => r.test(s))) deny(input, 'R-210', `The Reader Advocate may not run "${s.slice(0, 60)}". Allowed: gh pr view|checkout|comment|edit, npm ci, npm run build|preview|shots.`);
 }
 
-for (const seg of segs) {
-  let t = tokenize(seg);
+for (let t of segs.flatMap((s) => expand(s))) {
   if (t[0] === 'cd' && t[1]) { cwd = isAbsolute(t[1]) ? t[1] : resolve(cwd, t[1]); continue; }
   if (t[0] === 'git') {
     // strip global options: -C <path>, -c <k=v>
@@ -188,22 +217,27 @@ for (const seg of segs) {
     let endpoint = '';
     const fields = [];
     let hasInput = false;
+    let inputText = '';
+    // -F key=@file reads the file; check its text as the value.
+    const typedField = (f) => { const k = f.indexOf('='); return k > 0 && f[k + 1] === '@' ? f.slice(0, k + 1) + fileText(f.slice(k + 2)) : f; };
     for (let i = 0; i < args.length; i++) {
       const a = args[i];
       if (a === '-X' || a === '--method') { method = String(args[i + 1] || '').toUpperCase(); i++; continue; }
       if (a.startsWith('--method=')) { method = a.slice(9).toUpperCase(); continue; }
       if (/^-X[A-Za-z]+$/.test(a)) { method = a.slice(2).toUpperCase(); continue; }
-      if (['-f', '-F', '--field', '--raw-field'].includes(a)) { fields.push(String(args[i + 1] || '')); i++; continue; }
-      if (/^--(raw-)?field=/.test(a)) { fields.push(a.slice(a.indexOf('=') + 1)); continue; }
-      if (a === '--input') { hasInput = true; i++; continue; }
-      if (a.startsWith('--input=')) { hasInput = true; continue; }
+      if (['-F', '--field'].includes(a)) { fields.push(typedField(String(args[i + 1] || ''))); i++; continue; }
+      if (/^--field=/.test(a)) { fields.push(typedField(a.slice(8))); continue; }
+      if (['-f', '--raw-field'].includes(a)) { fields.push(String(args[i + 1] || '')); i++; continue; }
+      if (/^--raw-field=/.test(a)) { fields.push(a.slice(12)); continue; }
+      if (a === '--input') { hasInput = true; inputText += fileText(String(args[i + 1] || '')); i++; continue; }
+      if (a.startsWith('--input=')) { hasInput = true; inputText += fileText(a.slice(8)); continue; }
       if (VALUE_FLAGS.includes(a)) { i++; continue; }
       if (!a.startsWith('-') && !endpoint) endpoint = a;
     }
     const path = endpoint.replace(/^https?:\/\/[^/]+/, '').replace(/^\//, '').split('?')[0];
     const write = (method && method !== 'GET') || (!method && (fields.length > 0 || hasInput));
     if (path === 'graphql') {
-      const q = [...fields, cmd].join('\n');
+      const q = [...fields, inputText, cmd].join('\n');
       if (/\bmutation\b/.test(q) && /(merge|label|ruleset|branchprotection|review|comment|ref\b|refs?\(|updateRef|createRef|deleteRef|automerge)/i.test(q)) {
         deny(input, 'R-203', 'GraphQL mutations on merges, labels, reviews, comments, refs or rulesets are blocked. Use the gh pr commands.');
       }
