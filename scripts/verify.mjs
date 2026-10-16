@@ -16,6 +16,7 @@ const steps = [
   ['eslint (R-401, R-405)', 'npm', ['run', 'lint']],
   ['stylelint (R-601, R-608)', 'npm', ['run', 'lint:css']],
   ['lint rule self-test', 'npm', ['run', 'lint:selftest']],
+  ['hook tests (R-101, R-105, R-106, R-501)', 'npm', ['run', 'hooks:test']],
   ['type check (N-08)', 'npm', ['run', 'check']],
   ['unit tests (N-08)', 'npm', ['test']],
   ['build (N-09)', 'npm', ['run', 'build']],
