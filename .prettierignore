@@ -1,0 +1,16 @@
+dist/
+.astro/
+node_modules/
+coverage/
+reports/
+playwright-report/
+test-results/
+package-lock.json
+# Reference material, docs and agent files are not site code
+reference/
+docs/
+.claude/
+plan.md
+CLAUDE.md
+# Fixtures violate rules on purpose
+.github/lint-fixtures/

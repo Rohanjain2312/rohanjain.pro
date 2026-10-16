@@ -1,6 +1,6 @@
 name: Task
 description: One unit of work for one owner role (docs/spec/03-workflow.md).
-title: "<summary>"
+title: '<summary>'
 body:
   - type: dropdown
     id: owner
@@ -29,7 +29,7 @@ body:
     attributes:
       label: Acceptance criteria
       description: A checklist. Each item can be verified.
-      placeholder: "- [ ] ..."
+      placeholder: '- [ ] ...'
     validations:
       required: true
   - type: textarea

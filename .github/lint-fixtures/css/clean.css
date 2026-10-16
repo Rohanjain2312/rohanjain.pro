@@ -1,0 +1,10 @@
+a {
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--rule);
+  transition: color 200ms ease;
+}
+
+b {
+  transition: opacity 0.15s ease;
+}
