@@ -1,0 +1,2 @@
+- [Review checklist and escaped defects](feedback_review_checklist.md): read before every review (closing keywords, regressed findings, live GitHub checks)
+- [Tooling quirks](reference_tooling_quirks.md): gh label edits via REST, em-dash hook, worktree git guard
