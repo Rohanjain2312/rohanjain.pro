@@ -1,0 +1,4 @@
+Named &mdash; entity
+Decimal &#8212; entity
+Hex &#x2014; entity
+Escape \u2014 done

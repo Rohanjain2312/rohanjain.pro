@@ -17,6 +17,7 @@
     "browsers:install": "npx --no-install playwright install chromium",
     "validate:content": "node scripts/validate-content.ts",
     "docs:lint": "node scripts/lint-docs.mjs",
+    "lint:copy": "node scripts/lint-copy.mjs",
     "verify": "node scripts/verify.mjs",
     "lint": "eslint . --max-warnings 0",
     "lint:css": "stylelint \"src/**/*.{css,astro,html}\" --allow-empty-input",
