@@ -8,4 +8,5 @@
 - [Review checklist](feedback_review_checklist.md): closing keywords, regressed findings, live GitHub checks, stale approvals
 - [Repo settings checklist](review_checklist_repo_settings.md): re-verify live gh api at review, CODEOWNERS vs owners.json, Actions perms
 - [Token step review](token_step_review.md): check step interaction (gh auth refresh) and fine-grained permissions in needs-client.md
+- [Dependency review](dependency_review_checklist.md): R-506 PRs: release age vs cooldown (#79), signatures, provenance, OSV batch, telemetry
 - [Signed commits](signed_commits_paused.md): R-107 rule paused in Phase 0, restored by PR #68; scope removed by the client, RR-8 closed
