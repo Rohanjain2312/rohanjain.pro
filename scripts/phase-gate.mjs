@@ -15,7 +15,8 @@ import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 
-const REPO = process.env.PHASE_GATE_REPO || 'Rohanjain2312/rohanjain.pro';
+const testMode = () => process.env.PHASE_GATE_TEST === '1';
+const repo = () => (testMode() && process.env.PHASE_GATE_REPO) || 'Rohanjain2312/rohanjain.pro';
 const SEVERITIES = ['severity:medium', 'severity:high', 'severity:critical'];
 const CLAUDE_EXCLUDES = [
   '.claude/state',
@@ -79,12 +80,16 @@ function gh(args) {
 }
 
 function githubData(fixture) {
-  if (fixture) return JSON.parse(readFileSync(fixture, 'utf8'));
+  if (fixture) {
+    if (!testMode())
+      throw new Error('R-511 --gh-fixture is test-only; refused unless PHASE_GATE_TEST=1');
+    return JSON.parse(readFileSync(fixture, 'utf8'));
+  }
   const issues = gh([
     'issue',
     'list',
     '-R',
-    REPO,
+    repo(),
     '--state',
     'open',
     '--limit',
@@ -96,12 +101,17 @@ function githubData(fixture) {
     title: i.title,
     labels: i.labels.map((l) => l.name),
   }));
-  const limit = gh(['api', `repos/${REPO}/interaction-limits`]);
+  const limit = gh(['api', `repos/${repo()}/interaction-limits`]);
   return { issues, limit };
 }
 
 export function checkGate({ phase, root, fixture = null, nextGate = null, now = Date.now() }) {
   const failures = [];
+  if (nextGate && (!Number.isFinite(Date.parse(nextGate)) || Date.parse(nextGate) < now)) {
+    return [
+      `ADR-0018 --next-gate "${nextGate}" is unparseable or in the past; give a future YYYY-MM-DD date`,
+    ];
+  }
   const need = (rule, rel) => {
     if (!existsSync(join(root, rel))) failures.push(`${rule} missing ${rel}`);
   };

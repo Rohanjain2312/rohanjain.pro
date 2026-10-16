@@ -1,0 +1,5 @@
+# Time-boxed waiver, ADR-0021. Ignore by advisory ID only, never by package.
+[[IgnoredVulns]]
+id = "GHSA-vfj7-8cjw-p6xm"
+ignoreUntil = 2027-01-15
+reason = "Dev-only braces DoS via micromatch in stylelint and eslint-plugin-astro; no fix available; see docs/adr/0021-osv-braces-waiver.md"

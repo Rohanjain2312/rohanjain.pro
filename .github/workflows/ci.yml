@@ -200,8 +200,6 @@ jobs:
         run: npm ci --ignore-scripts
       - name: npm audit, production dependencies, high severity (R-507)
         run: npm audit --omit=dev --audit-level=high
-      - name: npm audit, dev toolchain (report only)
-        run: npm audit --audit-level=high || echo "Dev-toolchain findings reported above. Tracked in the PR; they do not ship in the site."
       - name: Secret scan (R-508)
         uses: gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e # v3.0.0
         env:
@@ -210,4 +208,5 @@ jobs:
         uses: google/osv-scanner-action/osv-scanner-action@b1d267aea5211fa648d9d442fa64b90dbdcbdd36 # v2.7.0
         with:
           scan-args: |-
+            --config=.github/osv-scanner.toml
             --lockfile=package-lock.json

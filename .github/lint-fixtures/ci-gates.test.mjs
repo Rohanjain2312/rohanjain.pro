@@ -10,6 +10,7 @@ import { spawnSync } from 'node:child_process';
 import { checkGate } from '../../scripts/phase-gate.mjs';
 import { checkPins } from '../scripts/ci-checks.mjs';
 
+process.env.PHASE_GATE_TEST = '1';
 const SHA = 'a'.repeat(40);
 
 function put(root, rel, text = 'x', mtime = null) {
@@ -121,6 +122,24 @@ test('CLI exits 1 and prints the rule', () => {
   const r = spawnSync('node', ['scripts/phase-gate.mjs', '2', '--root', root, '--gh-fixture', fixture(root)], { encoding: 'utf8' });
   assert.equal(r.status, 1);
   assert.match(r.stderr, /R-804 missing docs\/retros\/phase-2\.md/);
+  rmSync(root, { recursive: true });
+});
+
+test('bad or past --next-gate fails', () => {
+  const root = gateRoot(2);
+  for (const g of ['nonsense', '2020-01-01']) {
+    const out = checkGate({ phase: 2, root, fixture: fixture(root), nextGate: g });
+    assert.match(out[0], /^ADR-0018 --next-gate/);
+  }
+  rmSync(root, { recursive: true });
+});
+
+test('CLI refuses --gh-fixture without PHASE_GATE_TEST', () => {
+  const root = gateRoot(2);
+  const env = { ...process.env, PHASE_GATE_TEST: '' };
+  const r = spawnSync('node', ['scripts/phase-gate.mjs', '2', '--root', root, '--gh-fixture', fixture(root)], { encoding: 'utf8', env });
+  assert.equal(r.status, 1);
+  assert.match(r.stderr, /test-only/);
   rmSync(root, { recursive: true });
 });
 
