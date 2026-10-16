@@ -1,10 +1,20 @@
 /* Print base (design spec section 12): black on white, no navigation. Tokens only. */
 
+@page {
+  size: Letter;
+  margin: 18mm;
+}
+
 @media print {
   html,
   body {
     background: var(--print-paper);
     color: var(--ink);
+  }
+
+  .page {
+    max-width: none;
+    padding: 0;
   }
 
   .noprint {
