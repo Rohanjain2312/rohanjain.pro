@@ -12,8 +12,10 @@
     "preview": "astro preview",
     "check": "astro check && tsc --noEmit",
     "test": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage --coverage.include=src/lib/**/*.ts --coverage.thresholds.lines=90",
     "test:e2e": "playwright test --pass-with-no-tests",
     "browsers:install": "npx --no-install playwright install chromium",
+    "validate:content": "node scripts/validate-content.ts",
     "docs:lint": "node scripts/lint-docs.mjs",
     "verify": "node scripts/verify.mjs"
   },
@@ -24,6 +26,7 @@
     "@astrojs/check": "0.9.10",
     "@playwright/test": "1.64.1",
     "@types/node": "26.6.5",
+    "@vitest/coverage-v8": "5.0.5",
     "typescript": "5.9.3",
     "vitest": "5.0.5"
   }
