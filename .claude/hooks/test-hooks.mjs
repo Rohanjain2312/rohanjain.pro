@@ -189,7 +189,16 @@ const swt = join(repo, 'wt-stop'); g('worktree', 'add', '-q', '-b', 'qa/104-stop
 const memFile = (r, f) => { mkdirSync(join(swt, '.claude', 'agent-memory', r), { recursive: true }); writeFileSync(join(swt, '.claude', 'agent-memory', r, f), 'x'); };
 const stopAs = (agent) => run('stop-check.mjs', { cwd: swt, hook_event_name: agent ? 'SubagentStop' : 'Stop', ...(agent ? { agent_type: agent } : {}) }).decision;
 const stopCases = [];
+g('-C', swt, 'add', '-A'); mkdirSync(join(swt, '.claude', 'agent-memory', 'qa-engineer'), { recursive: true }); writeFileSync(join(swt, '.claude', 'agent-memory', 'qa-engineer', 'MEMORY.md'), 'a'); execFileSync('git', ['add', '.'], { cwd: swt }); execFileSync('git', ['commit', '-q', '-m', 'mem'], { cwd: swt });
+writeFileSync(join(swt, '.claude', 'agent-memory', 'qa-engineer', 'MEMORY.md'), 'b');
+stopCases.push(['R-803 subagent ends with an unstaged edit of tracked memory', stopAs('qa-engineer'), 'allow']);
 memFile('qa-engineer', 'note.md');
+stopCases.push(['R-803 tracked memory edit plus new memory file', stopAs('qa-engineer'), 'allow']);
+execFileSync('git', ['add', '-A'], { cwd: swt }); execFileSync('git', ['commit', '-q', '-m', 'mem2'], { cwd: swt });
+mkdirSync(join(swt, 'src'), { recursive: true }); execFileSync('git', ['mv', '.claude/agent-memory/qa-engineer/note.md', 'src/moved.md'], { cwd: swt });
+stopCases.push(['R-803 move out of memory folder is blocked', stopAs('qa-engineer'), 'deny']);
+execFileSync('git', ['reset', '-q', '--hard'], { cwd: swt });
+memFile('qa-engineer', 'note2.md');
 stopCases.push(['R-803 subagent ends with own memory only', stopAs('qa-engineer'), 'allow']);
 stopCases.push(['R-803 supervisor with memory only is blocked', stopAs(), 'deny']);
 stopCases.push(['R-803 other role memory is blocked', stopAs('security-engineer'), 'deny']);
