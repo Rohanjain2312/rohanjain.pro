@@ -14,3 +14,4 @@
 - [Stop hook review](stop_hook_review_pr106.md): PR #106, git() trims porcelain output; probe tracked edits, renames, quoting
 - [Inline build config](project_inline_build_config.md): no CSP hashes now; Astro must be set to emit no inline style or script (#18, #29)
 - [Git hooks review](git_hooks_review.md): PR #109 lessons: commitlint parser hang, lint-staged stash, time-box probes (issue #111)
+- [Static server header probes](review_static_server_headers.md): PR #120 preview.mjs, raw vs decoded path mismatch, bind address, missing _headers
