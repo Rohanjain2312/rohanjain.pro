@@ -19,3 +19,4 @@
 - [CI workflow review](ci_workflow_review_checklist.md): PR #125; read the PR's CI log first, SHA-to-tag, OSV vs audit, control builds, gate CLI test flags
 - [Review checklist](feedback_review_checklist.md): closing keywords, regressed findings, live GitHub checks, stale approvals, moved criteria, risk-acceptance wording
 - [ADR-0022 model policy](project-adr0022-model-policy.md): no-opus Security risk, open items (needs-client, RR-3, CODEOWNERS, status.md) as of 2026-10-16
+- [Workflow review](workflow_review_checklist.md): workflow PRs: token env scope vs third-party code, release-please defaults, Actions settings (#134, #150)

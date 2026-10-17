@@ -21,3 +21,5 @@
 - [Skill alias review (PR #119)](project-skills-alias-review-pr119.md): common-word aliases slipped past schema checks; rerun alias audit on skills.json changes
 - [QA tooling gaps](project-qa-tooling-gaps.md): lychee (#13) and copy lint (#27) are not run yet; substitutes, owners and verify limits.
 - [check-claims gaps (PR #137)](project-check-claims-gaps-pr137.md): R-301 check bypasses (years, noscript, global set) to hand-check once pages exist
+- [npm script bypass (PR #136)](project-npm-script-bypass-pr136.md): shell routes that re-enable install scripts past R-509, verified with real npm; re-check on guard-bash changes.
+- [Shared scratchpad names](feedback-shared-scratchpad.md): other agents overwrite generic probe names; use QA-prefixed names and check headers before citing.

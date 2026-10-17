@@ -16,14 +16,10 @@ Log of defects that passed a QA review and were found later, plus the defects a 
 - Open at cd0f7fb (round 3, Low): README does not warn that `npm run dev` returns 404 until the first page lands; SECURITY.md is in spec 03's Documentation set but not in #30 and no open issue names it; ADR-0019 cites this PR's review thread; head is three commits behind main.
 - Correction to round 3 wording: the PR comment said verify's stamp step "does not run" in an export. It runs, but it reads HEAD through git, which an export lacks, so it cannot produce a real stamp.
 
-## PR #122 (headers and CSP, issue #18)
-- Caught in round 1 (head f4f0d4d, QA CHANGES REQUESTED, Medium): headers.md said `build.inlineStylesheets: 'never'` is enough for a CSP-clean build. Astro 7.4.0 also inlines small bundled `<script>` blocks; `vite.build.assetsInlineLimit: 0` is needed too. Found only by building a scratch page, not by reading.
-- Check for any CSP or "no inline" claim: build a page with inline style, script and JSON-LD and inspect `dist/*.html`.
-
 **Why:** doc PRs contain many claims. The builder's self-check and the first QA pass both focused on copy and links, and missed claims that conflict with ADRs.
 **How to apply:** for any docs PR, compare each privacy, stack, licence and "what the site does" claim with docs/adr/ and docs/spec/ and record the result. See [[docs-review-checks]].
 
-## PR #119 (claims, skills, roles, site data; issues #23, #24)
-- Round 1 (head e4ef9e0, CHANGES REQUESTED) said "no alias collides with another skill's name or alias". It missed alias `function calling` on "Tool calling", which equals the name of the skill "Function calling". Found at round 2 (head 0e4b1b4) by an overlap script. Logged Low (the engine must dedupe by phrase).
-- Lesson: run the alias audit as a script (exact match against every name and alias, then substring overlap with hyphens folded), not by eye. Also check studied-tier names that contain a proven alias (for example `openai` inside "Azure OpenAI").
-- Open at approval: `docs/qa/claims-verification.md` has no claim entries; `verifiedOn` on claims is the ledger date, not a QA date (R-303).
+## PR #136 (hooks: #51 worktree path normalization, #58 npm install scripts)
+- Round 1 (head 5b8935d, QA CHANGES REQUESTED, High). The #51 fix holds for all 8 roles (128/128 in the dotdot matrix, main fails 106/128). The #58 acceptance fails. Real npm re-enables install scripts through `npm config --location=project set ignore-scripts false`, shell writes to `.npmrc`, `--ignore-scripts=$VAR`, and quote-split flags. None of these are blocked. The builder's probe covers only the three literal forms the issue names. Details in [[project-npm-script-bypass-pr136]].
+- Test gaps caught in round 1: the #51 probe covers security-engineer only, though the acceptance says any role. The named `npm rebuild --ignore-scripts=false` case is not in test-hooks.mjs.
+- Lesson: a builder's probe that follows the issue's examples passes the examples but misses the same effect through a different flag, file, or quoting. QA must enumerate routes (flag, env, npm config location, file write, substitution, quoting) and run them against real npm, not only the regexes.
