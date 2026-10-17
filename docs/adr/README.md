@@ -28,3 +28,4 @@ Format: context, decision, consequences, alternatives. New ADRs take the next nu
 | [0022](0022-parallel-agents-and-low-deferral.md) | More parallel agents, haiku for chores, Low findings deferred to their trigger |
 | [0023](0023-npm-release-cooldown.md) | Seven-day release cooldown for manual npm installs; "latest stable" means newest release at least 7 days old |
 | [0024](0024-ship-faster.md) | Ship faster: product first, bigger slices, bounded reviews |
+| [0025](0025-gate-time-releases.md) | Gate-time releases instead of release-please |
