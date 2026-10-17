@@ -8,7 +8,8 @@ description: Use when starting a phase and when all issues in a phase milestone 
 ## Starting phase N
 1. Read the phase in `docs/spec/11-phases.md`.
 2. Write `docs/phases/phase-N-plan.md`: goal, issues, owners, risks.
-3. Create the milestone and one issue per unit of work (labels: `phase-N`, `role:<role>`, `type:<type>`; acceptance criteria in each). Put them on the project board.
+3. Create the milestone and one issue per vertical slice, a few per phase (labels: `phase-N`, `role:<role>`, `type:<type>`; acceptance criteria in each), plus one `Phase N Low backlog` issue. Put them on the project board (ADR-0024).
+4. Building may start before the previous gate closes once that phase has only findings fixes, audits and gate records left (ADR-0024).
 
 ## Closing phase N
 - **R-206** At each gate, QA audits 20% of merged PRs, matching each approval to the reviewer's subagent transcript.
@@ -18,7 +19,7 @@ Steps:
 1. Milestone has zero open issues; `main` is green.
 2. Delegate to QA: the review audit (`docs/qa/review-audit-N.md`), the seeded-defect audit at Phases 1 and 3 (skill `seeded-defect-audit`), and the probe test when `.claude/` changed (skill `probe-test`).
 3. Delegate to Security: phase review in `docs/security/reviews/phase-N.md`.
-4. Write `docs/demos/phase-N.md` (screenshots, what changed), `docs/retros/phase-N.md` (went well, went badly, one process change), and run skill `context-audit`.
+4. Write short records (ADR-0024): `docs/demos/phase-N.md` (what shipped, screenshots), `docs/retros/phase-N.md` (went well, went badly, one process change). Run skill `context-audit` at Phases 3 and 6 only. The Security phase review reads the findings register and the phase's security-labeled PRs; Phase 6 runs the full §8.9 assessment.
 5. Write `docs/gates/phase-N.md`: the gate criteria from `docs/spec/11-phases.md`, each with a link to evidence.
 6. Run `node scripts/phase-gate.mjs N`. It fails on missing records or open `severity:medium|high|critical` issues (R-511).
 7. Check R-107: `gh api "repos/Rohanjain2312/rohanjain.pro/commits?sha=main&per_page=100" --paginate --jq '.[] | select(.commit.verification.verified | not) | .sha'` prints nothing except `4d2944105bc1cc1e5e540666bdcbd6fb515d2c3d`, the empty root commit (ADR-0013, ADR-0014).

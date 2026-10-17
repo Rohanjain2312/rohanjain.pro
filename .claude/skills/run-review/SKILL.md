@@ -12,9 +12,9 @@ Read the PR labels. Required: `supervisor` always; `design-lead` for `needs:desi
 
 ## Delegating
 - **R-204** A review delegation contains only the PR number, head SHA, acceptance criteria and plan references; never the builder's report or reasoning.
-- **R-205** CI first; then QA, Security and Design Lead in parallel (up to eight agents at a time, ADR-0022); then Reader Advocate; Supervisor last. Each reviewer posts before reading others' reviews.
-- Reviewers run on sonnet; haiku may review docs-only PRs, but never gives the only required review on code, workflows, hooks or content. No opus (ADR-0022).
-- One review round per reviewer where possible: Low findings become follow-up issues, not a new round.
+- **R-205** CI first; then QA, Security and Design Lead in parallel on one PR, with at most two PRs in flight (ADR-0022, ADR-0024); then Reader Advocate; Supervisor last. Each reviewer posts before reading others' reviews.
+- Reviewers run on sonnet; haiku may review docs-only PRs and docs-only fix diffs (ADR-0024), but never gives the only required review on code, workflows, hooks or content. No opus (ADR-0022).
+- Bounded reviews (ADR-0024): one round per reviewer against the acceptance criteria and named risks. A Low beyond them goes as a line on the phase's `Phase N Low backlog` issue, never CHANGES REQUESTED; a Medium or higher blocks wherever it is found. A re-review after a fix checks only the diff from the reviewed head: on haiku only when the fix changes docs and nothing else; on sonnet for any code, workflow, hook, content or security-path change (ADR-0022 decision 2).
 
 Delegation template (copy exactly, fill the brackets, add nothing else):
 
@@ -22,6 +22,7 @@ Delegation template (copy exactly, fill the brackets, add nothing else):
 Review PR #<n> at head <sha>.
 Acceptance criteria: <paste from issue #<i>>.
 Relevant spec: <file and section>.
+Scope: judge these criteria and the named risks in one round. Lows beyond them go on issue #<phase Low backlog>, not CHANGES REQUESTED; a Medium or higher blocks wherever found.
 Post one comment with `gh pr comment <n> --body-file <file>` in this format:
 REVIEW: APPROVED | CHANGES REQUESTED
 Reviewer: <your agent name>
@@ -38,4 +39,4 @@ If you approve, add the label approved:<role>.
 
 ## After reviews
 - CHANGES REQUESTED: send the findings to the builder, who fixes and pushes. The new head invalidates old approvals (R-208); re-run the reviews that are required.
-- All approvals present and CI green: post the Supervisor review, then `gh pr merge <n> --squash --delete-branch`. Update `docs/status.md`.
+- All approvals present and CI green: post the Supervisor review, add the label `approved:supervisor` (review-gate requires it), then `gh pr merge <n> --squash --delete-branch`. Update `docs/status.md`.
