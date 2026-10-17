@@ -12,6 +12,7 @@ const g = (...a) => execFileSync('git', a, { cwd: repo, stdio: 'ignore' });
 g('init', '-q', '-b', 'main'); g('config', 'user.email', 't@t'); g('config', 'user.name', 't');
 writeFileSync(join(repo, 'README.md'), 'x'); g('add', '.'); g('commit', '-q', '-m', 'init');
 const feat = join(repo, 'wt'); g('worktree', 'add', '-q', '-b', 'frontend/14-hero', feat);
+const cwt = join(repo, '.claude', 'worktrees', 'agent-t1'); g('worktree', 'add', '-q', '-b', 'security/51-t', cwt);
 mkdirSync(join(repo, 'docs'), { recursive: true });
 writeFileSync(join(repo, 'q.graphql'), 'mutation { addLabelsToLabelable(input:{labelableId:"x",labelIds:["y"]}) { clientMutationId } }');
 writeFileSync(join(repo, 'review.txt'), 'REVIEW: APPROVED\nReviewer: security-engineer\nHead: abcdef1\nAgent: a1\nChecked:\n- headers\n');
@@ -145,6 +146,16 @@ const cases = [
   ['R-112 worktree path', write('src/components/Card.astro', '<p/>', 'frontend-engineer', feat), 'allow'],
   ['R-112 supervisor edits src', write('src/lib/x.ts', 'export {}'), 'deny'],
   ['R-112 supervisor edits status', write('docs/status.md', '# Status'), 'allow'],
+  ['R-112 dotdot in worktree path (#51)', run('guard-write.mjs', { tool_name: 'Write', tool_input: { file_path: `${cwt}/docs/security/../../.claude/hooks/owners.json`, content: '{}' }, cwd: cwt, agent_type: 'security-engineer' }), 'deny'],
+  ['R-112 dotdot into owned path ok (#51)', run('guard-write.mjs', { tool_name: 'Write', tool_input: { file_path: `${cwt}/src/lib/../components/Hero.astro`, content: '<p/>' }, cwd: cwt, agent_type: 'frontend-engineer' }), 'allow'],
+  ['R-509 npm ignore-scripts=false (#58)', bash('npm ci --ignore-scripts=false', 'platform-engineer'), 'deny'],
+  ['R-509 npm ignore-scripts false (#58)', bash('npm install left-pad --ignore-scripts false', 'platform-engineer'), 'deny'],
+  ['R-509 npm no-ignore-scripts (#58)', bash('npm rebuild --no-ignore-scripts', 'platform-engineer'), 'deny'],
+  ['R-509 npm_config env (#58)', bash('npm_config_ignore_scripts=false npm ci', 'platform-engineer'), 'deny'],
+  ['R-509 npm_config env empty (#58)', bash('npm_config_ignore_scripts= npm ci', 'platform-engineer'), 'deny'],
+  ['R-509 npm config set (#58)', bash('npm config set ignore-scripts false', 'platform-engineer'), 'deny'],
+  ['R-509 npm ci ok (#58)', bash('npm ci', 'platform-engineer'), 'allow'],
+  ['R-509 npm ignore-scripts true ok (#58)', bash('npm ci --ignore-scripts=true', 'platform-engineer'), 'allow'],
   ['R-113 reference', write('reference/README.md', 'x'), 'deny'],
   ['R-610 nested CLAUDE.md', write('src/lib/CLAUDE.md', 'x', 'app-data-engineer'), 'deny'],
   ['R-610 md in pages', write('src/pages/notes.md', 'x', 'frontend-engineer'), 'deny'],

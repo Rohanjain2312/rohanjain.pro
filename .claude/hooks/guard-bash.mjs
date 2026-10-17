@@ -25,6 +25,11 @@ const RAW_DENY = [
   [/\bgit\b(?![^\n;|&]*\s--(get|get-all|get-regexp|list)\b)[^\n;|&]*\bconfig\b[^\n;|&]*\b(remote\.[^\s]+\.(push)?url|url\.[^\s]+\.(push)?insteadof)\b/i, 'Changing remote URLs is blocked.'],
   [/\bgit\b[^\n;|&]*\bpush\b[^\n;|&]*--repo\b/, 'Push only to origin.'],
   [/\brepositories\/\d+/, 'Use repos/<owner>/<name> paths; repositories/<id> is blocked.'],
+  // #58: .npmrc sets ignore-scripts=true; flags and env vars must not turn install scripts back on.
+  [/--ignore-scripts(=|\s+)["']?(false|0|no)\b/i, 'Turning npm install scripts back on is blocked (.npmrc ignore-scripts=true).'],
+  [/--no-ignore-scripts\b/i, 'Turning npm install scripts back on is blocked (.npmrc ignore-scripts=true).'],
+  [/\bnpm_config_ignore_scripts\s*=\s*["']?(false|0|no|["']|\s|$)/i, 'Turning npm install scripts back on is blocked (.npmrc ignore-scripts=true).'],
+  [/\bnpm\s+config\s+(set|delete|rm)\b[^\n;|&]*\bignore-scripts\b/i, 'Changing the npm ignore-scripts setting is blocked.'],
 ];
 for (const [re, why] of RAW_DENY) if (re.test(cmd)) deny(input, 'R-509', why);
 {
