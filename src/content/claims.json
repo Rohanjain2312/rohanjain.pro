@@ -2,14 +2,14 @@
   {
     "id": "goldman-tenure",
     "value": "Jan 2021 to Jun 2024",
-    "display": "~4 years, Jan 2021 to Jun 2024",
+    "display": "~3.5 years, Jan 2021 to Jun 2024",
     "source": "Résumé, client-confirmed",
     "verifiedOn": "2026-10-15"
   },
   {
     "id": "goldman-tenure-years",
-    "value": 4,
-    "display": "~4 years",
+    "value": 3.5,
+    "display": "~3.5 years",
     "source": "Résumé, client-confirmed",
     "verifiedOn": "2026-10-15"
   },
@@ -178,7 +178,7 @@
   {
     "id": "loan-v2-subgraphs",
     "value": 2,
-    "display": "2 parallel subgraphs",
+    "display": "2 subgraphs (CA and Notice paths)",
     "source": "Résumé; repo loan-servicing-agent",
     "sourceUrl": "https://github.com/Rohanjain2312/loan-servicing-agent",
     "verifiedOn": "2026-10-15"
@@ -211,14 +211,6 @@
     "id": "loan-v2-routing",
     "value": "Claude Sonnet + GPT-4o-mini",
     "display": "Claude Sonnet + GPT-4o-mini routing by cost and quality",
-    "source": "Résumé; repo loan-servicing-agent",
-    "sourceUrl": "https://github.com/Rohanjain2312/loan-servicing-agent",
-    "verifiedOn": "2026-10-15"
-  },
-  {
-    "id": "loan-v2-deploy",
-    "value": "Docker on GKE Autopilot via GitHub Actions",
-    "display": "Docker on GKE Autopilot via GitHub Actions, A2A",
     "source": "Résumé; repo loan-servicing-agent",
     "sourceUrl": "https://github.com/Rohanjain2312/loan-servicing-agent",
     "verifiedOn": "2026-10-15"
@@ -417,21 +409,21 @@
   },
   {
     "id": "fc-pruning-heads",
-    "value": 50,
-    "display": "pruning 50% of attention heads",
-    "source": "Résumé, client-confirmed; repo FinCompress",
+    "value": 30,
+    "display": "pruning about 30% of attention heads",
+    "source": "Repo FinCompress README; résumé differs (50%)",
     "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
     "verifiedOn": "2026-10-15",
-    "note": "Repo note: chart peak at 29.2%. Client chose the résumé value."
+    "note": "Repo README: +0.9 pts at 30% (29.2% pruned, F1 0.8966); +0.6 pts at 50% (48.6% pruned, F1 0.8936). Teacher 0.8876."
   },
   {
     "id": "fc-pruning-f1-gain",
     "value": "+0.9 points",
     "display": "improved val Macro F1 by +0.9 points",
-    "source": "Résumé, client-confirmed; repo FinCompress",
+    "source": "Repo FinCompress README",
     "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
     "verifiedOn": "2026-10-15",
-    "note": "Repo note: chart peak at 29.2%. Client chose the résumé value."
+    "note": "Repo README: +0.9 pts at 30% (29.2% pruned); +0.6 pts at 50% (48.6% pruned)."
   },
   {
     "id": "fc-dates",
@@ -452,7 +444,7 @@
   {
     "id": "tariff-rulings-eval",
     "value": 40,
-    "display": "40 rulings dated after 2026-07-01",
+    "display": "40 rulings dated on or after 2026-07-01",
     "source": "Repo customs-court README",
     "sourceUrl": "https://github.com/Rohanjain2312/customs-court",
     "verifiedOn": "2026-10-15"
@@ -483,8 +475,8 @@
   },
   {
     "id": "tariff-dates",
-    "value": "Sep 2026",
-    "display": "Sep 2026",
+    "value": "Sep to Oct 2026",
+    "display": "Sep to Oct 2026",
     "source": "Repo customs-court README",
     "sourceUrl": "https://github.com/Rohanjain2312/customs-court",
     "verifiedOn": "2026-10-15"
@@ -540,19 +532,20 @@
   {
     "id": "mr-baselines",
     "value": 6,
-    "display": "outperforming 6 baseline architectures",
+    "display": "outperforming 6 other architectures on accuracy and F1",
     "source": "Résumé, client-confirmed; repo transformer-market-regime",
     "sourceUrl": "https://github.com/Rohanjain2312/transformer-market-regime",
-    "verifiedOn": "2026-10-15"
+    "verifiedOn": "2026-10-15",
+    "note": "Repo README: the Engineered Transformer has higher MCC (0.506 vs 0.480), and MCC is the README primary metric."
   },
   {
     "id": "mr-f1",
     "value": 88.4,
-    "display": "88.4% F1 with optimized thresholds",
+    "display": "88.4% F1 on the Bullish class",
     "source": "Résumé, client-confirmed; repo transformer-market-regime",
     "sourceUrl": "https://github.com/Rohanjain2312/transformer-market-regime",
     "verifiedOn": "2026-10-15",
-    "note": "Repo note: README F1 72.70%. Client chose the résumé value."
+    "note": "Repo README: overall F1 is 72.70%; 88.44% is the Bullish-class F1. The README does not tie it to threshold optimization."
   },
   {
     "id": "mr-imbalance",

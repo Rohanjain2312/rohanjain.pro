@@ -5,8 +5,8 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import {
+  buildClaimIndex,
   checkHtml,
-  claimNumbers,
   formatFinding,
   pageName,
   type AllowEntry,
@@ -54,10 +54,18 @@ const site = siteSchema.parse(readJson('site.json'));
 const allowlist = existsSync(join(contentDir, 'claims-allowlist.json'))
   ? (claimsAllowlistSchema.parse(readJson('claims-allowlist.json')) as AllowEntry[])
   : [];
-const allowed = claimNumbers(claims, [site.phone]);
+const allowed = buildClaimIndex(claims, [site.phone]);
 
 const findings: Finding[] = [];
 const files = htmlFiles(dist).sort();
+if (files.length === 0) {
+  if (args.includes('--require-dist')) {
+    console.error(`R-301: ${dist} has no HTML files. Run the build first.`);
+    process.exit(1);
+  }
+  console.log('check-claims: dist/ has no HTML yet, skipped');
+  process.exit(0);
+}
 for (const file of files) {
   const page = pageName(relative(dist, file));
   findings.push(...checkHtml(page, readFileSync(file, 'utf8'), allowed, allowlist));
