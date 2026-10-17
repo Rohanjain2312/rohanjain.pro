@@ -13,7 +13,7 @@ Out of scope: fit check (Phase 3), résumé and brief dialogs and `/for` pages (
 ## Order
 1. App/Data pushes `projects.json` and `figures.json` onto the PR A branch; Frontend builds the pages on the same branch.
 2. PR B builds while PR A is in review (pipeline of two).
-3. Gate record `docs/gates/phase-2.md`, `node scripts/phase-gate.mjs 2`, release `v0.2.0`.
+3. Gate checks from `docs/spec/11-phases.md` Phases 2 and 5 (Reader Advocate 5-second test, images within budget, design check). Gate record `docs/gates/phase-2.md`, `node scripts/phase-gate.mjs 2`, release `v0.2.0`.
 
 ## Risks
 - PR A is large. Mitigation: `size:approved` with a reason; the combined reviewer checks screenshots at 390, 768 and 1280 px.

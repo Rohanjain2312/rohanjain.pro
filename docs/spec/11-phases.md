@@ -2,7 +2,7 @@
 
 Intent and gate criteria for each phase. Tasks are created as GitHub Issues at the start of each phase (skill `phase-gate`); they are not listed here (R-805).
 
-Each phase ends with an automated gate run by the Supervisor: all CI checks green on `main`, acceptance criteria verified, the gate record written with evidence for each criterion (ADR-0026 retired demo records and per-phase Design and Security reviews). **If the gate passes, the Supervisor starts the next phase in the same session if usage allows (skill `session-protocol`), otherwise it stops cleanly and the next session continues.** No client sign-off is needed at any gate.
+Each phase ends with an automated gate run by the Supervisor: all CI checks green on `main`, acceptance criteria verified, the gate record written with evidence for each criterion (ADR-0026 retired demo records and per-phase Security reviews; the design check and the Reader Advocate checks listed under each phase still apply). **If the gate passes, the Supervisor starts the next phase in the same session if usage allows (skill `session-protocol`), otherwise it stops cleanly and the next session continues.** No client sign-off is needed at any gate.
 
 ### Phase 0: Inception and governance
 Owner: Supervisor (all roles)
