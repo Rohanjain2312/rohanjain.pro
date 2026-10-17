@@ -41,3 +41,8 @@ One entry at the start and end of each session (skill `session-protocol`).
 - Done: #96, #118 (ADR-0022: up to eight parallel agents, haiku for chores, Low deferral rule), #15 with #150, #25 and #26, #28, #51 and #58; closed #56 and #148. Claims verification found 7 mismatches (#140 to #146).
 - Next: reviews for #135, #139, #149; claim fixes; #31; Phase 1 gate. Phase 2 after the gate.
 - Blockers: none. Client: three unsourced numbers in `docs/needs-client.md`; availability line; optional CLI install.
+
+## 2026-10-17 end (Phase 1, fourth run)
+- Done: #14, #42, #15 cleanup (#173, ADR-0025), #79, #147, #29, #157 (ADR-0024 ship faster), #160, #161, #140 to #146 and #151, #169, #170 (client-decided claims restored after the Supervisor's #165 error), #31 (audit 1), #177, #178, #107. Phase 1 gate passed; `v0.1.0`.
+- Next: Phase 2 plan and slices.
+- Blockers: none. Client: three unsourced numbers and the availability line in `docs/needs-client.md`.
