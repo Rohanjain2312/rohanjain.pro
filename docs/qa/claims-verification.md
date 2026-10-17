@@ -1,0 +1,185 @@
+# Claims verification log
+
+Owner: qa-engineer. Rule: R-303. Issue: #28. Date of this pass: 2026-10-16.
+
+Every claim in `src/content/claims.json` has one row below. The completeness check (`npm run claims:verified`, part of `npm run validate:content` and so of `npm run verify` and CI) fails when a claim has no row, a row has no claim, a row's value differs from `claims.json`, or a row is malformed. Change a claim's value and its row fails until QA re-verifies it.
+
+## Method
+
+- Each claim was checked against the files it cites, opened directly. The Evidence Ledger's own source notes were not trusted.
+- Résumé: `reference/resume/Rohan_Resume_v26.docx`, read from `word/document.xml`. Cited here as "Resume, section, bullet n".
+- Repos: read through the GitHub API on the default branch (all `main`, all public) at the head commit given in the table below. Line numbers refer to that commit. Dates were checked against first and last commit dates.
+- Figures: `reference/figures/*.png`, viewed.
+- PyPI: `graphbench-kg` checked on pypi.org.
+- Employer work and the IEEE paper cannot be checked outside the résumé. Those claims are verified against the résumé only, which is their declared source ("Résumé, client-confirmed").
+
+| Repo | Head checked | First to last commit |
+|---|---|---|
+| loan-servicing-agent | 0920ab4 | 2026-04-19 to 2026-08-29 |
+| trade-settlement-fail-predictor | 3b74de3 | 2026-10-08 to 2026-10-10 |
+| computer-use-automation | 1923a8c | 2026-09-17 to 2026-09-18 |
+| FinCompress | 442af31 | 2026-02-27 to 2026-03-09 |
+| customs-court | 324f4b1 | 2026-09-28 to 2026-10-01 |
+| Self-Healing-Code-Agent | 37a6d8c | 2026-02-20 to 2026-08-29 |
+| transformer-market-regime | 6946b7b | 2025-11-25 to 2025-12-13 |
+| medical-llm-finetuning | b67025d | 2026-01-09 to 2026-01-12 |
+| graphbench | 2b81ae9 | 2026-03-10 to 2026-08-29 |
+
+## Results
+
+Result values: `verified` (found in the cited source and consistent), `verified-note` (found, with a caveat in the source column), `mismatch #N` (the source disagrees or does not support it; issue N is open), `unsourced` (no source found).
+
+Totals: 92 claims. 68 verified, 13 verified-note, 10 mismatch (7 issues), 1 unsourced. See the summary at the end.
+
+### Goldman Sachs (résumé)
+
+| Claim ID | Value | Source checked | Result | Date |
+|---|---|---|---|---|
+| `goldman-tenure` | `Jan 2021 to Jun 2024` | Resume, Work Experience, Goldman Sachs, "Data Scientist, Jan 2021 - June 2024". Dates match. They span 3 years 5 to 6 months, so "~4 years" beside them is generous: issue #146 | mismatch #146 | 2026-10-16 |
+| `goldman-tenure-years` | `4` | Resume, Goldman bullet 1, "over 4 years". Matches the résumé; conflicts with its own date range: issue #146 | mismatch #146 | 2026-10-16 |
+| `goldman-roles` | `STEM Intern to Data Analyst to Data Scientist` | Resume, Goldman bullet 1, "Progressed from STEM Intern to Data Analyst to Data Scientist". Asset Management and Bengaluru from the Goldman header and bullet 1 | verified | 2026-10-16 |
+| `production-experience-years` | `3.5` | `reference/role_descriptions.md` lines 5, 9, 13 ("3.5+ years production experience") and Resume summary line | verified | 2026-10-16 |
+| `settlement-pending-trades-reduction` | `40` | Resume, Goldman bullet 2, "reducing pending trades by 40%" | verified | 2026-10-16 |
+| `settlement-penalty-savings` | `~$65k a quarter` | Resume, Goldman bullet 2, "~$65k/quarter" | verified | 2026-10-16 |
+| `loan-v1-models` | `GPT-4 and GPT-3.5-turbo` | Resume, Goldman bullet 3, "GPT-4, GPT-3.5-turbo, RAG with pgvector" | verified | 2026-10-16 |
+| `loan-v1-pipeline-modules` | `10` | Resume, Goldman bullet 3, "10-module pipeline" | verified | 2026-10-16 |
+| `loan-v1-tools` | `7` | Resume, Goldman bullet 3, "7 tools" | verified | 2026-10-16 |
+| `loan-v1-approvals` | `2` | Resume, Goldman bullet 3, "2 human-in-the-loop approval checkpoints" | verified | 2026-10-16 |
+| `loan-v1-checks` | `14` | Resume, Goldman bullet 3, "14 validation checks" | verified | 2026-10-16 |
+| `loan-v1-hours-saved` | `40` | Resume, Goldman bullet 3, "saved 40 hrs/month" | verified | 2026-10-16 |
+| `loan-v1-rag` | `pgvector` | Resume, Goldman bullet 3, "RAG with pgvector" | verified | 2026-10-16 |
+| `loan-v1-db-writes` | `eliminated` | Resume, Goldman bullet 3, "eliminated erroneous database writes" | verified | 2026-10-16 |
+| `kyc-ocr-accuracy` | `96` | Resume, Goldman bullet 4, "at 96% accuracy" | verified | 2026-10-16 |
+| `kyc-ocr-teams` | `4` | Resume, Goldman bullet 4, "for 4 additional teams" | verified | 2026-10-16 |
+| `kpi-pipeline-systems` | `10+` | Resume, Goldman bullet 5, "data from 10+ systems" | verified | 2026-10-16 |
+| `kpi-pipeline-ftes` | `3` | Resume, Goldman bullet 5, "saving the equivalent of 3 FTEs" | verified | 2026-10-16 |
+| `workflows-before` | `4` | Resume, Goldman bullet 1, "scaling automated workflows from 4 to 18" | verified | 2026-10-16 |
+| `workflows-after` | `18` | Resume, Goldman bullet 1, "from 4 to 18" | verified | 2026-10-16 |
+| `workflows-increase` | `350` | Resume, Goldman bullet 1, "(350% increase)". 18 over 4 is 4.5, an increase of 350%: arithmetic holds | verified | 2026-10-16 |
+| `workflows-hours-saved` | `180+` | Resume, Goldman bullet 1, "cutting manual work by 180+ hours/quarter" | verified | 2026-10-16 |
+| `interns-offers` | `3` | Resume, Goldman bullet 6, "mentored 3 interns to full-time offers" | verified | 2026-10-16 |
+| `interns-program` | `division-wide` | Resume, Goldman bullet 6, "program adopted as standard onboarding division-wide" | verified | 2026-10-16 |
+
+### Loan Servicing Agent v2 (résumé, repo loan-servicing-agent)
+
+| Claim ID | Value | Source checked | Result | Date |
+|---|---|---|---|---|
+| `loan-v2-agents` | `10` | Resume, Loan Servicing Agent bullet 1, "10-agent". Repo README line 38 "Ten specialized agents"; `agents/` holds 9 agent files plus the orchestrator | verified | 2026-10-16 |
+| `loan-v2-subgraphs` | `2` | Resume, bullet 1, "2 parallel subgraphs". Repo has `ca_branch` and `notice_branch` subgraphs (`graph/ca_branch.py` 69-76, `graph/notice_branch.py` 124-146). They are alternative paths, not concurrent: issue #144 | mismatch #144 | 2026-10-16 |
+| `loan-v2-tools` | `15` | Resume, bullet 2, "15 least-privilege tools". Repo README line 128 "15 tools"; `tools/` holds 15 files | verified | 2026-10-16 |
+| `loan-v2-approvals` | `4` | Resume, bullet 2, "4 HIL interrupts". Repo `graph/orchestrator.py` has four `interrupt()` calls (lines 218, 277, 302, 339), one per HIL node | verified | 2026-10-16 |
+| `loan-v2-checks` | `22` | Resume, bullet 2, "22 validation checks". Repo `MasterPlan.md` line 14 "all 22 checks" and section 11, check 22 at line 431 | verified | 2026-10-16 |
+| `loan-v2-routing` | `Claude Sonnet + GPT-4o-mini` | Resume, bullet 1. Repo README lines 62-63: orchestrator Claude Sonnet, extraction GPT-4o-mini, validation, storage and execution Claude Haiku. The claim leaves out Haiku, which is a third model | verified-note | 2026-10-16 |
+| `loan-v2-deploy` | `Docker on GKE Autopilot via GitHub Actions` | Resume, bullet 3 states Docker, GKE Autopilot, GitHub Actions and A2A. The repo (48 files, one branch) has no Dockerfile, no Kubernetes manifest, no `.github/` and no A2A code: issue #143 | mismatch #143 | 2026-10-16 |
+| `loan-v2-dates` | `Apr to Aug 2026` | Repo commits 2026-04-19 to 2026-08-29 | verified | 2026-10-16 |
+
+### Trade Settlement Fail Predictor (résumé, repo trade-settlement-fail-predictor)
+
+| Claim ID | Value | Source checked | Result | Date |
+|---|---|---|---|---|
+| `settle-trades` | `3.1M` | Resume, Trade Settlement bullet 1, "3.1M synthetic trades". Repo README line 48 "About 3.1 million trades"; synthetic stated at lines 6-8 | verified | 2026-10-16 |
+| `settle-fail-rate` | `~3%` | Resume, bullet 1, "3% fail rate". Repo README line 48 "about 3% failed" | verified | 2026-10-16 |
+| `settle-features` | `20` | Resume, bullet 1. Repo README lines 16 and 84 ("the 20 features") | verified | 2026-10-16 |
+| `settle-variants` | `12` | Resume, bullet 1, "12 ... variants". Repo README does not state 12. The blog table (`docs/blog/predicting-trade-settlement-fails.md` lines 88-94) lists 4 model families (LR, linear SVM, RBF SVM, XGBoost) and README line 58 says each is trained three ways, which gives 12 | verified-note | 2026-10-16 |
+| `settle-pr-auc` | `0.333` | Blog line 94 and line 98; figure `reference/figures/settle_pr.png` legend "XGBoost PR-AUC 0.333"; Resume bullet 1 | verified | 2026-10-16 |
+| `settle-pr-auc-random` | `0.045` | Blog lines 36 and 90; figure footer "Random list scores the fail rate, 4.5%" | verified | 2026-10-16 |
+| `settle-pr-auc-lift` | `~7x` | Blog line 98 "about 7 times better than random"; 0.333 over 0.045 is 7.4. Resume bullet 1 "7x" | verified | 2026-10-16 |
+| `settle-brier-before` | `0.213` | Blog line 105 "Brier score went from 0.213 to 0.035 after calibration"; Resume bullet 3 | verified | 2026-10-16 |
+| `settle-brier-after` | `0.035` | Blog lines 94 and 105; Resume bullet 3 | verified | 2026-10-16 |
+| `settle-shap-correlation` | `0.96` | Blog line 114 "rank correlation 0.96"; figure `reference/figures/settle_shap.png` subtitle; Resume bullet 3 | verified | 2026-10-16 |
+| `settle-dates` | `Oct 2026` | Repo commits 2026-10-08 to 2026-10-10 | verified | 2026-10-16 |
+
+### Computer-Use Automation (repo computer-use-automation README)
+
+| Claim ID | Value | Source checked | Result | Date |
+|---|---|---|---|---|
+| `cua-capabilities` | `2` | README lines 24-30, two capabilities in the table (`member_savings_balance_lookup`, `member_stop_payment_request`) | verified | 2026-10-16 |
+| `cua-discovery-calls` | `22` | README line 136 "One discovery run is 22 model calls". Stated by the README; a discovery run needs a model key and was not re-run | verified-note | 2026-10-16 |
+| `cua-replay-seconds` | `~10 s` | README line 174 "~10s, no model" (also lines 187 and 350). Stated by the README; not re-run | verified-note | 2026-10-16 |
+| `cua-tests` | `137` | README line 95 "137 tests in about 75 seconds, none of which call a model". Stated by the README; the suite was not re-run | verified-note | 2026-10-16 |
+| `cua-dates` | `Sep 2026` | Repo commits 2026-09-17 to 2026-09-18 | verified | 2026-10-16 |
+
+### FinCompress (résumé, repo FinCompress)
+
+| Claim ID | Value | Source checked | Result | Date |
+|---|---|---|---|---|
+| `fc-size-ratio` | `9.1x` | Repo README line 47 "9.1x smaller"; Resume bullet 1. 437.9 over 47.7 is 9.18, so 9.1x is truncated and understates slightly | verified-note | 2026-10-16 |
+| `fc-size-before` | `437.9 MB` | Repo README line 44; `results/benchmark_results.csv` teacher size_mb 437.95; Resume says 438 MB (rounded) | verified | 2026-10-16 |
+| `fc-size-after` | `47.7 MB` | Repo README line 47; Resume bullet 1 | verified | 2026-10-16 |
+| `fc-variants` | `7` | Repo README lines 77, 92 and 174; Resume bullet 1 "7 benchmarked variants" | verified | 2026-10-16 |
+| `fc-latency-before` | `286.9 ms` | `fincompress/results/article_assets/article_data.json` teacher 286.88 ms; figure `reference/figures/fc_latency.png`. The same repo's `results/benchmark_results.csv` shows teacher 77.0 ms and has no PTQ row, so the repo holds two latency sets | verified-note | 2026-10-16 |
+| `fc-latency-after` | `19.8 ms` | `article_data.json` student_ptq 19.83 ms; figure. Student F1 for that model is 0.786 against 0.918 for the teacher on test. Same two-latency-sets note | verified-note | 2026-10-16 |
+| `fc-latency-ratio` | `14.5x` | 286.88 over 19.83 is 14.47. Same sources and note as the two latency claims | verified-note | 2026-10-16 |
+| `fc-pruning-heads` | `50` | Resume bullet 2 says 50%. Repo README lines 49-50 and `article_data.json`: the +0.9 gain is at 30% (29.2%) pruning; at 50% (48.6%) it is +0.6: issue #140 | mismatch #140 | 2026-10-16 |
+| `fc-pruning-f1-gain` | `+0.9 points` | Same evidence as `fc-pruning-heads`: +0.9 is the 30% result, 50% gives +0.6 (0.8936 against teacher 0.8876): issue #140 | mismatch #140 | 2026-10-16 |
+| `fc-dates` | `Feb to Mar 2026` | Repo commits 2026-02-27 to 2026-03-09; checkpoints dated 2026-03-01 | verified | 2026-10-16 |
+
+### TariffAgent (repo customs-court README)
+
+| Claim ID | Value | Source checked | Result | Date |
+|---|---|---|---|---|
+| `tariff-exact-match` | `82.5` | README lines 59 and 76-77: 82.5% 10-digit, fixed 40-item sample, interval [70.0, 92.5]. Run by Claude Opus 5.5 in a Claude Code session, labeled separately from API runs (line 91) | verified-note | 2026-10-16 |
+| `tariff-rulings-eval` | `40` | README line 68 "150 CBP rulings dated 2026-07-01 or later; the agent ran on a fixed 40-item sample". The display says "after", the repo says "on or after": issue #145 | mismatch #145 | 2026-10-16 |
+| `tariff-zero-shot` | `15` | README line 75: Claude Sonnet 5.5 zero-shot, same 40 items, 15.0%. The agent row is a different model (Opus 5.5); the same-model pair (Sonnet 5.5 agent, line 77) is also 82.5% | verified-note | 2026-10-16 |
+| `tariff-rulings-corpus` | `44,139` | README line 11 "44,139 CROSS rulings" | verified | 2026-10-16 |
+| `tariff-mcp-tools` | `8` | README line 11 "8 read-only tools" | verified | 2026-10-16 |
+| `tariff-dates` | `Sep 2026` | Repo commits 2026-09-28 to 2026-10-01 (two commits on 2026-10-01 UTC): issue #145 | mismatch #145 | 2026-10-16 |
+
+### Self-Healing Code Agent (repo Self-Healing-Code-Agent README)
+
+| Claim ID | Value | Source checked | Result | Date |
+|---|---|---|---|---|
+| `shca-first-try` | `3` | README line 202 "First-pass success 3 / 8 (37%)" | verified | 2026-10-16 |
+| `shca-after-repair` | `7` | README line 204 "Final success rate 7 / 8 (87%)" | verified | 2026-10-16 |
+| `shca-benchmark-tasks` | `8` | README line 196 "8 tasks across 6 categories"; harness in `evaluation/` (line 268) | verified | 2026-10-16 |
+| `shca-dates` | `Feb to Aug 2026` | Repo commits 2026-02-20 to 2026-08-29 | verified | 2026-10-16 |
+
+### Transformer Market Regime Classifier (résumé, repo transformer-market-regime)
+
+| Claim ID | Value | Source checked | Result | Date |
+|---|---|---|---|---|
+| `mr-accuracy` | `81.78` | Repo README line 35 and 46; Resume bullet 1 | verified | 2026-10-16 |
+| `mr-mcc` | `0.48` | Repo README lines 36 and 46 (0.480); Resume bullet 1 | verified | 2026-10-16 |
+| `mr-baselines` | `6` | Resume bullet 1. Repo README table lines 44-52 lists six other models, but the Engineered Transformer has MCC 0.506 against 0.480, and README line 481 names MCC the primary metric: issue #142 | mismatch #142 | 2026-10-16 |
+| `mr-f1` | `88.4` | Resume bullet 2. Repo README: overall F1 is 72.70% (line 37); 88.44% is the Bullish-class F1 (line 39, line 513): issue #141 | mismatch #141 | 2026-10-16 |
+| `mr-imbalance` | `68/32` | Repo README lines 399-400 (test set 68.3% Bullish, 31.7% Bearish) and line 514; Resume bullet 2 | verified | 2026-10-16 |
+| `mr-years` | `24` | Repo README lines 223-224 and 294: data from 2000-01-01 to 2024-11-24 (about 24.9 years); Resume bullet 1 "24-year" | verified | 2026-10-16 |
+| `mr-dates` | `Nov to Dec 2025` | Repo commits 2025-11-25 to 2025-12-13 | verified | 2026-10-16 |
+
+### Medical LLM (repo medical-llm-finetuning README)
+
+| Claim ID | Value | Source checked | Result | Date |
+|---|---|---|---|---|
+| `med-base` | `Mistral 7B` | README lines 3 and 40 (Mistral 7B Instruct v0.3) | verified | 2026-10-16 |
+| `med-lora-params` | `1.14` | README lines 47 and 56 "1.14% (83.9M / 7.3B)" | verified | 2026-10-16 |
+| `med-format-tuned` | `100` | README lines 21 and 48 "Format Adherence: 100% (vs 0% base model)". The repo holds no results file and no sample size for this figure | verified-note | 2026-10-16 |
+| `med-format-base` | `0` | README line 48, same statement and same caveat | verified-note | 2026-10-16 |
+| `med-prompts` | `10` | No source found. README never states a 10-prompt check. `evaluation/evaluate_model.py` lines 90 and 250 only set a default `num_samples` of 10; `evaluation/manual_evaluation.py` lists 5 prompts. No recorded run | unsourced | 2026-10-16 |
+| `med-dates` | `Jan 2026` | Repo commits 2026-01-09 to 2026-01-12 | verified | 2026-10-16 |
+
+### GraphBench (repo graphbench README)
+
+| Claim ID | Value | Source checked | Result | Date |
+|---|---|---|---|---|
+| `gb-gnn-rag-em` | `5` | README line 59 "Exact Match (EM) 3.2% / 5.0%" (GraphRAG / GNN-RAG) | verified | 2026-10-16 |
+| `gb-graphrag-em` | `3.2` | README line 59 | verified | 2026-10-16 |
+| `gb-questions` | `500` | README lines 20 and 55 "500 HotpotQA distractor questions" | verified | 2026-10-16 |
+| `gb-package` | `graphbench-kg` | README line 74 `pip install graphbench-kg`; PyPI lists graphbench-kg 0.2.0, first upload 2026-03-12 | verified | 2026-10-16 |
+| `gb-dates` | `Mar to Aug 2026` | Repo commits 2026-03-10 to 2026-08-29 | verified | 2026-10-16 |
+
+### IEEE paper and education (résumé)
+
+| Claim ID | Value | Source checked | Result | Date |
+|---|---|---|---|---|
+| `ieee-model` | `MLP-ELM` | Resume, Publications, "Designed MLP-Extreme Learning Machine". The paper itself was not checked | verified | 2026-10-16 |
+| `ieee-accuracy` | `95` | Resume, Publications, "achieving 95% accuracy" | verified | 2026-10-16 |
+| `ieee-scans` | `6,400+` | Resume, Publications, "6,400+ MRI scans" | verified | 2026-10-16 |
+| `ieee-improvement` | `17` | Resume, Publications, "17% improvement over baselines" | verified | 2026-10-16 |
+| `edu-umd` | `Aug 2024 to May 2026` | Resume, Education, "Master of Science in Applied Machine Learning, Aug 2024 - May 2026", University of Maryland | verified | 2026-10-16 |
+| `edu-pes` | `Aug 2017 to May 2021` | Resume, Education, "Bachelor of Technology in Electronics and Communication Engineering, Aug 2017 - May 2021", PES University | verified | 2026-10-16 |
+
+## Summary
+
+- Open mismatch issues: #140 (fc-pruning-heads, fc-pruning-f1-gain, high), #141 (mr-f1, medium), #142 (mr-baselines, medium), #143 (loan-v2-deploy, medium), #144 (loan-v2-subgraphs, low), #145 (tariff-rulings-eval, tariff-dates, low), #146 (goldman-tenure, goldman-tenure-years, low).
+- Unsourced: `med-prompts`.
+- The default check fails on missing, stale or malformed rows and warns on open findings. `node tests/fixtures/claims/check-verification-log.mjs --require-clean` also fails on open findings; use it at the phase gate.
