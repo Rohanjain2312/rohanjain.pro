@@ -137,7 +137,7 @@ Data flows:
 |---|---|---|---|---|---|
 | 5.1 | E | Workflow token over-scoped | Default workflow permissions `read`; Actions cannot approve PRs (both verified); write per job only | repo settings; R-504 | active; check phase-1 |
 | 5.2 | E, I | Fork PR runs workflows or reaches secrets | Fork PR approval `all_external_contributors` (verified); never `pull_request_target` with PR code; no secret in this repo can read application data | repo settings; ADR-0016; `deploy.yml` review | active; phase-7 |
-| 5.3 | T | `status.yml` bot PR bypasses role reviews; fetched data shapes site content | `status.json` holds only booleans and dates computed by the workflow, never response bodies; schema-validated; bot PR still needs all required checks | Security review of `status.yml` | phase-1 or 2 (Info, see 9.4) |
+| 5.3 | T | `status.yml` writes data without role review; fetched data shapes site content | `status.json` holds only booleans and dates computed by the workflow, never response bodies; schema-validated; the workflow writes only the `status-data` branch, never `main` (ADR-0027), and the build treats the file as optional data | Security review of `status.yml` | phase-1 or 2 (Info, see 9.4) |
 | 5.4 | E | Cloudflare token used by a non-release job | Token held in the private repo's `production` environment (ADR-0016); scoped to Pages edit on one account; 90-day rotation | §8.5, ADR-0016, `docs/runbooks/rotate-secrets.md` | phase-7 |
 | 5.5 | I | Secret printed in logs, or application data in public logs and artifacts | No secrets until Phase 7; GitHub masks secrets; gitleaks in CI; this repo's builds use fixtures only | R-508, ADR-0016 | active (no secrets); phase-1 |
 | 5.6 | T | Code scanning gaps | CodeQL on PRs and weekly; Scorecard weekly, target 8+ | `codeql.yml`, `scorecard.yml` | phase-1 (#15) |
@@ -280,6 +280,6 @@ These are not findings; they are inputs the owning issue must meet. Security che
 1. #18 (headers and CSP): add `require-trusted-types-for 'script'` to the CSP, or record why not.
 2. #14 (PR process checks): review-gate counts only comments with `author_association` OWNER; pr-hygiene fails PRs that touch paths not owned by the branch's role (#47); labeler routes `.claude/**`, workflows, `.npmrc`, `public/_headers` and dependency files to Security (#42).
 3. #15 (security workflows): `sha_pinning_required` is on (verified 2026-10-15); restrict `allowed_actions` (now `all`) to GitHub-owned and selected actions if Scorecard allows.
-4. `status.yml`: write only booleans, status codes and dates, never response bodies; validate `status.json` against a schema; the bot PR must pass all required checks (a PR opened with `GITHUB_TOKEN` does not trigger `pull_request` workflows, so use a design that does).
+4. `status.yml`: write only booleans, status codes and dates, never response bodies; validate `status.json` against a schema; write only to the `status-data` branch with `contents: write` on that one job, never to `main`, and open no PR (ADR-0027).
 5. Deploy workflows (Phase 7): never run PR code with the Cloudflare token; no `pull_request_target`; the token lives only in the private repo (ADR-0016).
 6. Secret scanning for non-provider patterns is off (verified 2026-10-15); turn it on when #12 lands.
