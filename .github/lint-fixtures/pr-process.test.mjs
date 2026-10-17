@@ -63,41 +63,22 @@ test('globs', () => {
 // Every path in the #42 list must produce needs:security-review.
 const SECURITY_PATHS = [
   '.github/workflows/anything.yml',
-  '.github/dependabot.yml',
-  '.github/CODEOWNERS',
-  '.husky/pre-commit',
-  '.lintstagedrc.json',
-  '.gitleaks.toml',
-  '.npmrc',
-  'public/_headers',
-  'public/.well-known/security.txt',
-  'scripts/preview.mjs',
-  'astro.config.mjs',
-  'SECURITY.md',
-  'docs/security/threat-model.md',
-  'scripts/verify.mjs',
-  'scripts/phase-gate.mjs',
-  '.claude/hooks/guard-bash.mjs',
-  'package.json',
-  'package-lock.json',
   '.github/scripts/pr-process.mjs',
   '.github/labeler.json',
+  'public/_headers',
 ];
 for (const p of SECURITY_PATHS)
   test(`labeler: ${p} needs security review`, () => {
     assert.ok(deriveLabels([file(p)], config).includes('needs:security-review'));
   });
 
-test('labeler: other labels and no label', () => {
-  assert.deepEqual(deriveLabels([file('src/components/Hero.astro')], config), []);
-  assert.deepEqual(deriveLabels([file('docs/runbooks/a.md')], config), []);
-  assert.deepEqual(deriveLabels([file('tests/visual/home.spec.ts-snapshots/a.png')], config).sort(), [
-    'needs:design-review',
-    'needs:qa-review',
-  ]);
-  assert.deepEqual(deriveLabels([file('src/content/claims.json')], config), ['needs:qa-review']);
-  assert.deepEqual(deriveLabels([file('tests/unit/a.test.ts')], config), ['needs:qa-review']);
-  assert.deepEqual(deriveLabels([file('new.md', { previous_filename: '.husky/pre-push' })], config), ['needs:security-review']);
+test('labeler: one combined review, security only for workflow and header changes', () => {
+  assert.deepEqual(deriveLabels([file('src/components/Hero.astro')], config), ['needs:qa-review']);
+  assert.deepEqual(deriveLabels([file('docs/runbooks/a.md')], config), ['needs:qa-review']);
+  assert.deepEqual(deriveLabels([file('package.json')], config), ['needs:qa-review']);
+  assert.deepEqual(deriveLabels([file('tests/visual/home.spec.ts-snapshots/a.png')], config), ['needs:qa-review']);
+  assert.deepEqual(deriveLabels([file('.husky/pre-commit')], config), ['needs:qa-review']);
+  assert.deepEqual(deriveLabels([file('new.md', { previous_filename: 'public/_headers' })], config).sort(), ['needs:qa-review', 'needs:security-review']);
 });
 
 // --- pr-hygiene ----------------------------------------------------------------------------------
@@ -196,7 +177,7 @@ const review = ({ verdict = 'APPROVED', reviewer = 'security-engineer', head = H
     findings,
   ].join('\n');
 const comment = (body, login = OWNER, id = 1) => ({ id, body, user: { login } });
-const gate = ({ comments = [], labels = [], files = [file('docs/runbooks/a.md')], pr = {} } = {}) =>
+const gate = ({ comments = [], labels = [], files = [], pr = {} } = {}) =>
   checkReviewGate({ pr: basePr({ labels: labels.map((name) => ({ name })), ...pr }), files, comments, config, owner: OWNER });
 const sup = (over) => comment(review({ reviewer: 'supervisor', agent: 'main', ...over }), OWNER, 2);
 
@@ -226,15 +207,16 @@ test('gate R-201/R-209: required roles come from labels and from paths', () => {
   assert.ok(byPath.notes.some((n) => /R-209 labels not yet applied/.test(n)));
 });
 
-test('gate R-609: design review for visual baselines', () => {
+test('gate R-609: visual baselines need only the combined review', () => {
   const r = gate({ comments: [sup()], labels: ['approved:supervisor'], files: [file('tests/visual/a-snapshots/home.png')] });
-  assert.match(fails(r), /R-609\/R-201 design-lead/);
+  assert.match(fails(r), /R-201 qa-engineer/);
+  assert.doesNotMatch(fails(r), /design-lead/);
 });
 
 test('gate: all required approvals pass', () => {
   const r = gate({
-    comments: [sup(), comment(review(), OWNER, 3)],
-    labels: ['approved:supervisor', 'approved:security'],
+    comments: [sup(), comment(review(), OWNER, 3), comment(review({ reviewer: 'qa-engineer' }), OWNER, 4)],
+    labels: ['approved:supervisor', 'approved:security', 'approved:qa'],
     files: [file('.github/workflows/x.yml')],
   });
   assert.deepEqual(r.failures, []);

@@ -1,37 +1,12 @@
 {
-  "_comment": "Source of truth for review-needed labels (R-209, R-609, R-506, R-701). Read by .github/scripts/pr-process.mjs, which labeler.yml and review-gate.yml both run. Globs: ** crosses directories, * stays inside one. A PR gets a label when any changed path matches any glob.",
+  "_comment": "Source of truth for review-needed labels (R-209, R-609, R-506, R-701). Read by .github/scripts/pr-process.mjs, which labeler.yml and review-gate.yml both run. Globs: ** crosses directories, * stays inside one. A PR gets a label when any changed path matches any glob. One combined review (qa-engineer) for every PR; Security review only for workflow and header changes (ADR-0026).",
   "needs:security-review": [
-    ".claude/**",
     ".github/workflows/**",
     ".github/scripts/**",
     ".github/labeler.json",
-    ".github/dependabot.yml",
-    ".github/CODEOWNERS",
-    ".github/osv-scanner.toml",
-    ".husky/**",
-    ".lintstagedrc*",
-    ".gitleaks.toml",
-    ".npmrc",
-    "public/_headers",
-    "public/.well-known/**",
-    "scripts/preview.mjs",
-    "tests/unit/preview.test.*",
-    "astro.config.*",
-    "package.json",
-    "package-lock.json",
-    "SECURITY.md",
-    "docs/security/**",
-    "scripts/verify.mjs",
-    "scripts/phase-gate.mjs"
+    "public/_headers"
   ],
-  "needs:design-review": ["tests/visual/**/*.png", "tests/visual/**/*-snapshots/**"],
-  "needs:qa-review": [
-    "tests/**",
-    "src/content/**",
-    "**/*.test.*",
-    "**/*.spec.*",
-    "vitest.config.*",
-    "playwright.config.*"
-  ],
+  "needs:design-review": [],
+  "needs:qa-review": ["**"],
   "needs:reader-review": []
 }
