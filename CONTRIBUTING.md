@@ -28,8 +28,8 @@ This site is built by a team of Claude Code agents under a Supervisor. The rules
 
 ## Reviews
 
-- Labels from the changed paths decide the reviewers (R-209): `needs:design-review`, `needs:security-review`, `needs:qa-review`, `needs:reader-review`. The Supervisor reviews every pull request.
-- Reviews run in order: CI, QA, Security, Design Lead, Reader Advocate, Supervisor (R-205). Each review is one comment in the format from the `run-review` skill (`.claude/skills/run-review/SKILL.md`), and an approval adds the label `approved:<role>`.
+- Labels from the changed paths decide the reviewers (R-209): `needs:security-review` (workflows, workflow scripts, labeler config, `public/_headers`) and `needs:qa-review` (every PR). The Supervisor reviews every pull request.
+- Reviews run in order: CI, one combined QA review (plus Security where required), Supervisor (R-205, ADR-0026). Each review is one comment in the format from the `run-review` skill (`.claude/skills/run-review/SKILL.md`), and an approval adds the label `approved:<role>`.
 - A new commit invalidates earlier approvals (R-208).
 - Only the Supervisor merges, by squash, deleting the branch (R-111).
 

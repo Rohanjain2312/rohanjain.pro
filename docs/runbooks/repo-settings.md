@@ -96,7 +96,7 @@ All 50 labels, from `gh label list --limit 100`:
 - Phase: `phase-0` to `phase-8`.
 - Role: `role:design-lead`, `role:supervisor`, `role:app-data-engineer`, `role:frontend-engineer`, `role:platform-engineer`, `role:qa-engineer`, `role:security-engineer`, `role:reader-advocate`.
 - Type: `type:feat`, `type:chore`, `type:fix`, `type:docs`, `type:ci`, `type:test`, `type:refactor`, `type:security`.
-- Review needed (R-209): `needs:design-review`, `needs:security-review`, `needs:qa-review`, `needs:reader-review`.
+- Review needed (R-209): `needs:security-review`, `needs:qa-review`.
 - Approved (R-202): `approved:supervisor`, `approved:design`, `approved:security`, `approved:qa`, `approved:reader`.
 - Severity: `severity:critical`, `severity:high`, `severity:medium`, `severity:low`, `severity:info`.
 - Other: `size:approved` (Supervisor approved a PR over 600 lines), `accessibility` (barrier affecting people with disabilities).

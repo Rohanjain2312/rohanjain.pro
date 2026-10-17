@@ -52,7 +52,7 @@ Claude Code builds the golden test set itself; the client is not asked.
   9. Rendering any generated string (including HTML and script payloads) adds no elements to the page (component test).
 
 ### 9.6 Seeded-defect audits
-Procedure and categories: skill `seeded-defect-audit` (R-704).
+Procedure and categories: skill `seeded-defect-audit`. Audit 1 ran at Phase 1; no later audits (R-704 retired, ADR-0026).
 
 ### 9.7 External validation
 5-second and first-click test, recruiter fit ratings, and reply-rate tracking: skill `external-validation`. Pass criteria are success criterion 9 in `docs/spec/01-product.md`.
