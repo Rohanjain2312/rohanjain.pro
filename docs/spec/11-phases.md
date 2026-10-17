@@ -23,7 +23,7 @@ Owners: Platform (pipeline), Design Lead + Frontend (tokens, spec), App/Data (co
 - QA verifies every claim in `claims.json` against its source.
 **Gate:** green pipeline; empty styled page builds; headers verified locally; content validation passing; claims verified by QA; seeded-defect audit 1 scored, and any role below 75% retrained and re-tested.
 
-### Phase 2: Core pages
+### Phase 2: Core pages (with Phase 5 folded in, ADR-0026)
 Owners: Frontend (UI), Design Lead (review), App/Data (wiring)
 - Hero, results strip, production section with both folds, selected work, more projects, background fold, contact (with phone), footer, 404, privacy page.
 - Static and content-driven; claims check passing.
@@ -42,7 +42,7 @@ Owners: Frontend (dialog), App/Data (PDF generator, `/for` generator), Design Le
 - `npm run for` generator and `/for/[slug]` page, expiry, noindex, random slugs, JD never stored. Create one sample application page from a golden posting to prove the flow. (R-501, R-503)
 **Gate:** PDFs pass text extraction and claims check; generator tested end to end; enumeration and noindex tests pass.
 
-### Phase 5: Figures, demos and status
+### Phase 5: Figures, demos and status (built inside Phase 2, ADR-0026)
 Owners: Frontend + Design Lead (figures UI), App/Data (figures data), Platform (status workflow)
 - Figures fold with timeline and tiles; optimized images; alt text from `figures.json`.
 - Click-to-load demo embeds with sandbox and fallback.

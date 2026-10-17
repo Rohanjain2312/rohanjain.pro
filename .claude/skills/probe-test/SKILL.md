@@ -5,7 +5,8 @@ description: Use after Phase 0 and after any change to CLAUDE.md or .claude/ to 
 
 # Probe test
 
-- **R-807** Run the probe test after Phase 0 and after any change to CLAUDE.md or .claude/.
+Retired (ADR-0026): **R-807** no longer requires probe tests. Kept for reference only.
+
 
 ## Part 1: hooks (deterministic, seconds)
 `node .claude/hooks/test-hooks.mjs`. Every case must pass. It feeds synthetic tool calls to the hooks and checks they block or allow as expected.

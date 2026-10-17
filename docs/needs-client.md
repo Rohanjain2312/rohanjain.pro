@@ -13,6 +13,7 @@ The only things Claude Code cannot do itself. Each item has exact steps. Claude 
 - [ ] To let the build resume on its own after usage limits (`scripts/autopilot.sh`, #116), install the Claude Code command-line tool. In Terminal run `brew install --cask claude-code`, then `claude --version` to check. The desktop app's copy cannot run from Terminal.
 
 ## Accepted risks (no action needed)
+- Your speed decision (ADR-0026): each PR gets one combined review, Security only for workflow and header changes, and no audits of reviews or agent instructions. CI and the claims check remain.
 - Until 2026-10-22, 54 locked npm packages are under 7 days old (ADR-0023). They are signed, install scripts are off, and the audit is clean. They pass the 7-day rule on that date with no change.
 - To build faster (ADR-0024, your request): reviews judge each PR's stated criteria in one round, so small issues outside them can wait for a later phase; re-checks of small docs and content fixes use a cheaper model; one audit of agent instructions runs at Phases 3 and 6 instead of every phase. Every phase's quality gate is unchanged.
 - All agents, including Security reviewers, run on sonnet or haiku; none on opus (ADR-0022, your request to save usage). Reviews share one model family with the builders, so some shared blind spots go uncaught. Seeded-defect audits measure this.

@@ -40,12 +40,12 @@ Every "must" and "never" in this project lives here, with exactly one home. 86 r
 | **R-201** | Required reviews come from labels; review-gate blocks merge until each required approval exists. | here | review-gate CI check; ruleset | phase-1 |
 | **R-202** ★ | A review comment states REVIEW: APPROVED or CHANGES REQUESTED, Reviewer: <role>, Head: <sha>, Agent: <agent id>. | here | review-gate CI check; guard-bash hook | active / phase-1 |
 | **R-203** ★ | A role posts reviews only as itself; the Supervisor never writes a review for another role. | here | guard-bash hook compares Reviewer to agent_type | active |
-| R-204 | A review delegation contains only the PR number, head SHA, acceptance criteria and plan references; never the builder's report or reasoning. | `.claude/skills/run-review/SKILL.md` | judgment; audited by R-206 | prose |
-| R-205 | CI first; then QA, Security and Design Lead in parallel on one PR, with at most two PRs in flight (ADR-0022, ADR-0024); then Reader Advocate; Supervisor last. Each reviewer posts before reading others' reviews. | `.claude/skills/run-review/SKILL.md` | judgment | prose |
-| R-206 ★ | At each gate, QA audits 20% of merged PRs, matching each approval to the reviewer's subagent transcript. | `.claude/skills/phase-gate/SKILL.md` | phase-gate script checks docs/qa/review-audit-N.md exists | phase-1 |
+| R-204 | A review delegation contains only the PR number, head SHA, acceptance criteria and plan references; never the builder's report or reasoning. | `.claude/skills/run-review/SKILL.md` | judgment | prose |
+| R-205 | CI first; then one combined review by qa-engineer (tests, content, copy, design), plus Security only for workflow and header changes; Supervisor last. At most two PRs in flight (ADR-0024, ADR-0026). Each reviewer posts before reading others' reviews. | `.claude/skills/run-review/SKILL.md` | judgment | prose |
+| R-206 | Retired (ADR-0026): no review audit at gates. | `.claude/skills/phase-gate/SKILL.md` | none | retired |
 | **R-207** ★ | A review lists what was checked with evidence; "no findings" names at least three checks. | here | review-gate CI check for a Checked: section | phase-1 |
 | **R-208** | A new commit invalidates earlier approvals. | here | review-gate CI check (Head must equal PR head) | phase-1 |
-| **R-209** | Review-needed labels come from changed paths. The path map in `.github/labeler.json` is the source of truth (Security for `.claude/**`, workflows, hooks, headers, dependencies and gate scripts; Design for visual baselines; QA for tests and content). | here | labeler CI | phase-1 |
+| **R-209** | Review-needed labels come from changed paths. The path map in `.github/labeler.json` is the source of truth (the combined QA review for every path; Security for workflows, workflow scripts, the labeler config and `public/_headers`, ADR-0026). | here | labeler CI | phase-1 |
 | R-210 ★ | The Reader Advocate judges only rendered output (screenshots, extracted text, PDFs), never source code or plans. | `.claude/agents/reader-advocate.md` | guard-bash and guard-read hooks restrict its commands and files | active |
 | **R-301** | Every number in built HTML and PDFs maps to an entry in src/content/claims.json. | here | check-claims CI | phase-1 |
 | R-302 | No claim is stronger than its source. Client decisions override repo values (see the content rule file). | `.claude/rules/content.md` | judgment; QA verification (R-303) | prose |
@@ -80,22 +80,22 @@ Every "must" and "never" in this project lives here, with exactly one home. 86 r
 | **R-606** | WCAG 2.2 AA: zero axe violations, 44 px touch targets. | here | axe CI | phase-2 |
 | **R-607** | Performance budgets hold (see docs/spec/09-quality.md). | here | Lighthouse CI | phase-2 |
 | **R-608** ★ | Motion is 200 ms or less and respects prefers-reduced-motion. | here | Stylelint max duration; e2e reduced-motion check | phase-1 |
-| **R-609** | Visual baselines change only with Design Lead approval. | here | labeler; review-gate | phase-1 |
+| **R-609** | Visual baselines change only with the combined reviewer's approval (ADR-0026). | here | labeler; review-gate | phase-1 |
 | **R-610** ★ | No CLAUDE.md or other instruction files in public/ or src/pages/ (they would be served as pages). | here | guard-write hook; docs lint | active |
 | R-701 ★ | Never weaken or delete a test to get a build to pass; removing a test file requires QA review. | `.claude/rules/tests.md` | pr-hygiene CI flags removed tests; labeler | phase-1 |
 | **R-702** | Mutation score breaks at 80 for src/lib/fitcheck/ and 70 elsewhere in src/lib/. | here | Stryker CI | phase-3 |
 | **R-703** | Line coverage on src/lib/ is at least 90%. | here | Vitest CI | phase-1 |
-| R-704 ★ | Seeded-defect audits run at the end of Phases 1 and 3; any role under 75% in its area is retrained and re-tested. | `.claude/skills/seeded-defect-audit/SKILL.md` | phase-gate script checks docs/qa/audit-N.md | phase-1 |
+| R-704 | Retired after audit 1 (ADR-0026). | `.claude/skills/seeded-defect-audit/SKILL.md` | none | retired |
 | R-705 | QA writes acceptance tests from the issue's criteria without reading the builder's report. | `.claude/agents/qa-engineer.md` | judgment | prose |
 | R-801 | Check usage before each phase and each issue; start a phase only if it fits in the remaining usage. | `.claude/skills/session-protocol/SKILL.md` | judgment | prose |
 | R-802 ★ | After each issue: commit, push, merge if green, update docs/status.md. | `.claude/skills/session-protocol/SKILL.md` | Stop hook warns on uncommitted work | active |
 | **R-803** ★ | Never end a session with uncommitted work; push a draft PR instead. A subagent may leave only its own agent-memory notes uncommitted; the Supervisor collects them. | here | Stop hook | active |
-| R-804 ★ | A phase closes only when its plan, demo, retro and gate records exist. | `.claude/skills/phase-gate/SKILL.md` | phase-gate script | phase-1 |
+| R-804 ★ | A phase closes only when its plan and gate records exist (ADR-0026). | `.claude/skills/phase-gate/SKILL.md` | phase-gate script | phase-1 |
 | R-805 ★ | Tasks live in GitHub Issues and progress in docs/status.md; plan.md and docs/spec/ hold intent only. | `CLAUDE.md` | docs lint rejects task checklists in docs/spec/ | active |
 | **R-806** ★ | Instruction files stay within token budgets, and every rule has exactly one home. | here | docs lint | active |
-| R-807 ★ | Run the probe test after Phase 0 and after any change to CLAUDE.md or .claude/. | `.claude/skills/probe-test/SKILL.md` | phase-gate script checks docs/qa/probe-results.md is newer than .claude/ | phase-1 |
+| R-807 | Retired (ADR-0026): no probe tests. | `.claude/skills/probe-test/SKILL.md` | none | retired |
 | R-901 | Validation results are stored without names or contact details. | `.claude/skills/external-validation/SKILL.md` | judgment | prose |
 | **R-902** | The /for holdout assigns the link to 3 of 4 applications at random. | here | apps script test | phase-8 |
 | R-903 | /for open tracking uses only cookieless Cloudflare path counts. | `.claude/skills/external-validation/SKILL.md` | Security review | prose |
 
-**Gaps that cannot be closed by a check** (all agents share one GitHub account and one model family): R-204, R-205 and R-705 depend on how the Supervisor writes delegations. They are audited after the fact by R-206 (QA review audit), the seeded-defect audits (R-704) and the context audit skill.
+**Gaps that cannot be closed by a check** (all agents share one GitHub account and one model family): R-204, R-205 and R-705 depend on how the Supervisor writes delegations. Since ADR-0026 they are not audited after the fact; CI and the claims check are the backstop.
