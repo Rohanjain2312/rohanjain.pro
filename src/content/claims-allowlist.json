@@ -1,1 +1,7 @@
-[]
+[
+  {
+    "page": "/404",
+    "number": "404",
+    "reason": "status code and traceback decoration"
+  }
+]
