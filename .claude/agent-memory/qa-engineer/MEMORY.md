@@ -19,3 +19,5 @@
 - [Git hooks gaps (PR #109)](project-git-hooks-pr109.md): case-sensitive R-501, merge/fixup ignores, gitleaks unrun; how to probe hooks e2e
 - [Write tool and unicode escapes](feedback-write-tool-unicode-escapes.md): backslash-u in Write content trips R-008; build chars from code points
 - [Skill alias review (PR #119)](project-skills-alias-review-pr119.md): common-word aliases slipped past schema checks; rerun alias audit on skills.json changes
+- [QA tooling gaps](project-qa-tooling-gaps.md): lychee (#13) and copy lint (#27) are not run yet; substitutes, owners and verify limits.
+- [check-claims gaps (PR #137)](project-check-claims-gaps-pr137.md): R-301 check bypasses (years, noscript, global set) to hand-check once pages exist
