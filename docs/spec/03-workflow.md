@@ -45,4 +45,4 @@ Project board, PR pages, `docs/status.md`, `docs/standups.md`, and a short termi
 - Each release is a Git tag and a GitHub Release with notes and an SBOM.
 
 ## Documentation set
-`README.md` (written for both recruiters who land on the repo and developers), `CONTRIBUTING.md`, `SECURITY.md`, `LICENSE` (code MIT; content and résumé text all rights reserved), `docs/adr/`, `docs/design/`, `docs/security/`, `docs/runbooks/`, `docs/reviews/`, `docs/demos/`, `docs/status.md`, `docs/needs-client.md`, `docs/architecture.md`, `docs/content-guide.md`.
+`README.md` (written for both recruiters who land on the repo and developers), `CONTRIBUTING.md`, `SECURITY.md`, `LICENSE` (code MIT; content and résumé text all rights reserved), `docs/adr/`, `docs/design/`, `docs/security/`, `docs/runbooks/`, `docs/reviews/`, `docs/status.md`, `docs/needs-client.md`, `docs/architecture.md`, `docs/content-guide.md`.

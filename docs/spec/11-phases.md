@@ -11,7 +11,7 @@ Owner: Supervisor (all roles)
 - Already in the folder from the client: `plan.md`, `CLAUDE.md`, `.claude/` (agents, rules, skills, hooks, settings), `docs/` (rules, spec, status, needs-client), `scripts/lint-docs.mjs`, `reference/`, `.gitignore`. Verify `node .claude/hooks/test-hooks.mjs` and `node scripts/lint-docs.mjs` pass, then commit all of it in the first PR (branch `supervisor/1-bootstrap`). Do not modify `reference/`.
 - Write ADRs 0001 to 0012 and create the full issue backlog for Phase 1 (later phases are created at their start).
 - Security drafts the threat model; Design Lead drafts the design spec outline.
-**Gate:** Phase 1 backlog complete with acceptance criteria; ADRs written; threat model and design outline committed; probe test passed and recorded in `docs/qa/probe-results.md` (R-807).
+**Gate:** Phase 1 backlog complete with acceptance criteria; ADRs written; threat model and design outline committed.
 
 ### Phase 1: Foundations
 Owners: Platform (pipeline), Design Lead + Frontend (tokens, spec), App/Data (content), Security (headers)
@@ -24,19 +24,19 @@ Owners: Platform (pipeline), Design Lead + Frontend (tokens, spec), App/Data (co
 **Gate:** green pipeline; empty styled page builds; headers verified locally; content validation passing; claims verified by QA; seeded-defect audit 1 scored, and any role below 75% retrained and re-tested.
 
 ### Phase 2: Core pages (with Phase 5 folded in, ADR-0026)
-Owners: Frontend (UI), Design Lead (review), App/Data (wiring)
+Owners: Frontend (UI), App/Data (wiring)
 - Hero, results strip, production section with both folds, selected work, more projects, background fold, contact (with phone), footer, 404, privacy page.
 - Static and content-driven; claims check passing.
 **Gate:** design review passes the anti-slop checklist at 390/768/1280 px; Reader Advocate's simulated 5-second test passes; zero axe violations; Lighthouse budgets met locally; claims check and copy lint green. The real 5-second test packet is ready in `docs/needs-client.md` (does not block).
 
 ### Phase 3: Fit check and brief
-Owners: App/Data (engine and golden set), Frontend (UI), Security (review), Design Lead (brief layout)
+Owners: App/Data (engine and golden set), Frontend (UI), Design Lead (brief layout)
 - Engine per `docs/spec/06-architecture.md` §5.4; golden set per `docs/spec/09-quality.md` §9.4; ReDoS test.
 - UI: samples, textarea, optional fields, verdict, evidence rows, gaps, brief with print stylesheet.
 **Gate:** golden tests and alias audit pass; property tests pass; mutation score at or above threshold; XSS payload tests pass; brief prints to one page in Chromium and WebKit; keyboard-only flow works. The fit-rating packet is ready in `docs/needs-client.md` (does not block).
 
 ### Phase 4: Résumé, PDFs and per-application pages
-Owners: Frontend (dialog), App/Data (PDF generator, `/for` generator), Design Lead (PDF layout), Security (review)
+Owners: Frontend (dialog), App/Data (PDF generator, `/for` generator), Design Lead (PDF layout)
 - Accessible résumé dialog with three tabs; no-JS fallback.
 - Résumé PDFs generated at build, ATS-friendly, claims-checked.
 - `npm run for` generator and `/for/[slug]` page, expiry, noindex, random slugs, JD never stored. Create one sample application page from a golden posting to prove the flow. (R-501, R-503)
