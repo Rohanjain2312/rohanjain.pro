@@ -13,7 +13,7 @@ A portfolio site whose only job is to get Rohan Jain interviews for ML Engineer,
 | SessionStart hook | Every start, resume and compaction | The session-protocol instruction, git state, `docs/status.md`, compaction snapshot |
 | `.claude/agents/<role>.md` | When that role is delegated work | Role duties, owned paths, model, review duties, veto |
 | `.claude/rules/*.md` | When a matching file is read or edited | Content, fit-check, UI, tests, CI rules |
-| `.claude/skills/*/SKILL.md` | Description always; body when invoked | Session protocol, reviews, phase gates, audits, validation, probes, context audit |
+| `.claude/skills/*/SKILL.md` | Description always; body when invoked | Session protocol, reviews, phase gates, validation (audits and probes retired, ADR-0026) |
 | `.claude/hooks/` | On every tool call (enforcement), not as context | Hard rules: blocked actions cite a rule ID |
 | `docs/spec/*` | Only when read | The full specification |
 
@@ -43,7 +43,6 @@ A portfolio site whose only job is to get Rohan Jain interviews for ML Engineer,
 ## Checks on the instructions themselves
 - `node scripts/lint-docs.mjs`: one home per rule, inventory matches homes, links resolve, token budgets, no instruction files where they would be served.
 - `node .claude/hooks/test-hooks.mjs`: every hook blocks and allows what it should.
-- Skill `probe-test`: fresh-session probes after Phase 0 and after any change to `CLAUDE.md` or `.claude/`.
 
 ## To start or continue
 First time only: if a `_claude` folder exists, run `mv _claude .claude` in the local folder (the setup files could not be written into `.claude` remotely).

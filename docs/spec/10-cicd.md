@@ -42,7 +42,7 @@ Generated from `docs/rules.md`. Hooks marked active already exist in `.claude/ho
 | R-111 | guard-bash hook; ruleset (squash only, required checks, no bypass) | phase-0 |
 | R-201 | review-gate CI check; ruleset | phase-1 |
 | R-202 | review-gate CI check; guard-bash hook | phase-1 |
-| R-206 | phase-gate script checks docs/qa/review-audit-N.md exists | phase-1 |
+| R-206 | Retired (ADR-0026) | none |
 | R-207 | review-gate CI check for a Checked: section | phase-1 |
 | R-208 | review-gate CI check (Head must equal PR head) | phase-1 |
 | R-209 | labeler CI | phase-1 |
@@ -77,11 +77,11 @@ Generated from `docs/rules.md`. Hooks marked active already exist in `.claude/ho
 | R-701 | pr-hygiene CI flags removed tests; labeler | phase-1 |
 | R-702 | Stryker CI | phase-3 |
 | R-703 | Vitest CI | phase-1 |
-| R-704 | phase-gate script checks docs/qa/audit-N.md | phase-1 |
+| R-704 | Retired after audit 1 (ADR-0026) | none |
 | R-804 | phase-gate script | phase-1 |
 | R-805 | docs lint rejects task checklists in docs/spec/ | active |
 | R-806 | docs lint | active |
-| R-807 | phase-gate script checks docs/qa/probe-results.md is newer than .claude/ | phase-1 |
+| R-807 | Retired (ADR-0026) | none |
 | R-902 | apps script test | phase-8 |
 
-Also wire into CI from Phase 1: `node scripts/lint-docs.mjs` (R-806) and `node .claude/hooks/test-hooks.mjs` whenever `.claude/` changes (R-807).
+Also wire into CI from Phase 1: `node scripts/lint-docs.mjs` (R-806) and `node .claude/hooks/test-hooks.mjs` whenever `.claude/` changes (the hooks self-test).
