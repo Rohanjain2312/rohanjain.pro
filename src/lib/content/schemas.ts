@@ -117,10 +117,26 @@ export const resumeSchema = z
         })
         .strict(),
     ),
-    projects: z.array(z.object({ projectId: slug, bullets: z.array(bulletSchema) }).strict()),
-    publication: z.object({ citation: nonEmpty, url: httpsUrl.optional() }).strict().optional(),
+    projects: z.array(
+      z
+        .object({
+          projectId: slug,
+          links: z.array(linkSchema).optional(),
+          bullets: z.array(bulletSchema),
+        })
+        .strict(),
+    ),
+    publication: z
+      .object({ citation: nonEmpty, url: httpsUrl.optional(), claimIds: z.array(slug).optional() })
+      .strict()
+      .optional(),
   })
   .strict();
+
+// Numerals that are not claims (R-301, ADR-0015): the 404 status code, decorative line numbers, ordinals.
+export const claimsAllowlistSchema = z.array(
+  z.object({ page: nonEmpty, number: nonEmpty, reason: nonEmpty }).strict(),
+);
 
 export const siteSchema = z
   .object({
