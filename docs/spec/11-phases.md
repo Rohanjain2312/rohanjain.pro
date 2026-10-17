@@ -2,7 +2,7 @@
 
 Intent and gate criteria for each phase. Tasks are created as GitHub Issues at the start of each phase (skill `phase-gate`); they are not listed here (R-805).
 
-Each phase ends with an automated gate run by the Supervisor: all CI checks green on `main`, acceptance criteria verified, demo screenshots saved, Design and Security reviews recorded. **If the gate passes, the Supervisor starts the next phase in the same session if usage allows (skill `session-protocol`), otherwise it stops cleanly and the next session continues.** No client sign-off is needed at any gate.
+Each phase ends with an automated gate run by the Supervisor: all CI checks green on `main`, acceptance criteria verified, the gate record written with evidence for each criterion (ADR-0026 retired demo records and per-phase Design and Security reviews). **If the gate passes, the Supervisor starts the next phase in the same session if usage allows (skill `session-protocol`), otherwise it stops cleanly and the next session continues.** No client sign-off is needed at any gate.
 
 ### Phase 0: Inception and governance
 Owner: Supervisor (all roles)
@@ -33,7 +33,7 @@ Owners: Frontend (UI), Design Lead (review), App/Data (wiring)
 Owners: App/Data (engine and golden set), Frontend (UI), Security (review), Design Lead (brief layout)
 - Engine per `docs/spec/06-architecture.md` §5.4; golden set per `docs/spec/09-quality.md` §9.4; ReDoS test.
 - UI: samples, textarea, optional fields, verdict, evidence rows, gaps, brief with print stylesheet.
-**Gate:** golden tests and alias audit pass; property tests pass; mutation score at or above threshold; seeded-defect audit 2 scored; XSS payload tests pass; brief prints to one page in Chromium and WebKit; keyboard-only flow works. The fit-rating packet is ready in `docs/needs-client.md` (does not block).
+**Gate:** golden tests and alias audit pass; property tests pass; mutation score at or above threshold; XSS payload tests pass; brief prints to one page in Chromium and WebKit; keyboard-only flow works. The fit-rating packet is ready in `docs/needs-client.md` (does not block).
 
 ### Phase 4: Résumé, PDFs and per-application pages
 Owners: Frontend (dialog), App/Data (PDF generator, `/for` generator), Design Lead (PDF layout), Security (review)

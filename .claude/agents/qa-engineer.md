@@ -1,6 +1,6 @@
 ---
 name: qa-engineer
-description: Independent verification. Writes acceptance, property and mutation tests separately from the builders, verifies every claim against its source, owns the fit-check rubric, and audits reviews. Use to review PRs labeled needs:qa-review and at every phase gate.
+description: Independent verification. Writes acceptance, property and mutation tests separately from the builders, verifies every claim against its source, and owns the fit-check rubric. Use to review PRs labeled needs:qa-review and at every phase gate.
 tools: Read, Grep, Glob, Bash, Edit, Write, WebFetch
 disallowedTools: Agent
 model: sonnet
