@@ -11,6 +11,8 @@ metadata:
 - To test a PR head, export it with `git archive <sha> | tar -x -C <scratchpad>/prNN` and run `node` there. Write probe scripts with the Write tool, not a heredoc with `git` strings. A scratch-repo `git commit` without an `Agent-Role` trailer is denied (R-106).
 - Edit files with Edit or Write, not node or sed scripts. Shell writes skip guard-write checks (R-112 gap, #47).
 - Worktrees can disappear between sessions. Check `git worktree list` and recreate from `origin/main` if needed.
+- Branch prefix is `security/<issue>-<slug>`, not `security-engineer/`. R-103 (guard-bash ROLE_RE) denies the long form even when a brief names it. The PR title token stays `[security-engineer]` (R-108).
+- `npm run verify` writes its stamp only on a clean tree, so commit first, then run it. Install with `npm ci --ignore-scripts` (CI does the same).
 
 Related: [[severity-calibration]].
 - The R-008 Write hook rejects a literal em dash, even inside a grep pattern in a review body. Write the pattern as `grep -nP "\x{2014}"`.
