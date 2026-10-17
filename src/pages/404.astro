@@ -10,6 +10,8 @@ const before = lines
   .filter((l) => !('error' in l))
   .map((l) => l.text)
   .join('\n');
+const head = `${before}\n`;
+const tail = errorLine ? errorLine.text : '';
 ---
 
 <Base title={copy.meta.title} description={copy.heading} noindex>
@@ -18,7 +20,7 @@ const before = lines
       <p class="meta">{copy.label}</p>
       <h1 class="crash__title">{copy.heading}</h1>
       <!-- prettier-ignore -->
-      <pre class="trace">{before}{'\n'}<span class="trace-error">{errorLine?.text}</span></pre>
+      <pre class="trace">{head}<span class="trace-error">{tail}</span></pre>
       <p class="note crash__note">{copy.note}</p>
       <a class="back-link" href="/">
         {copy.back}
