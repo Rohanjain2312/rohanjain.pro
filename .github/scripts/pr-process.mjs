@@ -373,7 +373,6 @@ export function checkReviewGate({ pr, files, comments, config, owner }) {
   for (const role of ROLES) {
     const b = latest.get(role);
     const need = required.has(role);
-    const label = APPROVAL_LABEL[role];
     const why =
       role === 'design-lead' && derived.includes('needs:design-review') ? 'R-609/R-201' : 'R-201';
     if (!b) {
