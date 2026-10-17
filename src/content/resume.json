@@ -1,0 +1,275 @@
+{
+  "header": {
+    "name": "Rohan Jain",
+    "location": "New York, NY",
+    "email": "rohanjain2312@gmail.com",
+    "phone": "+1 240 495 9682",
+    "links": [
+      {
+        "label": "LinkedIn",
+        "url": "https://www.linkedin.com/in/jaroh23"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/Rohanjain2312"
+      },
+      {
+        "label": "HuggingFace",
+        "url": "https://huggingface.co/rohanjain2312"
+      }
+    ]
+  },
+  "education": [
+    {
+      "school": "University of Maryland",
+      "degree": "Master of Science in Applied Machine Learning",
+      "dateRange": "Aug 2024 to May 2026",
+      "details": []
+    },
+    {
+      "school": "PES University, Bengaluru, India",
+      "degree": "Bachelor of Technology in Electronics and Communication Engineering",
+      "dateRange": "Aug 2017 to May 2021",
+      "details": ["Relevant Coursework: Machine Learning, Artificial Neural Networks"]
+    }
+  ],
+  "skillGroups": [
+    {
+      "label": "Programming & ML Frameworks",
+      "skills": ["Python (PyTorch, scikit-learn, Pandas, NumPy)", "SQL"]
+    },
+    {
+      "label": "Agentic AI",
+      "skills": [
+        "LangGraph",
+        "LangChain",
+        "Google ADK",
+        "Microsoft Agent Framework",
+        "MCP",
+        "A2A",
+        "LangSmith",
+        "function calling/tool use",
+        "multi-agent orchestration",
+        "Chain-of-Thought prompting",
+        "human-in-the-loop",
+        "agent evaluation (golden sets, LLM-as-judge)",
+        "prompt-injection and tool-misuse guardrails"
+      ]
+    },
+    {
+      "label": "RAG",
+      "skills": [
+        "document ingestion",
+        "chunking",
+        "embeddings",
+        "hybrid search (pgvector, BM25, RRF)",
+        "cross-encoder reranking",
+        "LlamaIndex"
+      ]
+    },
+    {
+      "label": "Inference & Optimization",
+      "skills": [
+        "vLLM",
+        "INT8 PTQ/QAT",
+        "knowledge distillation",
+        "structured pruning",
+        "GGUF",
+        "Ollama"
+      ]
+    },
+    {
+      "label": "Deep Learning",
+      "skills": [
+        "LLMs (LoRA, PEFT, GRPO)",
+        "Transformers",
+        "CNNs",
+        "Transfer Learning",
+        "Time-Series Analysis"
+      ]
+    },
+    {
+      "label": "Cloud & Infrastructure",
+      "skills": [
+        "Kubernetes",
+        "Docker",
+        "GitHub Actions CI/CD",
+        "AWS (Lambda, Bedrock, Aurora, S3)",
+        "REST APIs"
+      ]
+    },
+    {
+      "label": "Data Engineering",
+      "skills": [
+        "ETL Pipelines",
+        "Data Lakes",
+        "Advanced SQL (CTEs, Window Functions)",
+        "Vector Databases"
+      ]
+    }
+  ],
+  "experience": [
+    {
+      "company": "Goldman Sachs",
+      "title": "Data Scientist",
+      "location": "Bengaluru, India",
+      "dateRange": "Jan 2021 to Jun 2024",
+      "bullets": [
+        {
+          "text": "Progressed from STEM Intern to Data Analyst to Data Scientist across ~4 years, scaling automated workflows from 4 to 18 (350% increase) and cutting manual work by 180+ hours/quarter within Goldman Sachs Asset Management division.",
+          "claimIds": [
+            "goldman-roles",
+            "goldman-tenure-years",
+            "workflows-before",
+            "workflows-after",
+            "workflows-increase",
+            "workflows-hours-saved"
+          ]
+        },
+        {
+          "text": "Trained SVM classification model analyzing trade settlement patterns, reducing pending trades by 40% and mitigating regulatory penalties by ~$65k/quarter; Applied SMOTE for class imbalance",
+          "claimIds": ["settlement-pending-trades-reduction", "settlement-penalty-savings"]
+        },
+        {
+          "text": "Engineered a Loan Servicing Automation AI Agent (GPT-4, GPT-3.5-turbo, RAG with pgvector) coordinating a 10-module pipeline and 7 tools (PDF parsing, internal document store, PostgreSQL), with 2 human-in-the-loop approval checkpoints across 14 validation checks; saved 40 hrs/month and eliminated erroneous database writes",
+          "claimIds": [
+            "loan-v1-models",
+            "loan-v1-rag",
+            "loan-v1-pipeline-modules",
+            "loan-v1-tools",
+            "loan-v1-approvals",
+            "loan-v1-checks",
+            "loan-v1-hours-saved",
+            "loan-v1-db-writes"
+          ]
+        },
+        {
+          "text": "Built a computer vision OCR pipeline automating KYC compliance extraction for 4 additional teams at 96% accuracy",
+          "claimIds": ["kyc-ocr-teams", "kyc-ocr-accuracy"]
+        },
+        {
+          "text": "Modeled and queried data from 10+ systems into an automated KPI/KRI analytics pipeline (Python, SQL, pandas, statsmodels, Tableau), saving the equivalent of 3 FTEs",
+          "claimIds": ["kpi-pipeline-systems", "kpi-pipeline-ftes"]
+        },
+        {
+          "text": "Designed a STEM training program covering ETL, data lakes, and Python automation; mentored 3 interns to full-time offers; program adopted as standard onboarding division-wide",
+          "claimIds": ["interns-offers", "interns-program"]
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "projectId": "loan-servicing-agent",
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/Rohanjain2312/loan-servicing-agent"
+        }
+      ],
+      "bullets": [
+        {
+          "text": "Converted a Goldman Sachs loan-servicing prototype into a 10-agent LangGraph system with 2 parallel subgraphs and heterogeneous LLM routing (Claude Sonnet / GPT-4o-mini by cost-quality tradeoff)",
+          "claimIds": ["loan-v2-agents", "loan-v2-subgraphs", "loan-v2-routing"]
+        },
+        {
+          "text": "Built tool-misuse controls: 15 least-privilege tools, Pydantic schema validation at every agent boundary, idempotent DB writes, confidence-gated routing, and 4 HIL interrupts before any irreversible write across 22 validation checks",
+          "claimIds": ["loan-v2-tools", "loan-v2-approvals", "loan-v2-checks"]
+        },
+        {
+          "text": "Containerized with Docker and deployed to Kubernetes (GKE Autopilot) using GitHub Actions CI/CD for automated build, testing, image publishing, and rolling deployments; exposed agents via the A2A protocol for interoperable agent-to-agent communication",
+          "claimIds": ["loan-v2-deploy"]
+        }
+      ]
+    },
+    {
+      "projectId": "trade-settlement-fail-predictor",
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/Rohanjain2312/trade-settlement-fail-predictor"
+        },
+        {
+          "label": "HuggingFace",
+          "url": "https://huggingface.co/spaces/rohanjain2312/trade-settlement-fail-predictor-demo"
+        }
+      ],
+      "bullets": [
+        {
+          "text": "Rebuilt a Goldman Sachs settlement-fail SVM on 3.1M synthetic trades (~3% fail rate, 20 features), benchmarking 12 Logistic Regression, linear/RBF SVM, and XGBoost variants tuned with Optuna and time-series CV; XGBoost led at 0.333 PR-AUC (~7x the random baseline)",
+          "claimIds": [
+            "settle-trades",
+            "settle-fail-rate",
+            "settle-features",
+            "settle-variants",
+            "settle-pr-auc",
+            "settle-pr-auc-lift"
+          ]
+        },
+        {
+          "text": "Prevented data leakage with time-based train/validation/test splits and SMOTE applied only to training data, enforced by automated tests in CI",
+          "claimIds": []
+        },
+        {
+          "text": "Calibrated scores on validation (Brier 0.213 to 0.035) and checked GPU TreeSHAP against planted ground truth (SHAP rank correlation 0.96); shipped an interactive Streamlit demo on Hugging Face Spaces",
+          "claimIds": ["settle-brier-before", "settle-brier-after", "settle-shap-correlation"]
+        }
+      ]
+    },
+    {
+      "projectId": "fincompress",
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/Rohanjain2312/FinCompress"
+        },
+        {
+          "label": "HuggingFace",
+          "url": "https://huggingface.co/spaces/rohanjain2312/FinCompress"
+        },
+        {
+          "label": "Colab",
+          "url": "https://colab.research.google.com/drive/1J7Pukro1HISlPITOB8d2Xp-VF27TLu4o?usp=sharing"
+        }
+      ],
+      "bullets": [
+        {
+          "text": "Compressed FinBERT (financial sentiment) 9.1x from 437.9 MB to 47.7 MB via INT8 PTQ/QAT, knowledge distillation, and structured pruning across 7 benchmarked variants",
+          "claimIds": ["fc-size-ratio", "fc-size-before", "fc-size-after", "fc-variants"]
+        },
+        {
+          "text": "Found that pruning 50% of attention heads improved val Macro F1 by +0.9 points; published weights to HuggingFace Hub with GitHub Actions CI/CD",
+          "claimIds": ["fc-pruning-heads", "fc-pruning-f1-gain"]
+        }
+      ]
+    },
+    {
+      "projectId": "transformer-market-regime",
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/Rohanjain2312/transformer-market-regime"
+        },
+        {
+          "label": "Colab",
+          "url": "https://colab.research.google.com/drive/1rYV5_blpoisUp3-M089RPxrVemL1Jm7G?usp=sharing"
+        }
+      ],
+      "bullets": [
+        {
+          "text": "Developed a CNN-Transformer hybrid achieving 81.78% accuracy (0.480 MCC) on 24 years of S&P 500 regime classification, outperforming 6 baseline architectures",
+          "claimIds": ["mr-accuracy", "mr-mcc", "mr-years", "mr-baselines"]
+        },
+        {
+          "text": "Engineered leakage-safe time-series pipeline with macroeconomic indicators and Gaussian HMM-based regime labelling; optimized thresholds to achieve 88.4% F1 under 68/32 class imbalance",
+          "claimIds": ["mr-f1", "mr-imbalance"]
+        }
+      ]
+    }
+  ],
+  "publication": {
+    "citation": "Alzheimer's Disease Detection (MATLAB, MLP-ELM, GLCM). Designed MLP-Extreme Learning Machine, achieving 95% accuracy on 6,400+ MRI scans using GLCM features; published IEEE research with 17% improvement over baselines; presented at IEEE International Conference",
+    "url": "https://ieeexplore.ieee.org/document/9573589",
+    "claimIds": ["ieee-model", "ieee-accuracy", "ieee-scans", "ieee-improvement"]
+  }
+}

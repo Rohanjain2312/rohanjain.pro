@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/check-claims.ts --require-dist",
     "preview": "node scripts/preview.mjs",
     "check": "astro check && tsc --noEmit",
     "test": "vitest run --passWithNoTests",
@@ -16,6 +16,7 @@
     "test:e2e": "playwright test --pass-with-no-tests",
     "browsers:install": "npx --no-install playwright install chromium",
     "validate:content": "node scripts/validate-content.ts",
+    "check:claims": "node scripts/check-claims.ts",
     "docs:lint": "node scripts/lint-docs.mjs",
     "lint:copy": "node scripts/lint-copy.mjs",
     "verify": "node scripts/verify.mjs",

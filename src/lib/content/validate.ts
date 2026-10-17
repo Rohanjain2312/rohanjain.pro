@@ -33,6 +33,7 @@ type Figure = { id: string; projectId: string; claimIds: string[] };
 type Bullet = { claimIds: string[] };
 type Resume = {
   experience: { bullets: Bullet[] }[];
+  publication?: { claimIds?: string[] };
   projects: { projectId: string; bullets: Bullet[] }[];
 };
 type Application = {
@@ -141,6 +142,7 @@ export function validateContent(raw: RawContent): Problem[] {
         claimRefs('resume.json', `experience.${i}.bullets.${j}.claimIds`, b.claimIds),
       ),
     );
+    claimRefs('resume.json', 'publication.claimIds', resume.publication?.claimIds ?? []);
     resume.projects.forEach((p, i) => {
       projectRef('resume.json', `projects.${i}.projectId`, p.projectId);
       p.bullets.forEach((b, j) =>
