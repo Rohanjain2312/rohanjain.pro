@@ -1,6 +1,6 @@
 ---
 name: context-audit
-description: Use at every phase retrospective to check from session transcripts which instructions agents actually loaded, which rules were blocked, and where rules should move.
+description: Retired (ADR-0026): no context audits. Kept for reference; use only if the client asks for one.
 ---
 
 # Context audit

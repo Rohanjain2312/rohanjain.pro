@@ -3,7 +3,7 @@
 How work moves from issue to merge. The rules themselves are in `docs/rules.md`; most are enforced by hooks and CI.
 
 ## Process and Definition of Done
-- Phased delivery with automated gates (`docs/spec/11-phases.md`). Each phase is a sprint with a goal, tickets and a recorded demo (screenshots and a short summary in `docs/demos/phase-N.md`).
+- Phased delivery with automated gates (`docs/spec/11-phases.md`). Each phase is a sprint with a goal and tickets, closed by a plan and a gate record (ADR-0026).
 - Every unit of work is a GitHub Issue with: title, owner role, description, acceptance criteria, test plan, security notes, design notes, labels (`phase-N`, `role-*`, `type-*`).
 - Definition of Ready: the ticket has acceptance criteria, an owner and no unknown dependencies.
 - Definition of Done (all required):
@@ -31,7 +31,7 @@ GitHub Issues (one per unit of work, with owner role label, phase milestone, typ
 - GitHub does not let an account approve its own PR, so approvals are review comments plus `approved:<role>` labels, checked by the `review-gate` status check.
 
 ## Ceremonies (written, not meetings)
-Phase plan, standup log each session, demo, retrospective, context audit and gate record per phase (R-804; skill `phase-gate`).
+Phase plan, standup log each session and gate record per phase (R-804; skill `phase-gate`). Demos, retrospectives and context audits are retired (ADR-0026).
 
 ## Releases and hotfixes
 release-please keeps a release PR open; the Supervisor merges it at each phase gate (`v0.N.0`; `v0.9.0` release candidate after Phase 6; `v1.0.0` at launch). Hotfixes use `<role>/<issue>-hotfix-<slug>` with the same checks; roll back first if production is broken.
