@@ -21,6 +21,16 @@ CI runs this as its own named step.
 - Agents use `npm ci`.
 - Use `npm install <pkg>` only when adding a dependency under R-506. Security reviews that change.
 
+## Release cooldown for manual installs
+
+- `.npmrc` sets `min-release-age=7` (npm 11.19 or later). Manual `npm install`, `npm update` and `npm install <pkg>` skip versions published in the last 7 days. This matches Dependabot's cooldown.
+- `npm ci` installs the lockfile exactly and does not read this setting.
+- Check: `npm config get min-release-age` must print `7` from the repo root.
+- "Latest stable" means the newest stable release at least 7 days old. Prereleases do not count.
+- A security fix may ship inside the 7 days only in a PR that Security reviews. The PR names the advisory and the reason. Use `min-release-age-exclude` for a single package only with the same review.
+- Do not raise the number or remove the setting without Security review (R-209, R-506).
+- Re-locking after this setting changes is a separate step. Check each new version's publish date against the rule before you lock it. Decision record: ADR-0023.
+
 ## A package that needs its script
 
 1. Open an issue that names the package and why the script is needed.
