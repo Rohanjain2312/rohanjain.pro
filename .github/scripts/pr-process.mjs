@@ -328,8 +328,8 @@ function parseBlock(text, comment) {
   const reviewer = /^Reviewer:[ \t]*(\S+)[ \t]*$/m.exec(text)?.[1] ?? null;
   if (!reviewer) problems.push('R-202 missing "Reviewer: <role>"');
   else if (!ROLES.includes(reviewer)) problems.push(`R-202 unknown reviewer "${reviewer}"`);
-  const head = /^Head:[ \t]*([0-9a-f]{7,40})[ \t]*$/m.exec(text)?.[1] ?? null;
-  if (!head) problems.push('R-202 missing "Head: <sha>"');
+  const head = /^Head:[ \t]*([0-9a-f]{40})[ \t]*$/m.exec(text)?.[1] ?? null;
+  if (!head) problems.push('R-208 missing "Head: <sha>" with the full 40-character SHA');
   const agent = /^Agent:[ \t]*(\S.*)$/m.exec(text)?.[1] ?? null;
   if (!agent) problems.push('R-202 missing "Agent: <agent id>"');
 
@@ -347,6 +347,7 @@ function parseBlock(text, comment) {
         'R-207 the Checked section names no command or file as evidence (put a command in backticks or name a file)',
       );
   }
+  if (findingsAt < 0) problems.push('R-207 missing a "Findings:" section');
   let findingsNone = false;
   if (findingsAt >= 0) {
     const inline = lines[findingsAt].replace(/^Findings:/, '').trim();
@@ -359,7 +360,7 @@ function parseBlock(text, comment) {
 }
 
 export function headMatches(blockHead, prHead) {
-  return Boolean(blockHead) && blockHead.length >= 7 && prHead.startsWith(blockHead);
+  return Boolean(blockHead) && blockHead === prHead;
 }
 
 export function checkReviewGate({ pr, files, comments, config, owner }) {

@@ -246,8 +246,14 @@ test('gate R-208: review of an older head is rejected', () => {
   assert.match(fails(r), /R-202 label approved:supervisor has no matching/);
 });
 
-test('gate R-208: a short head prefix of the PR head is accepted', () => {
-  assert.deepEqual(gate({ comments: [sup({ head: HEAD.slice(0, 7) })], labels: ['approved:supervisor'] }).failures, []);
+test('gate R-208: a short head is rejected, only the full SHA counts', () => {
+  const r = gate({ comments: [sup({ head: HEAD.slice(0, 7) })], labels: ['approved:supervisor'] });
+  assert.match(fails(r), /R-208 missing "Head/);
+});
+
+test('gate R-207: a review without Findings is rejected', () => {
+  const body = review({ reviewer: 'supervisor', agent: 'main' }).replace(/\nFindings:\n.*$/s, '');
+  assert.match(fails(gate({ comments: [comment(body)], labels: ['approved:supervisor'] })), /R-207 missing a "Findings:"/);
 });
 
 test('gate R-202: label without a review, review without a label', () => {
