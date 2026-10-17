@@ -22,6 +22,8 @@ const { title, description, noindex = false } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <!-- Placeholder until the Design Lead ships public/favicon.svg (design spec 13.2). Stops the /favicon.ico 404 in the console. -->
+    <link rel="icon" href="data:," />
     {noindex && <meta name="robots" content="noindex" />}
     <link
       rel="preload"
