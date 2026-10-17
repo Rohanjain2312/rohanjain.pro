@@ -36,3 +36,8 @@ One entry at the start and end of each session (skill `session-protocol`).
 - Done since last time: nothing new; resumed from the checkpoint in PR #130. Moved a stale Security memory file into the #107 memory branch.
 - Doing now: wave 4. #14 with #42 (Platform) and #25 with #26 (App/Data) in parallel; then #15, #28, #29; then wave 5 (#31) and the Phase 1 gate. Phase 2 starts after the gate if usage allows (weekly usage at 73%).
 - Blockers: none.
+
+## 2026-10-16 end (Phase 1, third session)
+- Done: #96, #118 (ADR-0022: up to eight parallel agents, haiku for chores, Low deferral rule), #15 with #150, #25 and #26, #28, #51 and #58; closed #56 and #148. Claims verification found 7 mismatches (#140 to #146).
+- Next: reviews for #135, #139, #149; claim fixes; #31; Phase 1 gate. Phase 2 after the gate.
+- Blockers: none. Client: three unsourced numbers in `docs/needs-client.md`; availability line; optional CLI install.
