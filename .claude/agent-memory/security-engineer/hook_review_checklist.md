@@ -22,4 +22,6 @@ When a PR changes a hook, probe each class below with synthetic PreToolUse JSON 
 - Fail-open: a command that hangs the hook (`/dev/zero`), a bad `%` escape that throws, the 15 s timeout. A timed-out PreToolUse hook does not block.
 - Legitimate commands that must still allow (own-role review, own label, supervisor merge, reads of other repos). Count false positives.
 
+- npm config tripwires (PR #136, 2026-10-16): confirm each form live with npm in a scratch project (`.npmrc` ignore-scripts=true plus a root `install` script writing a marker). Facts on npm 11: flag works only as `false` or `--no-ignore-scripts`; env var also accepts `null`, `0`, `00`, `0.0`; `npm_config_ignore-scripts` (hyphen) works; `npm set ... --location=project` rewrites `.npmrc` (alias of `npm config set`). Filed as #148 (Low). Use spawnSync from a node script; shell loops with variables are refused by the worktree guard.
+
 Related: [[escaped-hook-path-traversal]], [[severity-calibration]]

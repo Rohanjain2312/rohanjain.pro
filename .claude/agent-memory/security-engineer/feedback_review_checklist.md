@@ -23,4 +23,12 @@ Checks to run on every review, learned from past reviews:
 
 6. **Schema PRs (PR #83, 2026-10-16):** probe the maximum accepted size of privacy-bound records (R-502 files reached 48 KB), regex-only date fields (`2000-13-45` passes; use `z.iso.date()`), nested `.strict()` coverage, and what error messages echo. For new dev dependencies, compare lock `integrity` with `npm view <pkg> dist.integrity` and check install scripts. Rated Low, approved.
 
-Related: [[tooling-quirks]], [[escaped-defects]]
+7. **A criterion moved to another issue must sit in that issue's body, not only in a comment (PR #133, 2026-10-16).** #118's CODEOWNERS item was "moved" to #121 by a comment, and the comment says CODEOWNERS already lists the paths. It did not. #121's body has no such criterion.
+   **Why:** the comment is the only record, and it was wrong, so the item vanished.
+   **How to apply:** for each moved criterion, grep the target issue body and check the target file, not the comment.
+
+8. **Risk acceptance wording (PR #133):** an ADR that "accepts" a risk must say "accepted risk" in its text, be listed in `docs/needs-client.md`, and get an RR row in `docs/security/threat-model.md`. The ADR's own word "Consequences" is not enough (R-511).
+
+9. **Review model (PR #133):** this review ran on haiku. ADR-0022 allows haiku only for docs-only reviews, and `.claude/skills/` is not docs-only. Note the model in the review's Checked list and let the Supervisor decide whether to re-run on sonnet.
+
+Related: [[tooling-quirks]], [[escaped-defects]], [[review-checklist-repo-settings]], [[project-adr0022-model-policy]]
