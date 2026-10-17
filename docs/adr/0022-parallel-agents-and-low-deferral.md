@@ -8,7 +8,7 @@ The client said (2026-10-16, third Phase 1 session) that the build takes too lon
 The Phase 1 milestone also holds 18 Low follow-ups. Most name their own trigger: "before the first page with section links", "before Phase 3", "with Phase 4". Holding the Phase 1 gate for them delays Phase 2 and does not reduce risk sooner.
 
 ## Decision
-1. The Supervisor runs independent issues and reviews in parallel, up to five agents at a time. Work on overlapping files stays serialized.
+1. The Supervisor runs independent issues and reviews in parallel, up to eight agents at a time. Work on overlapping files stays serialized.
 2. Models: sonnet for building and for reviews of code, workflows, hooks and content; haiku for mechanical work (label chores, small docs fixes, simple Low follow-ups, docs-only reviews). No opus subagents, including Security reviews of `.claude/hooks/` changes. This replaces the opus exception in ADR-0020 decision 1.
 3. R-205 keeps its order: CI first; QA, Security and Design Lead in parallel; then Reader Advocate; Supervisor last.
 4. At a phase gate, a `severity:low` issue whose own text names a later trigger, or that needs something only the client can provide, moves to the milestone of that trigger. The Supervisor comments the reason on the issue and lists the moved issues in the gate record. Medium and higher findings still block (R-511).

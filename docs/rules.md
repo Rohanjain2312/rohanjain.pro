@@ -41,7 +41,7 @@ Every "must" and "never" in this project lives here, with exactly one home. 86 r
 | **R-202** ★ | A review comment states REVIEW: APPROVED or CHANGES REQUESTED, Reviewer: <role>, Head: <sha>, Agent: <agent id>. | here | review-gate CI check; guard-bash hook | active / phase-1 |
 | **R-203** ★ | A role posts reviews only as itself; the Supervisor never writes a review for another role. | here | guard-bash hook compares Reviewer to agent_type | active |
 | R-204 | A review delegation contains only the PR number, head SHA, acceptance criteria and plan references; never the builder's report or reasoning. | `.claude/skills/run-review/SKILL.md` | judgment; audited by R-206 | prose |
-| R-205 | CI first; then QA, Security and Design Lead in parallel (up to five agents at a time, ADR-0022); then Reader Advocate; Supervisor last. Each reviewer posts before reading others' reviews. | `.claude/skills/run-review/SKILL.md` | judgment | prose |
+| R-205 | CI first; then QA, Security and Design Lead in parallel (up to eight agents at a time, ADR-0022); then Reader Advocate; Supervisor last. Each reviewer posts before reading others' reviews. | `.claude/skills/run-review/SKILL.md` | judgment | prose |
 | R-206 ★ | At each gate, QA audits 20% of merged PRs, matching each approval to the reviewer's subagent transcript. | `.claude/skills/phase-gate/SKILL.md` | phase-gate script checks docs/qa/review-audit-N.md exists | phase-1 |
 | **R-207** ★ | A review lists what was checked with evidence; "no findings" names at least three checks. | here | review-gate CI check for a Checked: section | phase-1 |
 | **R-208** | A new commit invalidates earlier approvals. | here | review-gate CI check (Head must equal PR head) | phase-1 |
