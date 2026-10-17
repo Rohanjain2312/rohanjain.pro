@@ -24,3 +24,5 @@
 - [npm script bypass (PR #136)](project-npm-script-bypass-pr136.md): shell routes that re-enable install scripts past R-509, verified with real npm; re-check on guard-bash changes.
 - [Shared scratchpad names](feedback-shared-scratchpad.md): other agents overwrite generic probe names; use QA-prefixed names and check headers before citing.
 - [PR process gate review (PR #135)](project-pr-process-gate-pr135.md): comment-strip bypass found at 3135510; re-check cases and Low items
+- [PR #165 claims fixes](project-pr165-claims-fixes.md): approved dc071e7; QA log re-date owed after merge; check-claims probe recipe
+- [QA tooling status](project-qa-tooling-gaps.md): copy lint is on main but skipped when earlier CI steps fail (audit 1, PR #168); lychee status; verify limits.

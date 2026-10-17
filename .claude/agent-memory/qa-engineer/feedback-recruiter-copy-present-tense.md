@@ -11,4 +11,4 @@ Recruiter-facing text describes only what exists at the reviewed head. Planned f
 
 **How to apply:** For any README or copy PR, list each present-tense product claim and check it against the tree (`ls src`, `ls .github/workflows`, the routes that actually return 200). Anything missing gets "planned" wording or a link to status. Also check CI claims ("enforced by CI", "everything CI runs") against `.github/workflows/`.
 
-Related: [[project-qa-gaps-2026-10-16]].
+Related: [[project-qa-tooling-gaps]].
