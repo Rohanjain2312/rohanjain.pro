@@ -11,4 +11,4 @@ Write logs, fetched files and scratch text to the session scratchpad, never insi
 
 **How to apply:** Redirect verify output to the scratchpad. Check `git status --short` before verify, and run it again after any stray file is removed. Split git work into one plain command per call. When checking out a PR head for review, remember to switch back to the worktree branch and delete the temporary local ref afterwards.
 
-Related: [[project-qa-gaps-2026-10-16]].
+Related: [[project-qa-tooling-gaps]].

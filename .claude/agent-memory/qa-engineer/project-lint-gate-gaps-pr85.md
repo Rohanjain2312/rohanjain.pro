@@ -16,4 +16,4 @@ PR #85 (lint, format, style gates) was approved with follow-ups. Known bypasses 
 
 **How to apply:** On any PR that adds components, fitcheck code or CSS, grep for these forms by hand. When property tests (R-405 render test) land, confirm they cover the bypass forms. Re-run `/private/tmp` style probes against the real configs after any lint config change. Check CI (#13) runs `npm run lint:selftest`.
 
-Related: [[project-qa-gaps-2026-10-16]].
+Related: [[project-qa-tooling-gaps]].
