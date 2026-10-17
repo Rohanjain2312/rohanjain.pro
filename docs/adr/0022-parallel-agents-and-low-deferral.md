@@ -1,6 +1,6 @@
 # ADR-0022: More parallel agents, haiku for chores, and Low findings deferred to their trigger
 
-Status: accepted · Date: 2026-10-16 · Issues: #118 · Supersedes: ADR-0020 decision 2 (the two-agent cap)
+Status: accepted, decision 1 narrowed by ADR-0024 (pipeline of two) · Date: 2026-10-16 · Issues: #118 · Supersedes: ADR-0020 decision 2 (the two-agent cap)
 
 ## Context
 The client said in the session chat (2026-10-16, third Phase 1 session) that the build takes too long. They asked for more agents in parallel and smaller models for less intensive tasks. ADR-0020 capped work at two agents at a time.

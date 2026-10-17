@@ -14,7 +14,7 @@ Read the PR labels. Required: `supervisor` always; `design-lead` for `needs:desi
 - **R-204** A review delegation contains only the PR number, head SHA, acceptance criteria and plan references; never the builder's report or reasoning.
 - **R-205** CI first; then QA, Security and Design Lead in parallel (up to eight agents at a time, ADR-0022); then Reader Advocate; Supervisor last. Each reviewer posts before reading others' reviews.
 - Reviewers run on sonnet; haiku may review docs-only PRs, but never gives the only required review on code, workflows, hooks or content. No opus (ADR-0022).
-- One review round per reviewer where possible: Low findings become follow-up issues, not a new round.
+- Bounded reviews (ADR-0024): one round per reviewer against the acceptance criteria and named risks. Anything beyond them is a Low, added as a line to the phase's `Phase N Low backlog` issue, never CHANGES REQUESTED. A re-review after a fix checks only the diff from the reviewed head, on haiku, unless the fix touches files outside the reviewed scope.
 
 Delegation template (copy exactly, fill the brackets, add nothing else):
 
@@ -22,6 +22,7 @@ Delegation template (copy exactly, fill the brackets, add nothing else):
 Review PR #<n> at head <sha>.
 Acceptance criteria: <paste from issue #<i>>.
 Relevant spec: <file and section>.
+Scope: judge these criteria and the named risks in one round; put anything beyond them as Low lines on issue #<phase Low backlog>, not CHANGES REQUESTED.
 Post one comment with `gh pr comment <n> --body-file <file>` in this format:
 REVIEW: APPROVED | CHANGES REQUESTED
 Reviewer: <your agent name>
