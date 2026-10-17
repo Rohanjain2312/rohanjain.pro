@@ -14,6 +14,14 @@ const text = [ti.content, ti.new_string, ti.new_source, ...(Array.isArray(ti.edi
 
 if (rel.startsWith('reference/')) deny(input, 'R-113', 'reference/ is read-only.');
 
+// #58: .npmrc must keep ignore-scripts=true; an edit may not set it to anything else or remove it.
+if (/(^|\/)\.npmrc$/.test(rel)) {
+  const olds = [ti.old_string, ...(Array.isArray(ti.edits) ? ti.edits.map((e) => e.old_string) : [])].filter((x) => typeof x === 'string').join('\n');
+  const setsOther = /ignore-scripts\s*=\s*(?!true\b)/i.test(text);
+  const removes = ti.content !== undefined ? !/^\s*ignore-scripts\s*=\s*true\b/im.test(ti.content) : (/ignore-scripts/i.test(olds) && !/ignore-scripts\s*=\s*true\b/i.test(text));
+  if (setsOther || removes) deny(input, 'R-509', '.npmrc must keep ignore-scripts=true (#58).');
+}
+
 const base = rel.split('/').pop();
 if (/^public\/.*\.md$/i.test(rel) || /^src\/pages\/.*\.md$/i.test(rel)) deny(input, 'R-610', 'Markdown in public/ or src/pages/ would be served as a page.');
 if (base === 'CLAUDE.md' && rel !== 'CLAUDE.md' && rel !== '.claude/CLAUDE.md') deny(input, 'R-610', 'Use .claude/rules/<topic>.md with paths: frontmatter instead of a nested CLAUDE.md.');

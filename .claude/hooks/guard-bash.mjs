@@ -25,13 +25,18 @@ const RAW_DENY = [
   [/\bgit\b(?![^\n;|&]*\s--(get|get-all|get-regexp|list)\b)[^\n;|&]*\bconfig\b[^\n;|&]*\b(remote\.[^\s]+\.(push)?url|url\.[^\s]+\.(push)?insteadof)\b/i, 'Changing remote URLs is blocked.'],
   [/\bgit\b[^\n;|&]*\bpush\b[^\n;|&]*--repo\b/, 'Push only to origin.'],
   [/\brepositories\/\d+/, 'Use repos/<owner>/<name> paths; repositories/<id> is blocked.'],
-  // #58: .npmrc sets ignore-scripts=true; flags and env vars must not turn install scripts back on.
-  [/--ignore-scripts(=|\s+)["']?(false|0|no)\b/i, 'Turning npm install scripts back on is blocked (.npmrc ignore-scripts=true).'],
-  [/--no-ignore-scripts\b/i, 'Turning npm install scripts back on is blocked (.npmrc ignore-scripts=true).'],
-  [/\bnpm_config_ignore_scripts\s*=\s*["']?(false|0|no|["']|\s|$)/i, 'Turning npm install scripts back on is blocked (.npmrc ignore-scripts=true).'],
-  [/\bnpm\s+config\s+(set|delete|rm)\b[^\n;|&]*\bignore-scripts\b/i, 'Changing the npm ignore-scripts setting is blocked.'],
 ];
 for (const [re, why] of RAW_DENY) if (re.test(cmd)) deny(input, 'R-509', why);
+// #58: .npmrc sets ignore-scripts=true; no flag, env var, config command or shell write may turn install scripts back on.
+// Matched on the command with quotes and backslashes removed, so quote-splitting does not hide it.
+{
+  const flat = cmd.replace(/['"\\]/g, '');
+  const NPM_SCRIPTS = 'Turning npm install scripts back on is blocked (.npmrc ignore-scripts=true, #58).';
+  if (/--ignore-scripts=(?!true\b)/i.test(flat) || /--ignore-scripts\s+(false|0|no|null|off|\$)/i.test(flat) || /--no-ignore-scripts\b/i.test(flat)) deny(input, 'R-509', NPM_SCRIPTS);
+  if (/\bnpm_config_ignore[-_]scripts\s*=(?!\s*true\b)/i.test(flat)) deny(input, 'R-509', NPM_SCRIPTS);
+  if (/\bnpm\s+(config|c|set|get)\b[^\n;|&]*\bignore-scripts\b/i.test(flat) && !/\bnpm\s+(config\s+(\S+\s+)*)?get\b/i.test(flat)) deny(input, 'R-509', 'Changing the npm ignore-scripts setting is blocked (#58).');
+  if (/(>|\btee\s|\bsed\s+-[a-z]*i|\bperl\s+-[a-z]*i|\b(cp|mv|ln|install|dd|truncate)\s)[^\n;|&]*\.npmrc\b/i.test(flat)) deny(input, 'R-509', 'Shell writes to .npmrc are blocked; change it with Edit in a reviewed PR (#58).');
+}
 {
   const m = cmd.match(/\bGH_REPO=["']?([^\s"';|&]+)/);
   if (m && m[1].replace(/^https:\/\/github\.com\//, '').toLowerCase() !== 'rohanjain2312/rohanjain.pro') deny(input, 'R-509', 'GH_REPO may name only Rohanjain2312/rohanjain.pro.');
