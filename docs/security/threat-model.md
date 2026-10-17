@@ -260,7 +260,7 @@ No Medium or higher finding from this threat model is open. Medium findings bloc
 |---|---|---|---|---|
 | RR-1 | Attribution rests on self-declared `Agent-Role` trailers and a local, git-ignored hook log | One account; no per-role identity on GitHub | supervisor | each phase gate |
 | RR-2 | A steered agent with the shared token can forge approvals or edit the ruleset outside the hooked commands | GitHub cannot tell roles apart; hooks are tripwires (ADR-0018) | supervisor (QA audits via R-206) | each phase gate |
-| RR-3 | All reviewers are Claude models and may share blind spots | Model family is fixed; partly offset by model tiers, context separation, machine checks and external validation | supervisor | each phase gate |
+| RR-3 | All reviewers are Claude models and may share blind spots; no opus is used, so Security reviews of hooks have no model diversity (ADR-0022) | Model family is fixed and tiers no longer differ; offset by context separation, machine checks, seeded-defect audits and external validation | supervisor | each phase gate |
 | RR-4 | A compromised dependency that passes audit and OSV can still alter the build | No scanner catches every malicious release; cooldown and `ignore-scripts` reduce, not remove, the risk | security-engineer | monthly review |
 | RR-5 | Phone number exposed to scrapers | Client decision for reachability; mitigated by keeping it out of structured data | client (accepted), security-engineer monitors | Phase 6 |
 | RR-6 | Look-alike domains and phishing in the client's name | Not preventable at reasonable cost | client, security-engineer | Phase 7 |
@@ -268,6 +268,9 @@ No Medium or higher finding from this threat model is open. Medium findings bloc
 | RR-8 | Closed 2026-10-16. The signed-commit rule (R-107) is back on (PR #68, #33 closed) and the client removed `write:ssh_signing_key` from the shared token (scopes: gist, project, read:org, repo, workflow). Kept as history: `4d29441` stays the one allowed unsigned commit (closed #38) | none | supervisor | each phase gate: `gh auth status` must not list the scope |
 | RR-9 | Interaction limit expires 2027-04-16 (six months at most) | GitHub offers no permanent setting for public repos | supervisor | renewed at each phase gate (skill `phase-gate`, ADR-0018); gate fails if lapsed |
 | RR-10 | Agents run in the client's user account with network access | Claude Code sandbox mode with a network allowlist not yet evaluated | supervisor | Phase 1 retro (ADR-0018) |
+| RR-12 | Dev-only `braces` advisory GHSA-vfj7-8cjw-p6xm is waived in CI (ADR-0021) | No fixed version; dev toolchain only, repo-controlled globs | security-engineer | 2027-01-15 or when a fix ships |
+| RR-13 | The lockfile holds packages under 7 days old until 2026-10-22 (ADR-0023) | Re-lock churn for a gap that closes by itself; signatures, `ignore-scripts=true` and 0 audit findings (RR-4) | security-engineer | age check on or after 2026-10-22 |
+| RR-14 | Bounded reviews, docs-only haiku re-checks, context audit at Phases 3 and 6 only, tripwire gaps open to Phase 8 (ADR-0024) | Speed, requested by the client; a Medium or higher finding still blocks anywhere (R-511) | supervisor | each phase gate; Phase 6 assessment |
 | RR-11 | A steered agent can reach the all-repo gh token through interpreter indirection (`node -e`, `python3 -c`) | A command denylist cannot be complete; accepted by ADR-0018. Mitigation available to the client: the optional repo-scoped fine-grained token in `docs/needs-client.md` (step corrections tracked in #63) | supervisor; client informed via `docs/needs-client.md` | Phase 1 retro (sandbox decision), each phase gate |
 
 ## 9. Requirements handed to other issues
