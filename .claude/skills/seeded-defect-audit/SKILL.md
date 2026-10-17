@@ -5,7 +5,7 @@ description: Use at the end of Phase 1 and Phase 3 to measure each reviewer by p
 
 # Seeded-defect audit
 
-- **R-704** Seeded-defect audits run at the end of Phases 1 and 3; any role under 75% in its area is retrained and re-tested.
+- **R-704** Retired after audit 1 (ADR-0026). Kept for reference only.
 
 ## Plant
 1. The Supervisor writes the defect list to `.claude/state/audit-N.json` (git-ignored) before creating anything, and does not mention it in any delegation.

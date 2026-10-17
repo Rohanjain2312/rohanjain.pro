@@ -29,3 +29,4 @@ Format: context, decision, consequences, alternatives. New ADRs take the next nu
 | [0023](0023-npm-release-cooldown.md) | Seven-day release cooldown for manual npm installs; "latest stable" means newest release at least 7 days old |
 | [0024](0024-ship-faster.md) | Ship faster: product first, bigger slices, bounded reviews |
 | [0025](0025-gate-time-releases.md) | Gate-time releases instead of release-please |
+| [0026](0026-combined-review-lean-gates.md) | One combined review, merged phases, lean gates |
