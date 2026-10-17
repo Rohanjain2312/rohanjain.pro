@@ -45,7 +45,7 @@ Every "must" and "never" in this project lives here, with exactly one home. 86 r
 | R-206 ★ | At each gate, QA audits 20% of merged PRs, matching each approval to the reviewer's subagent transcript. | `.claude/skills/phase-gate/SKILL.md` | phase-gate script checks docs/qa/review-audit-N.md exists | phase-1 |
 | **R-207** ★ | A review lists what was checked with evidence; "no findings" names at least three checks. | here | review-gate CI check for a Checked: section | phase-1 |
 | **R-208** | A new commit invalidates earlier approvals. | here | review-gate CI check (Head must equal PR head) | phase-1 |
-| **R-209** | Review-needed labels come from changed paths (.claude/** and dependencies need Security; visual baselines need Design; tests and content need QA). | here | labeler CI | phase-1 |
+| **R-209** | Review-needed labels come from changed paths. The path map in `.github/labeler.json` is the source of truth (Security for `.claude/**`, workflows, hooks, headers, dependencies and gate scripts; Design for visual baselines; QA for tests and content). | here | labeler CI | phase-1 |
 | R-210 ★ | The Reader Advocate judges only rendered output (screenshots, extracted text, PDFs), never source code or plans. | `.claude/agents/reader-advocate.md` | guard-bash and guard-read hooks restrict its commands and files | active |
 | **R-301** | Every number in built HTML and PDFs maps to an entry in src/content/claims.json. | here | check-claims CI | phase-1 |
 | R-302 | No claim is stronger than its source. Client decisions override repo values (see the content rule file). | `.claude/rules/content.md` | judgment; QA verification (R-303) | prose |

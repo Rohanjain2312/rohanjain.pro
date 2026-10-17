@@ -173,6 +173,17 @@ test('pins: missing read-all fails with R-504', () => {
   rmSync(root, { recursive: true });
 });
 
+test('pins: pull_request_target fails with R-504', () => {
+  for (const on of ['on:\n  pull_request_target:\n    types: [opened]', 'on: [pull_request_target]', 'on:\n  push:\n  pull_request_target:']) {
+    const root = wfRoot(`${on}\npermissions: read-all\njobs: {}\n`);
+    assert.match(checkPins(root).join('\n'), /R-504 .*pull_request_target is not allowed/, on);
+    rmSync(root, { recursive: true });
+  }
+  const ok = wfRoot('# never pull_request_target here\non: pull_request\npermissions: read-all\njobs: {}\n');
+  assert.deepEqual(checkPins(ok), []);
+  rmSync(ok, { recursive: true });
+});
+
 test('pins: unpinned action in a composite action fails', () => {
   const root = wfRoot('permissions: read-all\njobs: {}\n');
   put(root, '.github/actions/s/action.yml', `runs:\n  steps:\n    - uses: actions/setup-node@main\n`);
