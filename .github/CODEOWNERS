@@ -70,8 +70,6 @@
 /.stylelintrc* @Rohanjain2312
 /commitlint.config.* @Rohanjain2312
 /lighthouserc.* @Rohanjain2312
-/release-please-config.json @Rohanjain2312
-/.release-please-manifest.json @Rohanjain2312
 /wrangler.toml @Rohanjain2312
 /public/_redirects @Rohanjain2312
 /public/robots.txt @Rohanjain2312

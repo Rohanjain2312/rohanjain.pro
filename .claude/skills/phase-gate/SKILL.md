@@ -24,5 +24,5 @@ Steps:
 6. Run `node scripts/phase-gate.mjs N`. It fails on missing records or open `severity:medium|high|critical` issues (R-511).
 7. Check R-107: `gh api "repos/Rohanjain2312/rohanjain.pro/commits?sha=main&per_page=100" --paginate --jq '.[] | select(.commit.verification.verified | not) | .sha'` prints nothing except `4d2944105bc1cc1e5e540666bdcbd6fb515d2c3d`, the empty root commit (ADR-0013, ADR-0014).
 8. Renew the interaction limit: `gh api -X PUT repos/Rohanjain2312/rohanjain.pro/interaction-limits -f limit=collaborators_only -f expiry=six_months` (ADR-0018).
-9. Merge the release-please PR (tags `v0.N.0`).
+9. Publish the release: `gh release create v0.N.0 --target main --generate-notes`; the Release workflow attaches the SBOM (ADR-0025).
 10. If the gate passes, start the next phase when usage allows (skill `session-protocol`). Never wait for the client.
