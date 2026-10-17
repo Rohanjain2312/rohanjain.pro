@@ -11,3 +11,15 @@
 - [Signed commits](signed_commits_paused.md): R-107 rule paused in Phase 0, restored by PR #68; scope removed by the client, RR-8 closed
 - [Dependency review](dependency_review_checklist.md): R-506 PRs: release age vs cooldown (#79), signatures, provenance, OSV batch, telemetry
 - [Inline rule and JSON-LD](project_inline_rule_jsonld.md): PR #82 ruling, test conditions, follow-ups for #18 and #29
+- [Stop hook review](stop_hook_review_pr106.md): PR #106, git() trims porcelain output; probe tracked edits, renames, quoting
+- [Inline build config](project_inline_build_config.md): no CSP hashes now; Astro must be set to emit no inline style or script (#18, #29)
+- [Git hooks review](git_hooks_review.md): PR #109 lessons: commitlint parser hang, lint-staged stash, time-box probes (issue #111)
+- [Static server header probes](review_static_server_headers.md): PR #120 preview.mjs, raw vs decoded path mismatch, bind address, missing _headers
+- [CI workflow review](review_ci_workflow_checklist.md): PR #125: entry-guard symlink fail-open, waiver pattern, merge-result build, CI logs
+- [CI workflow review](ci_workflow_review_checklist.md): PR #125; read the PR's CI log first, SHA-to-tag, OSV vs audit, control builds, gate CLI test flags
+- [Review checklist](feedback_review_checklist.md): closing keywords, regressed findings, live GitHub checks, stale approvals, moved criteria, risk-acceptance wording
+- [ADR-0022 model policy](project-adr0022-model-policy.md): no-opus Security risk, open items (needs-client, RR-3, CODEOWNERS, status.md) as of 2026-10-16
+- [Workflow review](workflow_review_checklist.md): workflow PRs: token env scope vs third-party code, release-please defaults, Actions settings (#134, #150)
+- [Severity calibration](severity-calibration.md): ADR-0018 rating rule; 53-I3 exception only proposed (#63); past findings and their state
+- [PR #158 ADR-0024](project-adr-0024-process-trims.md): ship-faster trims; type:security move agreements, open #160 (High) and #161 (Medium)
+- [CI gate review](ci_gate_review_checklist.md): PR #135 review-gate probes: self-edited YAML, parser leniency, labeler gaps, 3000-file cap

@@ -8,4 +8,21 @@
 - [Review mechanics](reference_review_mechanics.md): label name approved:qa, clean-clone verification, sandbox command limits
 - [QA gaps at Phase 1 start](project-qa-gaps-2026-10-16.md): lychee, lint-copy and CI absent; manual checks needed until #13 and lint-copy land
 - [Lint gate bypasses (PR #85)](project-lint-gate-gaps-pr85.md): known R-405/R-401/R-608 bypass forms to hand-check until fixed
+- [QA tooling gaps](project-qa-tooling-gaps.md): lychee (#13) absent, lint-copy exists; no built-output CSP test; verify limits.
+- [Link and copy lint pending](project_link_and_copy_lint_pending.md): lychee (#13) and copy lint (#27) not built yet; substitute checks and flag them
+- [Tooling gotchas](reference-tooling-gotchas.md): worktree git guard, gh label add workaround, shared dev-server ports, prettier scope
+- [Verify on rebased merge](feedback_verify_on_rebased_merge.md): before approving, trial-merge current main and re-run verify; a green head can fail after main gains gates
+- [Escaped-defect log](defects-escaped-review.md): defects that got past review rounds, with the round that caught them
+- [Gate state](project_gate_state.md): which QA gates exist on main (lint-copy, lychee, format) and which are missing as of 2026-10-16
+- [Read the issue before the PR body](feedback-r705-issue-before-body.md): R-705 ordering; the PR body is the builder's report, so leave it out of the first fetch.
+- [Stylelint token rules](reference-stylelint-token-rules.md): rgb() is banned in every file, including tokens.css; what the token override really exempts.
+- [Git hooks gaps (PR #109)](project-git-hooks-pr109.md): case-sensitive R-501, merge/fixup ignores, gitleaks unrun; how to probe hooks e2e
+- [Write tool and unicode escapes](feedback-write-tool-unicode-escapes.md): backslash-u in Write content trips R-008; build chars from code points
+- [Skill alias review (PR #119)](project-skills-alias-review-pr119.md): common-word aliases slipped past schema checks; rerun alias audit on skills.json changes
 - [QA tooling gaps](project-qa-tooling-gaps.md): lychee (#13) and copy lint (#27) are not run yet; substitutes, owners and verify limits.
+- [check-claims gaps (PR #137)](project-check-claims-gaps-pr137.md): R-301 check bypasses (years, noscript, global set) to hand-check once pages exist
+- [npm script bypass (PR #136)](project-npm-script-bypass-pr136.md): shell routes that re-enable install scripts past R-509, verified with real npm; re-check on guard-bash changes.
+- [Shared scratchpad names](feedback-shared-scratchpad.md): other agents overwrite generic probe names; use QA-prefixed names and check headers before citing.
+- [PR process gate review (PR #135)](project-pr-process-gate-pr135.md): comment-strip bypass found at 3135510; re-check cases and Low items
+- [PR #165 claims fixes](project-pr165-claims-fixes.md): approved dc071e7; QA log re-date owed after merge; check-claims probe recipe
+- [QA tooling status](project-qa-tooling-gaps.md): copy lint is on main but skipped when earlier CI steps fail (audit 1, PR #168); lychee status; verify limits.

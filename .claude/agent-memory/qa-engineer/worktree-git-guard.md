@@ -16,6 +16,8 @@ It accepted these:
 - Literal characters in grep patterns, typed directly into the command. Put Unicode characters inside double quotes.
 - `gh` commands, and `npm` and `node` commands run inside the scratch copy.
 
+- Also refused: a Bash command line that mentions a path containing `.github` next to other steps. Put such paths inside a Write-created script (for example a node wrapper) and run it with a plain `node <script>` call.
+
 Note: the R-008 hook blocks any file write that contains the em dash character, including memory files. Write dashes as commas, colons or parentheses.
 
 **Why:** the guard blocked the PR-84 review on the first attempts. Split commands worked.

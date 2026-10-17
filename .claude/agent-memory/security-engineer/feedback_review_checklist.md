@@ -23,4 +23,8 @@ Checks to run on every review, learned from past reviews:
 
 6. **Schema PRs (PR #83, 2026-10-16):** probe the maximum accepted size of privacy-bound records (R-502 files reached 48 KB), regex-only date fields (`2000-13-45` passes; use `z.iso.date()`), nested `.strict()` coverage, and what error messages echo. For new dev dependencies, compare lock `integrity` with `npm view <pkg> dist.integrity` and check install scripts. Rated Low, approved.
 
-Related: [[tooling-quirks]], [[escaped-defects]]
+7. **Process PRs that amend an ADR (PR #158, 2026-10-16):** read the amended ADR's rule text and compare it with the new one. Check the skills that repeat the rule, because they can contradict each other inside one file (run-review said "never haiku" and then "re-review on haiku"). Check that every accepted risk is listed in `docs/needs-client.md`. Recount any factual claim about review rounds from the posted REVIEW comments (ADR-0024 said four QA rounds; the comments show five).
+   **Why:** the veto (R-511) and the ADR-0022 haiku limit are enforced only through the text, so a silent rewrite of either removes the control.
+   **How to apply:** run `git diff` on the amended ADR and the skills, then grep each changed rule's keyword (haiku, Low, CHANGES REQUESTED, approved) across `docs/` and `.claude/`.
+
+Related: [[tooling-quirks]], [[escaped-defects]], [[project-adr-0024-process-trims]]

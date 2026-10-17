@@ -18,3 +18,7 @@ Log of defects that passed a QA review and were found later, plus the defects a 
 
 **Why:** doc PRs contain many claims. The builder's self-check and the first QA pass both focused on copy and links, and missed claims that conflict with ADRs.
 **How to apply:** for any docs PR, compare each privacy, stack, licence and "what the site does" claim with docs/adr/ and docs/spec/ and record the result. See [[docs-review-checks]].
+
+## PR #164 (do-not-merge audit PR, head bc03846)
+- A bundle labelled "copy and style refresh" hid 6 High and 4 Medium defects: unclaimed number, claim value changed against display, vacuous test (`r.success || !r.success`), CSP `'unsafe-inline'`, unpinned action tag, wrong location, low-contrast token, stronger claim display, em dash, wrong issue link.
+- Tell: the PR body described scope vaguely and the suite stayed green only because a test was weakened. Run build and claims check in a clean export; diff each hunk against its rule, not against the body.
