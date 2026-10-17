@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "title": "Privacy · Rohan Jain",
+    "description": "What this site collects and what it does not."
+  },
+  "label": "privacy",
+  "heading": "What this site collects",
+  "updated": "2026-10-17",
+  "updatedLabel": "last updated",
+  "intro": "This page lists what the site collects and what it does not. It sets no cookies.",
+  "groups": [
+    {
+      "label": "collected",
+      "items": [
+        {
+          "term": "Visit counts",
+          "text": "After launch, cookieless analytics counts page views. It uses no cookies and no fingerprinting."
+        }
+      ]
+    },
+    {
+      "label": "not collected",
+      "items": [
+        { "term": "Cookies", "text": "The site sets none." },
+        {
+          "term": "Job descriptions",
+          "text": "Text you paste into the fit check is processed in your browser and never leaves it."
+        },
+        {
+          "term": "Personal data",
+          "text": "The site collects no personal data about visitors."
+        },
+        {
+          "term": "Tracking",
+          "text": "There are no advertising or marketing scripts and no third-party trackers."
+        }
+      ]
+    }
+  ]
+}

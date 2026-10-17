@@ -1,0 +1,48 @@
+---
+import Fold from './Fold.astro';
+import FigureTile from './FigureTile.astro';
+import type { FigureView, TimelineEntry } from './data.ts';
+
+interface Props {
+  title: string;
+  intro: string;
+  timelineLabel: string;
+  timeline: TimelineEntry[];
+  figures: FigureView[];
+}
+
+const { title, intro, timelineLabel, timeline, figures } = Astro.props;
+---
+
+<Fold title={title} count={figures.length}>
+  <div class="panel" data-figures>
+    <p class="panel__intro">{intro}</p>
+    <div class="timeline-region">
+      <ol class="timeline" aria-label={timelineLabel}>
+        {timeline.map((e) => (
+          <li class="timeline__item">
+            <time class="meta" datetime={e.start.iso}>
+              {e.start.label}
+            </time>
+            {e.projectId ? (
+              <a class="timeline__entry" href={`#fig-${e.figureId}`} data-project={e.projectId}>
+                {e.label}
+              </a>
+            ) : (
+              <span class="timeline__plain">{e.label}</span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="tiles">
+      {figures.map((f) => (
+        <FigureTile figure={f} />
+      ))}
+    </div>
+  </div>
+</Fold>
+
+<script>
+  import './figures.ts';
+</script>

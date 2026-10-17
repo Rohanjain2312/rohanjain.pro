@@ -1,0 +1,90 @@
+---
+import Fold from './Fold.astro';
+import ExternalLink from './ExternalLink.astro';
+import { claimOf, fill, type ClaimMap } from './lib.ts';
+
+interface Props {
+  claims: ClaimMap;
+  projects: { id: string; name: string; links: { label: string; url: string }[] }[];
+  copy: {
+    label: string;
+    heading: string;
+    rangeClaim: string;
+    summary: string;
+    built: {
+      title: string;
+      items: {
+        lead: string;
+        text: string;
+        link?: { label: string; projectId: string; linkLabel: string };
+      }[];
+    };
+    loan: {
+      title: string;
+      tag: string;
+      lines: { sign: string; text: string }[];
+      note: string;
+    };
+  };
+}
+
+const { claims, projects, copy } = Astro.props;
+const range = String(claimOf(claims, copy.rangeClaim).value);
+
+function hrefFor(link: { projectId: string; linkLabel: string }): string {
+  const project = projects.find((p) => p.id === link.projectId);
+  const found = project?.links.find((l) => l.label === link.linkLabel);
+  if (!found) throw new Error(`No "${link.linkLabel}" link on project "${link.projectId}".`);
+  return found.url;
+}
+---
+
+<section class="production" aria-labelledby="production-heading">
+  <p class="meta">{copy.label}</p>
+  <div class="production__head">
+    <h2 id="production-heading">{copy.heading}</h2>
+    <p class="meta production__range">{range}</p>
+  </div>
+  <p class="production__summary">{copy.summary}</p>
+  <div>
+    <Fold title={copy.built.title} count={copy.built.items.length}>
+      <ul class="built">
+        {copy.built.items.map((item) => (
+          <li>
+            <strong>{item.lead}</strong> {fill(item.text, claims)}
+            {item.link && (
+              <>
+                {' '}
+                <ExternalLink
+                  class="inline-mono"
+                  href={hrefFor(item.link)}
+                  label={item.link.label}
+                />
+              </>
+            )}
+          </li>
+        ))}
+      </ul>
+    </Fold>
+    <Fold title={copy.loan.title} count={copy.loan.tag}>
+      <div class="loan">
+        <div class="diff">
+          {copy.loan.lines.map((line) =>
+            line.sign === '-' ? (
+              <del class="diff__line diff__line--del">
+                <span aria-hidden="true">- </span>
+                {fill(line.text, claims)}
+              </del>
+            ) : (
+              <ins class="diff__line diff__line--add">
+                <span aria-hidden="true">+ </span>
+                {fill(line.text, claims)}
+              </ins>
+            ),
+          )}
+        </div>
+        <p class="note">{copy.loan.note}</p>
+      </div>
+    </Fold>
+  </div>
+</section>

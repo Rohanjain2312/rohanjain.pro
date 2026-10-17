@@ -1,0 +1,33 @@
+---
+import Fold from './Fold.astro';
+import { claimOf, fill, yearSpan, type ClaimMap } from './lib.ts';
+
+interface Props {
+  claims: ClaimMap;
+  title: string;
+  /** Schools in the order shown, each tied to the claim that holds its dates. */
+  education: { school: string; degree: string; claimId: string }[];
+  publication: { lead: string; text: string };
+}
+
+const { claims, title, education, publication } = Astro.props;
+---
+
+<section aria-label={title}>
+  <Fold title={title} count={education.length + 1}>
+    <div class="background">
+      {education.map((e) => (
+        <div class="background__row">
+          <span>
+            <strong>{e.degree}</strong> · {e.school}
+          </span>
+          <span class="meta">{yearSpan(String(claimOf(claims, e.claimId).value))}</span>
+        </div>
+      ))}
+      <p>
+        <strong>{publication.lead}</strong>
+        {fill(publication.text, claims)}
+      </p>
+    </div>
+  </Fold>
+</section>

@@ -1,0 +1,34 @@
+---
+import ExternalLink from './ExternalLink.astro';
+import type { ProjectView } from './data.ts';
+
+interface Props {
+  project: ProjectView;
+  demoLabel: string;
+}
+
+const { project, demoLabel } = Astro.props;
+---
+
+<article class="card">
+  <p class="meta">{project.dateRange}</p>
+  <h3>{project.name}</h3>
+  <p class="card__line">{project.oneLiner}</p>
+  <p class="card__result">
+    <span class="card__figure">{project.headline}</span>
+    {project.context.length > 0 && <span class="card__context">{project.context.join(' · ')}</span>}
+  </p>
+  <div class="links">
+    {project.demo && (
+      <ExternalLink
+        class="text-link"
+        href={project.demo.url}
+        label={demoLabel}
+        context={project.name}
+      />
+    )}
+    {project.links.map((l) => (
+      <ExternalLink class="text-link" href={l.url} label={l.label} context={project.name} />
+    ))}
+  </div>
+</article>
