@@ -12,8 +12,8 @@ Read the PR labels. Required: `supervisor` always; `design-lead` for `needs:desi
 
 ## Delegating
 - **R-204** A review delegation contains only the PR number, head SHA, acceptance criteria and plan references; never the builder's report or reasoning.
-- **R-205** CI first; then QA, Security and Design Lead in parallel (at most two agents at a time); then Reader Advocate; Supervisor last. Each reviewer posts before reading others' reviews.
-- Reviewers run on sonnet. Pass `model: opus` to the Security review only when the PR changes `.claude/hooks/` (ADR-0020).
+- **R-205** CI first; then QA, Security and Design Lead in parallel (up to five agents at a time, ADR-0022); then Reader Advocate; Supervisor last. Each reviewer posts before reading others' reviews.
+- Reviewers run on sonnet; haiku may review docs-only PRs, but never gives the only required review on code, workflows, hooks or content. No opus (ADR-0022).
 - One review round per reviewer where possible: Low findings become follow-up issues, not a new round.
 
 Delegation template (copy exactly, fill the brackets, add nothing else):
