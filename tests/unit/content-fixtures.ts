@@ -34,7 +34,7 @@ export function validContent(): { [K in keyof RawContent]-?: any } {
         headlineClaimId: 'fake-claim-a',
         contextClaimIds: ['fake-claim-b'],
         links: [link],
-        demo: { url: 'https://example.com/demo', screenshot: 'fake.png' },
+        demo: { url: 'https://example.com/demo', screenshot: 'fake.png', what: 'Fake demo.' },
         stack: ['FakeLang'],
       },
     ],

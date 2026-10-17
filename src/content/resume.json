@@ -160,7 +160,7 @@
   ],
   "projects": [
     {
-      "projectId": "loan-servicing-agent",
+      "projectId": "loan",
       "links": [
         {
           "label": "GitHub",
@@ -183,7 +183,7 @@
       ]
     },
     {
-      "projectId": "trade-settlement-fail-predictor",
+      "projectId": "settle",
       "links": [
         {
           "label": "GitHub",
@@ -217,7 +217,7 @@
       ]
     },
     {
-      "projectId": "fincompress",
+      "projectId": "fc",
       "links": [
         {
           "label": "GitHub",
@@ -244,7 +244,7 @@
       ]
     },
     {
-      "projectId": "transformer-market-regime",
+      "projectId": "mr",
       "links": [
         {
           "label": "GitHub",
