@@ -16,3 +16,4 @@
 - [Git hooks review](git_hooks_review.md): PR #109 lessons: commitlint parser hang, lint-staged stash, time-box probes (issue #111)
 - [Static server header probes](review_static_server_headers.md): PR #120 preview.mjs, raw vs decoded path mismatch, bind address, missing _headers
 - [CI workflow review](review_ci_workflow_checklist.md): PR #125: entry-guard symlink fail-open, waiver pattern, merge-result build, CI logs
+- [CI workflow review](ci_workflow_review_checklist.md): PR #125; read the PR's CI log first, SHA-to-tag, OSV vs audit, control builds, gate CLI test flags
