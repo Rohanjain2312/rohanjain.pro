@@ -110,8 +110,8 @@ Stack, repository layout, content model, engine and generator specs, and the ADR
 - Copy explains that free demos may take up to a minute to wake.
 
 ### 5.7 Scheduled status workflow
-- `status.yml` runs daily on GitHub Actions with read-only permissions. It checks each demo URL and the latest commit date of each featured repo (public, no token needed), writes `public/status.json`, and opens an automated PR that auto-merges when checks pass.
-- The site reads `status.json` at build time. No runtime calls.
+- `status.yml` runs daily on GitHub Actions. It checks each demo URL and the latest commit date of each featured repo (public, no token needed) and writes `status.json` to the orphan branch `status-data` (ADR-0027). It never writes `main` and opens no PR.
+- The site reads `status.json` at build time; the deploy workflow copies it from `status-data` into `public/` first. No runtime calls. No file means no status line.
 
 ### 5.8 Résumé PDF generation
 - `src/content/resume.json` is seeded verbatim from `reference/resume/Rohan_Resume_v26.docx`, with the client decisions in `docs/spec/05-evidence-ledger.md` §4.4 applied, the location set to New York, NY, and no work authorization line.
