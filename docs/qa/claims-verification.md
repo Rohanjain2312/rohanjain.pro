@@ -1,6 +1,6 @@
 # Claims verification log
 
-Owner: qa-engineer. Rule: R-303. Issue: #28. Date of this pass: 2026-10-16.
+Owner: qa-engineer. Rule: R-303. Issues: #28, #170. Date of this pass: 2026-10-16.
 
 Every claim in `src/content/claims.json` has one row below. The completeness check (`npm run claims:verified`, part of `npm run validate:content` and so of `npm run verify` and CI) fails when a claim has no row, a row has no claim, a row's value differs from `claims.json`, or a row is malformed. Change a claim's value and its row fails until QA re-verifies it.
 
@@ -29,14 +29,14 @@ Every claim in `src/content/claims.json` has one row below. The completeness che
 
 Result values: `verified` (found in the cited source and consistent), `verified-note` (found, with a caveat in the source column), `mismatch #N` (the source disagrees or does not support it; issue N is open), `unsourced` (no source found).
 
-Totals: 92 claims. 68 verified, 13 verified-note, 10 mismatch (7 issues), 1 unsourced. See the summary at the end.
+Totals: 92 claims. 70 verified, 21 verified-note, 0 mismatch, 1 unsourced. See the summary at the end.
 
 ### Goldman Sachs (résumé)
 
 | Claim ID | Value | Source checked | Result | Date |
 |---|---|---|---|---|
-| `goldman-tenure` | `Jan 2021 to Jun 2024` | Resume, Work Experience, Goldman Sachs, "Data Scientist, Jan 2021 - June 2024". Dates match. They span 3 years 5 to 6 months, so "~4 years" beside them is generous: issue #146 | mismatch #146 | 2026-10-16 |
-| `goldman-tenure-years` | `3.5` | Resume, Goldman bullet 1, "over 4 years". Matches the résumé; conflicts with its own date range: issue #146 | mismatch #146 | 2026-10-16 |
+| `goldman-tenure` | `Jan 2021 to Jun 2024` | Resume, Work Experience, Goldman Sachs, "Data Scientist, Jan 2021 - June 2024"; bullet 1 "over 4 years" (client-confirmed, R-302). Note: the dates span 3 years 5 to 6 months, so "~4 years" is generous | verified-note | 2026-10-16 |
+| `goldman-tenure-years` | `4` | Resume, Goldman bullet 1, "Progressed from STEM Intern to Data Analyst to Data Scientist over 4 years" (client-confirmed, R-302). Note: the Jan 2021 to Jun 2024 range is 3 years 5 to 6 months | verified-note | 2026-10-16 |
 | `goldman-roles` | `STEM Intern to Data Analyst to Data Scientist` | Resume, Goldman bullet 1, "Progressed from STEM Intern to Data Analyst to Data Scientist". Asset Management and Bengaluru from the Goldman header and bullet 1 | verified | 2026-10-16 |
 | `production-experience-years` | `3.5` | `reference/role_descriptions.md` lines 5, 9, 13 ("3.5+ years production experience") and Resume summary line | verified | 2026-10-16 |
 | `settlement-pending-trades-reduction` | `40` | Resume, Goldman bullet 2, "reducing pending trades by 40%" | verified | 2026-10-16 |
@@ -65,11 +65,12 @@ Totals: 92 claims. 68 verified, 13 verified-note, 10 mismatch (7 issues), 1 unso
 | Claim ID | Value | Source checked | Result | Date |
 |---|---|---|---|---|
 | `loan-v2-agents` | `10` | Resume, Loan Servicing Agent bullet 1, "10-agent". Repo README line 38 "Ten specialized agents"; `agents/` holds 9 agent files plus the orchestrator | verified | 2026-10-16 |
-| `loan-v2-subgraphs` | `2` | Resume, bullet 1, "2 parallel subgraphs". Repo has `ca_branch` and `notice_branch` subgraphs (`graph/ca_branch.py` 69-76, `graph/notice_branch.py` 124-146). They are alternative paths, not concurrent: issue #144 | mismatch #144 | 2026-10-16 |
+| `loan-v2-subgraphs` | `2` | Resume, Loan Servicing Agent bullet 1, "2 parallel subgraphs" (client-confirmed, R-302). Note: repo has `ca_branch` and `notice_branch` subgraphs (`graph/ca_branch.py` 69-76, `graph/notice_branch.py` 124-146); they are alternative paths, and only the Notice path fans out in parallel (validation and RAG validation) | verified-note | 2026-10-16 |
 | `loan-v2-tools` | `15` | Resume, bullet 2, "15 least-privilege tools". Repo README line 128 "15 tools"; `tools/` holds 15 files | verified | 2026-10-16 |
 | `loan-v2-approvals` | `4` | Resume, bullet 2, "4 HIL interrupts". Repo `graph/orchestrator.py` has four `interrupt()` calls (lines 218, 277, 302, 339), one per HIL node | verified | 2026-10-16 |
 | `loan-v2-checks` | `22` | Resume, bullet 2, "22 validation checks". Repo `MasterPlan.md` line 14 "all 22 checks" and section 11, check 22 at line 431 | verified | 2026-10-16 |
 | `loan-v2-routing` | `Claude Sonnet + GPT-4o-mini` | Resume, bullet 1. Repo README lines 62-63: orchestrator Claude Sonnet, extraction GPT-4o-mini, validation, storage and execution Claude Haiku. The claim leaves out Haiku, which is a third model | verified-note | 2026-10-16 |
+| `loan-v2-deploy` | `Docker on GKE Autopilot via GitHub Actions` | Resume, Loan Servicing Agent bullet 3, "Containerized with Docker and deployed to Kubernetes (GKE Autopilot) using GitHub Actions CI/CD ... A2A protocol" (client-confirmed, R-302). Note: the public repo (48 files, one branch) has no Dockerfile, no Kubernetes manifest, no `.github/` and no A2A code | verified-note | 2026-10-16 |
 | `loan-v2-dates` | `Apr to Aug 2026` | Repo commits 2026-04-19 to 2026-08-29 | verified | 2026-10-16 |
 
 ### Trade Settlement Fail Predictor (résumé, repo trade-settlement-fail-predictor)
@@ -109,8 +110,8 @@ Totals: 92 claims. 68 verified, 13 verified-note, 10 mismatch (7 issues), 1 unso
 | `fc-latency-before` | `286.9 ms` | `fincompress/results/article_assets/article_data.json` teacher 286.88 ms; figure `reference/figures/fc_latency.png`. The same repo's `results/benchmark_results.csv` shows teacher 77.0 ms and has no PTQ row, so the repo holds two latency sets | verified-note | 2026-10-16 |
 | `fc-latency-after` | `19.8 ms` | `article_data.json` student_ptq 19.83 ms; figure. Student F1 for that model is 0.786 against 0.918 for the teacher on test. Same two-latency-sets note | verified-note | 2026-10-16 |
 | `fc-latency-ratio` | `14.5x` | 286.88 over 19.83 is 14.47. Same sources and note as the two latency claims | verified-note | 2026-10-16 |
-| `fc-pruning-heads` | `30` | Resume bullet 2 says 50%. Repo README lines 49-50 and `article_data.json`: the +0.9 gain is at 30% (29.2%) pruning; at 50% (48.6%) it is +0.6: issue #140 | mismatch #140 | 2026-10-16 |
-| `fc-pruning-f1-gain` | `+0.9 points` | Same evidence as `fc-pruning-heads`: +0.9 is the 30% result, 50% gives +0.6 (0.8936 against teacher 0.8876): issue #140 | mismatch #140 | 2026-10-16 |
+| `fc-pruning-heads` | `50` | Resume, Projects, FinCompress bullet 2, "pruning 50% of attention heads improved val Macro F1 by +0.9 pts" (client-confirmed, R-302). Note: repo README lines 49-50 and `article_data.json`: +0.9 is at 30% (29.2% pruned); 50% (48.6% pruned) gives +0.6 | verified-note | 2026-10-16 |
+| `fc-pruning-f1-gain` | `+0.9 points` | Resume, Projects, FinCompress bullet 2, "+0.9 pts" (client-confirmed, R-302). Note: repo README line 49 gives +0.9 at 30% pruning; line 50 gives +0.6 at 50% (0.8936 against teacher 0.8876) | verified-note | 2026-10-16 |
 | `fc-dates` | `Feb to Mar 2026` | Repo commits 2026-02-27 to 2026-03-09; checkpoints dated 2026-03-01 | verified | 2026-10-16 |
 
 ### TariffAgent (repo customs-court README)
@@ -118,11 +119,11 @@ Totals: 92 claims. 68 verified, 13 verified-note, 10 mismatch (7 issues), 1 unso
 | Claim ID | Value | Source checked | Result | Date |
 |---|---|---|---|---|
 | `tariff-exact-match` | `82.5` | README lines 59 and 76-77: 82.5% 10-digit, fixed 40-item sample, interval [70.0, 92.5]. Run by Claude Opus 5.5 in a Claude Code session, labeled separately from API runs (line 91) | verified-note | 2026-10-16 |
-| `tariff-rulings-eval` | `40` | README line 68 "150 CBP rulings dated 2026-07-01 or later; the agent ran on a fixed 40-item sample". The display says "after", the repo says "on or after": issue #145 | mismatch #145 | 2026-10-16 |
+| `tariff-rulings-eval` | `40` | Repo README line 68, "150 CBP rulings dated 2026-07-01 or later; the agent ran on a fixed 40-item sample". The display "on or after 2026-07-01" matches | verified | 2026-10-16 |
 | `tariff-zero-shot` | `15` | README line 75: Claude Sonnet 5.5 zero-shot, same 40 items, 15.0%. The agent row is a different model (Opus 5.5); the same-model pair (Sonnet 5.5 agent, line 77) is also 82.5% | verified-note | 2026-10-16 |
 | `tariff-rulings-corpus` | `44,139` | README line 11 "44,139 CROSS rulings" | verified | 2026-10-16 |
 | `tariff-mcp-tools` | `8` | README line 11 "8 read-only tools" | verified | 2026-10-16 |
-| `tariff-dates` | `Sep to Oct 2026` | Repo commits 2026-09-28 to 2026-10-01 (two commits on 2026-10-01 UTC): issue #145 | mismatch #145 | 2026-10-16 |
+| `tariff-dates` | `Sep to Oct 2026` | Repo commits 2026-09-28 to 2026-10-01 (UTC) | verified | 2026-10-16 |
 
 ### Self-Healing Code Agent (repo Self-Healing-Code-Agent README)
 
@@ -139,8 +140,8 @@ Totals: 92 claims. 68 verified, 13 verified-note, 10 mismatch (7 issues), 1 unso
 |---|---|---|---|---|
 | `mr-accuracy` | `81.78` | Repo README line 35 and 46; Resume bullet 1 | verified | 2026-10-16 |
 | `mr-mcc` | `0.48` | Repo README lines 36 and 46 (0.480); Resume bullet 1 | verified | 2026-10-16 |
-| `mr-baselines` | `6` | Resume bullet 1. Repo README table lines 44-52 lists six other models, but the Engineered Transformer has MCC 0.506 against 0.480, and README line 481 names MCC the primary metric: issue #142 | mismatch #142 | 2026-10-16 |
-| `mr-f1` | `88.4` | Resume bullet 2. Repo README: overall F1 is 72.70% (line 37); 88.44% is the Bullish-class F1 (line 39, line 513): issue #141 | mismatch #141 | 2026-10-16 |
+| `mr-baselines` | `6` | Resume, Projects, transformer-market-regime bullet 1, "outperforming 6 baseline architectures" (client-confirmed, R-302). Note: repo README table lines 46-52 lists six other models and the CNN-Transformer leads them on accuracy and F1, but the Engineered Transformer has MCC 0.506 against 0.480 and README line 481 names MCC the primary metric | verified-note | 2026-10-16 |
+| `mr-f1` | `88.4` | Resume, Projects, transformer-market-regime bullet 2, "optimized thresholds to achieve 88.4% F1" (client-confirmed, R-302). Note: repo README overall F1 is 72.70% (line 37); 88.44% is the Bullish-class F1 (lines 39 and 513), and the README does not tie it to threshold optimization | verified-note | 2026-10-16 |
 | `mr-imbalance` | `68/32` | Repo README lines 399-400 (test set 68.3% Bullish, 31.7% Bearish) and line 514; Resume bullet 2 | verified | 2026-10-16 |
 | `mr-years` | `24` | Repo README lines 223-224 and 294: data from 2000-01-01 to 2024-11-24 (about 24.9 years); Resume bullet 1 "24-year" | verified | 2026-10-16 |
 | `mr-dates` | `Nov to Dec 2025` | Repo commits 2025-11-25 to 2025-12-13 | verified | 2026-10-16 |
@@ -179,6 +180,7 @@ Totals: 92 claims. 68 verified, 13 verified-note, 10 mismatch (7 issues), 1 unso
 
 ## Summary
 
-- Open mismatch issues: #140 (fc-pruning-heads, fc-pruning-f1-gain, high), #141 (mr-f1, medium), #142 (mr-baselines, medium), #143 (loan-v2-deploy, medium), #144 (loan-v2-subgraphs, low), #145 (tariff-rulings-eval, tariff-dates, low), #146 (goldman-tenure, goldman-tenure-years, low).
+- Open mismatch issues: none. The rows for #140 to #146 were re-verified in the #170 pass (see below).
 - Unsourced: `med-prompts`.
+- Re-verification for #170 (2026-10-16). The résumé and client decisions are valid sources that override repo values (R-302 and the Evidence Ledger), so a claim that matches the résumé is `verified-note` with the repo value in the source column, not `mismatch`. Rows re-verified against `src/content/claims.json` as at commit 595c0bb (before PR #165 changed it): `goldman-tenure`, `goldman-tenure-years`, `loan-v2-subgraphs`, `loan-v2-deploy`, `fc-pruning-heads`, `fc-pruning-f1-gain`, `mr-baselines`, `mr-f1`. The tariff claims `tariff-rulings-eval` and `tariff-dates` keep the PR #165 wording and are `verified` against the repo README and commit dates. Résumé checked: `reference/resume/Rohan_Resume_v26.docx`. Repo heads checked (unchanged since the first pass): FinCompress 442af31, customs-court 324f4b1, transformer-market-regime 6946b7b, loan-servicing-agent 0920ab4. Verified against the `source` and `value` fields on `main` at 7148fe1; App/Data is changing `source` fields in #169, which this log does not check.
 - The default check fails on missing, stale or malformed rows and warns on open findings. `node tests/fixtures/claims/check-verification-log.mjs --require-clean` also fails on open findings; use it at the phase gate.
