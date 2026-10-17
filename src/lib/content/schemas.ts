@@ -36,7 +36,10 @@ export const projectSchema = z
     headlineClaimId: slug,
     contextClaimIds: z.array(slug),
     links: z.array(linkSchema),
-    demo: z.object({ url: httpsUrl, screenshot: nonEmpty }).strict().optional(),
+    demo: z
+      .object({ url: httpsUrl, screenshot: nonEmpty.optional(), what: nonEmpty })
+      .strict()
+      .optional(),
     stack: z.array(nonEmpty),
   })
   .strict();
@@ -64,9 +67,16 @@ export const figureSchema = z
     id: slug,
     projectId: slug,
     kind: z.enum(['image', 'bars']),
+    title: nonEmpty.optional(),
     src: nonEmpty.optional(),
     alt: nonEmpty,
-    bars: z.array(z.object({ label: nonEmpty, value: z.number() }).strict()).optional(),
+    // The last bar is the strong one. display is the text shown for the value; axisMax is the full-width value.
+    bars: z
+      .array(
+        z.object({ label: nonEmpty, value: z.number(), display: nonEmpty.optional() }).strict(),
+      )
+      .optional(),
+    axisMax: z.number().positive().optional(),
     axisLabel: nonEmpty,
     caption: nonEmpty,
     note: nonEmpty,

@@ -1,0 +1,142 @@
+[
+  {
+    "id": "loan",
+    "name": "Loan Servicing Agent",
+    "dateRange": "Apr to Aug 2026",
+    "featured": true,
+    "order": 1,
+    "oneLiner": "My Goldman prototype, rebuilt in public. A person approves every irreversible step.",
+    "headlineClaimId": "loan-v2-agents",
+    "contextClaimIds": ["loan-v2-tools", "loan-v2-approvals", "loan-v2-checks"],
+    "links": [{ "label": "code", "url": "https://github.com/Rohanjain2312/loan-servicing-agent" }],
+    "stack": ["LangGraph", "Pydantic", "Claude Sonnet", "GPT-4o-mini", "Docker", "Kubernetes"]
+  },
+  {
+    "id": "settle",
+    "name": "Settlement Fail Predictor",
+    "dateRange": "Oct 2026",
+    "featured": true,
+    "order": 2,
+    "oneLiner": "My Goldman settlement model, rebuilt on 3.1M synthetic trades.",
+    "headlineClaimId": "settle-pr-auc-lift",
+    "contextClaimIds": ["settle-pr-auc", "settle-pr-auc-random"],
+    "links": [
+      { "label": "code", "url": "https://github.com/Rohanjain2312/trade-settlement-fail-predictor" }
+    ],
+    "demo": {
+      "url": "https://huggingface.co/spaces/rohanjain2312/trade-settlement-fail-predictor-demo",
+      "what": "Score a trade and see which features pushed its risk up."
+    },
+    "stack": ["Python", "XGBoost", "SVM", "Optuna", "SHAP", "Streamlit"]
+  },
+  {
+    "id": "cua",
+    "name": "Computer-Use Automation",
+    "dateRange": "Sep 2026",
+    "featured": true,
+    "order": 3,
+    "oneLiner": "Claude learns a task on a legacy banking screen once. Replays need no model.",
+    "headlineClaimId": "cua-discovery-calls",
+    "contextClaimIds": ["cua-replay-seconds"],
+    "links": [
+      { "label": "code", "url": "https://github.com/Rohanjain2312/computer-use-automation" }
+    ],
+    "stack": ["Python", "Anthropic API"]
+  },
+  {
+    "id": "fc",
+    "name": "FinCompress",
+    "dateRange": "Feb to Mar 2026",
+    "featured": true,
+    "order": 4,
+    "oneLiner": "A financial language model made small enough for cheap CPUs, with the accuracy cost measured.",
+    "headlineClaimId": "fc-size-ratio",
+    "contextClaimIds": ["fc-latency-before", "fc-latency-after"],
+    "links": [
+      { "label": "write-up", "url": "https://medium.com/p/f17dfbe74d04" },
+      { "label": "code", "url": "https://github.com/Rohanjain2312/FinCompress" }
+    ],
+    "demo": {
+      "url": "https://huggingface.co/spaces/rohanjain2312/FinCompress",
+      "what": "Type a financial sentence and compare the full and compressed models."
+    },
+    "stack": [
+      "PyTorch",
+      "INT8 PTQ/QAT",
+      "Knowledge distillation",
+      "Structured pruning",
+      "Hugging Face Hub"
+    ]
+  },
+  {
+    "id": "tariff",
+    "name": "TariffAgent",
+    "dateRange": "Sep to Oct 2026",
+    "featured": false,
+    "order": 5,
+    "oneLiner": "Tariff codes with cited rulings, served as an MCP server.",
+    "headlineClaimId": "tariff-exact-match",
+    "contextClaimIds": ["tariff-zero-shot"],
+    "links": [{ "label": "code", "url": "https://github.com/Rohanjain2312/customs-court" }],
+    "stack": ["Python", "MCP", "RAG", "Anthropic API"]
+  },
+  {
+    "id": "shca",
+    "name": "Self-Healing Code Agent",
+    "dateRange": "Feb to Aug 2026",
+    "featured": false,
+    "order": 6,
+    "oneLiner": "Writes code, runs tests, repairs itself.",
+    "headlineClaimId": "shca-after-repair",
+    "contextClaimIds": ["shca-first-try", "shca-benchmark-tasks"],
+    "links": [
+      {
+        "label": "demo",
+        "url": "https://huggingface.co/spaces/rohanjain2312/Self-Healing-Code-Agent"
+      },
+      { "label": "code", "url": "https://github.com/Rohanjain2312/Self-Healing-Code-Agent" }
+    ],
+    "stack": ["Python", "LangGraph", "Anthropic API"]
+  },
+  {
+    "id": "mr",
+    "name": "Market Regime Classifier",
+    "dateRange": "Nov to Dec 2025",
+    "featured": false,
+    "order": 7,
+    "oneLiner": "CNN-Transformer on 24 years of S&P 500 data.",
+    "headlineClaimId": "mr-accuracy",
+    "contextClaimIds": ["mr-mcc", "mr-baselines"],
+    "links": [
+      { "label": "code", "url": "https://github.com/Rohanjain2312/transformer-market-regime" }
+    ],
+    "stack": ["PyTorch", "Transformers", "Gaussian HMM"]
+  },
+  {
+    "id": "med",
+    "name": "Medical LLM",
+    "dateRange": "Jan 2026",
+    "featured": false,
+    "order": 8,
+    "oneLiner": "Mistral 7B fine-tuned with LoRA on a small share of its weights.",
+    "headlineClaimId": "med-lora-params",
+    "contextClaimIds": ["med-base"],
+    "links": [
+      { "label": "model", "url": "https://huggingface.co/rohanjain2312/medical-mistral-7b" },
+      { "label": "code", "url": "https://github.com/Rohanjain2312/medical-llm-finetuning" }
+    ],
+    "stack": ["Mistral 7B", "LoRA", "PEFT", "GGUF"]
+  },
+  {
+    "id": "gb",
+    "name": "GraphBench",
+    "dateRange": "Mar to Aug 2026",
+    "featured": false,
+    "order": 9,
+    "oneLiner": "Fair benchmark of GraphRAG against GNN-RAG on HotpotQA.",
+    "headlineClaimId": "gb-gnn-rag-em",
+    "contextClaimIds": ["gb-graphrag-em", "gb-questions"],
+    "links": [{ "label": "code", "url": "https://github.com/Rohanjain2312/graphbench" }],
+    "stack": ["Python", "GraphRAG", "GNN-RAG"]
+  }
+]

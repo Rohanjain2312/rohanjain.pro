@@ -23,6 +23,9 @@ export type RawContent = {
   applications?: Record<string, unknown>;
 };
 
+// Evidence that is not a project on the site: the Goldman Sachs role and the IEEE paper.
+const EVIDENCE_SOURCES = new Set(['goldman', 'ieee']);
+
 export type Problem = { file: string; field: string; message: string };
 
 // Shapes of parsed records after schema validation. Only the fields this module reads are listed.
@@ -126,7 +129,7 @@ export function validateContent(raw: RawContent): Problem[] {
   if (claimIds && projectIds) {
     skills?.forEach((s, i) =>
       s.evidence.forEach((id, j) => {
-        if (!claimIds.has(id) && !projectIds.has(id)) {
+        if (!claimIds.has(id) && !projectIds.has(id) && !EVIDENCE_SOURCES.has(id)) {
           out.push({
             file: 'skills.json',
             field: `${i}.evidence.${j}`,
