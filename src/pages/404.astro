@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import copy from '../components/copy/notfound.json';
+
+// The traceback is pre-formatted text, so it is built as plain strings: the lines before the error,
+// then the error line on its own (set apart by weight, not color; design spec 8.2).
+const lines = copy.traceback;
+const errorLine = lines.find((l) => 'error' in l);
+const before = lines
+  .filter((l) => !('error' in l))
+  .map((l) => l.text)
+  .join('\n');
+const head = `${before}\n`;
+const tail = errorLine ? errorLine.text : '';
+---
+
+<Base title={copy.meta.title} description={copy.heading} noindex>
+  <main class="crash">
+    <div class="crash__column">
+      <p class="meta">{copy.label}</p>
+      <h1 class="crash__title">{copy.heading}</h1>
+      <!-- prettier-ignore -->
+      <pre class="trace">{head}<span class="trace-error">{tail}</span></pre>
+      <p class="note crash__note">{copy.note}</p>
+      <a class="back-link" href="/">
+        {copy.back}
+      </a>
+    </div>
+  </main>
+</Base>

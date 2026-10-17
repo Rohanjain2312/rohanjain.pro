@@ -1,0 +1,26 @@
+---
+import { profileLinks, type Profiles } from './profiles.ts';
+
+interface Props {
+  profiles: Profiles;
+  privacyLabel: string;
+}
+
+const { profiles, privacyLabel } = Astro.props;
+const links = profileLinks(profiles);
+---
+
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <nav aria-label="Elsewhere" class="site-footer__links">
+      {links.map((l) => (
+        <a class="footer-link" href={l.url}>
+          {l.label}
+        </a>
+      ))}
+      <a class="footer-link" href="/privacy/">
+        {privacyLabel}
+      </a>
+    </nav>
+  </div>
+</footer>

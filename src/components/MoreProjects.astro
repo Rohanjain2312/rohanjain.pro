@@ -1,0 +1,29 @@
+---
+import Fold from './Fold.astro';
+import ExternalLink from './ExternalLink.astro';
+import type { ProjectView } from './data.ts';
+
+interface Props {
+  title: string;
+  projects: ProjectView[];
+}
+
+const { title, projects } = Astro.props;
+---
+
+<Fold title={title} count={projects.length}>
+  <ul class="rows">
+    {projects.map((p) => (
+      <li class="row">
+        <span class="meta row__date">{p.dateRange}</span>
+        <span class="row__name">{p.name}</span>
+        <span class="row__line">{p.oneLiner}</span>
+        <span class="row__links">
+          {p.links.map((l) => (
+            <ExternalLink class="row__link" href={l.url} label={l.label} context={p.name} />
+          ))}
+        </span>
+      </li>
+    ))}
+  </ul>
+</Fold>

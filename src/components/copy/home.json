@@ -1,0 +1,114 @@
+{
+  "meta": {
+    "title": "Rohan Jain · ML and AI Engineer",
+    "description": "I build ML systems that hold up in production, and AI agents I measure before I trust."
+  },
+  "nav": [
+    { "label": "work", "hash": "work" },
+    { "label": "contact", "hash": "contact" }
+  ],
+  "hero": {
+    "role": "ML and AI Engineer",
+    "lede": "I build ML systems that hold up in production, and AI agents I measure before I trust.",
+    "emailSubject": "Role for Rohan Jain",
+    "resultsLabel": "Results at a glance",
+    "results": [
+      {
+        "figure": "{{settlement-pending-trades-reduction.value}}%",
+        "caption": "fewer pending trades from my settlement model at Goldman Sachs"
+      },
+      {
+        "figure": "{{loan-v1-hours-saved.value}} hrs",
+        "caption": "saved a month by my loan servicing AI agent at Goldman Sachs"
+      },
+      {
+        "figure": "{{tariff-exact-match.value}}%",
+        "caption": "exact tariff codes from TariffAgent on unseen rulings, vs {{tariff-zero-shot.value}}% zero-shot"
+      }
+    ],
+    "credentials": "IEEE-published · MS Applied ML, University of Maryland · mentored {{interns-offers.value}} interns to full-time offers"
+  },
+  "production": {
+    "label": "01 · production",
+    "heading": "Goldman Sachs · Data Scientist",
+    "rangeClaim": "goldman-tenure",
+    "summary": "Intern to Data Scientist in Asset Management. Shipped a settlement-failure model, a loan servicing AI agent, a KYC OCR pipeline and a KPI analytics pipeline.",
+    "built": {
+      "title": "What I built there",
+      "items": [
+        {
+          "lead": "Settlement model.",
+          "text": "SVM with SMOTE. {{settlement-pending-trades-reduction}}, {{settlement-penalty-savings}}.",
+          "link": { "label": "rebuild", "projectId": "settle", "linkLabel": "code" }
+        },
+        {
+          "lead": "Loan servicing AI agent.",
+          "text": "GPT-4 with RAG, {{loan-v1-tools}}, human approvals; {{loan-v1-hours-saved}}."
+        },
+        {
+          "lead": "KYC OCR.",
+          "text": "Automated compliance extraction for {{kyc-ocr-teams}} at {{kyc-ocr-accuracy}}."
+        },
+        {
+          "lead": "KPI analytics.",
+          "text": "Pipeline over {{kpi-pipeline-systems}}, saving the {{kpi-pipeline-ftes}}."
+        },
+        {
+          "lead": "Training program.",
+          "text": "Adopted division-wide. Mentored {{interns-offers.value}} interns to full-time offers."
+        }
+      ]
+    },
+    "loan": {
+      "title": "The loan agent, then and now",
+      "tag": "v1 → v2",
+      "lines": [
+        { "sign": "-", "text": "{{loan-v1-models}}" },
+        { "sign": "+", "text": "Claude Sonnet or GPT-4o-mini, chosen per step" },
+        {
+          "sign": "-",
+          "text": "{{loan-v1-pipeline-modules.value}}-module pipeline, {{loan-v1-tools}}"
+        },
+        {
+          "sign": "+",
+          "text": "{{loan-v2-agents.value}} LangGraph agents, {{loan-v2-tools.value}} least-privilege tools"
+        },
+        { "sign": "-", "text": "{{loan-v1-approvals}} across {{loan-v1-checks}}" },
+        { "sign": "+", "text": "{{loan-v2-approvals}} across {{loan-v2-checks}}" },
+        { "sign": "+", "text": "Pydantic at every boundary, idempotent writes" },
+        { "sign": "+", "text": "{{loan-v2-deploy}}" }
+      ],
+      "note": "same problem, rebuilt with twice the human checks"
+    }
+  },
+  "work": {
+    "label": "02 · selected work",
+    "heading": "Four projects, real numbers",
+    "demoLink": "try it here",
+    "more": "More projects"
+  },
+  "figures": {
+    "title": "Figures from the repos",
+    "intro": "Each result on its own axis. Click a date to find it.",
+    "timelineLabel": "Timeline",
+    "plain": [
+      { "claimId": "goldman-tenure", "label": "Goldman Sachs" },
+      { "claimId": "edu-umd", "label": "MS, Maryland" }
+    ]
+  },
+  "background": {
+    "title": "Education and publication",
+    "publication": {
+      "lead": "IEEE paper:",
+      "text": "Alzheimer's detection, {{ieee-accuracy}} on {{ieee-scans}}."
+    }
+  },
+  "contact": {
+    "heading": "Have a role in mind?",
+    "line": "If it's a fit, I'll tell you why. If not, I'll tell you that too.",
+    "emailSubject": "Role for Rohan Jain"
+  },
+  "footer": {
+    "privacy": "Privacy"
+  }
+}

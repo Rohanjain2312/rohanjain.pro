@@ -1,0 +1,47 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { loadSite } from '../components/data.ts';
+import home from '../components/copy/home.json';
+import copy from '../components/copy/privacy.json';
+
+const { site } = await loadSite();
+const updated = new Date(`${copy.updated}T00:00:00Z`);
+const updatedText = updated.toLocaleDateString('en-US', {
+  month: 'short',
+  day: 'numeric',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+---
+
+<Base title={copy.meta.title} description={copy.meta.description}>
+  <SiteHeader name={site.name} nav={home.nav} />
+  <main class="main main--read">
+    <div class="read">
+      <div class="read__top">
+        <p class="meta">{copy.label}</p>
+        <h1 class="compact">{copy.heading}</h1>
+        <p class="meta">
+          {copy.updatedLabel} <time datetime={copy.updated}>{updatedText}</time>
+        </p>
+        <p class="read__intro">{copy.intro}</p>
+      </div>
+      {copy.groups.map((g) => (
+        <section class="group" aria-label={g.label}>
+          <h2 class="group__label">{g.label}</h2>
+          <dl class="group__list">
+            {g.items.map((item) => (
+              <div class="group__item">
+                <dt>{item.term}</dt>
+                <dd>{item.text}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      ))}
+    </div>
+  </main>
+  <SiteFooter profiles={site.profiles} privacyLabel={home.footer.privacy} />
+</Base>

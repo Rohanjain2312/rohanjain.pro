@@ -1,0 +1,18 @@
+{
+  "meta": { "title": "Run crashed · 404" },
+  "label": "step 404",
+  "heading": "Run crashed. Loss is NaN.",
+  "traceback": [
+    { "text": "Traceback (most recent call last):" },
+    { "text": "  File \"site/router.py\", line 404, in resolve" },
+    { "text": "    page = routes[path]" },
+    { "text": "KeyError: the page you asked for" },
+    { "text": "" },
+    { "text": "During handling of the above exception:" },
+    { "text": "  File \"site/train.py\", line 1, in step" },
+    { "text": "    loss.backward()" },
+    { "text": "RuntimeError: run crashed, loss is NaN", "error": true }
+  ],
+  "note": "not your fault. probably a bad link on my end.",
+  "back": "← restart from the last checkpoint"
+}

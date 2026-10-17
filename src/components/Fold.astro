@@ -1,0 +1,23 @@
+---
+interface Props {
+  title: string;
+  /** Shown after the label in muted type. A number, or a short tag such as "v1 → v2". */
+  count?: string | number;
+  id?: string;
+}
+
+const { title, count, id } = Astro.props;
+---
+
+<details class="fold" id={id}>
+  <summary class="fold__summary">
+    <span class="fold__plus" aria-hidden="true">
+      +
+    </span>
+    <span class="fold__label">{title}</span>
+    {count !== undefined && <span class="fold__count">{count}</span>}
+  </summary>
+  <div class="fold__body">
+    <slot />
+  </div>
+</details>

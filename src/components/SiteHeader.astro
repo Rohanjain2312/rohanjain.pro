@@ -1,0 +1,30 @@
+---
+interface Props {
+  nav: { label: string; hash: string }[];
+  /** True on the home page, where the wordmark is plain text and nav links are in-page anchors. */
+  home?: boolean;
+  name: string;
+}
+
+const { nav, home = false, name } = Astro.props;
+const prefix = home ? '' : '/';
+---
+
+<header class="site-header noprint">
+  <div class="site-header__inner">
+    {home ? (
+      <span class="wordmark">{name}</span>
+    ) : (
+      <a class="wordmark" href="/">
+        {name}
+      </a>
+    )}
+    <nav aria-label="Sections" class="site-nav">
+      {nav.map((n) => (
+        <a class="nav-link" href={`${prefix}#${n.hash}`}>
+          {n.label}
+        </a>
+      ))}
+    </nav>
+  </div>
+</header>
