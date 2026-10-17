@@ -46,3 +46,8 @@ One entry at the start and end of each session (skill `session-protocol`).
 - Done: #14, #42, #15 cleanup (#173, ADR-0025), #79, #147, #29, #157 (ADR-0024 ship faster), #160, #161, #140 to #146 and #151, #169, #170 (client-decided claims restored after the Supervisor's #165 error), #31 (audit 1), #177, #178, #107. Phase 1 gate passed; `v0.1.0`.
 - Next: Phase 2 plan and slices.
 - Blockers: none. Client: three unsourced numbers and the availability line in `docs/needs-client.md`.
+
+## 2026-10-17 start (Phase 2)
+- Done since last time: Phase 2 plan and ADR-0026 doc cleanup are in draft PR #185; issues #181 (PR A), #183 (PR B) and #184 created.
+- Doing now: review of #185, then App/Data seeds `projects.json` and `figures.json` for PR A while Frontend starts the pages.
+- Blockers: none.
