@@ -9,6 +9,8 @@ The only things Claude Code cannot do itself. Each item has exact steps. Claude 
 
 - [ ] Two numbers in your résumé have no source in the Evidence Ledger, so `resume.json` leaves them out (R-005, PR #137): "109M params" and "all 3 planted interactions ranked top 3 of 190 pairs". The site claim "10-prompt check" (medical LLM project) also has no source QA could find (PR #152). To keep any of them, reply with the repo file or notebook that shows each number. Otherwise nothing is needed.
 
+- [ ] Six mockup numbers have no source in the repos or résumé, so the new project and figure content leaves them out (R-005, PR #186). To keep any, reply with the repo file or notebook that shows it: Market Regime baseline accuracy 61.16% and baseline MCC -0.036 (and the test window "Sep 2022 to Oct 2025"); FinCompress F1 0.897 at 29% of heads pruned, the 0.888 baseline, and the F1 0.89 to 0.77 accuracy cost; Settlement RBF SVM 0.319 and logistic regression 0.305 PR-AUC. Otherwise nothing is needed.
+
 ## Optional (speed)
 - [ ] To let the build resume on its own after usage limits (`scripts/autopilot.sh`, #116), install the Claude Code command-line tool. In Terminal run `brew install --cask claude-code`, then `claude --version` to check. The desktop app's copy cannot run from Terminal.
 
