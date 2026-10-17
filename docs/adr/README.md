@@ -25,3 +25,4 @@ Format: context, decision, consequences, alternatives. New ADRs take the next nu
 | [0019](0019-license-scope.md) | License scope: site copy is reserved, repository docs are MIT |
 | [0020](0020-faster-reviews.md) | Faster reviews: sonnet reviewers, parallel review order |
 | [0021](0021-osv-braces-waiver.md) | Time-boxed OSV waiver for dev-only braces advisory |
+| [0022](0022-parallel-agents-and-low-deferral.md) | More parallel agents, haiku for chores, Low findings deferred to their trigger |

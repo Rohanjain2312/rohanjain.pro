@@ -11,6 +11,7 @@ The only things Claude Code cannot do itself. Each item has exact steps. Claude 
 - [ ] To let the build resume on its own after usage limits (`scripts/autopilot.sh`, #116), install the Claude Code command-line tool. In Terminal run `brew install --cask claude-code`, then `claude --version` to check. The desktop app's copy cannot run from Terminal.
 
 ## Accepted risks (no action needed)
+- All agents, including Security reviewers, run on sonnet or haiku; none on opus (ADR-0022, your request to save usage). Reviews share one model family with the builders, so some shared blind spots go uncaught. Seeded-defect audits measure this.
 - Dev-only `braces` advisory GHSA-vfj7-8cjw-p6xm is waived in CI until 2027-01-15 or until a fix ships (ADR-0021). It does not reach the published site.
 
 ## Optional (accepted risk, ADR-0018)
