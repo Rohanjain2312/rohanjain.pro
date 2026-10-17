@@ -23,3 +23,4 @@
 - [check-claims gaps (PR #137)](project-check-claims-gaps-pr137.md): R-301 check bypasses (years, noscript, global set) to hand-check once pages exist
 - [npm script bypass (PR #136)](project-npm-script-bypass-pr136.md): shell routes that re-enable install scripts past R-509, verified with real npm; re-check on guard-bash changes.
 - [Shared scratchpad names](feedback-shared-scratchpad.md): other agents overwrite generic probe names; use QA-prefixed names and check headers before citing.
+- [PR process gate review (PR #135)](project-pr-process-gate-pr135.md): comment-strip bypass found at 3135510; re-check cases and Low items

@@ -16,4 +16,6 @@ For any PR that adds dependencies or changes `package-lock.json`, check these wi
 - Check the bind address of dev and preview servers with `lsof`, and look for outbound telemetry (`ASTRO_TELEMETRY_DISABLED`).
 - Until #79 is fixed, a new lock without `min-release-age=7` adds to #79. It is not a new finding.
 
+- PR #149 (2026-10-16, approved, #79 fix): `min-release-age=7` works on npm 11.19; explicit `pkg@too-new` fails with ETARGET (fail closed). Lock has 54 packages under 7 days, all clear by 2026-10-22T15:05Z. Re-run the lock age check on or after that date at the Phase 1 gate. R-509 hook blocks shell writes to `.npmrc`; test with the `--min-release-age=7` flag instead.
+
 Related: [[severity-calibration]], [[tooling-quirks]]

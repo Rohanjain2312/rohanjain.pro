@@ -20,3 +20,6 @@
 - [Review checklist](feedback_review_checklist.md): closing keywords, regressed findings, live GitHub checks, stale approvals, moved criteria, risk-acceptance wording
 - [ADR-0022 model policy](project-adr0022-model-policy.md): no-opus Security risk, open items (needs-client, RR-3, CODEOWNERS, status.md) as of 2026-10-16
 - [Workflow review](workflow_review_checklist.md): workflow PRs: token env scope vs third-party code, release-please defaults, Actions settings (#134, #150)
+- [Severity calibration](severity-calibration.md): ADR-0018 rating rule; 53-I3 exception only proposed (#63); past findings and their state
+- [PR #158 ADR-0024](project-adr-0024-process-trims.md): ship-faster trims; type:security move agreements, open #160 (High) and #161 (Medium)
+- [CI gate review](ci_gate_review_checklist.md): PR #135 review-gate probes: self-edited YAML, parser leniency, labeler gaps, 3000-file cap
