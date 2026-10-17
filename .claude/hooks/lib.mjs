@@ -28,7 +28,8 @@ export const LABEL_ROLE = { supervisor: 'supervisor', 'design-lead': 'design', '
 // Repo-relative path; strips Claude Code worktree prefixes (.claude/worktrees/<name>/).
 export function repoRel(p, input) {
   if (!p) return '';
-  const abs = isAbsolute(p) ? p : resolve(input.cwd || projectDir(input), p);
+  // resolve() also normalizes '..' in absolute paths, so a worktree path cannot climb out of an owned prefix (#51).
+  const abs = resolve(input.cwd || projectDir(input), p);
   const m = abs.replace(/\\/g, '/').match(/\/\.claude\/worktrees\/[^/]+\/(.*)$/);
   if (m) return m[1];
   // Each worktree has its own top level; walk up to an existing directory first.
