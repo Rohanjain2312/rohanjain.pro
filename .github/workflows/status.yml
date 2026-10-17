@@ -1,19 +1,14 @@
 name: Status
 
-# Daily: checks each demo URL and the latest commit date of each featured repo, then proposes public/status.json
-# (F-10, docs/spec/06-architecture.md 5.7). The site reads the file at build time; nothing runs at request time.
-# Job 1 (collect) is read-only and runs the script. Job 2 (propose) holds the only write permissions, runs no repo
-# code, and only copies a validated JSON file onto a branch and opens a PR.
-# Manual dispatch runs collect only unless "propose" is ticked.
+# Daily: checks each demo URL and the latest commit date of each featured repo, then writes status.json to the
+# orphan branch status-data (F-10, ADR-0027, docs/spec/06-architecture.md 5.7). It never writes main and opens no PR.
+# The Phase 7 deploy workflow copies the file into public/ before the build; nothing runs at request time.
+# Job 1 (collect) is read-only and runs the script. Job 2 (publish) holds the only write permission, runs no repo
+# code, validates the JSON shape, and makes one commit per run (always, so the check date stays fresh).
 on:
   schedule:
     - cron: '17 6 * * *'
   workflow_dispatch:
-    inputs:
-      propose:
-        description: Also open the status PR
-        type: boolean
-        default: false
 
 permissions: read-all
 
@@ -46,49 +41,46 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-  propose:
-    name: propose
+  publish:
+    name: publish
     needs: collect
-    if: github.event_name == 'schedule' || inputs.propose
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: write
-      pull-requests: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          ref: main
           persist-credentials: true
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: status
-          path: incoming
+          path: ${{ runner.temp }}/incoming
       - name: Validate the file
+        env:
+          INCOMING: ${{ runner.temp }}/incoming/status.json
         run: |
           node -e '
-            const s = JSON.parse(require("fs").readFileSync("incoming/status.json", "utf8"));
+            const s = JSON.parse(require("fs").readFileSync(process.env.INCOMING, "utf8"));
             const d = /^\d{4}-\d{2}-\d{2}$/;
             const ok = d.test(s.checkedAt) && d.test(s.lastUpdated) && Array.isArray(s.demos) &&
               s.demos.every((x) => /^https:\/\/huggingface\.co\/spaces\//.test(x.url) && typeof x.up === "boolean" && d.test(x.checkedAt));
             if (!ok) { console.error("status.json has an unexpected shape"); process.exit(1); }
           '
-      - name: Open the PR
+      - name: Commit to status-data
         env:
-          GH_TOKEN: ${{ github.token }}
+          INCOMING: ${{ runner.temp }}/incoming/status.json
         run: |
-          cp incoming/status.json public/status.json
-          if git diff --quiet -- public/status.json && [ -z "$(git ls-files --others --exclude-standard public/status.json)" ]; then
-            echo "status.json unchanged. Nothing to propose."
-            exit 0
-          fi
-          branch="platform/183-status-$(date -u +%Y-%m-%d)"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git switch -c "$branch"
-          git add public/status.json
+          if git ls-remote --exit-code --heads origin status-data > /dev/null; then
+            git fetch --depth=1 origin status-data
+            git switch --force -C status-data FETCH_HEAD
+          else
+            git switch --orphan status-data
+          fi
+          git rm -rq --ignore-unmatch . > /dev/null
+          cp "$INCOMING" status.json
+          git add status.json
           git commit -m "chore(status): daily status data" -m "Agent-Role: platform-engineer"
-          git push --force-with-lease origin "$branch"
-          gh pr create --base main --head "$branch" \
-            --title "[platform-engineer] chore(status): daily status data (#183)" \
-            --body "Daily update of public/status.json from .github/workflows/status.yml. Refs #183."
+          git push origin status-data
