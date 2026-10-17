@@ -2,6 +2,7 @@
 // components need. Everything shown on a page starts here or in src/components/copy/*.json.
 import { getCollection, getEntry } from 'astro:content';
 import type { ImageMetadata } from 'astro';
+import type { Claim, Figure, Project, Resume, Site } from '../lib/content/schemas.ts';
 import figureOrder from '../content/figures.json';
 import {
   claimMap,
@@ -28,7 +29,7 @@ export type ProjectView = {
   headline: string;
   context: string[];
   links: { label: string; url: string }[];
-  demo?: { url: string; what: string };
+  demo?: { url: string; what: string } | undefined;
 };
 
 export type FigureView = {
@@ -39,9 +40,9 @@ export type FigureView = {
   date: string;
   dateIso: string;
   alt: string;
-  image?: ImageMetadata;
-  bars?: { label: string; value: number; display: string }[];
-  axisMax?: number;
+  image?: ImageMetadata | undefined;
+  bars?: { label: string; value: number; display: string }[] | undefined;
+  axisMax?: number | undefined;
   axisLabel: string;
   caption: string;
   note: string;
@@ -57,15 +58,15 @@ export type TimelineEntry = {
 };
 
 export async function loadSite() {
-  const claimList = (await getCollection('claims')).map((e) => e.data);
+  const claimList = (await getCollection('claims')).map((e) => e.data as Claim);
   const claims: ClaimMap = claimMap(claimList);
-  const site = (await getEntry('site', 'site'))?.data;
-  const resume = (await getEntry('resume', 'resume'))?.data;
+  const site = (await getEntry('site', 'site'))?.data as Site | undefined;
+  const resume = (await getEntry('resume', 'resume'))?.data as Resume | undefined;
   if (!site) throw new Error('src/content/site.json is missing.');
   if (!resume) throw new Error('src/content/resume.json is missing.');
 
   const projects: ProjectView[] = (await getCollection('projects'))
-    .map((e) => e.data)
+    .map((e) => e.data as Project)
     .sort((a, b) => a.order - b.order)
     .map((p) => ({
       id: p.id,
@@ -84,9 +85,9 @@ export async function loadSite() {
   // Collections come back sorted by id; the page keeps the order of figures.json.
   const order = figureOrder.map((f) => f.id);
   const figures: FigureView[] = (await getCollection('figures'))
-    .sort((a, b) => order.indexOf(a.data.id) - order.indexOf(b.data.id))
+    .sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id))
     .map((e) => {
-      const f = e.data;
+      const f = e.data as Figure;
       const project = byId.get(f.projectId);
       if (!project) throw new Error(`Figure "${f.id}" names unknown project "${f.projectId}".`);
       let image: ImageMetadata | undefined;
