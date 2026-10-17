@@ -9,14 +9,6 @@ The only things Claude Code cannot do itself. Each item has exact steps. Claude 
 
 - [ ] Two numbers in your résumé have no source in the Evidence Ledger, so `resume.json` leaves them out (R-005, PR #137): "109M params" and "all 3 planted interactions ranked top 3 of 190 pairs". The site claim "10-prompt check" (medical LLM project) also has no source QA could find (PR #152). To keep any of them, reply with the repo file or notebook that shows each number. Otherwise nothing is needed.
 
-- [ ] For your information (PR #165): the site now states these claims as the public repos show them, so they differ from your résumé. Consider updating the résumé to match, so a recruiter who checks the repo sees the same numbers. No reply is needed.
-  - FinCompress pruning: the +0.9 point gain is at about 30% of heads pruned (50% gives +0.6), not at 50%.
-  - Market regime F1: 88.4% is the Bullish-class F1; the repo's overall F1 is 72.70%.
-  - Market regime baselines: compared with 6 other architectures on accuracy and F1.
-  - Loan agent v2: the Docker, GKE, GitHub Actions and A2A deployment line is removed (not in the public repo); the 2 subgraphs are alternative paths (CA and Notice), not parallel.
-  - Goldman Sachs tenure: about 3.5 years (Jan 2021 to Jun 2024), not ~4 years.
-  - Tariff rulings: "on or after" wording, as the repo states it.
-
 ## Optional (speed)
 - [ ] To let the build resume on its own after usage limits (`scripts/autopilot.sh`, #116), install the Claude Code command-line tool. In Terminal run `brew install --cask claude-code`, then `claude --version` to check. The desktop app's copy cannot run from Terminal.
 
