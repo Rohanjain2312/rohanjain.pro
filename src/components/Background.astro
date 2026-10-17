@@ -25,8 +25,7 @@ const { claims, title, education, publication } = Astro.props;
         </div>
       ))}
       <p>
-        <strong>{publication.lead}</strong>
-        {fill(publication.text, claims)}
+        <strong>{publication.lead}</strong> {fill(publication.text, claims)}
       </p>
     </div>
   </Fold>
