@@ -70,3 +70,23 @@ R-807 is met by this run, per the Supervisor's decision: Part 1 passed and probe
 
 - Re-run probes 1 to 8 in a true headless or logged-in session, including the SessionStart hook.
 - Run probes 9 and 10 interactively and record the `/context` token total.
+
+# Phase 1 probe test
+
+Owner: qa-engineer. Rule: R-807 (skill `probe-test`). Trigger: `.claude/hooks` and `.claude/settings.json` changed in Phase 1. Date: 2026-10-16. Issue: #107 (cited as directed).
+
+- Commit tested: `22d3563` (main).
+- Changes since the Phase 0 run (`09d4058`): #81 (verify stamp from the worktree), #106 (memory-only subagent ending), #117 (sonnet reviewers, parallel reviews), #136 (worktree path normalisation, npm script re-enable block).
+
+| Part | Result |
+|---|---|
+| Part 1: hooks | PASS, 172 of 172 checks (125 at Phase 0) |
+| Part 2: headless probes 1 to 10 | NOT RUN. Needs the client's logged-in CLI; tracked in #75 (Phase 8) |
+
+## Part 1: hooks
+
+Command: `node .claude/hooks/test-hooks.mjs` in a worktree whose HEAD equals main. Exit code 0. Last line: `ALL PASSED (172 checks)`. 172 lines begin with `PASS`; no line reports a failure.
+
+## Part 2
+
+Not run. `claude` is not on the PATH of the agent shell, and the Phase 0 attempt showed that a child `claude -p` has no login. The Phase 0 subagent-method results (probes 1 to 8) were not repeated. Probes 9 and 10 are interactive. All three items stay open in #75. The hook changes above are covered by Part 1 only, not by a fresh-session run.
