@@ -30,7 +30,7 @@ for (const [re, why] of RAW_DENY) if (re.test(cmd)) deny(input, 'R-509', why);
 // #58: .npmrc sets ignore-scripts=true; no flag, env var, config command or shell write may turn install scripts back on.
 // Matched on the command with quotes and backslashes removed, so quote-splitting does not hide it.
 {
-  const flat = cmd.replace(/['"\\]/g, '');
+  const flat = cmd.replace(/\\\r?\n/g, ' ').replace(/['"\\]/g, '');
   const NPM_SCRIPTS = 'Turning npm install scripts back on is blocked (.npmrc ignore-scripts=true, #58).';
   if (/--ignore-scripts=(?!true\b)/i.test(flat) || /--ignore-scripts\s+(false|0|no|null|off|\$)/i.test(flat) || /--no-ignore-scripts\b/i.test(flat)) deny(input, 'R-509', NPM_SCRIPTS);
   if (/\bnpm_config_ignore[-_]scripts\s*=(?!\s*true\b)/i.test(flat)) deny(input, 'R-509', NPM_SCRIPTS);
