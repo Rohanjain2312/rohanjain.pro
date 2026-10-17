@@ -168,6 +168,8 @@ const cases = [
   ['R-509 awk inplace .npmrc (#58)', bash("awk -i inplace '{print}' .npmrc", 'platform-engineer'), 'deny'],
   ['R-509 grep .npmrc ok (#58)', bash('grep ignore-scripts .npmrc', 'platform-engineer'), 'allow'],
   ['R-509 git diff .npmrc ok (#58)', bash('git diff main -- .npmrc', 'platform-engineer'), 'allow'],
+  ['R-509 npm flag before config (#58)', bash('npm --location=project config set ignore-scripts false', 'platform-engineer'), 'deny'],
+  ['R-509 git log --output .npmrc (#58)', bash('git log -1 --output=.npmrc', 'platform-engineer'), 'deny'],
   ['R-509 npm config get ok (#58)', bash('npm config get ignore-scripts', 'platform-engineer'), 'allow'],
   ['R-509 cat .npmrc ok (#58)', bash('cat .npmrc', 'platform-engineer'), 'allow'],
   ['R-509 write .npmrc false (#58)', write('.npmrc', 'ignore-scripts=false\n', 'platform-engineer'), 'deny'],

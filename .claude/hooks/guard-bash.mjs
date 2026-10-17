@@ -34,11 +34,11 @@ for (const [re, why] of RAW_DENY) if (re.test(cmd)) deny(input, 'R-509', why);
   const NPM_SCRIPTS = 'Turning npm install scripts back on is blocked (.npmrc ignore-scripts=true, #58).';
   if (/--ignore-scripts=(?!true\b)/i.test(flat) || /--ignore-scripts\s+(false|0|no|null|off|\$)/i.test(flat) || /--no-ignore-scripts\b/i.test(flat)) deny(input, 'R-509', NPM_SCRIPTS);
   if (/\bnpm_config_ignore[-_]scripts\s*=(?!\s*true\b)/i.test(flat)) deny(input, 'R-509', NPM_SCRIPTS);
-  if (/\bnpm\s+(config|c|set|get)\b[^\n;|&]*\bignore-scripts\b/i.test(flat) && !/\bnpm\s+(config\s+(\S+\s+)*)?get\b/i.test(flat)) deny(input, 'R-509', 'Changing the npm ignore-scripts setting is blocked (#58).');
+  if (/\bnpm\s+(-\S+\s+)*(config|c|set|get)\b[^\n;|&]*\bignore-scripts\b/i.test(flat) && !/\bnpm\s+(-\S+\s+)*(config\s+(\S+\s+)*)?get\b/i.test(flat)) deny(input, 'R-509', 'Changing the npm ignore-scripts setting is blocked (#58).');
   // Any shell segment that names .npmrc must be a plain read; writers (redirects, sed, interpreters) are all denied.
   for (const seg of flat.split(/;|&&|\|\||\||\n/)) {
     if (!/\.npmrc\b/i.test(seg)) continue;
-    if (/>/.test(seg) || !/^\s*(cat|head|tail|less|grep|rg|wc|ls|stat|diff|git\s+(diff|log|show|status|blame|ls-files))\b/i.test(seg)) deny(input, 'R-509', 'Only plain reads of .npmrc are allowed from the shell; change it with Edit in a reviewed PR (#58).');
+    if (/>|--output\b|\s-o\s/.test(seg) || !/^\s*(cat|head|tail|less|grep|rg|wc|ls|stat|diff|git\s+(diff|log|show|status|blame|ls-files))\b/i.test(seg)) deny(input, 'R-509', 'Only plain reads of .npmrc are allowed from the shell; change it with Edit in a reviewed PR (#58).');
   }
 }
 {
