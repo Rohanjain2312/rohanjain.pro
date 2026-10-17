@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import {
+  buildClaimIndex,
   checkHtml,
   claimNumbers,
   extractNumbers,
@@ -20,9 +21,10 @@ const claims = [
   { value: 0.48, display: '0.480 fake score' },
 ];
 const allowed = claimNumbers(claims, ['+1 555 010 0199']);
+const index = buildClaimIndex(claims, ['+1 555 010 0199']);
 
 const page = (body: string, head = '') =>
-  `<!doctype html><html><head><title>Fake 999</title>${head}</head><body>${body}</body></html>`;
+  `<!doctype html><html><head><title>Home</title>${head}</head><body>${body}</body></html>`;
 
 describe('visibleText', () => {
   it('drops head, script, style, template and comments', () => {
@@ -32,7 +34,7 @@ describe('visibleText', () => {
     );
     const t = visibleText(html);
     expect(t).toContain('Seen 111');
-    for (const n of ['777', '888', '555', '666', '444', '999']) expect(t).not.toContain(n);
+    for (const n of ['777', '888', '555', '666', '444']) expect(t).not.toContain(n);
   });
 
   it('ignores non-visible attributes but keeps alt and aria-label', () => {
@@ -85,7 +87,7 @@ describe('claimNumbers', () => {
 describe('checkHtml', () => {
   it('passes claimed numbers, years and formatting variants', () => {
     const html = page(
-      '<p>111 widgets, 2,500 users, score 0.48 and 0.480, since 2026 and 1999. Call +1 555 010 0199</p>',
+      '<p>111 widgets, 2,500 users, score 0.48 and 0.480, since Jan 2026 and Mar 1999. Call +1 555 010 0199</p>',
     );
     expect(checkHtml('/', html, allowed)).toEqual([]);
   });
@@ -112,6 +114,63 @@ describe('checkHtml', () => {
     const list = [{ page: '/404', number: '404', reason: 'HTTP status code' }];
     expect(checkHtml('/404', html, allowed, list)).toEqual([]);
     expect(checkHtml('/other', html, allowed, list)).toHaveLength(1);
+  });
+});
+
+describe('R-301 gaps (issue #151)', () => {
+  const nums = (html: string, a: Set<string> | typeof index = index) =>
+    checkHtml('/', page(html), a).map((f) => f.number);
+
+  it('treats 1900 to 2099 as a year only in date context', () => {
+    expect(nums('<p>Served 2000 customers</p>')).toEqual(['2000']);
+    expect(nums('<p>Served 2000 customers</p>', allowed)).toEqual(['2000']);
+    expect(nums('<p>Built in 1999 units</p>')).toEqual(['1999']);
+    for (const ok of [
+      '<time datetime="2026-10-16">2026</time>',
+      '<p>Sep 2026</p>',
+      '<p>September 15, 2026</p>',
+      '<p>15 Sep 2026</p>',
+      '<p>2026-10-16</p>',
+      '<p>10/16/2026</p>',
+      '<p>Q3 2026</p>',
+      '<p>\u00a9 2026 Fake</p>',
+    ])
+      expect(nums(ok), ok).toEqual([]);
+  });
+
+  it('matches per occurrence, not against the union of claim values', () => {
+    expect(nums('<p>FAKE-111 widgets</p>')).toEqual([]);
+    expect(nums('<p>Ships 111 widgets daily</p>')).toEqual([]);
+    expect(nums('<p>I ate 111 pancakes</p>')).toEqual(['111']);
+    // The union mode still passes it, which is the gap the index closes.
+    expect(nums('<p>I ate 111 pancakes</p>', allowed)).toEqual([]);
+  });
+
+  it('flags a second occurrence that lacks the claim context', () => {
+    expect(
+      nums(`<p>111 widgets</p><p>${'Filler. '.repeat(20)}</p><p>Plays 111 guitars</p>`),
+    ).toEqual(['111']);
+  });
+
+  it('reads noscript, title, placeholder and value text', () => {
+    expect(nums('<noscript>Only 777 left</noscript>')).toEqual(['777']);
+    const titled = '<html><head><title>Top 888 firms</title></head><body></body></html>';
+    expect(checkHtml('/', titled, index).map((f) => f.number)).toEqual(['888']);
+    expect(nums('<a href="#" title="Over 666 fans">x</a>')).toEqual(['666']);
+    expect(nums('<input placeholder="Pick 557 items">')).toEqual(['557']);
+    expect(nums('<input type="submit" value="Send 444 now">')).toEqual(['444']);
+    expect(nums('<input type="hidden" value="333">')).toEqual([]);
+  });
+
+  it('extracts numbers with a leading x or dot', () => {
+    expect(extractNumbers('x73 and .73 and 1.5 and S3 file.v3').map((f) => f.raw)).toEqual([
+      'x73',
+      '.73',
+      '1.5',
+    ]);
+    expect(nums('<p>Boosted x73 overall</p>')).toEqual(['x73']);
+    expect(nums('<p>Scored .73 overall</p>')).toEqual(['.73']);
+    expect(nums('<p>Scored 0.73 overall</p>')).toEqual(['0.73']);
   });
 });
 
@@ -212,6 +271,21 @@ describe('scripts/check-claims.ts', () => {
     const missing = join(content, 'no-dist');
     expect(run('--dist', missing, '--content', content).status).toBe(0);
     expect(run('--dist', missing, '--content', content, '--require-dist').status).toBe(1);
+  });
+
+  it('fails --require-dist on an empty dist and skips without it', () => {
+    const { dist, content } = setup('<p>x</p>');
+    const empty = join(dist, '..', 'empty');
+    mkdirSync(empty);
+    expect(run('--dist', empty, '--content', content, '--require-dist').status).toBe(1);
+    expect(run('--dist', empty, '--content', content).status).toBe(0);
+  });
+
+  it('fails a seeded "Served 2000 customers"', () => {
+    const { dist, content } = setup('<p>Served 2000 customers</p>');
+    const r = run('--dist', dist, '--content', content);
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('"2000"');
   });
 
   it('fails when claims.json is missing', () => {

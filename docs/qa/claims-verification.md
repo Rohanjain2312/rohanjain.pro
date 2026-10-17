@@ -36,7 +36,7 @@ Totals: 92 claims. 68 verified, 13 verified-note, 10 mismatch (7 issues), 1 unso
 | Claim ID | Value | Source checked | Result | Date |
 |---|---|---|---|---|
 | `goldman-tenure` | `Jan 2021 to Jun 2024` | Resume, Work Experience, Goldman Sachs, "Data Scientist, Jan 2021 - June 2024". Dates match. They span 3 years 5 to 6 months, so "~4 years" beside them is generous: issue #146 | mismatch #146 | 2026-10-16 |
-| `goldman-tenure-years` | `4` | Resume, Goldman bullet 1, "over 4 years". Matches the résumé; conflicts with its own date range: issue #146 | mismatch #146 | 2026-10-16 |
+| `goldman-tenure-years` | `3.5` | Resume, Goldman bullet 1, "over 4 years". Matches the résumé; conflicts with its own date range: issue #146 | mismatch #146 | 2026-10-16 |
 | `goldman-roles` | `STEM Intern to Data Analyst to Data Scientist` | Resume, Goldman bullet 1, "Progressed from STEM Intern to Data Analyst to Data Scientist". Asset Management and Bengaluru from the Goldman header and bullet 1 | verified | 2026-10-16 |
 | `production-experience-years` | `3.5` | `reference/role_descriptions.md` lines 5, 9, 13 ("3.5+ years production experience") and Resume summary line | verified | 2026-10-16 |
 | `settlement-pending-trades-reduction` | `40` | Resume, Goldman bullet 2, "reducing pending trades by 40%" | verified | 2026-10-16 |
@@ -70,7 +70,6 @@ Totals: 92 claims. 68 verified, 13 verified-note, 10 mismatch (7 issues), 1 unso
 | `loan-v2-approvals` | `4` | Resume, bullet 2, "4 HIL interrupts". Repo `graph/orchestrator.py` has four `interrupt()` calls (lines 218, 277, 302, 339), one per HIL node | verified | 2026-10-16 |
 | `loan-v2-checks` | `22` | Resume, bullet 2, "22 validation checks". Repo `MasterPlan.md` line 14 "all 22 checks" and section 11, check 22 at line 431 | verified | 2026-10-16 |
 | `loan-v2-routing` | `Claude Sonnet + GPT-4o-mini` | Resume, bullet 1. Repo README lines 62-63: orchestrator Claude Sonnet, extraction GPT-4o-mini, validation, storage and execution Claude Haiku. The claim leaves out Haiku, which is a third model | verified-note | 2026-10-16 |
-| `loan-v2-deploy` | `Docker on GKE Autopilot via GitHub Actions` | Resume, bullet 3 states Docker, GKE Autopilot, GitHub Actions and A2A. The repo (48 files, one branch) has no Dockerfile, no Kubernetes manifest, no `.github/` and no A2A code: issue #143 | mismatch #143 | 2026-10-16 |
 | `loan-v2-dates` | `Apr to Aug 2026` | Repo commits 2026-04-19 to 2026-08-29 | verified | 2026-10-16 |
 
 ### Trade Settlement Fail Predictor (résumé, repo trade-settlement-fail-predictor)
@@ -110,7 +109,7 @@ Totals: 92 claims. 68 verified, 13 verified-note, 10 mismatch (7 issues), 1 unso
 | `fc-latency-before` | `286.9 ms` | `fincompress/results/article_assets/article_data.json` teacher 286.88 ms; figure `reference/figures/fc_latency.png`. The same repo's `results/benchmark_results.csv` shows teacher 77.0 ms and has no PTQ row, so the repo holds two latency sets | verified-note | 2026-10-16 |
 | `fc-latency-after` | `19.8 ms` | `article_data.json` student_ptq 19.83 ms; figure. Student F1 for that model is 0.786 against 0.918 for the teacher on test. Same two-latency-sets note | verified-note | 2026-10-16 |
 | `fc-latency-ratio` | `14.5x` | 286.88 over 19.83 is 14.47. Same sources and note as the two latency claims | verified-note | 2026-10-16 |
-| `fc-pruning-heads` | `50` | Resume bullet 2 says 50%. Repo README lines 49-50 and `article_data.json`: the +0.9 gain is at 30% (29.2%) pruning; at 50% (48.6%) it is +0.6: issue #140 | mismatch #140 | 2026-10-16 |
+| `fc-pruning-heads` | `30` | Resume bullet 2 says 50%. Repo README lines 49-50 and `article_data.json`: the +0.9 gain is at 30% (29.2%) pruning; at 50% (48.6%) it is +0.6: issue #140 | mismatch #140 | 2026-10-16 |
 | `fc-pruning-f1-gain` | `+0.9 points` | Same evidence as `fc-pruning-heads`: +0.9 is the 30% result, 50% gives +0.6 (0.8936 against teacher 0.8876): issue #140 | mismatch #140 | 2026-10-16 |
 | `fc-dates` | `Feb to Mar 2026` | Repo commits 2026-02-27 to 2026-03-09; checkpoints dated 2026-03-01 | verified | 2026-10-16 |
 
@@ -123,7 +122,7 @@ Totals: 92 claims. 68 verified, 13 verified-note, 10 mismatch (7 issues), 1 unso
 | `tariff-zero-shot` | `15` | README line 75: Claude Sonnet 5.5 zero-shot, same 40 items, 15.0%. The agent row is a different model (Opus 5.5); the same-model pair (Sonnet 5.5 agent, line 77) is also 82.5% | verified-note | 2026-10-16 |
 | `tariff-rulings-corpus` | `44,139` | README line 11 "44,139 CROSS rulings" | verified | 2026-10-16 |
 | `tariff-mcp-tools` | `8` | README line 11 "8 read-only tools" | verified | 2026-10-16 |
-| `tariff-dates` | `Sep 2026` | Repo commits 2026-09-28 to 2026-10-01 (two commits on 2026-10-01 UTC): issue #145 | mismatch #145 | 2026-10-16 |
+| `tariff-dates` | `Sep to Oct 2026` | Repo commits 2026-09-28 to 2026-10-01 (two commits on 2026-10-01 UTC): issue #145 | mismatch #145 | 2026-10-16 |
 
 ### Self-Healing Code Agent (repo Self-Healing-Code-Agent README)
 
