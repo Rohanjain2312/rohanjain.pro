@@ -131,14 +131,14 @@ export function checkBranchName(pr) {
 // --- pr-hygiene (R-104, R-108, R-109, R-404, R-506, R-701) ---------------------------------------
 
 export function stripHtmlComments(text) {
-  // Repeat until stable so nested forms like "<!<!-- x -->--" cannot rebuild a comment.
+  // Scan from the start after every cut, so nested forms like "<!<!-- x -->--" cannot rebuild a comment.
   // An unterminated "<!--" runs to the end of the text, as in HTML.
-  let prev;
-  do {
-    prev = text;
-    text = text.replace(/<!--[\s\S]*?-->/g, '').replace(/<!--[\s\S]*$/, '');
-  } while (text !== prev);
-  return text;
+  for (;;) {
+    const start = text.indexOf('<!--');
+    if (start < 0) return text;
+    const end = text.indexOf('-->', start + 4);
+    text = text.slice(0, start) + (end < 0 ? '' : text.slice(end + 3));
+  }
 }
 
 export function parseTitle(title) {
