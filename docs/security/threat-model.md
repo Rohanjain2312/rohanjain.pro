@@ -73,7 +73,7 @@ Data flows:
 - DF1 Agent reads an issue or comment, edits files, commits, pushes a branch, opens a PR (B2, B1, B3).
 - DF2 `npm ci` or `npm install` pulls packages and runs the build locally and in CI (B4, B5).
 - DF3 PR runs CI; Supervisor squash-merges when gates pass; `release.yml` tags; the private repo's workflow deploys to Pages (B3, B5, B9, ADR-0016).
-- DF4 `status.yml` fetches demo URLs and public repo dates daily, writes `public/status.json`, opens an automated PR (B5).
+- DF4 `status.yml` fetches demo URLs and public repo dates daily, writes `status.json` to the `status-data` branch (ADR-0027); no PR (B5).
 - DF5 Visitor loads pages, PDFs and fonts from the same origin; clicks to load a Hugging Face demo (B6).
 - DF6 Visitor pastes JD text; the engine scores it in memory and renders text nodes (B7).
 - DF7 Client runs `npm run for --jd ./posting.txt`; the result JSON is written to `APPLICATIONS_DIR` in the private repo, the posting is discarded; the private repo builds, deploys and cleans up (B8, ADR-0016).

@@ -30,7 +30,7 @@ Stack, repository layout, content model, engine and generator specs, and the ADR
 │  ├─ state/                 # git-ignored: hook log, compaction snapshot, verify stamp, audit lists
 │  └─ settings.json          # env, permissions, hook wiring
 ├─ .github/
-│  ├─ workflows/             # ci.yml, codeql.yml, status.yml, release.yml, scorecard.yml, cleanup.yml, deploy.yml (Phase 7)
+│  ├─ workflows/             # ci.yml, codeql.yml, status.yml, release.yml, scorecard.yml, cleanup.yml, deploy.yml (previews; production deploys from the private repo, ADR-0016)
 │  ├─ CODEOWNERS
 │  ├─ pull_request_template.md
 │  ├─ ISSUE_TEMPLATE/
