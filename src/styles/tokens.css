@@ -18,7 +18,7 @@
   --card: #fbf9f3; /* chips, textarea, inputs, figure tiles */
   --ink: #1b1a17; /* text, 1.5 px rules, solid button, dark bands */
   --ink-2: #2c2a25; /* lede and body prose */
-  --muted: #5e5a50; /* labels, dates, captions; weak bar fill */
+  --muted: #a8a398; /* labels, dates, captions; weak bar fill */
   --rule: #cfc8b6; /* 1 px dividers, chip and tile borders */
   --rule-faint: #e2dccc; /* list rows in folds, image frames, bar track */
   --note: #b42b25; /* RED: margin notes only, never a state or accent */

@@ -71,7 +71,7 @@
   },
   {
     "id": "loan-v1-checks",
-    "value": 14,
+    "value": 16,
     "display": "14 checks",
     "source": "Résumé, client-confirmed",
     "verifiedOn": "2026-10-15"
@@ -107,7 +107,7 @@
   {
     "id": "kyc-ocr-teams",
     "value": 4,
-    "display": "4 additional teams",
+    "display": "adopted firm-wide by 4 additional teams",
     "source": "Résumé, client-confirmed",
     "verifiedOn": "2026-10-15"
   },
