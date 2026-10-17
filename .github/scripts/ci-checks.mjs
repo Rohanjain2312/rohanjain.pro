@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Repo policy checks run by ci.yml. Usage: node .github/scripts/ci-checks.mjs pins|applications [--root DIR]
-//   pins          R-504  every `uses:` is pinned to a 40-char commit SHA; each workflow sets `permissions: read-all` at top level
+//   pins          R-504  every `uses:` is pinned to a 40-char commit SHA; each workflow sets `permissions: read-all` at top level; no pull_request_target
 //   applications  R-501  the repo tracks nothing under src/content/applications/ except .gitkeep (ADR-0016)
 import { spawnSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
@@ -32,6 +32,15 @@ export function checkPins(root) {
       if (ref.startsWith('./') || ref.startsWith('docker://')) return;
       if (!/@[0-9a-f]{40}$/.test(ref))
         failures.push(`R-504 ${rel}:${i + 1} action is not pinned to a full commit SHA: ${ref}`);
+    });
+    text.split('\n').forEach((line, i) => {
+      if (
+        /^\s*(?:on:\s*\[?.*|-\s*|)\bpull_request_target\b/.test(line) &&
+        !line.trim().startsWith('#')
+      )
+        failures.push(
+          `R-504 ${rel}:${i + 1} pull_request_target is not allowed: it runs with write access and secrets. Use pull_request.`,
+        );
     });
     if (
       rel.split('\\').join('/').startsWith('.github/workflows/') &&

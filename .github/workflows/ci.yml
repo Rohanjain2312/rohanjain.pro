@@ -33,8 +33,8 @@ jobs:
         run: node scripts/lint-docs.mjs
       - name: Hook tests (R-807)
         run: node .claude/hooks/test-hooks.mjs
-      - name: Phase gate and CI check self-tests (R-504, R-511, R-804)
-        run: node --test .github/lint-fixtures/ci-gates.test.mjs
+      - name: Phase gate, CI check and PR process self-tests (R-103, R-201, R-209, R-504, R-511, R-804)
+        run: node --test .github/lint-fixtures/ci-gates.test.mjs .github/lint-fixtures/pr-process.test.mjs
 
   static:
     name: static

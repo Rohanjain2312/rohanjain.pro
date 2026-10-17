@@ -1,6 +1,6 @@
 # Runbook: repository settings
 
-Records the live configuration of `Rohanjain2312/rohanjain.pro` as of 2026-10-15. The Supervisor owns the settings. This file only records them. Re-verify with the commands at the end.
+Records the live configuration of `Rohanjain2312/rohanjain.pro` as of 2026-10-16. The Supervisor owns the settings. This file only records them. Re-verify with the commands at the end.
 
 ## General
 
@@ -38,12 +38,34 @@ Target: default branch. Enforcement: active. Bypass actors: none.
 | non_fast_forward | blocked (no force push) |
 | required_linear_history | on |
 | pull_request | 0 required approvals, stale reviews dismissed on push, squash only, `require_extra_approval_for_unattributed_changes` true |
+| required_signatures | on |
 
 Approvals are `approved:<role>` labels checked by `review-gate`, because GitHub does not let an account approve its own PR (docs/spec/03-workflow.md).
 
-The `required_signatures` rule is active. It was restored on 2026-10-16 by PR #68, which closed issue #33. ADR-0014, which removed the rule, is superseded.
+`required_signatures` is on (restored 2026-10-16 by PR #68, issue #33; ADR-0014 is superseded). Do not remove it.
 
-Required status checks are not yet in the ruleset. They are added once the Phase 1 workflows exist.
+### Required status checks (R-111, R-201)
+
+Added by the Supervisor after the PR for issue #14 merges, with the command in that PR's body. Each check is pinned to the GitHub Actions app (`integration_id` 15368), so no other app can post a passing status. `strict_required_status_checks_policy` is false. There is no bypass actor.
+
+| Check | Workflow | Rules |
+|---|---|---|
+| `policy`, `static`, `content`, `test`, `build`, `e2e`, `security` | `ci.yml` | see `docs/spec/10-cicd.md` 10.1 |
+| `review-gate` | `review-gate.yml` | R-201, R-202, R-207, R-208, R-609 |
+| `branch-name` | `branch-name.yml` | R-103 |
+| `pr-hygiene` | `pr-hygiene.yml` | R-104, R-108, R-109, R-404, R-506, R-701 |
+| `labeler` | `labeler.yml` | R-209 |
+
+Until the Supervisor applies the command, the live ruleset has no required status checks.
+
+### How review-gate works
+
+- Reviews are PR comments from the repo owner in the `run-review` format. Post the comment first, then add the `approved:<role>` label. The label event re-runs the check. If the label came first, re-run the check from the Actions tab or remove and re-add the label.
+- Required reviews: `supervisor` always, plus one per `needs:*-review` label. The check also derives those labels from the changed paths, so a removed label does not remove the requirement.
+- The path-to-label map is `.github/labeler.json` (R-209). To change it, edit that file in a PR. It needs Security review.
+- Draft PRs pass with a note. The check starts enforcing when the PR is marked ready.
+- The workflows run the script from the base commit of the PR. A PR that edits `.github/scripts/pr-process.mjs` is checked by the old script and the change takes effect after merge.
+- Self-tests: `npm run gates:test`.
 
 ## Security features
 
