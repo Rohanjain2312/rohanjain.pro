@@ -34,7 +34,12 @@ for (const [re, why] of RAW_DENY) if (re.test(cmd)) deny(input, 'R-509', why);
   const NPM_SCRIPTS = 'Turning npm install scripts back on is blocked (.npmrc ignore-scripts=true, #58).';
   if (/--ignore-scripts=(?!true\b)/i.test(flat) || /--ignore-scripts\s+(false|0|no|null|off|\$)/i.test(flat) || /--no-ignore-scripts\b/i.test(flat)) deny(input, 'R-509', NPM_SCRIPTS);
   if (/\bnpm_config_ignore[-_]scripts\s*=(?!\s*true\b)/i.test(flat)) deny(input, 'R-509', NPM_SCRIPTS);
-  if (/\bnpm\s+(-\S+\s+)*(config|c|set|get)\b[^\n;|&]*\bignore-scripts\b/i.test(flat) && !/\bnpm\s+(-\S+\s+)*(config\s+(\S+\s+)*)?get\b/i.test(flat)) deny(input, 'R-509', 'Changing the npm ignore-scripts setting is blocked (#58).');
+  // Any npm segment that still names ignore-scripts after removing the safe flag forms must be a read (get).
+  for (const seg of flat.split(/;|&&|\|\||\||\n/)) {
+    if (!/\bnpm\b/i.test(seg)) continue;
+    const rest = seg.replace(/--ignore-scripts(=true)?(?=\s|$)/gi, '');
+    if (/\bignore-scripts\b/i.test(rest) && !/\b(get|ls|list)\b/i.test(rest)) deny(input, 'R-509', 'Changing the npm ignore-scripts setting is blocked (#58).');
+  }
   // Any shell segment that names .npmrc must be a plain read; writers (redirects, sed, interpreters) are all denied.
   for (const seg of flat.split(/;|&&|\|\||\||\n/)) {
     if (!/\.npmrc\b/i.test(seg)) continue;
