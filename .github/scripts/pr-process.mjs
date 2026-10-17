@@ -131,7 +131,14 @@ export function checkBranchName(pr) {
 // --- pr-hygiene (R-104, R-108, R-109, R-404, R-506, R-701) ---------------------------------------
 
 export function stripHtmlComments(text) {
-  return text.replace(/<!--[\s\S]*?-->/g, '');
+  // Repeat until stable so nested forms like "<!<!-- x -->--" cannot rebuild a comment.
+  // An unterminated "<!--" runs to the end of the text, as in HTML.
+  let prev;
+  do {
+    prev = text;
+    text = text.replace(/<!--[\s\S]*?-->/g, '').replace(/<!--[\s\S]*$/, '');
+  } while (text !== prev);
+  return text;
 }
 
 export function parseTitle(title) {
@@ -241,9 +248,9 @@ export function checkPrHygiene({ pr, files, config, basePkg = null, headPkg = nu
   }
 
   const lines = changedLines(files);
-  if (lines > MAX_LINES && !labels.includes('size:approved'))
+  if (lines >= MAX_LINES && !labels.includes('size:approved'))
     failures.push(
-      `R-109 this PR changes ${lines} lines (limit ${MAX_LINES}, package-lock.json not counted). Split it, or ask the Supervisor to add size:approved with a reason.`,
+      `R-109 this PR changes ${lines} lines (must be under ${MAX_LINES}, package-lock.json not counted). Split it, or ask the Supervisor to add size:approved with a reason.`,
     );
 
   const thresholds = thresholdChanges(files);

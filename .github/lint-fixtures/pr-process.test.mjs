@@ -114,6 +114,8 @@ test('hygiene R-104: Closes line', () => {
   assert.match(fails(hygiene({ body: 'Closes #<issue>' })), /R-104/);
   assert.match(fails(hygiene({ body: '```\nCloses #14\n```' })), /R-104/);
   assert.match(fails(hygiene({ body: '<!-- Closes #14 -->' })), /R-104/);
+  assert.match(fails(hygiene({ body: '<!<!-- x -->--\nCloses #14\n-->' })), /R-104/);
+  assert.match(fails(hygiene({ body: 'text\n<!-- unterminated\nCloses #14\n' })), /R-104/);
   assert.deepEqual(hygiene({ body: 'x\nCloses #14\nCloses #42\n' }).failures, []);
   assert.match(fails(hygiene({ body: 'Closes #15' })), /R-104.*#14/);
 });
@@ -135,9 +137,10 @@ test('hygiene R-108: title', () => {
 test('hygiene R-109: size', () => {
   const big = [file('src/a.ts', { additions: 600, deletions: 1 })];
   assert.match(fails(hygiene({}, big)), /R-109.*601/);
+  assert.match(fails(hygiene({}, [file('src/a.ts', { additions: 599, deletions: 1 })])), /R-109.*600/);
   assert.deepEqual(hygiene({ labels: [{ name: 'size:approved' }] }, big).failures, []);
   assert.deepEqual(hygiene({}, [file('package-lock.json', { additions: 5000, deletions: 0 })]).failures, []);
-  assert.deepEqual(hygiene({}, [file('src/a.ts', { additions: 599, deletions: 1 })]).failures, []);
+  assert.deepEqual(hygiene({}, [file('src/a.ts', { additions: 598, deletions: 1 })]).failures, []);
 });
 
 test('hygiene R-404: thresholds need an ADR', () => {
