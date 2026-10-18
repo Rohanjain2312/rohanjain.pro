@@ -1,0 +1,13 @@
+Synthetic clean fixture. Ordinary project notes, no posting text.
+
+## Responsibilities
+
+Security owns the headers file and the secret scan config.
+
+The word qualifications may appear in prose, and so may requirements, without a second heading
+line close by. A single heading is not a posting.
+
+## Decisions
+
+We record equal treatment of all contributors in the contributing guide. That sentence does not
+use the posting boilerplate.

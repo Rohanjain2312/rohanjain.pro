@@ -1,0 +1,3 @@
+Synthetic test fixture. Made-up company. Not a real posting.
+
+Example Corp (fictional) is an Equal Opportunity Employer. All qualified applicants are welcome.
