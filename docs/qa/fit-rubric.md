@@ -8,7 +8,7 @@ This rubric gives the expected verdict for each golden posting in `tests/fixture
 
 | Rater | Status |
 |---|---|
-| QA Engineer | Done. Version 1, 2026-10-17. |
+| QA Engineer | Done. Version 2, 2026-10-17. |
 | Reader Advocate (second rater, §9.4) | Not yet rated. Rate the 18 postings and 3 samples from this rubric, record disagreements below, and QA will resolve each in a new rubric version. |
 | Real recruiter ratings | None yet. They replace this rubric as ground truth when they arrive (skill `external-validation`, §9.4 item 7). |
 
@@ -27,7 +27,7 @@ Read each requirement line and list the skills it names. Then count.
 1. **Names.** A requirement names a skill when it contains the skill's name, a standard abbreviation, plural or hyphenation of it, or the same words in another grammatical form. Examples: "fine-tune" names Supervised fine-tuning, "define KPIs" names KPI definition, "orchestrate workflows" names Workflow orchestration, "quantize" names Model quantization.
 2. **Coordination.** "Training and inference pipelines" names both Training pipelines and Inference pipelines. "Unit and integration tests" names both.
 3. **Containment.** A phrase that contains a shorter skill name names that skill too. "Text classification" names Text classification and Classification. "Hugging Face Transformers" names Hugging Face, Transformers and Hugging Face Transformers. "LLM agents" names AI agents and Large Language Models. "Function calling" names Function calling and Tool calling.
-4. **Short forms.** A shortened form counts only when it is unambiguous in the field: distillation, Spark, CI. These do not count: "parsing" (document parsing), "tracing" (agent tracing), "stakeholders" (stakeholder management).
+4. **Short forms.** A shortened form counts only when it is unambiguous in the field: distillation, Spark. These do not count: "parsing" (document parsing), "tracing" (agent tracing), "stakeholders" (stakeholder management), "CI" (also a confidence interval in data science postings).
 5. **Paraphrase does not count.** A line that describes a capability without using the skill's words names nothing. Examples: "route requests between models", "citations back to source passages", "communicate findings to stakeholders", "explain model results".
 6. **Each skill counts once.** Repeats do not add.
 7. **Unlisted technologies.** A named language, framework, platform or tool that is not in `skills.json` is one gap. Techniques and domain words that are not in `skills.json` (Bayesian methods, ranking, fraud, churn) are not counted. Lab equipment, degrees, years of experience and personality traits are not counted.
@@ -68,7 +68,7 @@ The full skill lists for each posting are in `tests/fixtures/golden/verdicts.jso
 |---|---|---|---|---|
 | AI Engineer | Strong fit | 16 / 18 | 0.889 | 3 |
 | Data Scientist | Not a strong fit | 7 / 14 | 0.500 | 2 |
-| iOS Engineer | Not a strong fit | 1 / 8 | 0.125 | 5 |
+| iOS Engineer | Not a strong fit | 0 / 7 | 0.000 | 4 |
 
 The Data Scientist sample comes out "Not a strong fit" under the current tiers. A/B testing, experimental design, power analysis, causal inference, forecasting, Snowflake and dbt are all `studied`, and they are half of what the sample asks for. This is an honest result under R-403, not an engine fault. If Design wants that sample to show a different verdict, change the sample text. Do not change a threshold or a tier for it.
 
@@ -91,6 +91,10 @@ The Data Scientist sample comes out "Not a strong fit" under the current tiers. 
 - **Adjacent roles are weak.** Data, analytics and backend engineer postings share SQL, Python, Kubernetes and CI/CD with Rohan but ask mostly for studied or unlisted tools.
 - **Unrelated roles show no proven skill.** All three have at least four counted gaps, so they read "Not a strong fit", not "Not enough to go on".
 
+## First engine run (19da6ab plus thresholds rename)
+
+No expected verdict was changed because of the engine. Four postings disagreed: ai-02 (engine Strong fit), ai-04 and ml-01 (engine Not a strong fit), and neg-game (engine Not enough to go on). The causes are missing aliases (fine-tune, quantize, distillation, KPIs, time-series, Spark, "A/B tests", coordinated phrases such as "unit and integration tests"), missing extras (FastAPI, GCP) and Unity being alias-only. With those additions in a scratch copy, the engine agreed with the rubric on all 18 postings and 3 samples. The fixes belong to App/Data (R-407).
+
 ## Change control
 
 - A change to an expected verdict needs a new rubric version, a reason, and the Reader Advocate's rating on record. The engine disagreeing is not a reason by itself. First decide whether the engine or the rubric is wrong at skill level.
@@ -102,3 +106,4 @@ The Data Scientist sample comes out "Not a strong fit" under the current tiers. 
 | Version | Date | Change |
 |---|---|---|
 | 1 | 2026-10-17 | First rubric by QA. Written before the engine ran on any posting. Reader Advocate not yet rated. |
+| 2 | 2026-10-17 | Made after the first engine run, to fix one error of mine: "CI" is ambiguous (confidence interval), so rule 4 no longer counts it. The iOS sample goes from 1 / 8 to 0 / 7. No expected verdict changed. The engine's output did not change any verdict in the rubric. |

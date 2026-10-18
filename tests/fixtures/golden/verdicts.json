@@ -334,7 +334,7 @@
     },
     "ios": {
       "expected": "Not a strong fit",
-      "proven": ["CI/CD"],
+      "proven": [],
       "gaps": [],
       "unlisted": ["iOS", "Swift", "UIKit", "Core Data", "Xcode", "Kotlin", "Android"]
     }
