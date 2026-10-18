@@ -122,6 +122,8 @@ jobs:
           cache: npm
       - name: Install (R-507)
         run: npm ci --ignore-scripts
+      - name: Playwright browsers (the build renders the resume PDFs)
+        run: npm run browsers:install
       - name: Build
         run: npm run build
       - name: Copy lint, build output (R-007, R-008, R-010, R-601, R-603)
@@ -168,10 +170,10 @@ jobs:
           cache: npm
       - name: Install (R-507)
         run: npm ci --ignore-scripts
+      - name: Playwright browsers (the build renders the resume PDFs)
+        run: npm run browsers:install
       - name: Build
         run: npm run build
-      - name: Playwright browsers
-        run: npm run browsers:install
       - name: e2e tests (R-505)
         run: npm run test:e2e
       - name: Frontend suite, axe zero violations, layout, screenshots (R-605, R-606)
