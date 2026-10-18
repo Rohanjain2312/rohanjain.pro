@@ -13,6 +13,8 @@ The only things Claude Code cannot do itself. Each item has exact steps. Claude 
 
 - [ ] Optional, does not block the build: recruiter fit ratings (skill `external-validation`, after Phase 3). Send at least 3 recruiters or hiring managers the 10 postings in `docs/validation/phase-3-rating-packet.md` (the team prepares this file with the postings only; the engine's verdicts are not in it) plus a screenshot of the home page top (`npm run shots`, file `.shots/home-1280-fold.png`; the résumé PDF arrives in Phase 4). Message: "Here are 10 made-up job postings and a picture of a candidate's page. For each posting, pick one: Strong fit, Good fit with gaps, or Not a strong fit. Go with your first judgement." Paste the ratings back without names (R-901). The test passes when the engine matches the majority on at least 7 of 10 and never says "Strong fit" where the majority says "Not a strong fit". Nothing is needed from you if you skip this.
 
+- [ ] Phase 7, after v0.9.0 (does not block earlier work). Steps are in `docs/runbooks/launch.md` section 1: (1) Cloudflare account with passkey or 2FA, add `rohanjain.pro`, and send the two nameservers it shows; (2) Porkbun: turn DNSSEC off, set those nameservers, and later paste one DS record; (3) create one Cloudflare setup token from the prepared link and run the prepared command that uses it once on your computer (it sets up DNS and creates a narrow deploy token for GitHub, ADR-0032); revoke the setup token after launch.
+
 ## Optional (speed)
 - [ ] To let the build resume on its own after usage limits (`scripts/autopilot.sh`, #116), install the Claude Code command-line tool. In Terminal run `brew install --cask claude-code`, then `claude --version` to check. The desktop app's copy cannot run from Terminal.
 
