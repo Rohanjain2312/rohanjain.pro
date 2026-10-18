@@ -3,9 +3,59 @@
 import { join, isAbsolute, resolve } from 'node:path';
 import { readInput, roleOf, PREFIX, LABEL_ROLE, tokenize, segments, currentBranch, headSha, gitTop, readIfExists, deny, allow, projectDir } from './lib.mjs';
 
+// $'...' is ANSI-C quoting: bash turns \n, \xHH, \uHHHH and octal escapes into characters before the program sees
+// the argument. Rewrite each span as a plain single-quoted string holding the decoded text, so every check below
+// reads what bash really passes (#251). Spans inside other quotes are left alone.
+function decodeAnsiC(s) {
+  const simple = { n: '\n', r: '\r', t: '\t', a: '\x07', b: '\b', e: '\x1b', E: '\x1b', f: '\f', v: '\v', '\\': '\\', "'": "'", '"': '"', '?': '?' };
+  let out = '';
+  let q = null;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (q) {
+      out += c;
+      if (q === '"' && c === '\\' && i + 1 < s.length) out += s[++i];
+      else if (c === q) q = null;
+      continue;
+    }
+    if (c === '\\') { out += c + (s[i + 1] ?? ''); i++; continue; }
+    if (c === '$' && s[i + 1] === "'") {
+      let j = i + 2;
+      let text = '';
+      for (; j < s.length && s[j] !== "'"; j++) {
+        if (s[j] !== '\\' || j + 1 >= s.length) { text += s[j]; continue; }
+        const e = s[++j];
+        if (e in simple) text += simple[e];
+        else if (e === 'x') {
+          const m = /^[0-9a-fA-F]{1,2}/.exec(s.slice(j + 1));
+          if (m) { text += String.fromCharCode(parseInt(m[0], 16)); j += m[0].length; } else text += '\\x';
+        } else if (e === 'u' || e === 'U') {
+          const m = new RegExp(`^[0-9a-fA-F]{1,${e === 'u' ? 4 : 8}}`).exec(s.slice(j + 1));
+          if (m) {
+            // fromCodePoint throws above U+10FFFF, which would crash the hook and let the command through.
+            const cp = parseInt(m[0], 16);
+            text += cp > 0x10ffff ? '�' : String.fromCodePoint(cp);
+            j += m[0].length;
+          } else text += '\\' + e;
+        } else if (/[0-7]/.test(e)) {
+          const m = /^[0-7]{1,3}/.exec(s.slice(j));
+          text += String.fromCharCode(parseInt(m[0], 8) & 255); j += m[0].length - 1;
+        } else text += '\\' + e;
+      }
+      if (j >= s.length) { out += s.slice(i); break; }
+      out += "'" + text.replace(/'/g, "'\\''") + "'";
+      i = j;
+      continue;
+    }
+    if (c === '"' || c === "'") q = c;
+    out += c;
+  }
+  return out;
+}
+
 const input = readInput();
 if (input.tool_name && input.tool_name !== 'Bash') allow();
-const cmd = String(input.tool_input?.command || '');
+const cmd = decodeAnsiC(String(input.tool_input?.command || ''));
 const role = roleOf(input);
 let cwd = input.cwd || projectDir(input);
 
@@ -65,6 +115,8 @@ function bodyOf(t) {
     else if (t[i].startsWith('--body=')) body = t[i].slice(7);
     else if (t[i] === '--body-file' || t[i] === '-F') file = t[i + 1] || '';
     else if (t[i].startsWith('--body-file=')) file = t[i].slice(12);
+    else if (/^-b./.test(t[i]) && !t[i].startsWith('--')) body = t[i].slice(2).replace(/^=/, ''); // pflag: -bTEXT, -b=TEXT
+    else if (/^-F./.test(t[i])) file = t[i].slice(2).replace(/^=/, '');
   }
   if (file === '-') {
     if (!/<</.test(cmd)) deny(input, 'R-202', 'Use --body text or --body-file <path> so the comment can be checked.');
@@ -74,11 +126,17 @@ function bodyOf(t) {
   if (body !== null && /\$\(|`/.test(body) && !/<</.test(body)) deny(input, 'R-202', 'Command substitution in a comment body hides it from checks. Use --body text or --body-file <path>.');
   return body || '';
 }
+// An absolute or relative path to a program (/opt/homebrew/bin/gh, ./git, /usr/bin/env) is the same program: every check
+// below keys on the bare name, so a path must not hide gh, git or a wrapper (#251).
+function bareCommand(t) {
+  return t[0] && t[0].includes('/') && !t[0].includes('=') ? [t[0].slice(t[0].lastIndexOf('/') + 1), ...t.slice(1)] : t;
+}
 // Unwrap env/command/exec/nohup/time prefixes, VAR=value assignments and sh -c strings.
 const WRAPPERS = new Set(['env', 'command', 'exec', 'nohup', 'time', 'builtin', 'xargs']);
 function expand(seg, depth = 0) {
   let t = tokenize(seg);
   while (t.length) {
+    t = bareCommand(t);
     if (WRAPPERS.has(t[0])) { t = t.slice(1); while (t.length && /^-/.test(t[0])) t = t.slice(1); continue; }
     if (/^[A-Za-z_][A-Za-z0-9_]*=/.test(t[0])) { t = t.slice(1); continue; }
     break;
@@ -271,7 +329,8 @@ for (let t of segs.flatMap((s) => expand(s))) {
 
     if (sub === 'comment') {
       const body = bodyOf(args);
-      if (/^\s*REVIEW:/m.test(body)) {
+      // A REVIEW: or Reviewer: line anywhere in the body (any line, any position) makes it a review block (#251).
+      if (/^\s*(REVIEW|Reviewer):/m.test(body)) {
         if (kind === 'issue') deny(input, 'R-202', 'Post reviews with gh pr comment.');
         checkReview(body);
       }
@@ -282,6 +341,7 @@ for (let t of segs.flatMap((s) => expand(s))) {
       for (let i = 0; i < args.length; i++) {
         if (labelFlags.includes(args[i])) checkLabels(String(args[i + 1] || '').split(','));
         for (const f of labelFlags) if (f.startsWith('--') && args[i].startsWith(f + '=')) checkLabels(args[i].slice(f.length + 1).split(','));
+        if (sub === 'create' && /^-l./.test(args[i])) checkLabels(args[i].slice(2).replace(/^=/, '').split(',')); // pflag: -lLABEL, -l=LABEL
       }
     }
   }
@@ -301,7 +361,10 @@ for (let t of segs.flatMap((s) => expand(s))) {
       const a = args[i];
       if (a === '-X' || a === '--method') { method = String(args[i + 1] || '').toUpperCase(); i++; continue; }
       if (a.startsWith('--method=')) { method = a.slice(9).toUpperCase(); continue; }
-      if (/^-X[A-Za-z]+$/.test(a)) { method = a.slice(2).toUpperCase(); continue; }
+      if (/^-X=?[A-Za-z]+$/.test(a)) { method = a.slice(2).replace(/^=/, '').toUpperCase(); continue; }
+      // pflag also accepts attached values: -fk=v, -Fk=v, -f=k=v (#251). The old parser read these as no field, so a write looked like a read.
+      const attached = /^-([fF])=?(.+)$/.exec(a);
+      if (attached && !a.startsWith('--')) { fields.push(attached[1] === 'F' ? typedField(attached[2]) : attached[2]); continue; }
       if (['-F', '--field'].includes(a)) { fields.push(typedField(String(args[i + 1] || ''))); i++; continue; }
       if (/^--field=/.test(a)) { fields.push(typedField(a.slice(8))); continue; }
       if (['-f', '--raw-field'].includes(a)) { fields.push(String(args[i + 1] || '')); i++; continue; }
@@ -346,7 +409,7 @@ for (let t of segs.flatMap((s) => expand(s))) {
       if (/(^|\/)(issues|pulls)\/(\d+\/)?comments(\/|$)/.test(path)) {
         if (hasInput) deny(input, 'R-202', 'Post comments with gh pr comment so reviews can be checked.');
         const body = fields.filter((f) => /^body=/.test(f)).map((f) => f.slice(5)).join('\n');
-        if (/^\s*REVIEW:/m.test(body)) deny(input, 'R-202', 'Post reviews with gh pr comment.');
+        if (/^\s*(REVIEW|Reviewer):/m.test(body)) deny(input, 'R-202', 'Post reviews with gh pr comment.');
       }
     }
   }
