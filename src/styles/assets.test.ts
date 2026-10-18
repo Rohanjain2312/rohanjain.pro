@@ -39,6 +39,15 @@ describe('layout and page', () => {
       );
     }
   });
+  it('keep styles out of .astro files and scripts bundled', () => {
+    const dirs = ['src/components', 'src/layouts', 'src/pages'];
+    for (const d of dirs) {
+      for (const f of readdirSync(d).filter((n) => n.endsWith('.astro'))) {
+        const text = readFileSync(join(d, f), 'utf8');
+        expect(text, f).not.toMatch(/<style|define:vars|is:inline|set:html|\sstyle=/);
+      }
+    }
+  });
 });
 
 /* eslint-enable security/detect-non-literal-fs-filename */

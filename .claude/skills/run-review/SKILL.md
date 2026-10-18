@@ -12,7 +12,7 @@ Read the PR labels. Required: `supervisor` always; `qa-engineer` for `needs:qa-r
 
 ## Delegating
 - **R-204** A review delegation contains only the PR number, head SHA, acceptance criteria and plan references; never the builder's report or reasoning.
-- **R-205** CI first; then QA, Security and Design Lead in parallel on one PR, with at most two PRs in flight (ADR-0022, ADR-0024); then Reader Advocate; Supervisor last. Each reviewer posts before reading others' reviews.
+- **R-205** CI first; then one combined review by qa-engineer (tests, content, copy, design), plus Security only for workflow and header changes; Supervisor last. At most two PRs in flight (ADR-0024, ADR-0026). Each reviewer posts before reading others' reviews.
 - Reviewers run on sonnet; haiku may review docs-only PRs and docs-only fix diffs (ADR-0024), but never gives the only required review on code, workflows, hooks or content. No opus (ADR-0022).
 - Bounded reviews (ADR-0024): one round per reviewer against the acceptance criteria and named risks. A Low beyond them goes as a line on the phase's `Phase N Low backlog` issue, never CHANGES REQUESTED; a Medium or higher blocks wherever it is found. A re-review after a fix checks only the diff from the reviewed head: on haiku only when the fix changes docs and nothing else; on sonnet for any code, workflow, hook, content or security-path change (ADR-0022 decision 2).
 

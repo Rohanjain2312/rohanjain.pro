@@ -1,0 +1,145 @@
+[
+  {
+    "id": "settle-pr-curves",
+    "projectId": "settle",
+    "kind": "image",
+    "title": "Settlement · PR curves",
+    "src": "reference/figures/settle_pr.png",
+    "alt": "Precision-recall curves for XGBoost, RBF SVM and logistic regression on settlement fails",
+    "axisLabel": "precision against recall",
+    "caption": "XGBoost PR-AUC 0.333, RBF SVM 0.319, logistic regression 0.305. Random list 0.045.",
+    "note": "the SVM I shipped holds up",
+    "claimIds": ["settle-pr-auc", "settle-pr-auc-svm", "settle-pr-auc-lr", "settle-pr-auc-random"]
+  },
+  {
+    "id": "settle-shap",
+    "projectId": "settle",
+    "kind": "image",
+    "title": "Settlement · SHAP check",
+    "src": "reference/figures/settle_shap.png",
+    "alt": "True planted feature effects compared with SHAP values",
+    "axisLabel": "planted effect against SHAP value",
+    "caption": "SHAP against the recipe I planted. SHAP rank correlation 0.96.",
+    "note": "explanations tested against truth",
+    "claimIds": ["settle-shap-correlation"]
+  },
+  {
+    "id": "tariff-hearing",
+    "projectId": "tariff",
+    "kind": "image",
+    "title": "TariffAgent",
+    "src": "reference/figures/tariff_hearing.png",
+    "alt": "Customs Court demo walking the tariff schedule",
+    "axisLabel": "screenshot",
+    "caption": "The courtroom demo, arguing a code from real rulings.",
+    "note": "tested on rulings newer than the model",
+    "claimIds": ["tariff-rulings-eval"]
+  },
+  {
+    "id": "cua-click",
+    "projectId": "cua",
+    "kind": "image",
+    "title": "Computer-Use",
+    "src": "reference/figures/cua_click.png",
+    "alt": "Legacy banking console with a system notice",
+    "axisLabel": "screenshot",
+    "caption": "A step from a discovery run on the mock console.",
+    "note": "22 calls once, zero after",
+    "claimIds": ["cua-discovery-calls"]
+  },
+  {
+    "id": "fc-pruning",
+    "projectId": "fc",
+    "kind": "image",
+    "title": "FinCompress · pruning",
+    "src": "reference/figures/fc_pruning.png",
+    "alt": "Macro F1 against the share of attention heads pruned",
+    "axisLabel": "macro F1 against share of heads pruned",
+    "caption": "Macro F1 as more attention heads are pruned, against the 0.8876 full model.",
+    "note": "less model, better score",
+    "claimIds": ["fc-f1-baseline"]
+  },
+  {
+    "id": "fc-latency",
+    "projectId": "fc",
+    "kind": "image",
+    "title": "FinCompress · latency",
+    "src": "reference/figures/fc_latency.png",
+    "alt": "CPU latency in milliseconds for each model variant",
+    "axisLabel": "CPU latency, milliseconds",
+    "caption": "CPU latency 286.9 ms full, 19.8 ms INT8.",
+    "note": "speed has a price; here it is",
+    "claimIds": ["fc-latency-before", "fc-latency-after"]
+  },
+  {
+    "id": "shca-bars",
+    "projectId": "shca",
+    "kind": "bars",
+    "title": "Self-Healing",
+    "alt": "Bar chart: 3 of 8 tasks solved on the first try, 7 of 8 after self-repair",
+    "bars": [
+      { "label": "first try", "value": 3, "display": "3 of 8" },
+      { "label": "after repair", "value": 7, "display": "7 of 8" }
+    ],
+    "axisMax": 8,
+    "axisLabel": "tasks solved",
+    "caption": "Its own 8-task benchmark. A demo of the loop, not a leaderboard.",
+    "note": "a loop that fixes its own misses",
+    "claimIds": ["shca-first-try", "shca-after-repair", "shca-benchmark-tasks"]
+  },
+  {
+    "id": "mr-bars",
+    "projectId": "mr",
+    "kind": "bars",
+    "title": "Market Regime",
+    "alt": "Bar chart of test accuracy: baseline 61.16%, CNN-Transformer 81.78%",
+    "bars": [
+      { "label": "baseline", "value": 61.16, "display": "61.16%" },
+      { "label": "CNN-Transformer", "value": 81.78, "display": "81.78%" }
+    ],
+    "axisMax": 100,
+    "axisLabel": "accuracy, test window Sep 2022 to Oct 2025",
+    "caption": "0.480 MCC against -0.036 for the baseline, on 24 years of S&P 500 data.",
+    "note": "splits kept in time order",
+    "claimIds": [
+      "mr-accuracy",
+      "mr-mcc",
+      "mr-years",
+      "mr-baseline-accuracy",
+      "mr-baseline-mcc",
+      "mr-test-window"
+    ]
+  },
+  {
+    "id": "gb-bars",
+    "projectId": "gb",
+    "kind": "bars",
+    "title": "GraphBench",
+    "alt": "Bar chart of exact match: GraphRAG 3.2%, GNN-RAG 5.0%",
+    "bars": [
+      { "label": "GraphRAG", "value": 3.2, "display": "3.2%" },
+      { "label": "GNN-RAG", "value": 5, "display": "5.0%" }
+    ],
+    "axisMax": 10,
+    "axisLabel": "exact match, percent",
+    "caption": "Both low. The harness is the point.",
+    "note": "a benchmark that can say no",
+    "claimIds": ["gb-graphrag-em", "gb-gnn-rag-em", "gb-questions"]
+  },
+  {
+    "id": "med-bars",
+    "projectId": "med",
+    "kind": "bars",
+    "title": "Medical LLM",
+    "alt": "Bar chart of format adherence: base model 0%, fine-tuned model 100%",
+    "bars": [
+      { "label": "base model", "value": 0, "display": "0%" },
+      { "label": "fine-tuned", "value": 100, "display": "100%" }
+    ],
+    "axisMax": 100,
+    "axisLabel": "correct format, small prompt check",
+    "caption": "Shows the format was learned, not medical skill.",
+    "note": "scoped claim, on purpose",
+    "claimIds": ["med-format-base", "med-format-tuned"]
+  }
+]

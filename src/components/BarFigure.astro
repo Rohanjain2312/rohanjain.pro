@@ -1,0 +1,45 @@
+---
+import { barPercent } from './lib.ts';
+
+interface Props {
+  bars: { label: string; value: number; display: string }[];
+  axisMax: number;
+  axisLabel: string;
+}
+
+const { bars, axisMax, axisLabel } = Astro.props;
+const last = bars.length - 1;
+---
+
+<div class="well well--bars">
+  {bars.map((b, i) => {
+    const pct = barPercent(b.value, axisMax);
+    return (
+      <div class="bar">
+        <div class="bar__text">
+          <span>{b.label}</span>
+          <span>{b.display}</span>
+        </div>
+        <svg
+          class="bar__svg"
+          viewBox="0 0 100 16"
+          preserveAspectRatio="none"
+          width="100"
+          height="16"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <rect class="bar__track" width="100" height="16" />
+          {pct > 0 && (
+            <rect
+              class={i === last ? 'bar__fill bar__fill--strong' : 'bar__fill'}
+              width={pct}
+              height="16"
+            />
+          )}
+        </svg>
+      </div>
+    );
+  })}
+  <p class="bar__axis">{axisLabel}</p>
+</div>

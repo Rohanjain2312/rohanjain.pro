@@ -28,11 +28,11 @@ ESLint (security and a11y plugins), Prettier, `astro check`, `tsc --noEmit`, Sty
 ### 9.3 Performance budgets (Lighthouse CI asserts, mobile)
 Performance 95+, Accessibility 100, Best Practices 100, SEO 100. LCP < 1.8 s, CLS < 0.05, TBT < 100 ms. Home page JS < 30 KB gzipped; CSS < 20 KB gzipped; fonts < 120 KB total; each figure image < 120 KB.
 
-### 9.4 Golden job postings (App/Data Engineer, Phase 3)
+### 9.4 Golden job postings (App/Data Engineer drafts, QA commits, Phase 3)
 Claude Code builds the golden test set itself; the client is not asked.
-1. Search the web for at least 18 recent, real US job postings: 4 AI Engineer, 4 ML Engineer, 4 Data Scientist, plus 6 negative controls (3 clearly unrelated, for example iOS or hardware, and 3 adjacent, for example data engineer, analytics engineer, backend engineer).
-2. For each, store in `tests/fixtures/postings/<id>.json`: source URL, retrieval date, role family, company anonymized (for example "fintech, NYC"), and a **paraphrased requirement list** in Claude Code's own words. Do not copy posting text verbatim.
-3. Before the engine exists, QA and the Reader Advocate assign an expected verdict to each posting using a written rubric (`docs/qa/fit-rubric.md`) based on the Evidence Ledger, and commit it. The App/Data Engineer does not set expected verdicts.
+1. Write at least 18 synthetic US job postings from scratch (ADR-0028): 4 AI Engineer, 4 ML Engineer, 4 Data Scientist, plus 6 negative controls (3 clearly unrelated, for example iOS or hardware, and 3 adjacent, for example data engineer, analytics engineer, backend engineer). Real postings are not read (R-509); write from the skills data, the Evidence Ledger and the on-site samples. Nothing from a real posting is stored: no text, paraphrase, URL, date or company name.
+2. App/Data hands the lists to QA, who commits each as `tests/fixtures/golden/<id>.json` (QA owns that path, R-112) and reviews each for realism and for any real names or URLs. Each file holds: id, role family, a made-up generic company descriptor (for example "fintech, NYC") and a `requirements` list of short strings in Claude Code's own words. Never use a path named `postings/` (R-501).
+3. Before the engine exists, QA and the Reader Advocate assign an expected verdict to each synthetic posting using a written rubric (`docs/qa/fit-rubric.md`) based on the Evidence Ledger, and commit it. The App/Data Engineer does not set expected verdicts.
 4. Golden tests assert: each expected verdict, the three on-site samples, and that every negative control returns "Not a strong fit".
 5. If the engine disagrees with the rubric, fix aliases or tiers first. Change thresholds only with an ADR.
 6. **Alias audit (QA):** for each alias, count how many negative-control postings it matches. Any alias that matches more than a third of them is too broad and must be removed or made more specific. Known suspects in the seed list: "production", "deploy", "tools", "search", "analysis", "analytics", "metrics", "agents", "documents", "pipelines", "evaluation", "stakeholders", "containers".
@@ -52,7 +52,7 @@ Claude Code builds the golden test set itself; the client is not asked.
   9. Rendering any generated string (including HTML and script payloads) adds no elements to the page (component test).
 
 ### 9.6 Seeded-defect audits
-Procedure and categories: skill `seeded-defect-audit` (R-704).
+Procedure and categories: skill `seeded-defect-audit`. Audit 1 ran at Phase 1; no later audits (R-704 retired, ADR-0026).
 
 ### 9.7 External validation
 5-second and first-click test, recruiter fit ratings, and reply-rate tracking: skill `external-validation`. Pass criteria are success criterion 9 in `docs/spec/01-product.md`.

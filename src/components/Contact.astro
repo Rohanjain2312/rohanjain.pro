@@ -1,0 +1,33 @@
+---
+import ExternalLink from './ExternalLink.astro';
+import { formatPhone, splitEmail, telHref } from './lib.ts';
+import { profileLinks, type Profiles } from './profiles.ts';
+
+interface Props {
+  email: string;
+  phone: string;
+  profiles: Profiles;
+  copy: { heading: string; line: string; emailSubject: string };
+}
+
+const { email, phone, profiles, copy } = Astro.props;
+const [local, domain] = splitEmail(email);
+const mailto = `mailto:${email}?subject=${encodeURIComponent(copy.emailSubject)}`;
+---
+
+<section class="contact" id="contact" aria-labelledby="contact-heading">
+  <h2 id="contact-heading">{copy.heading}</h2>
+  <p class="contact__line">{copy.line}</p>
+  <div class="contact__row">
+    <!-- prettier-ignore -->
+    <a class="btn btn--inverted" href={mailto}>{local}<wbr />{domain}</a>
+    <!-- [html-validate-disable-next tel-non-breaking -- the number is kept on one line with white-space: nowrap; non-breaking characters would copy into dialers as odd characters and the hyphen is not in the font subset] -->
+    <!-- prettier-ignore -->
+    <a class="text-link text-link--nowrap" href={telHref(phone)}>{formatPhone(phone)}</a>
+  </div>
+  <div class="contact__row">
+    {profileLinks(profiles).map((l) => (
+      <ExternalLink class="text-link" href={l.url} label={l.label} />
+    ))}
+  </div>
+</section>

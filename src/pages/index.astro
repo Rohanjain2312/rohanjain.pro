@@ -1,10 +1,94 @@
 ---
 import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import Hero from '../components/Hero.astro';
+import Production from '../components/Production.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import MoreProjects from '../components/MoreProjects.astro';
+import Figures from '../components/Figures.astro';
+import Background from '../components/Background.astro';
+import Contact from '../components/Contact.astro';
+import PrintFolds from '../components/PrintFolds.astro';
+import DemoDialog from '../components/DemoDialog.astro';
+import { loadStatusFile } from '../components/status-file.ts';
+import { buildTimeline, loadSite } from '../components/data.ts';
+import copy from '../components/copy/home.json';
+
+const data = await loadSite();
+const { site, resume, claims } = data;
+// Plain-words clauses for jargon (copy/home.json "glosses"), appended to card lines and figure captions.
+const withGloss = (text: string, gloss?: string): string => (gloss ? `${text} ${gloss}` : text);
+const projects = data.projects.map((p) => ({
+  ...p,
+  oneLiner: withGloss(p.oneLiner, (copy.glosses.projects as Record<string, string>)[p.id]),
+}));
+const figures = data.figures.map((f) => ({
+  ...f,
+  caption: withGloss(f.caption, (copy.glosses.figures as Record<string, string>)[f.id]),
+}));
+const featured = projects.filter((p) => p.featured);
+const more = projects.filter((p) => !p.featured);
+const timeline = buildTimeline(data, copy.figures.plain);
+const status = loadStatusFile();
+const downSince = (url?: string): string | undefined =>
+  url ? status?.demos.find((d) => d.url === url && !d.up)?.checkedAt : undefined;
+const demoList = projects.flatMap((p) => (p.demo ? [{ url: p.demo.url, name: p.name }] : []));
+
+// Education lines come from resume.json; each takes its dates from the claim named here.
+const educationClaims = ['edu-umd', 'edu-pes'];
+const education = resume.education.map((e, i) => ({
+  school: e.school.split(',')[0] ?? e.school,
+  degree: e.degree,
+  claimId: educationClaims[i] ?? '',
+}));
 ---
 
-<Base title="Rohan Jain" description="Portfolio of Rohan Jain.">
-  <main class="page">
-    <h1>Rohan Jain</h1>
-    <p class="label">Page in progress</p>
+<Base title={copy.meta.title} description={copy.meta.description}>
+  <SiteHeader name={site.name} nav={copy.nav} home />
+  <main class="main">
+    <Hero
+      name={site.name}
+      location={site.location}
+      availability={site.availability}
+      email={site.email}
+      claims={claims}
+      copy={copy.hero}
+    />
+    <Production claims={claims} projects={projects} copy={copy.production} />
+    <section class="work" id="work" aria-labelledby="work-heading">
+      <p class="meta">{copy.work.label}</p>
+      <h2 id="work-heading">{copy.work.heading}</h2>
+      <div class="cards">
+        {featured.map((p) => (
+          <ProjectCard
+            project={p}
+            demoLabel={copy.work.demoLink}
+            downSince={downSince(p.demo?.url)}
+            downText={copy.footer.demoDown}
+          />
+        ))}
+      </div>
+      <div>
+        <MoreProjects title={copy.work.more} projects={more} />
+        <Figures
+          title={copy.figures.title}
+          intro={copy.figures.intro}
+          timelineLabel={copy.figures.timelineLabel}
+          timeline={timeline}
+          figures={figures}
+        />
+      </div>
+    </section>
+    <Background
+      claims={claims}
+      title={copy.background.title}
+      education={education}
+      publication={copy.background.publication}
+    />
+    <Contact email={site.email} phone={site.phone} profiles={site.profiles} copy={copy.contact} />
   </main>
+  <SiteFooter profiles={site.profiles} copy={copy.footer} demos={demoList} />
+  <DemoDialog copy={copy.demo} />
+  <PrintFolds />
 </Base>

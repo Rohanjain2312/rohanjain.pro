@@ -2,14 +2,18 @@
 import '../styles/tokens.css';
 import '../styles/fonts.css';
 import '../styles/base.css';
+import '../styles/components.css';
+import '../styles/demo.css';
 import '../styles/print.css';
 
 interface Props {
   title: string;
   description: string;
+  /** Adds robots noindex. Used by the 404 page. */
+  noindex?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, noindex = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -19,6 +23,9 @@ const { title, description } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <!-- Placeholder until the Design Lead ships public/favicon.svg (design spec 13.2). Stops the /favicon.ico 404 in the console. -->
+    <link rel="icon" href="data:," />
+    {noindex && <meta name="robots" content="noindex" />}
     <link
       rel="preload"
       href="/fonts/newsreader-roman.woff2"

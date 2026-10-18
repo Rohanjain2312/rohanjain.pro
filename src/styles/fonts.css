@@ -3,8 +3,10 @@
   Source: Fontsource packages (OFL). Newsreader roman is the variable opsz font instanced to
   wght 400 to 600 and opsz 14 to 72 (fontTools instancer, then pyftsubset). Other files are the
   Fontsource Latin 400 italic and Plex Mono 400/500/600, re-subset. Subset: U+0020-007E, U+00A0,
-  U+00A9, U+00B7, U+00D7, U+00E9, U+2013-2014, U+2018-201D, U+2022, U+2026, U+2192, U+2197,
-  U+25CF, U+25CB. Total 93472 bytes (budget 120 KB).
+  U+00A9, U+00B7, U+00D7, U+00E9, U+2013-2014, U+2018-201D, U+2022, U+2026.
+  The arrows used on the site (U+2190 left, U+2192 right, U+2197 up-right) and the dots U+25CF, U+25CB are
+  not in the files (checked against each cmap); they render from the system font (issue #126, Design Lead
+  to accept in docs/design/spec.md). Total 93472 bytes (budget 120 KB).
   The fallback faces are metric-matched to the web fonts so the swap does not shift layout.
   Fallback values were measured from advance widths of English text and the hhea metrics:
   Georgia width 0.4508 em vs Newsreader 0.4136 em; Courier New width 0.6000 em vs Plex Mono 0.6000 em.

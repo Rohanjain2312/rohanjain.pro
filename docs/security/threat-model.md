@@ -73,7 +73,7 @@ Data flows:
 - DF1 Agent reads an issue or comment, edits files, commits, pushes a branch, opens a PR (B2, B1, B3).
 - DF2 `npm ci` or `npm install` pulls packages and runs the build locally and in CI (B4, B5).
 - DF3 PR runs CI; Supervisor squash-merges when gates pass; `release.yml` tags; the private repo's workflow deploys to Pages (B3, B5, B9, ADR-0016).
-- DF4 `status.yml` fetches demo URLs and public repo dates daily, writes `public/status.json`, opens an automated PR (B5).
+- DF4 `status.yml` fetches demo URLs and public repo dates daily, writes `status.json` to the `status-data` branch (ADR-0027); no PR (B5).
 - DF5 Visitor loads pages, PDFs and fonts from the same origin; clicks to load a Hugging Face demo (B6).
 - DF6 Visitor pastes JD text; the engine scores it in memory and renders text nodes (B7).
 - DF7 Client runs `npm run for --jd ./posting.txt`; the result JSON is written to `APPLICATIONS_DIR` in the private repo, the posting is discarded; the private repo builds, deploys and cleans up (B8, ADR-0016).
@@ -92,7 +92,7 @@ Data flows:
 | 1.6 | I | Agent reads `.env`, keys or postings | Settings deny for Read; hook deny for listed shell verbs and Read/Grep/Glob | R-509 settings, guard-read, guard-bash | active; interpreters, `git show`, globs and `~/.ssh` open #47 (Low); keychain reads open #63 (Low) |
 | 1.7 | E | Agent pipes a download into a shell or deletes outside the repo | Hook deny | R-510 guard-bash | active |
 | 1.8 | E | Agent prints the gh token or writes to another client repo | Input-side controls first (2.1); tripwires deny token printing, credential helpers, other-repo writes and remote overrides | guard-bash, ADR-0018 | closed #45, #60, #61 (PR #53); `gh alias`, keychain and clone-dir targeting open #63 (Low); interpreter indirection accepted (ADR-0018, RR-11) |
-| 1.9 | T | Agent edits hooks or settings to weaken them, or a hook fails open | `.claude/**` is Supervisor-owned; changes need Security review; probe test after changes; hooks load from the main checkout, so worktree edits take effect only after merge | R-112, R-209 labeler, R-807 | active; `..` paths open #51 (Low); fail-open on hang open #54 (Low); labeler phase-1 (#42) |
+| 1.9 | T | Agent edits hooks or settings to weaken them, or a hook fails open | `.claude/**` is Supervisor-owned; changes get the combined QA review (Security only for workflows and headers, ADR-0026); no probe test; hooks load from the main checkout, so worktree edits take effect only after merge | R-112, R-209 labeler | active; `..` paths open #51 (Low); fail-open on hang open #54 (Low); labeler phase-1 (#42) |
 | 1.10 | R | Unclear which agent did what | `Agent-Role` trailer, branch prefix, review fields, local hook log | R-103, R-106, R-202 | active; trailer is self-declared (RR-1) |
 | 1.11 | D | Runaway agent loops or spawns | Spawn depth 1, `maxTurns` per agent | R-115 settings | active |
 
@@ -112,7 +112,7 @@ Data flows:
 | # | S/T/R/I/D/E | Threat | Mitigation | Enforced by | Status |
 |---|---|---|---|---|---|
 | 3.1 | E | Account takeover of `Rohanjain2312` | Passkey or 2FA, recovery codes offline | `docs/needs-client.md` | client item open |
-| 3.2 | S | One account means GitHub cannot tell roles apart; a role can self-approve | Labels plus comments with role, head SHA and agent ID; hook checks; QA review audit | R-201, R-202, R-203, R-206, R-208 | active / phase-1; accepted (RR-2) |
+| 3.2 | S | One account means GitHub cannot tell roles apart; a role can self-approve | Labels plus comments with role, head SHA and agent ID; hook checks | R-201, R-202, R-203, R-208 | active / phase-1; accepted (RR-2) |
 | 3.3 | T | Ruleset edited or disabled through the API | Hook denies non-Supervisor ruleset writes and all deletes | R-111 guard-bash | active; Supervisor or interpreter indirection can still change it (RR-2, RR-11) |
 | 3.4 | T, R | Unsigned commits reach `main` | Ruleset `required_signatures` is on again (PR #68); squash merges are signed by GitHub; root commit `4d29441` is the one allowed exception | R-107, ADR-0013, ADR-0014, skill `phase-gate` | active (closed #38, closed #33 via PR #68); the `write:ssh_signing_key` scope is gone from the shared token (verified 2026-10-16), so no agent can add a second signing key (RR-8 closed) |
 | 3.5 | I | Secrets or JD text committed | `.gitignore`, hook on `git add`, gitleaks, push protection (enabled, verified) | R-501, R-508 | active; gitleaks phase-1 (#12) |
@@ -137,7 +137,7 @@ Data flows:
 |---|---|---|---|---|---|
 | 5.1 | E | Workflow token over-scoped | Default workflow permissions `read`; Actions cannot approve PRs (both verified); write per job only | repo settings; R-504 | active; check phase-1 |
 | 5.2 | E, I | Fork PR runs workflows or reaches secrets | Fork PR approval `all_external_contributors` (verified); never `pull_request_target` with PR code; no secret in this repo can read application data | repo settings; ADR-0016; `deploy.yml` review | active; phase-7 |
-| 5.3 | T | `status.yml` bot PR bypasses role reviews; fetched data shapes site content | `status.json` holds only booleans and dates computed by the workflow, never response bodies; schema-validated; bot PR still needs all required checks | Security review of `status.yml` | phase-1 or 2 (Info, see 9.4) |
+| 5.3 | T | `status.yml` writes data without role review; fetched data shapes site content | `status.json` holds only booleans and dates computed by the workflow, never response bodies; schema-validated; the workflow writes only the `status-data` branch, never `main` (ADR-0027), and the build treats the file as optional data | Security review of `status.yml` | phase-1 or 2 (Info, see 9.4) |
 | 5.4 | E | Cloudflare token used by a non-release job | Token held in the private repo's `production` environment (ADR-0016); scoped to Pages edit on one account; 90-day rotation | §8.5, ADR-0016, `docs/runbooks/rotate-secrets.md` | phase-7 |
 | 5.5 | I | Secret printed in logs, or application data in public logs and artifacts | No secrets until Phase 7; GitHub masks secrets; gitleaks in CI; this repo's builds use fixtures only | R-508, ADR-0016 | active (no secrets); phase-1 |
 | 5.6 | T | Code scanning gaps | CodeQL on PRs and weekly; Scorecard weekly, target 8+ | `codeql.yml`, `scorecard.yml` | phase-1 (#15) |
@@ -234,7 +234,7 @@ Rating rule (ADR-0018): new bypass forms are Low unless they bypass an input-sid
 ### 6.3 Shared GitHub account
 
 All seven roles and the Supervisor act as `Rohanjain2312`. Consequences:
-- GitHub cannot tell roles apart. Approvals are labels plus formatted comments, checked by review-gate (R-201, R-202, R-208) and audited after the fact (R-206). A steered agent could still forge them through interpreter indirection. Accepted (RR-2, RR-11).
+- GitHub cannot tell roles apart. Approvals are labels plus formatted comments, checked by review-gate (R-201, R-202, R-208) (no after-the-fact review audit: R-206 retired, ADR-0026). A steered agent could still forge them through interpreter indirection. Accepted (RR-2, RR-11).
 - The account is repo admin. "No bypass" in the ruleset means no bypass actors; an admin token can still edit the ruleset. The hook blocks this for non-Supervisor roles only (3.3).
 - The token reaches every client repo. PR #53 adds tripwires for token printing and other-repo writes. The optional repo-scoped token in `docs/needs-client.md` would remove the reach; until the client chooses it, the risk is accepted (ADR-0018, RR-11).
 - Outsiders cannot comment while the interaction limit holds, and cannot set labels at all, so labels are the stronger half of an approval. review-gate must count only OWNER-authored comments (3.7).
@@ -259,7 +259,7 @@ No Medium or higher finding from this threat model is open. Medium findings bloc
 | ID | Risk | Why it remains | Owner | Review |
 |---|---|---|---|---|
 | RR-1 | Attribution rests on self-declared `Agent-Role` trailers and a local, git-ignored hook log | One account; no per-role identity on GitHub | supervisor | each phase gate |
-| RR-2 | A steered agent with the shared token can forge approvals or edit the ruleset outside the hooked commands | GitHub cannot tell roles apart; hooks are tripwires (ADR-0018) | supervisor (QA audits via R-206) | each phase gate |
+| RR-2 | A steered agent with the shared token can forge approvals or edit the ruleset outside the hooked commands | GitHub cannot tell roles apart; hooks are tripwires (ADR-0018) | supervisor | each phase gate |
 | RR-3 | All reviewers are Claude models and may share blind spots; no opus is used, so Security reviews of hooks have no model diversity (ADR-0022) | Model family is fixed and tiers no longer differ; offset by context separation, machine checks, seeded-defect audits and external validation | supervisor | each phase gate |
 | RR-4 | A compromised dependency that passes audit and OSV can still alter the build | No scanner catches every malicious release; cooldown and `ignore-scripts` reduce, not remove, the risk | security-engineer | monthly review |
 | RR-5 | Phone number exposed to scrapers | Client decision for reachability; mitigated by keeping it out of structured data | client (accepted), security-engineer monitors | Phase 6 |
@@ -270,7 +270,7 @@ No Medium or higher finding from this threat model is open. Medium findings bloc
 | RR-10 | Agents run in the client's user account with network access | Claude Code sandbox mode with a network allowlist not yet evaluated | supervisor | Phase 1 retro (ADR-0018) |
 | RR-12 | Dev-only `braces` advisory GHSA-vfj7-8cjw-p6xm is waived in CI (ADR-0021) | No fixed version; dev toolchain only, repo-controlled globs | security-engineer | 2027-01-15 or when a fix ships |
 | RR-13 | The lockfile holds packages under 7 days old until 2026-10-22 (ADR-0023) | Re-lock churn for a gap that closes by itself; signatures, `ignore-scripts=true` and 0 audit findings (RR-4) | security-engineer | age check on or after 2026-10-22 |
-| RR-14 | Bounded reviews, docs-only haiku re-checks, context audit at Phases 3 and 6 only, tripwire gaps open to Phase 8 (ADR-0024) | Speed, requested by the client; a Medium or higher finding still blocks anywhere (R-511) | supervisor | each phase gate; Phase 6 assessment |
+| RR-14 | Bounded reviews, docs-only haiku re-checks, no context audit (ADR-0026), tripwire gaps open to Phase 8 (ADR-0024) | Speed, requested by the client; a Medium or higher finding still blocks anywhere (R-511) | supervisor | each phase gate; Phase 6 assessment |
 | RR-11 | A steered agent can reach the all-repo gh token through interpreter indirection (`node -e`, `python3 -c`) | A command denylist cannot be complete; accepted by ADR-0018. Mitigation available to the client: the optional repo-scoped fine-grained token in `docs/needs-client.md` (step corrections tracked in #63) | supervisor; client informed via `docs/needs-client.md` | Phase 1 retro (sandbox decision), each phase gate |
 
 ## 9. Requirements handed to other issues
@@ -280,6 +280,6 @@ These are not findings; they are inputs the owning issue must meet. Security che
 1. #18 (headers and CSP): add `require-trusted-types-for 'script'` to the CSP, or record why not.
 2. #14 (PR process checks): review-gate counts only comments with `author_association` OWNER; pr-hygiene fails PRs that touch paths not owned by the branch's role (#47); labeler routes `.claude/**`, workflows, `.npmrc`, `public/_headers` and dependency files to Security (#42).
 3. #15 (security workflows): `sha_pinning_required` is on (verified 2026-10-15); restrict `allowed_actions` (now `all`) to GitHub-owned and selected actions if Scorecard allows.
-4. `status.yml`: write only booleans, status codes and dates, never response bodies; validate `status.json` against a schema; the bot PR must pass all required checks (a PR opened with `GITHUB_TOKEN` does not trigger `pull_request` workflows, so use a design that does).
+4. `status.yml`: write only booleans, status codes and dates, never response bodies; validate `status.json` against a schema; write only to the `status-data` branch with `contents: write` on that one job, never to `main`, and open no PR (ADR-0027).
 5. Deploy workflows (Phase 7): never run PR code with the Cloudflare token; no `pull_request_target`; the token lives only in the private repo (ADR-0016).
 6. Secret scanning for non-provider patterns is off (verified 2026-10-15); turn it on when #12 lands.

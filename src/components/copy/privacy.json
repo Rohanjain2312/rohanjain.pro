@@ -1,0 +1,40 @@
+{
+  "meta": {
+    "title": "Privacy · Rohan Jain",
+    "description": "What this site collects and what it does not."
+  },
+  "label": "privacy",
+  "heading": "What this site collects",
+  "updated": "2026-10-17",
+  "updatedLabel": "last updated",
+  "intro": "This page lists what the site collects and what it does not. The site itself sets no cookies and stores nothing about you.",
+  "groups": [
+    {
+      "label": "collected",
+      "items": [
+        {
+          "term": "Request logs at the host",
+          "text": "The host that serves the pages processes standard request logs, which can include your IP address. The site does not read them."
+        },
+        {
+          "term": "Live demos",
+          "text": "A demo loads from Hugging Face only after you click Load live demo. Hugging Face then handles that request under its own terms."
+        }
+      ]
+    },
+    {
+      "label": "not collected",
+      "items": [
+        { "term": "Cookies", "text": "The site sets none." },
+        {
+          "term": "Forms and accounts",
+          "text": "The site has no forms or accounts and collects nothing you type."
+        },
+        {
+          "term": "Tracking",
+          "text": "There are no advertising or marketing scripts and no third-party trackers on the site."
+        }
+      ]
+    }
+  ]
+}

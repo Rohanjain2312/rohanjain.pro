@@ -15,6 +15,12 @@ describe('validateContent', () => {
     expect(validateContent({})).toEqual([]);
   });
 
+  it('accepts the Goldman Sachs and IEEE evidence IDs', () => {
+    const d = clone();
+    d.skills[0].evidence = ['goldman', 'ieee'];
+    expect(validateContent(d)).toEqual([]);
+  });
+
   const defects: [string, (d: any) => void, string, string][] = [
     ['schema error', (d) => (d.claims[0].verifiedOn = 'bad'), 'claims.json', '0.verifiedOn'],
     ['duplicate claim id', (d) => d.claims.push(d.claims[0]), 'claims.json', '2.id'],

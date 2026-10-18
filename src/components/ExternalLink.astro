@@ -1,0 +1,14 @@
+---
+interface Props {
+  href: string;
+  label: string;
+  /** Read by screen readers after the label, so repeated labels such as "code" stay distinct. */
+  context?: string;
+  class?: string;
+}
+
+const { href, label, context, class: className } = Astro.props;
+---
+
+<!-- prettier-ignore -->
+<a class={className} href={href}>{label}{context && <span class="sr-only"> for {context}</span>}<span aria-hidden="true"> ↗</span></a>
