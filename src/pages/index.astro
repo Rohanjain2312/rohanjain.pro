@@ -10,6 +10,8 @@ import Figures from '../components/Figures.astro';
 import Background from '../components/Background.astro';
 import Contact from '../components/Contact.astro';
 import PrintFolds from '../components/PrintFolds.astro';
+import DemoDialog from '../components/DemoDialog.astro';
+import { loadStatusFile } from '../components/status-file.ts';
 import { buildTimeline, loadSite } from '../components/data.ts';
 import copy from '../components/copy/home.json';
 
@@ -18,6 +20,10 @@ const { site, resume, projects, figures, claims } = data;
 const featured = projects.filter((p) => p.featured);
 const more = projects.filter((p) => !p.featured);
 const timeline = buildTimeline(data, copy.figures.plain);
+const status = loadStatusFile();
+const downSince = (url?: string): string | undefined =>
+  url ? status?.demos.find((d) => d.url === url && !d.up)?.checkedAt : undefined;
+const demoList = projects.flatMap((p) => (p.demo ? [{ url: p.demo.url, name: p.name }] : []));
 
 // Education lines come from resume.json; each takes its dates from the claim named here.
 const educationClaims = ['edu-umd', 'edu-pes'];
@@ -45,7 +51,12 @@ const education = resume.education.map((e, i) => ({
       <h2 id="work-heading">{copy.work.heading}</h2>
       <div class="cards">
         {featured.map((p) => (
-          <ProjectCard project={p} demoLabel={copy.work.demoLink} />
+          <ProjectCard
+            project={p}
+            demoLabel={copy.work.demoLink}
+            downSince={downSince(p.demo?.url)}
+            downText={copy.footer.demoDown}
+          />
         ))}
       </div>
       <div>
@@ -67,6 +78,7 @@ const education = resume.education.map((e, i) => ({
     />
     <Contact email={site.email} phone={site.phone} profiles={site.profiles} copy={copy.contact} />
   </main>
-  <SiteFooter profiles={site.profiles} privacyLabel={copy.footer.privacy} />
+  <SiteFooter profiles={site.profiles} copy={copy.footer} demos={demoList} />
+  <DemoDialog copy={copy.demo} />
   <PrintFolds />
 </Base>

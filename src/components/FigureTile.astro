@@ -20,6 +20,7 @@ const { figure } = Astro.props;
       <Image
         src={figure.image}
         alt={figure.alt}
+        width={800}
         widths={[400, 800]}
         sizes="(min-width: 48em) 25rem, 90vw"
         format="webp"

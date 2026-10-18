@@ -20,7 +20,7 @@ const steps = [
   ['ci gate self-tests (R-504, R-511, R-804)', 'npm', ['run', 'gates:test']],
   ['action pins (R-504)', 'node', ['.github/scripts/ci-checks.mjs', 'pins']],
   ['no tracked applications (R-501)', 'node', ['.github/scripts/ci-checks.mjs', 'applications']],
-  ['hook tests (R-807)', 'node', ['.claude/hooks/test-hooks.mjs']],
+  ['hooks self-test (R-101, R-105, R-106, R-501)', 'node', ['.claude/hooks/test-hooks.mjs']],
   ['copy lint self-test', 'node', ['--test', 'tests/fixtures/copy/lint-copy.test.mjs']],
   ['content validation', 'npm', ['run', 'validate:content']],
   ['type check (N-08)', 'npm', ['run', 'check']],
@@ -30,6 +30,10 @@ const steps = [
   ['copy lint, build output', 'npm', ['run', 'lint:copy', '--', '--require-dist']],
   ['html-validate', 'node', ['.github/scripts/html-validate.mjs']],
   ['e2e tests', 'npm', ['run', 'test:e2e']],
+  ['frontend suite: axe, layout, screenshots (R-605, R-606)', 'npm', ['run', 'test:frontend']],
+  // Captures are re-encoded on every run and differ by a few bytes. They are review aids, not asserted.
+  // Restore the tracked files so the clean-tree check below holds. Commit new captures by hand when the UI changes.
+  ['restore tracked screenshots', 'git', ['checkout', '--', 'tests/visual/screenshots']],
 ];
 
 function run(cmd, args) {
