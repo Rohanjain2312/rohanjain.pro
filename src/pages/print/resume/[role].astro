@@ -1,0 +1,23 @@
+---
+// Print route for the résumé PDFs (design spec 12.1, ADR-0010, architecture 5.8). scripts/resume-pdf.ts prints
+// each of these pages with Playwright. Noindex here and in public/_headers; the site has no sitemap that lists it.
+import Base from '../../../layouts/Base.astro';
+import ResumeSheet from '../../../components/ResumeSheet.astro';
+import { loadRoles, loadSite } from '../../../components/data.ts';
+import { buildResumeView } from '../../../components/resume-view.ts';
+import copy from '../../../components/copy/home.json';
+
+export async function getStaticPaths() {
+  const { resume, projects } = await loadSite();
+  const view = buildResumeView(resume, projects);
+  return (await loadRoles()).map((role) => ({ params: { role: role.id }, props: { role, view } }));
+}
+
+const { role, view } = Astro.props;
+---
+
+<Base title={`${view.name}, ${role.title}`} description={role.summary} noindex>
+  <main class="print-resume">
+    <ResumeSheet view={view} summary={role.summary} level={1} headings={copy.resume.headings} />
+  </main>
+</Base>

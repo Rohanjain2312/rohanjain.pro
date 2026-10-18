@@ -6,6 +6,9 @@ interface Props {
   location: string;
   availability: string;
   email: string;
+  /** Link to the default résumé PDF; with JavaScript the dialog script turns it into a button (F-04). */
+  resumeHref: string;
+  resumeLabel: string;
   claims: ClaimMap;
   copy: {
     role: string;
@@ -17,7 +20,7 @@ interface Props {
   };
 }
 
-const { name, location, availability, email, claims, copy } = Astro.props;
+const { name, location, availability, email, resumeHref, resumeLabel, claims, copy } = Astro.props;
 const eyebrow = `${copy.role} · ${location} · ${lowerFirst(availability)}`;
 const mailto = `mailto:${email}?subject=${encodeURIComponent(copy.emailSubject)}`;
 ---
@@ -28,6 +31,9 @@ const mailto = `mailto:${email}?subject=${encodeURIComponent(copy.emailSubject)}
     <h1>{name}</h1>
     <p class="lede">{copy.lede}</p>
     <div class="actions">
+      <a class="btn" href={resumeHref} data-resume-open>
+        {resumeLabel}
+      </a>
       <a class="text-link" href={mailto}>
         {email}
       </a>

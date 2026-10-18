@@ -14,9 +14,11 @@ import FitBrief from '../components/FitBrief.astro';
 import PrintFolds from '../components/PrintFolds.astro';
 import { join } from 'node:path';
 import { getCollection } from 'astro:content';
+import ResumeDialog from '../components/ResumeDialog.astro';
+import { buildResumeView } from '../components/resume-view.ts';
 import DemoDialog from '../components/DemoDialog.astro';
 import { loadStatusFile } from '../components/status-file.ts';
-import { buildTimeline, loadSite } from '../components/data.ts';
+import { buildTimeline, loadRoles, loadSite } from '../components/data.ts';
 import { loadEvidence } from '../lib/content/load.ts';
 import { fill, formatPhone, lowerFirst } from '../components/lib.ts';
 import { briefTitle } from '../components/fit-view.ts';
@@ -46,14 +48,18 @@ const demoList = projects.flatMap((p) => (p.demo ? [{ url: p.demo.url, name: p.n
 // Fit check: evidence items and role summaries are curated content, built here and handed to the island.
 const fitCopy = copy.fit as FitCopy;
 const evidence = loadEvidence(join(process.cwd(), 'src', 'content'));
-const roleList = (await getCollection('roles')).map(
-  (e) => e.data as { id: string; summary: string },
-);
+const roleList = await loadRoles();
 const roleSummary = (id: string) => {
   const r = roleList.find((x) => x.id === id);
   if (!r) throw new Error(`roles.json has no "${id}".`);
   return r.summary;
 };
+// Résumé dialog and its no-JavaScript links: the ML Engineer PDF is the default (F-04).
+const resumeView = buildResumeView(resume, projects);
+const defaultRole = roleList.find((r) => r.id === 'ml') ?? roleList[0];
+if (!defaultRole) throw new Error('roles.json is empty.');
+const resumeHref = `/resume/${defaultRole.pdfFile}`;
+const pdfLinks = roleList.map((r) => ({ label: r.title, href: `/resume/${r.pdfFile}` }));
 const briefContact = [
   site.email,
   formatPhone(site.phone),
@@ -78,6 +84,8 @@ const education = resume.education.map((e, i) => ({
       location={site.location}
       availability={site.availability}
       email={site.email}
+      resumeHref={resumeHref}
+      resumeLabel={copy.resume.open}
       claims={claims}
       copy={copy.hero}
     />
@@ -118,10 +126,20 @@ const education = resume.education.map((e, i) => ({
       education={education}
       publication={copy.background.publication}
     />
-    <Contact email={site.email} phone={site.phone} profiles={site.profiles} copy={copy.contact} />
+    <Contact
+      email={site.email}
+      phone={site.phone}
+      profiles={site.profiles}
+      resumeHref={resumeHref}
+      resumeLabel={copy.resume.open}
+      pdfLinks={pdfLinks}
+      pdfListLabel={copy.resume.pdfList}
+      copy={copy.contact}
+    />
   </main>
   <SiteFooter profiles={site.profiles} copy={copy.footer} demos={demoList} />
   <DemoDialog copy={copy.demo} />
+  <ResumeDialog view={resumeView} roles={roleList} initial={defaultRole.id} copy={copy.resume} />
   <FitBrief
     copy={fitCopy.brief}
     title={briefTitle(site.name, '', '', fitCopy.brief)}

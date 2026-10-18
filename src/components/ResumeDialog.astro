@@ -1,0 +1,84 @@
+---
+// Résumé dialog (design spec 7.13, F-04). Three role tabs (ARIA tabs pattern) over one sheet; only the summary
+// changes. Without JavaScript the dialog never opens: the "View résumé" controls are plain links to the PDFs.
+import ResumeSheet from './ResumeSheet.astro';
+import type { ResumeView, RoleEntry } from './resume-view.ts';
+
+interface Props {
+  view: ResumeView;
+  roles: RoleEntry[];
+  /** Id of the role shown first (ML Engineer, F-04). */
+  initial: string;
+  copy: {
+    dialogLabel: string;
+    tabsLabel: string;
+    download: string;
+    close: string;
+    headings: {
+      education: string;
+      skills: string;
+      experience: string;
+      projects: string;
+      publication: string;
+    };
+  };
+}
+
+const { view, roles, initial, copy } = Astro.props;
+const current = roles.find((r) => r.id === initial) ?? roles[0];
+if (!current) throw new Error('roles.json is empty.');
+---
+
+<dialog class="sheet-dialog resume-dialog" aria-label={copy.dialogLabel} data-resume-dialog>
+  <div class="sheet-dialog__column">
+    <div class="sheet-dialog__toolbar sheet-dialog__toolbar--split noprint">
+      <div role="tablist" aria-label={copy.tabsLabel} class="resume-tabs">
+        {roles.map((r) => (
+          <button
+            type="button"
+            role="tab"
+            class="resume-tab"
+            id={`resume-tab-${r.id}`}
+            aria-controls="resume-panel"
+            aria-selected={r.id === current.id ? 'true' : 'false'}
+            tabindex={r.id === current.id ? 0 : -1}
+            data-role={r.id}
+            data-summary={r.summary}
+          >
+            {r.title}
+          </button>
+        ))}
+      </div>
+      <div class="resume-actions">
+        {roles.map((r) => (
+          <a
+            class="btn btn--inverted"
+            href={`/resume/${r.pdfFile}`}
+            download={r.pdfFile}
+            hidden={r.id !== current.id}
+            data-resume-pdf={r.id}
+          >
+            {copy.download}
+            <span class="sr-only"> ({r.title})</span>
+          </a>
+        ))}
+        <button type="button" class="btn btn--outlined" data-resume-close>
+          {copy.close}
+        </button>
+      </div>
+    </div>
+    <div role="tabpanel" id="resume-panel" aria-labelledby={`resume-tab-${current.id}`}>
+      <ResumeSheet
+        view={view}
+        summary={current.summary}
+        level={2}
+        headings={copy.headings}
+        summaryHook
+      />
+    </div>
+  </div>
+</dialog>
+
+<script>
+  import './resume.ts';
+</script>

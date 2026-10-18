@@ -202,6 +202,21 @@
     "line": "If it's a fit, I'll tell you why. If not, I'll tell you that too.",
     "emailSubject": "Role for Rohan Jain"
   },
+  "resume": {
+    "open": "View résumé",
+    "dialogLabel": "Résumé",
+    "tabsLabel": "Résumé version",
+    "download": "Download PDF",
+    "close": "Close",
+    "pdfList": "Résumé PDFs",
+    "headings": {
+      "education": "Education",
+      "skills": "Skills",
+      "experience": "Work experience",
+      "projects": "Projects",
+      "publication": "Publication"
+    }
+  },
   "footer": {
     "privacy": "Privacy",
     "updated": "last updated",

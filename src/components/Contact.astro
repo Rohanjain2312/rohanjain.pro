@@ -7,10 +7,16 @@ interface Props {
   email: string;
   phone: string;
   profiles: Profiles;
+  resumeHref: string;
+  resumeLabel: string;
+  /** Plain links to each PDF, shown only when JavaScript is off (F-04). */
+  pdfLinks: { label: string; href: string }[];
+  pdfListLabel: string;
   copy: { heading: string; line: string; emailSubject: string };
 }
 
-const { email, phone, profiles, copy } = Astro.props;
+const { email, phone, profiles, resumeHref, resumeLabel, pdfLinks, pdfListLabel, copy } =
+  Astro.props;
 const [local, domain] = splitEmail(email);
 const mailto = `mailto:${email}?subject=${encodeURIComponent(copy.emailSubject)}`;
 ---
@@ -24,7 +30,20 @@ const mailto = `mailto:${email}?subject=${encodeURIComponent(copy.emailSubject)}
     <!-- [html-validate-disable-next tel-non-breaking -- the number is kept on one line with white-space: nowrap; non-breaking characters would copy into dialers as odd characters and the hyphen is not in the font subset] -->
     <!-- prettier-ignore -->
     <a class="text-link text-link--nowrap" href={telHref(phone)}>{formatPhone(phone)}</a>
+    <a class="text-link" href={resumeHref} data-resume-open>
+      {resumeLabel}
+    </a>
   </div>
+  <noscript>
+    <p class="contact__row">
+      <span>{pdfListLabel}:</span>
+      {pdfLinks.map((l) => (
+        <a class="text-link" href={l.href}>
+          {l.label}
+        </a>
+      ))}
+    </p>
+  </noscript>
   <div class="contact__row">
     {profileLinks(profiles).map((l) => (
       <ExternalLink class="text-link" href={l.url} label={l.label} />

@@ -1,0 +1,123 @@
+---
+// The résumé sheet (design spec 7.13 and 12.1). The dialog and the print route both render this, so the PDF
+// is the dialog's sheet printed. Only the summary differs between roles.
+import type { ResumeView } from './resume-view.ts';
+
+interface Props {
+  view: ResumeView;
+  summary: string;
+  /** Heading level of the name: 1 on the print route, 2 in the dialog. Section heads sit one level below. */
+  level: 1 | 2;
+  headings: {
+    education: string;
+    skills: string;
+    experience: string;
+    projects: string;
+    publication: string;
+  };
+  /** Marks the summary paragraph so the dialog can swap it when the tab changes. */
+  summaryHook?: boolean;
+}
+
+const { view, summary, level, headings, summaryHook = false } = Astro.props;
+const Name = `h${level}` as 'h1' | 'h2';
+const Head = `h${level + 1}` as 'h2' | 'h3';
+---
+
+<article class="sheet resume">
+  <header class="sheet__head">
+    <Name class="sheet__title resume__name">{view.name}</Name>
+    <p class="sheet__contact">{view.contact}</p>
+    <p class="sheet__contact">
+      {view.profiles.map((p, i) => (
+        <>
+          {i > 0 && ' · '}
+          <a href={p.url}>{p.text}</a>
+        </>
+      ))}
+    </p>
+  </header>
+  <p data-resume-summary={summaryHook ? '' : undefined}>{summary}</p>
+  <section class="sheet__section">
+    <Head class="sheet__heading">{headings.education}</Head>
+    {view.education.map((e) => (
+      <div class="resume__job resume__job--whole">
+        <p class="resume__line">
+          <span>
+            <strong>{e.school}</strong>, {e.degree}
+          </span>{' '}
+          <span class="resume__dates">{e.dateRange}</span>
+        </p>
+        {e.details.map((d) => (
+          <p>{d}</p>
+        ))}
+      </div>
+    ))}
+  </section>
+  <section class="sheet__section">
+    <Head class="sheet__heading">{headings.skills}</Head>
+    {view.skills.map((s) => (
+      <p>
+        <strong>{s.label}:</strong> {s.text}
+      </p>
+    ))}
+  </section>
+  <section class="sheet__section">
+    <Head class="sheet__heading">{headings.experience}</Head>
+    {view.experience.map((x) => (
+      <div class="resume__job">
+        <p class="resume__line">
+          <span>
+            <strong>{x.company}</strong>, {x.where} · <em>{x.title}</em>
+          </span>{' '}
+          <span class="resume__dates">{x.dateRange}</span>
+        </p>
+        <ul class="resume__bullets">
+          {x.bullets.map((b) => (
+            <li>{b}</li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </section>
+  <section class="sheet__section">
+    <Head class="sheet__heading">{headings.projects}</Head>
+    {view.projects.map((p) => (
+      <div class="resume__job resume__job--whole">
+        <p class="resume__line">
+          <span>
+            <strong>{p.name}</strong>
+            {p.links.map((l) => (
+              <>
+                {' · '}
+                <a href={l.url}>{l.label}</a>
+              </>
+            ))}
+          </span>{' '}
+          <span class="resume__dates">{p.dateRange}</span>
+        </p>
+        <ul class="resume__bullets">
+          {p.bullets.map((b) => (
+            <li>{b}</li>
+          ))}
+        </ul>
+      </div>
+    ))}
+  </section>
+  {view.publication && (
+    <section class="sheet__section">
+      <Head class="sheet__heading">{headings.publication}</Head>
+      <div class="resume__job resume__job--whole">
+        <p>
+          {view.publication.citation}
+          {view.publication.url && (
+            <>
+              {' '}
+              <a href={view.publication.url}>{view.publication.text}</a>
+            </>
+          )}
+        </p>
+      </div>
+    </section>
+  )}
+</article>

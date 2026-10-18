@@ -1,0 +1,160 @@
+/* Résumé dialog and sheet (design spec 7.13, 12.1). Tokens only for color (R-601). */
+
+/* A button used as a text link ("View résumé" in the contact band). */
+button.text-link {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: var(--rule-strong);
+  cursor: pointer;
+}
+
+.sheet-dialog__toolbar--split {
+  align-items: center;
+  justify-content: space-between;
+}
+
+.resume-tabs {
+  display: flex;
+  flex: 1 1 auto;
+  flex-wrap: wrap;
+  border: var(--rule-w-strong) solid var(--paper);
+}
+
+.resume-tab {
+  flex: 1 1 auto;
+  min-height: var(--control-height);
+  padding: 0 var(--space-8);
+  border: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--stack-mono);
+  font-size: var(--fs-xs);
+  cursor: pointer;
+}
+
+.resume-tab[aria-selected='true'] {
+  --focus: var(--ink);
+
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.resume-tab:focus-visible {
+  outline-offset: calc(-1 * var(--space-4));
+}
+
+.resume-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+
+.resume-actions [hidden] {
+  display: none;
+}
+
+/* Sheet */
+
+.resume__name {
+  font-size: 2rem;
+  line-height: 1.1;
+}
+
+.resume__job {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Education, projects and the publication stay whole. A job with many bullets may split between bullets. */
+.resume__job--whole,
+.resume__bullets li {
+  break-inside: avoid;
+}
+
+.resume__line {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-8);
+  break-after: avoid;
+}
+
+.resume__dates {
+  margin-left: auto;
+  font-family: var(--stack-mono);
+  font-size: var(--fs-xs);
+}
+
+.resume__bullets {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-left: var(--space-16);
+  list-style: disc;
+}
+
+.resume .sheet__section {
+  gap: var(--space-8);
+}
+
+.resume a {
+  color: inherit;
+  text-decoration-color: var(--rule-strong);
+  text-underline-offset: var(--space-4);
+}
+
+/* The print route on screen: the sheet on white, as the PDF will look. */
+.print-resume {
+  max-width: 51.25rem;
+  margin: 0 auto;
+  padding: var(--space-24) var(--space-16);
+}
+
+/* Résumé print (12.1): the dialog never prints; the print route prints its sheet. */
+@media print {
+  .resume-dialog {
+    display: none;
+  }
+
+  .print-resume {
+    max-width: none;
+    padding: 0;
+  }
+
+  /*
+    The sheet is tighter in the PDF than on screen so that the content fits two Letter pages (12.1, F-15):
+    --fs-sm and 1.4 instead of --fs-md and 1.5. Gaps move down one token step. Measured: the ML variant is
+    2053 px tall at 15 px / 1.5 against 1840 px for two pages.
+  */
+  .print-resume .sheet {
+    gap: var(--space-8);
+    padding: 0;
+    font-size: var(--fs-sm);
+    line-height: 1.4;
+  }
+
+  .print-resume .resume .sheet__section,
+  .print-resume .resume__job,
+  .print-resume .resume__bullets {
+    gap: var(--space-4);
+  }
+
+  .print-resume .sheet__heading,
+  .print-resume .sheet__contact {
+    color: var(--ink);
+  }
+
+  .resume .sheet__heading {
+    break-after: avoid;
+  }
+
+  .resume p,
+  .resume li {
+    orphans: 3;
+    widows: 3;
+  }
+}
