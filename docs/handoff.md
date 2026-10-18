@@ -32,7 +32,7 @@ Three short steps, details and exact commands in `docs/runbooks/launch.md` secti
 
 1. Create a free Cloudflare account with a passkey or 2FA, and add `rohanjain.pro`.
 2. At Porkbun, turn DNSSEC off, replace the nameservers with the two Cloudflare shows, and later paste one DS record.
-3. Create one Cloudflare API token from a prepared link and store it, with the account ID, using two `gh secret set` commands Claude Code prepares.
+3. Create one Cloudflare setup token from a prepared link and run the prepared command that uses it once on your computer. It sets up DNS and creates a narrow deploy token for GitHub (ADR-0032). Revoke the setup token after launch.
 
 Claude Code does the rest: DNS records, DNSSEC, CAA, email-hardening records, deploy, analytics, external header scans, smoke tests and tag `v1.0.0`.
 
@@ -65,7 +65,7 @@ After launch, log every application. Without the log, the team cannot tell wheth
 - Phase 8 (operate): weekly dependency updates, a monthly security review, a quarterly content check against your repositories, and a monthly report on reply rates.
 - After 30 stable days Claude Code submits the site for HSTS preload.
 - Monthly, the private workflow removes expired `/for` files and redeploys.
-- The Cloudflare token expires after 90 days. Claude Code tells you before it does and prepares the replacement command.
+- The Cloudflare deploy token expires after 90 days. Claude Code tells you before it does and prepares the replacement steps.
 - Domain renewal is yearly at Porkbun. Keep auto-renew on.
 - Rollback: Claude Code can redeploy an earlier tag in minutes (`docs/runbooks/launch.md` section 8).
 
