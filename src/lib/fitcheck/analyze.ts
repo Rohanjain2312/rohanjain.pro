@@ -66,10 +66,19 @@ export const analyze: Analyze = (text, skills, extras, evidence) => {
   const hits = matcher.skills.filter(({ terms }) => matchesAny(haystack, terms));
   const extraHits = matcher.extras.filter(({ terms }) => matchesAny(haystack, terms));
   // Plain-English skill names count only beside proven technical matches (issue #243).
+  // Context comes only from the curated technicalContextSkills list, one count per distinct skill.
   // Only shipped and work skills give context, so adding a gap term never changes the proven count.
-  const context = hits.filter(
-    (h) => !h.needsContext && (h.skill.tier === 'shipped' || h.skill.tier === 'work'),
-  ).length;
+  const technical = new Set(config.technicalContextSkills);
+  const context = new Set(
+    hits
+      .filter(
+        (h) =>
+          !h.needsContext &&
+          technical.has(h.skill.name) &&
+          (h.skill.tier === 'shipped' || h.skill.tier === 'work'),
+      )
+      .map((h) => h.skill.name),
+  ).size;
   const contextOk = context >= config.minContextMatches;
 
   for (const { skill } of hits.filter((h) => contextOk || !h.needsContext)) {
