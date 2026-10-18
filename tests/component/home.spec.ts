@@ -28,7 +28,10 @@ test.describe('no inline code', () => {
       const found = await page.evaluate(() => ({
         styleAttrs: document.querySelectorAll('[style]').length,
         styleTags: document.querySelectorAll('style').length,
-        inlineScripts: Array.from(document.querySelectorAll('script')).filter((s) => !s.src).length,
+        // JSON-LD is data, not code: the one inline script the CSP allows.
+        inlineScripts: Array.from(document.querySelectorAll('script')).filter(
+          (s) => !s.src && s.type !== 'application/ld+json',
+        ).length,
       }));
       expect(found).toEqual({ styleAttrs: 0, styleTags: 0, inlineScripts: 0 });
       expect(violations).toEqual([]);

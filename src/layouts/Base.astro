@@ -7,6 +7,8 @@ import '../styles/demo.css';
 import '../styles/fit.css';
 import '../styles/resume.css';
 import '../styles/print.css';
+import JsonLd from '../components/JsonLd.astro';
+import { OG_ALT, SITE_ORIGIN, brandFiles } from '../components/seo.ts';
 
 interface Props {
   title: string;
@@ -15,9 +17,18 @@ interface Props {
   noindex?: boolean;
   /** Overrides the robots content, for example "noindex, nofollow" on /for pages. */
   robots?: string;
+  /** JSON-LD data (schema.org). Rendered as the one inline script the CSP allows, because it is data. */
+  jsonLd?: object;
 }
 
-const { title, description, noindex = false, robots } = Astro.props;
+const { title, description, noindex = false, robots, jsonLd } = Astro.props;
+const brand = brandFiles();
+// Canonical and og:url only on indexable pages. 404 and print routes are noindex; /for pages set robots.
+const indexable = !noindex && !robots;
+const pageUrl = new URL(Astro.url.pathname, SITE_ORIGIN).href;
+// Social cards on every page except the 404 and print routes. /for pages reuse the same image (design spec 8.1).
+const social = !noindex;
+const imageUrl = brand.ogImage ? `${SITE_ORIGIN}${brand.ogImage}` : undefined;
 ---
 
 <!doctype html>
@@ -27,8 +38,35 @@ const { title, description, noindex = false, robots } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <!-- Placeholder until the Design Lead ships public/favicon.svg (design spec 13.2). Stops the /favicon.ico 404 in the console. -->
-    <link rel="icon" href="data:," />
+    {indexable && <link rel="canonical" href={pageUrl} />}
+    {brand.faviconSvg && <link rel="icon" href={brand.faviconSvg} type="image/svg+xml" />}
+    {brand.faviconIco && <link rel="icon" href={brand.faviconIco} sizes="32x32" />}
+    {brand.appleIcon && <link rel="apple-touch-icon" href={brand.appleIcon} />}
+    {!brand.faviconSvg && !brand.faviconIco && <link rel="icon" href="data:," />}
+    {social && (
+      <>
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Rohan Jain" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        {indexable && <meta property="og:url" content={pageUrl} />}
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        {imageUrl ? (
+          <>
+            <meta property="og:image" content={imageUrl} />
+            <meta property="og:image:width" content="1200" />
+            <meta property="og:image:height" content="630" />
+            <meta property="og:image:alt" content={OG_ALT} />
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:image" content={imageUrl} />
+            <meta name="twitter:image:alt" content={OG_ALT} />
+          </>
+        ) : (
+          <meta name="twitter:card" content="summary" />
+        )}
+      </>
+    )}
     {(robots || noindex) && <meta name="robots" content={robots ?? 'noindex'} />}
     <link
       rel="preload"
@@ -44,6 +82,7 @@ const { title, description, noindex = false, robots } = Astro.props;
       type="font/woff2"
       crossorigin
     />
+    {jsonLd && <JsonLd data={jsonLd} />}
   </head>
   <body>
     <slot />

@@ -1,0 +1,13 @@
+---
+// The page's behavior in one bundled script: one request instead of five (Lighthouse's simulated mobile LCP
+// drops by about 0.15 s). Each module wires itself to its own markup and does nothing when that markup is
+// absent. A bundled script, not an inline one (R-505).
+---
+
+<script>
+  import './figures.ts';
+  import './fit-check.ts';
+  import './demos.ts';
+  import './resume.ts';
+  import './print-folds.ts';
+</script>
