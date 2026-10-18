@@ -9,7 +9,7 @@ description: Use after Phase 2 (5-second test), after Phase 3 (recruiter fit rat
 - **R-903** /for open tracking uses only cookieless Cloudflare path counts.
 
 ## 5-second and first-click test (after Phase 2; repeat at Phase 6)
-- Prepare 390 and 1280 px home screenshots and a free form (Google Forms with timed image links, or Lyssna's free tier).
+- Prepare 390 and 1280 px home screenshots and a free form (Google Forms with timed image links, or Lyssna's free tier). Plain-file fallback (decision, 2026-10-18, to keep the client's steps minimal): send the two screenshots by message and ask the person to look for 5 seconds before answering; the exposure is then on the honour system, and the results are scored the same way. Use the form when the client is willing to set it up.
 - Questions: What is his role? Name one thing he has done. How would you contact him? First click: "Where would you get his résumé?"
 - Write the message for the client to send to at least 5 people who recruit or hire for technical roles, or work as engineers. Put it in `docs/needs-client.md`.
 - Pass: at least 4 of 5 name the role and one proof point, and at least 4 of 5 first clicks land on "View résumé".
