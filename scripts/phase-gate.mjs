@@ -9,8 +9,9 @@
 // {"issues":[{"number","title","labels":[...]}],"limit":{"limit","expires_at"}} instead, for tests.
 // The next planned gate defaults to 60 days from now; pass --next-gate to override.
 import { spawnSync } from 'node:child_process';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, realpathSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const testMode = () => process.env.PHASE_GATE_TEST === '1';
 const repo = () => (testMode() && process.env.PHASE_GATE_REPO) || 'Rohanjain2312/rohanjain.pro';
@@ -106,7 +107,8 @@ export function checkGate({ phase, root, fixture = null, nextGate = null, now = 
   return failures;
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Compare real paths: a symlinked argv[1] must still run the gate instead of exiting 0 silently (127-3).
+if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const args = parseArgs(process.argv.slice(2));
   if (!args) {
     console.error(
@@ -125,7 +127,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     for (const f of failures) console.error(`  ${f}`);
     process.exit(1);
   }
+  // 127-2: say where the data came from, so a fixture run is never mistaken for a live one.
   console.log(
-    `phase ${args.phase} gate OK: records present, no open Medium+ findings, interaction limit valid.`,
+    `phase ${args.phase} gate OK (repo ${repo()}, data ${args.fixture ? 'fixture' : 'github'}): records present, no open Medium+ findings, interaction limit valid.`,
   );
 }

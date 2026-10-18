@@ -3,7 +3,7 @@
 // Fixture directories are built inline in temp dirs, because tests/unit/ belongs to another role.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, mkdirSync, writeFileSync, utimesSync, rmSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, writeFileSync, utimesSync, rmSync, symlinkSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -159,4 +159,30 @@ test('pins: unpinned action in a composite action fails', () => {
   put(root, '.github/actions/s/action.yml', `runs:\n  steps:\n    - uses: actions/setup-node@main\n`);
   assert.match(checkPins(root)[0], /^R-504 .*action.yml:3/);
   rmSync(root, { recursive: true });
+});
+
+// 127-2, 127-3: the OK line names the repo and data source; a symlinked path still runs the check.
+test('CLI OK line names the repo and the data source (127-2)', () => {
+  const root = gateRoot(2);
+  const r = spawnSync('node', ['scripts/phase-gate.mjs', '2', '--root', root, '--gh-fixture', fixture(root)], { encoding: 'utf8' });
+  assert.equal(r.status, 0, r.stderr);
+  assert.match(r.stdout, /\(repo Rohanjain2312\/rohanjain\.pro, data fixture\)/);
+  rmSync(root, { recursive: true });
+});
+
+test('a symlinked path still runs the check and can fail (127-3)', () => {
+  const root = mkdtempSync(join(tmpdir(), 'link-'));
+  const wf = wfRoot('on: pull_request\njobs: {}\n');
+  for (const [src, args] of [
+    ['.github/scripts/ci-checks.mjs', ['pins', '--root', wf]],
+    ['scripts/phase-gate.mjs', ['2', '--root', root]],
+  ]) {
+    const link = join(root, 'link.mjs');
+    symlinkSync(join(process.cwd(), src), link);
+    const r = spawnSync('node', [link, ...args], { encoding: 'utf8', env: { ...process.env, PHASE_GATE_TEST: '' } });
+    assert.equal(r.status, 1, `${src}: ${r.stdout}${r.stderr}`);
+    rmSync(link);
+  }
+  rmSync(root, { recursive: true });
+  rmSync(wf, { recursive: true });
 });

@@ -5,7 +5,8 @@
 import { fileURLToPath } from 'node:url';
 import { defineConfig, devices } from '@playwright/test';
 
-const port = 4322;
+// PW_PORT lets two sessions run the matrix at once; the default is unchanged (190-s).
+const port = Number(process.env['PW_PORT'] ?? 4322);
 
 // Tests that run in the chromium project only. Every entry states why.
 const chromiumOnly = [
