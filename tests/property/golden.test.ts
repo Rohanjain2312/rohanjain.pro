@@ -5,6 +5,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { analyze, extras } from '../../src/lib/fitcheck/index.ts';
+import { config } from '../../src/lib/fitcheck/thresholds.ts';
 import {
   isNegativeControl,
   postingFiles,
@@ -28,13 +29,18 @@ function rubricVerdict(proven: number, gaps: number): string {
 }
 
 describe('golden set shape (ADR-0028)', () => {
-  it('has 18 postings: 4 ai, 4 ml, 4 ds, 3 unrelated, 3 adjacent', () => {
+  it('has 20 postings: 4 ai, 4 ml, 4 ds, 3 unrelated, 3 adjacent, 2 plain-words', () => {
     const count = (family: string): number =>
       postings.filter((p) => p.roleFamily === family).length;
-    expect(postings).toHaveLength(18);
-    expect([count('ai'), count('ml'), count('ds'), count('unrelated'), count('adjacent')]).toEqual([
-      4, 4, 4, 3, 3,
-    ]);
+    expect(postings).toHaveLength(20);
+    expect([
+      count('ai'),
+      count('ml'),
+      count('ds'),
+      count('unrelated'),
+      count('adjacent'),
+      count('plain-words'),
+    ]).toEqual([4, 4, 4, 3, 3, 2]);
   });
   it('names each file after its id and gives every posting the required fields only', () => {
     for (const [i, p] of postings.entries()) {
@@ -107,6 +113,50 @@ describe('engine against the rubric: negative controls', () => {
     expect(report.verdict).toBe('Not a strong fit');
     expect(report.enough).toBe(true);
   });
+});
+
+describe('engine against the rubric: plain-word negative controls (issue #243, ADR-0030)', () => {
+  // Non-technical postings built from ordinary words that are also skill names. They must not read as a fit.
+  const controls = postings.filter((p) => p.roleFamily === 'plain-words');
+  it('has two plain-word controls, the nurse and the lab technician', () => {
+    expect(controls.map((p) => p.id)).toEqual(['neg-lab', 'neg-nurse']);
+  });
+  it.each(controls.map((p) => [p.id, p] as const))(
+    '%s returns "Not enough to go on" with nothing counted',
+    (_id, p) => {
+      const report = analyze(postingText(p), skills, extras, []);
+      expect(report.verdict).toBe('Not enough to go on');
+      expect(report.enough).toBe(false);
+      expect(report.proven).toEqual([]);
+      expect(report.gaps).toEqual([]);
+    },
+  );
+  it('the controls hold only the words that rubric rule 9 holds back', () => {
+    // Every counted-looking word in a control is a plain-word skill, so the rubric counts none of them.
+    for (const p of controls) {
+      const e = verdicts.postings[p.id];
+      expect([e?.proven, e?.gaps, e?.unlisted]).toEqual([[], [], []]);
+    }
+  });
+});
+
+describe('rubric rule 9: plain-word skills in the expected lists need context', () => {
+  const plain = new Set(config.plainWordSkills);
+  const entries = [
+    ...Object.entries(verdicts.postings),
+    ...Object.entries(verdicts.samples).map(([id, e]) => [`sample ${id}`, e] as const),
+  ];
+  const technical = new Set(config.technicalContextSkills);
+  it.each(entries)(
+    '%s lists a plain-word skill only beside 2 technical-list skills it also proves',
+    (_id, e) => {
+      const listed = [...e.proven, ...e.gaps];
+      if (!listed.some((n) => plain.has(n))) return;
+      expect(e.proven.filter((n) => technical.has(n)).length).toBeGreaterThanOrEqual(
+        config.minContextMatches,
+      );
+    },
+  );
 });
 
 describe('engine against the rubric: on-site samples', () => {
