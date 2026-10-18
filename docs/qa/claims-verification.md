@@ -29,7 +29,7 @@ Every claim in `src/content/claims.json` has one row below. The completeness che
 
 Result values: `verified` (found in the cited source and consistent), `verified-note` (found, with a caveat in the source column), `mismatch #N` (the source disagrees or does not support it; issue N is open), `unsourced` (no source found).
 
-Totals: 92 claims. 70 verified, 21 verified-note, 0 mismatch, 1 unsourced. See the summary at the end.
+Totals: 99 claims. 76 verified, 22 verified-note, 0 mismatch, 1 unsourced. See the summary at the end.
 
 ### Goldman Sachs (résumé)
 
@@ -88,6 +88,8 @@ Totals: 92 claims. 70 verified, 21 verified-note, 0 mismatch, 1 unsourced. See t
 | `settle-brier-after` | `0.035` | Blog lines 94 and 105; Resume bullet 3 | verified | 2026-10-16 |
 | `settle-shap-correlation` | `0.96` | Blog line 114 "rank correlation 0.96"; figure `reference/figures/settle_shap.png` subtitle; Resume bullet 3 | verified | 2026-10-16 |
 | `settle-dates` | `Oct 2026` | Repo commits 2026-10-08 to 2026-10-10 | verified | 2026-10-16 |
+| `settle-pr-auc-svm` | `0.319` | Blog `docs/blog/predicting-trade-settlement-fails.md` line 93, results table, row "RBF SVM", setup "Class weights": PR-AUC 0.319 (22% of fails in the riskiest 2%, Brier 0.036). Table is labelled test period, synthetic data (lines 94-95). Display "RBF SVM 0.319" matches the three decimals | verified | 2026-10-17 |
+| `settle-pr-auc-lr` | `0.305` | Blog line 91, row "Logistic regression", setup "No resampling": PR-AUC 0.305 (21%, Brier 0.037). Same table, test period, synthetic data. Display "logistic regression PR-AUC 0.305" matches the three decimals | verified | 2026-10-17 |
 
 ### Computer-Use Automation (repo computer-use-automation README)
 
@@ -113,6 +115,8 @@ Totals: 92 claims. 70 verified, 21 verified-note, 0 mismatch, 1 unsourced. See t
 | `fc-pruning-heads` | `50` | Resume, Projects, FinCompress bullet 2, "pruning 50% of attention heads improved val Macro F1 by +0.9 pts" (client-confirmed, R-302). Note: repo README lines 49-50 and `article_data.json`: +0.9 is at 30% (29.2% pruned); 50% (48.6% pruned) gives +0.6 | verified-note | 2026-10-16 |
 | `fc-pruning-f1-gain` | `+0.9 points` | Resume, Projects, FinCompress bullet 2, "+0.9 pts" (client-confirmed, R-302). Note: repo README line 49 gives +0.9 at 30% pruning; line 50 gives +0.6 at 50% (0.8936 against teacher 0.8876) | verified-note | 2026-10-16 |
 | `fc-dates` | `Feb to Mar 2026` | Repo commits 2026-02-27 to 2026-03-09; checkpoints dated 2026-03-01 | verified | 2026-10-16 |
+| `fc-f1-baseline` | `0.8876` | Repo README line 44, Results table, row "Teacher (FinBERT fine-tuned)": Val Macro F1 0.8876, marked baseline. Display "validation Macro F1 0.8876 for the full model" matches the four decimals and the validation split. This is the validation score, not a test score | verified | 2026-10-17 |
+| `fc-f1-cost` | `0.7712` | Repo README line 47, row "Student - PTQ (INT8)", 12M params, 47.7 MB: Val Macro F1 0.7712. The Intermediate KD row (line 46) also shows 0.7712, so the value is the same for the FP32 student and the INT8 student, as the "same F1 as FP32" cell says. Display "F1 0.8876 to 0.7712 for the INT8 student" matches both numbers to four decimals. Note: the display does not say "validation"; both numbers are validation Macro F1, so the context (`fc-f1-baseline`) must carry that | verified-note | 2026-10-17 |
 
 ### TariffAgent (repo customs-court README)
 
@@ -145,6 +149,9 @@ Totals: 92 claims. 70 verified, 21 verified-note, 0 mismatch, 1 unsourced. See t
 | `mr-imbalance` | `68/32` | Repo README lines 399-400 (test set 68.3% Bullish, 31.7% Bearish) and line 514; Resume bullet 2 | verified | 2026-10-16 |
 | `mr-years` | `24` | Repo README lines 223-224 and 294: data from 2000-01-01 to 2024-11-24 (about 24.9 years); Resume bullet 1 "24-year" | verified | 2026-10-16 |
 | `mr-dates` | `Nov to Dec 2025` | Repo commits 2025-11-25 to 2025-12-13 | verified | 2026-10-16 |
+| `mr-baseline-accuracy` | `61.16` | Repo README line 52, all-models table, row "Baseline" (Model 0, the vanilla transformer, lines 70-73): Test Acc 61.16%. Line 515 repeats "baseline 61% accuracy". Display "61.16% baseline accuracy" matches the two decimals and the percent unit | verified | 2026-10-17 |
+| `mr-baseline-mcc` | `-0.036` | Repo README line 52, same row: MCC -0.036. Line 515 rounds it to -0.04. Display "-0.036 MCC for the baseline" matches the three decimals and the sign | verified | 2026-10-17 |
+| `mr-test-window` | `Sep 2022 to Oct 2025` | Repo README lines 388-399, split section: time-based split, no random shuffle; test set 15% (756 samples), "Period: Sep 21, 2022 to Oct 3, 2025". Display "test window Sep 2022 to Oct 2025" is the same range at month precision | verified | 2026-10-17 |
 
 ### Medical LLM (repo medical-llm-finetuning README)
 
@@ -183,4 +190,5 @@ Totals: 92 claims. 70 verified, 21 verified-note, 0 mismatch, 1 unsourced. See t
 - Open mismatch issues: none. The rows for #140 to #146 were re-verified in the #170 pass (see below).
 - Unsourced: `med-prompts`.
 - Re-verification for #170 (2026-10-16). The résumé and client decisions are valid sources that override repo values (R-302 and the Evidence Ledger), so a claim that matches the résumé is `verified-note` with the repo value in the source column, not `mismatch`. Rows re-verified against `src/content/claims.json` as restored by PR #172 (head 1b50df1), which returns these claims to their values at commit 595c0bb: `goldman-tenure`, `goldman-tenure-years`, `loan-v2-subgraphs`, `loan-v2-deploy`, `fc-pruning-heads`, `fc-pruning-f1-gain`, `mr-baselines`, `mr-f1`. The tariff claims `tariff-rulings-eval` and `tariff-dates` keep the PR #165 wording and are `verified` against the repo README and commit dates. Résumé checked: `reference/resume/Rohan_Resume_v26.docx`. Repo heads checked (unchanged since the first pass): FinCompress 442af31, customs-court 324f4b1, transformer-market-regime 6946b7b, loan-servicing-agent 0920ab4. Claim values checked against `claims.json` at 1b50df1 (on top of `main` 7148fe1).
+- Rows added for #183 (2026-10-17): `settle-pr-auc-svm`, `settle-pr-auc-lr`, `fc-f1-baseline`, `fc-f1-cost`, `mr-baseline-accuracy`, `mr-baseline-mcc`, `mr-test-window`. Each was read from the cited source (blog table, FinCompress README Results table, transformer-market-regime README table and split section), not from App/Data's notes. Value and display text match the source to the stated decimals. Repo heads at the check: FinCompress 442af31, transformer-market-regime 6946b7b, trade-settlement-fail-predictor 3b74de3 (all unchanged since the first pass). `fc-pruning-peak-f1` and `fc-pruning-peak-share` were removed from `claims.json` at 287fc37 and have no rows.
 - The default check fails on missing, stale or malformed rows and warns on open findings. `node tests/fixtures/claims/check-verification-log.mjs --require-clean` also fails on open findings; use it at the phase gate.
