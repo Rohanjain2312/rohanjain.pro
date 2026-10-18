@@ -453,23 +453,6 @@
     "note": "Full model val Macro F1 0.8876 to INT8 student (PTQ, 47.7 MB) 0.7712, repo README results table. The mockup rounded this to 0.89 to 0.77."
   },
   {
-    "id": "fc-pruning-peak-f1",
-    "value": 0.8966,
-    "display": "Macro F1 peaks at 0.8966",
-    "source": "Repo FinCompress README results table; figure 01_pruning_curve.png",
-    "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
-    "verifiedOn": "2026-10-17",
-    "note": "Chart peak at 29.2% of heads pruned. The résumé claim (50%, +0.9 points) stays as the client chose it (R-302)."
-  },
-  {
-    "id": "fc-pruning-peak-share",
-    "value": 29.2,
-    "display": "29.2% of heads pruned",
-    "source": "Repo FinCompress README results table; figure 01_pruning_curve.png",
-    "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
-    "verifiedOn": "2026-10-17"
-  },
-  {
     "id": "fc-pruning-heads",
     "value": 50,
     "display": "pruning 50% of attention heads",

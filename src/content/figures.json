@@ -55,9 +55,9 @@
     "src": "reference/figures/fc_pruning.png",
     "alt": "Macro F1 against the share of attention heads pruned",
     "axisLabel": "macro F1 against share of heads pruned",
-    "caption": "Macro F1 peaks at 0.8966 with 29.2% of heads pruned, above the 0.8876 full model.",
+    "caption": "Macro F1 as more attention heads are pruned, against the 0.8876 full model.",
     "note": "less model, better score",
-    "claimIds": ["fc-pruning-peak-f1", "fc-pruning-peak-share", "fc-f1-baseline"]
+    "claimIds": ["fc-f1-baseline"]
   },
   {
     "id": "fc-latency",
