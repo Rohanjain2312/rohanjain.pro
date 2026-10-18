@@ -1,6 +1,6 @@
 // Term matcher. Curated terms are compiled once; the user's text is only ever searched, never compiled (R-402).
-// A hit needs a boundary on both sides. Scanning uses indexOf, so there is no backtracking and no ReDoS.
-import { config } from './config.ts';
+// Deliberately avoids regexes (R-402): scanning uses indexOf plus boundary checks.
+import { config } from './thresholds.ts';
 import { normalizeTerm } from './normalize.ts';
 import type { Extra, Skill } from './types.ts';
 

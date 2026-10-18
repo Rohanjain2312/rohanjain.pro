@@ -163,7 +163,7 @@ describe('aliases', () => {
 });
 
 describe('scoring', () => {
-  it('uses the documented bands', () => {
+  it('uses the documented thresholds', () => {
     expect(verdictFor(10, 0.8).verdict).toBe('Strong fit');
     expect(verdictFor(10, 0.79).verdict).toBe('Good fit, with gaps');
     expect(verdictFor(10, 0.55).verdict).toBe('Good fit, with gaps');

@@ -55,7 +55,7 @@ export interface Report {
   gaps: string[];
   /** Up to 4 rows, ranked by matchCount. Empty when nothing proven matched. */
   evidenceRows: EvidenceRow[];
-  /** Family with the most matched skills (proven and studied). Ties and no matches fall back to the order in config. */
+  /** Family with the most matched skills (proven and studied). Ties and no matches fall back to the order in thresholds.ts. */
   roleFamily: RoleFamily;
 }
 

@@ -1,5 +1,5 @@
 // The fit-check engine (docs/spec/06-architecture.md section 5.4). Pure: same input, same Report.
-import { config } from './config.ts';
+import { config } from './thresholds.ts';
 import { matcherFor, matchesAny } from './matcher.ts';
 import { normalizeText } from './normalize.ts';
 import type {
@@ -17,8 +17,9 @@ export function verdictFor(
   ratio: number,
 ): { verdict: VerdictLabel; verdictKey: VerdictKey } {
   if (matches < config.minMatches) return { verdict: 'Not enough to go on', verdictKey: 'none' };
-  if (ratio >= config.bands.strong) return { verdict: 'Strong fit', verdictKey: 'strong' };
-  if (ratio >= config.bands.good) return { verdict: 'Good fit, with gaps', verdictKey: 'good' };
+  if (ratio >= config.thresholds.strong) return { verdict: 'Strong fit', verdictKey: 'strong' };
+  if (ratio >= config.thresholds.good)
+    return { verdict: 'Good fit, with gaps', verdictKey: 'good' };
   return { verdict: 'Not a strong fit', verdictKey: 'weak' };
 }
 

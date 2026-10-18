@@ -1,5 +1,5 @@
 // Engine settings. Edit values here only; no other file holds a number that decides a verdict.
-// Band edges are tuned against the golden set (docs/spec/09-quality.md section 9.4) and change only with an ADR (R-404).
+// Threshold values are tuned against the golden set (docs/spec/09-quality.md section 9.4) and change only with an ADR (R-404).
 import type { RoleFamily } from './types.ts';
 
 export const config = {
@@ -8,7 +8,7 @@ export const config = {
   /** Fewer matches than this (proven + gaps) gives "Not enough to go on". */
   minMatches: 4,
   /** Ratio edges: at or above `strong` is "Strong fit"; at or above `good` is "Good fit, with gaps". */
-  bands: { strong: 0.8, good: 0.55 },
+  thresholds: { strong: 0.8, good: 0.55 },
   maxEvidenceRows: 4,
   maxTagsPerRow: 8,
   /** Wins ties between role families, and the answer when nothing matched. */

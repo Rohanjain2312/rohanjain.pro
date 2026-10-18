@@ -1,5 +1,5 @@
 // Input cleaning (docs/spec/06-architecture.md section 5.4). Pure string work.
-import { config } from './config.ts';
+import { config } from './thresholds.ts';
 
 /**
  * Trim, NFKC, lowercase, collapse whitespace, cap at maxChars.
