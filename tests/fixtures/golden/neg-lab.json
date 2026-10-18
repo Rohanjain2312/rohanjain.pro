@@ -1,0 +1,17 @@
+{
+  "id": "neg-lab",
+  "roleFamily": "plain-words",
+  "company": "clinical laboratory",
+  "requirements": [
+    "Laboratory technician, clinical chemistry.",
+    "Accuracy and precision in sample prep,",
+    "calibration of analyzers,",
+    "recall of reagent lot numbers,",
+    "mentoring junior staff,",
+    "benchmarking against reference standards,",
+    "probability of error in each run,",
+    "clustering of samples by batch,",
+    "forecasting reagent supply,",
+    "deployments of new assay kits."
+  ]
+}

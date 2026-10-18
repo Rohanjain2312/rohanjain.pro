@@ -1,6 +1,6 @@
 {
   "rubric": "docs/qa/fit-rubric.md",
-  "rubricVersion": 2,
+  "rubricVersion": 3,
   "raters": { "qa": "done", "readerAdvocate": "not yet rated" },
   "postings": {
     "ai-01": {
@@ -239,7 +239,19 @@
     "ds-04": {
       "expected": "Not a strong fit",
       "proven": ["Tableau"],
-      "gaps": ["Online experimentation", "Clustering", "Probability", "BigQuery", "Apache Spark"],
+      "gaps": ["Online experimentation", "BigQuery", "Apache Spark"],
+      "unlisted": []
+    },
+    "neg-nurse": {
+      "expected": "Not enough to go on",
+      "proven": [],
+      "gaps": [],
+      "unlisted": []
+    },
+    "neg-lab": {
+      "expected": "Not enough to go on",
+      "proven": [],
+      "gaps": [],
       "unlisted": []
     },
     "neg-ios": {
