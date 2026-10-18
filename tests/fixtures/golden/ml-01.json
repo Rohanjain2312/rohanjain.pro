@@ -1,0 +1,14 @@
+{
+  "id": "ml-01",
+  "roleFamily": "ml",
+  "company": "marketplace, NYC",
+  "requirements": [
+    "Train and deploy gradient boosting and deep learning models for ranking and fraud",
+    "Strong Python, PyTorch or TensorFlow and scikit-learn",
+    "Feature engineering and feature stores for batch and real-time inference",
+    "Build training and inference pipelines with Airflow and Spark",
+    "Model monitoring and drift detection in production",
+    "Containerize services with Docker and deploy on Kubernetes",
+    "Experience with MLflow and experiment tracking"
+  ]
+}

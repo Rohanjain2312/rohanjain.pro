@@ -1,0 +1,14 @@
+{
+  "id": "ai-04",
+  "roleFamily": "ai",
+  "company": "legal technology, Chicago",
+  "requirements": [
+    "Build document AI pipelines: parsing, OCR and information extraction from contracts",
+    "Create retrieval systems with hybrid search and citations back to source passages",
+    "Evaluate retrieval quality and hallucination rates with golden datasets",
+    "Fine-tune and quantize models for cheaper inference with vLLM",
+    "Experience with Elasticsearch or Pinecone",
+    "Familiarity with Terraform and CI/CD",
+    "Python and TypeScript"
+  ]
+}

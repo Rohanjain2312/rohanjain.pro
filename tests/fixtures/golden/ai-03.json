@@ -1,0 +1,14 @@
+{
+  "id": "ai-03",
+  "roleFamily": "ai",
+  "company": "enterprise SaaS, San Francisco",
+  "requirements": [
+    "Design multi-agent systems with clear tool boundaries and orchestration",
+    "Implement agent memory and state management for long-running workflows",
+    "Experience with LangChain, LlamaIndex or Microsoft Agent Framework",
+    "Build prompt injection defenses and review flows for agent actions",
+    "Observability for agents: tracing and LangSmith or similar",
+    "Cloud experience on GCP with Vertex AI and Kubernetes",
+    "Write clear technical documentation"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "adj-de",
+  "roleFamily": "adjacent",
+  "company": "fintech, NYC",
+  "requirements": [
+    "Build and maintain batch and streaming data pipelines",
+    "Strong SQL and Python",
+    "Orchestrate workflows with Airflow",
+    "Model warehouses in Snowflake and transform with dbt",
+    "Work with Kafka and Spark",
+    "Terraform and AWS infrastructure",
+    "Data quality checks and observability"
+  ]
+}

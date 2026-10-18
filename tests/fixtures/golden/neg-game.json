@@ -1,0 +1,13 @@
+{
+  "id": "neg-game",
+  "roleFamily": "unrelated",
+  "company": "games studio, Seattle",
+  "requirements": [
+    "Build gameplay systems in Unity and C#",
+    "Optimize rendering performance for mobile and console",
+    "Author shaders and tools for artists",
+    "Collaborate with designers on level scripting",
+    "Android and iOS build pipelines",
+    "Shipped at least one title"
+  ]
+}

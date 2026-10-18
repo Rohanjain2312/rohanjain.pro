@@ -1,0 +1,14 @@
+{
+  "id": "ds-02",
+  "roleFamily": "ds",
+  "company": "retail, Minneapolis",
+  "requirements": [
+    "Forecast demand with time-series methods",
+    "Statistical analysis, hypothesis testing and regression analysis",
+    "Exploratory data analysis and data storytelling for executives",
+    "SQL window functions and data cleaning at scale",
+    "R or Python for modeling",
+    "Power BI or Looker dashboards",
+    "Master's degree in a quantitative field"
+  ]
+}

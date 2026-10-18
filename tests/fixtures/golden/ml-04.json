@@ -1,0 +1,14 @@
+{
+  "id": "ml-04",
+  "roleFamily": "ml",
+  "company": "healthcare AI, Boston",
+  "requirements": [
+    "Fine-tune transformer models for clinical text classification and extraction",
+    "Use Hugging Face Transformers and PyTorch",
+    "Model compression through quantization and distillation",
+    "Build evaluation suites, error analysis and explainability with SHAP",
+    "Transfer learning and imbalanced data handling",
+    "Deploy on AWS with Docker",
+    "Responsible AI and data privacy practices"
+  ]
+}
