@@ -76,6 +76,9 @@ jobs:
           APPLICATIONS_DIR: ${{ github.workspace }}/apps/applications
         run: |
           set -o pipefail
+          # git does not track empty directories: a private repo with no result file has no applications/ directory.
+          # That is an empty list, not an error. pipefail still catches real errors from the script.
+          mkdir -p "$APPLICATIONS_DIR"
           npm run --silent for -- --list-expired | sed -n 's/^expired //p' > "$RUNNER_TEMP/expired.txt"
           echo "expired files: $(wc -l < "$RUNNER_TEMP/expired.txt")"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

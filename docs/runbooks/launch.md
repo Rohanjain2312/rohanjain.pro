@@ -52,6 +52,7 @@ The private workflow builds in GitHub Actions and uploads `dist`. Cloudflare Pag
 - Output guard: the build fails if `dist/_headers` is missing or if a result JSON file is in `dist`.
 - No raw result file is ever uploaded. The `dist` artifact keeps one day and holds rendered pages only. The repo is private, so its logs and artifacts are private.
 - Monthly cleanup: `list-expired` runs `npm run for -- --list-expired` (names only, nothing deleted). `remove-expired` validates names, deletes those files, pushes to `main`, and the build job then redeploys.
+- Test with no result file: git does not track empty directories, so the private repo has no `applications/` directory until a result file exists. Before adding the fixture, run `workflow_dispatch` once with no result file. `list-expired` must pass with "expired files: 0" (the step creates the directory), `remove-expired` and `build` must run, and the build must succeed with no `/for` pages. The rollback command in section 8 depends on this.
 - Test before launch: add one fixture result to the private repo (generate it with `npm run for` against a made-up posting), run the workflow with `SITE_TAG` set, and check that `/for/<slug>` is in the deployed preview and that the claims step passes. Only the first real run proves the wrangler step, because no Cloudflare deploy token exists yet.
 
 ## 4. Cloudflare Pages
