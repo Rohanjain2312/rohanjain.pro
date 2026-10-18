@@ -14,9 +14,15 @@ This runs axe (`tests/a11y/`), behavior and layout checks (`tests/component/`) a
 npm run shots
 ```
 
-Builds if `dist/` is missing or older than `src/` or `public/`, serves it through `scripts/preview.mjs` on port 4323, and writes to `.shots/` (gitignored). The Reader Advocate reads only this folder.
+Always rebuilds (about 2 s), serves `dist/` through `scripts/preview.mjs` on a free port, checks that its own server answers (a per-run nonce file), and writes to `.shots/` (gitignored). The server is stopped on exit, errors, Ctrl-C and a closed pipe. The Reader Advocate reads only this folder.
 
-Files, for each of `home` (`/`), `privacy` (`/privacy/`) and `404` (`/404.html`) at widths 390 and 1280: `<page>-<width>.png` (full page, every fold open) and `<page>-<width>.txt` (rendered `innerText` of the body). Example: `home-390.png`, `home-390.txt`.
+Files, for each of `home` (`/`), `privacy` (`/privacy/`) and `404` (`/404.html`) at widths 390 and 1280:
+
+- `<page>-<width>-fold.png`: above the fold only, 390x844 and 1280x800. Use this for the 5-second test.
+- `<page>-<width>.png`: full page, every fold open.
+- `<page>-<width>.txt`: rendered text of the body.
+
+Example: `home-390-fold.png`, `home-390.png`, `home-390.txt`.
 
 ## Lighthouse (mobile, local)
 
