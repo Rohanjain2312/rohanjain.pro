@@ -115,7 +115,7 @@ Data flows:
 | 3.2 | S | One account means GitHub cannot tell roles apart; a role can self-approve | Labels plus comments with role, head SHA and agent ID; hook checks | R-201, R-202, R-203, R-208 | active / phase-1; accepted (RR-2) |
 | 3.3 | T | Ruleset edited or disabled through the API | Hook denies non-Supervisor ruleset writes and all deletes | R-111 guard-bash | active; Supervisor or interpreter indirection can still change it (RR-2, RR-11) |
 | 3.4 | T, R | Unsigned commits reach `main` | Ruleset `required_signatures` is on again (PR #68); squash merges are signed by GitHub; root commit `4d29441` is the one allowed exception | R-107, ADR-0013, ADR-0014, skill `phase-gate` | active (closed #38, closed #33 via PR #68); the `write:ssh_signing_key` scope is gone from the shared token (verified 2026-10-16), so no agent can add a second signing key (RR-8 closed) |
-| 3.5 | I | Secrets or JD text committed | `.gitignore`, hook on `git add`, gitleaks, push protection (enabled, verified) | R-501, R-508 | active; gitleaks phase-1 (#12) |
+| 3.5 | I | Secrets or JD text committed | `.gitignore`, hook on `git add`, gitleaks, push protection (enabled, verified) | R-501, R-508 | active; `.gitleaks.toml` with job-description rules (#245); gitleaks in CI and pre-commit |
 | 3.6 | I | `/for` data and slugs readable in the public repo | See 8.3 | ADR-0016 | closed #44, #62 (PR #55) |
 | 3.7 | S | Fake review comment posted by an outside user | Interaction limit stops outside comments; review-gate counts only OWNER-authored comments plus `approved:<role>` labels (outsiders cannot label) | repo settings; R-201 review-gate | active (limit); review-gate phase-1 (#14) |
 
@@ -146,7 +146,7 @@ Data flows:
 
 | # | S/T/R/I/D/E | Threat | Mitigation | Enforced by | Status |
 |---|---|---|---|---|---|
-| 6.1 | T, E | XSS or injected third-party script | Strict CSP (`default-src 'none'`, `script-src 'self'`, no `unsafe-inline` or `unsafe-eval`); add `require-trusted-types-for 'script'` (named in §8.1, missing from the §8.2 header) | R-505 headers test | active (CSP checked in Phase 6: evaluator, 11 XSS payload sets, no DOM sink in `src/`); Trusted Types open #241 (Low) |
+| 6.1 | T, E | XSS or injected third-party script | Strict CSP (`default-src 'none'`, `script-src 'self'`, no `unsafe-inline` or `unsafe-eval`); `require-trusted-types-for 'script'` (§8.1, §8.2; added for #241) | R-505 headers test | active (CSP checked in Phase 6: evaluator, 11 XSS payload sets, no DOM sink in `src/`); Trusted Types on, checked in Chromium (#241) |
 | 6.2 | T | Clickjacking | `frame-ancestors 'none'`, `X-Frame-Options: DENY` | R-505 | phase-1 |
 | 6.3 | I | Referrer or cross-origin leaks | `Referrer-Policy`, COOP, CORP, `Permissions-Policy` | R-505 | phase-1 |
 | 6.4 | T, E | Hugging Face iframe abuses the page | Created only on click; `sandbox`; `*.hf.space` only in `frame-src`; `referrerpolicy="no-referrer"`; COOP same-origin | R-512 CSP and e2e tests | phase-5 |
@@ -217,7 +217,7 @@ Probe on 2026-10-15: synthetic PreToolUse input fed to `guard-bash.mjs`, `guard-
 | Read `~/.ssh/id_ed25519` (security-engineer) | R-509 | allow | open #47 (Low) |
 | `gh auth token` (security-engineer) | R-509 | deny | closed #45, #60 (PR #53) |
 | `gh api -X DELETE repos/Rohanjain2312/some-other-repo` (frontend-engineer) | R-509 | deny | closed #45, #61 (PR #53) |
-| `gh repo edit Rohanjain2312/some-other-repo --visibility private` (frontend-engineer) | R-111 | deny | closed #45, #61 (PR #53) |
+| `gh repo edit Rohanjain2312/some-other-repo --visibility private` (frontend-engineer) | R-513 | deny | closed #45, #61 (PR #53) |
 | `git push git@github.com:Rohanjain2312/some-other-repo.git HEAD:feature` (frontend-engineer) | R-509 | deny | closed #45, #61 (PR #53) |
 | `security find-generic-password -s gh:github.com -w` (frontend-engineer) | none | allow | open #63 (Low) |
 | `npm install left-pad` (frontend-engineer) | none | allow (expected; `.npmrc` turns scripts off) | closed #46 (PR #52) |
@@ -281,9 +281,10 @@ One Medium finding from this threat model is open (TM-5, #251). Medium findings 
 
 These are not findings; they are inputs the owning issue must meet. Security checks them in review.
 
-1. #18 (headers and CSP): add `require-trusted-types-for 'script'` to the CSP, or record why not.
+1. #18 (headers and CSP): done in #241: `require-trusted-types-for 'script'` is in the CSP.
 2. #14 (PR process checks): review-gate counts only comments with `author_association` OWNER; pr-hygiene fails PRs that touch paths not owned by the branch's role (#47); labeler routes `.claude/**`, workflows, `.npmrc`, `public/_headers` and dependency files to Security (#42).
 3. #15 (security workflows): `sha_pinning_required` is on (verified 2026-10-15); restrict `allowed_actions` (now `all`) to GitHub-owned and selected actions if Scorecard allows.
 4. `status.yml`: write only booleans, status codes and dates, never response bodies; validate `status.json` against a schema; write only to the `status-data` branch with `contents: write` on that one job, never to `main`, and open no PR (ADR-0027).
 5. Deploy workflows (Phase 7): never run PR code with the Cloudflare token; no `pull_request_target`; the token lives only in the private repo (ADR-0016).
+   Checked 2026-10-18 (#245): no deploy workflow exists, no Cloudflare token or `wrangler` setting is in this repo (secret scan clean), and the repo has one ruleset (`main protection`). The `status-data` ruleset is still missing (#242, #244, Supervisor); it must exist before the deploy workflow runs.
 6. Secret scanning for non-provider patterns is off (verified 2026-10-15); turn it on when #12 lands.
