@@ -27,8 +27,12 @@
       "items": [
         { "term": "Cookies", "text": "The site sets none." },
         {
-          "term": "Forms and accounts",
-          "text": "The site has no forms or accounts and collects nothing you type."
+          "term": "Fit check text",
+          "text": "The fit check runs in your browser. The text you paste, and any company or role title you add, is not sent anywhere and is not stored by this site."
+        },
+        {
+          "term": "Accounts",
+          "text": "The site has no accounts and no form that sends anything to a server."
         },
         {
           "term": "Tracking",

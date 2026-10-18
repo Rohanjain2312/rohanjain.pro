@@ -74,7 +74,7 @@ test.describe('demo dialog', () => {
       'href',
       'https://huggingface.co/spaces/rohanjain2312/FinCompress',
     );
-    await expect(page.locator('dialog')).toBeHidden();
+    await expect(page.locator('dialog.demo')).toBeHidden();
     await context.close();
   });
 });

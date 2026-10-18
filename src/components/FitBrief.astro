@@ -1,0 +1,64 @@
+---
+// One-page brief dialog (design spec 7.14 and 12.2). Static shell; fit-check.ts fills the parts that
+// depend on the result, with textContent. The contact and background lines are build-time content.
+import type { FitCopy } from './fit-copy.ts';
+
+interface Props {
+  copy: FitCopy['brief'];
+  /** Email, phone, location and availability, built from site.json (F-14). */
+  /** Title with no role or company; the island replaces it when the brief opens. */
+  title: string;
+  contact: string[];
+  background: string;
+}
+
+const { copy, title, contact, background } = Astro.props;
+---
+
+<dialog class="sheet-dialog brief" aria-labelledby="brief-title" data-brief>
+  <div class="sheet-dialog__column">
+    <div class="sheet-dialog__toolbar noprint">
+      <button type="button" class="btn btn--inverted" data-brief-print>
+        {copy.save}
+      </button>
+      <button type="button" class="btn btn--outlined" data-brief-close>
+        {copy.close}
+      </button>
+    </div>
+    <article class="sheet">
+      <header class="sheet__head">
+        <p class="sheet__label">
+          {copy.eyebrow} · <span class="sheet__date" data-brief-date></span>
+        </p>
+        <h2 class="sheet__title" id="brief-title" data-brief-title>
+          {title}
+        </h2>
+        <p class="sheet__contact">{contact.join(' · ')}</p>
+      </header>
+      <p class="sheet__verdict">
+        <strong data-brief-verdict></strong>
+        <span class="sheet__counts" data-brief-counts></span>
+      </p>
+      <p data-brief-summary></p>
+      <section class="sheet__section" aria-labelledby="brief-evidence" data-brief-evidence>
+        <h3 class="sheet__heading" id="brief-evidence">
+          {copy.evidenceHeading}
+        </h3>
+        <ul class="sheet__rows" data-brief-rows></ul>
+      </section>
+      <section class="sheet__section" aria-labelledby="brief-gaps" data-brief-gaps>
+        <h3 class="sheet__heading" id="brief-gaps">
+          {copy.gapsHeading}
+        </h3>
+        <p data-brief-gap-line></p>
+      </section>
+      <section class="sheet__section" aria-labelledby="brief-background">
+        <h3 class="sheet__heading" id="brief-background">
+          {copy.backgroundHeading}
+        </h3>
+        <p>{background}</p>
+      </section>
+      <p class="sheet__provenance">{copy.provenance}</p>
+    </article>
+  </div>
+</dialog>

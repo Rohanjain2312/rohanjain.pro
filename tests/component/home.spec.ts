@@ -74,7 +74,7 @@ test.describe('layout', () => {
     await page.goto('/');
     const heights = await page.evaluate(() =>
       Array.from(document.querySelectorAll<HTMLElement>('.btn, .fold__summary'))
-        .filter((el) => el.offsetParent !== null)
+        .filter((el) => el.getClientRects().length > 0)
         .map((el) => Math.round(el.getBoundingClientRect().height)),
     );
     expect(heights.length).toBeGreaterThan(0);
@@ -101,6 +101,7 @@ test.describe('home content', () => {
     expect(headings).toEqual([
       'Goldman Sachs · Data Scientist',
       'Four projects, real numbers',
+      'Hiring? Paste the job description.',
       'Have a role in mind?',
     ]);
     await expect(page.locator('main')).toHaveCount(1);
