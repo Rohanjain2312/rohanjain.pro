@@ -1,5 +1,6 @@
 // Parses content files and checks references across them. Pure: callers pass raw JSON.
 import type { ZodType } from 'astro/zod';
+import { SLUG_PATTERN } from '../applications/schema.ts';
 import { projectLinkUrl } from './evidence.ts';
 import {
   applicationSchema,
@@ -221,13 +222,13 @@ export function validateContent(raw: RawContent): Problem[] {
       );
     });
   }
-  for (const [name, a] of apps) {
-    const file = `applications/${name}`;
-    if (name !== `${a.slug}.json`)
-      out.push({ file, field: 'slug', message: `slug "${a.slug}" does not match file name` });
-    if (a.expiresOn <= a.createdOn)
-      out.push({ file, field: 'expiresOn', message: 'expiresOn must be after createdOn' });
-    a.evidenceRows.forEach((r, i) => claimRefs(file, `evidenceRows.${i}.claimIds`, r.claimIds));
+  for (const [name] of apps) {
+    if (!SLUG_PATTERN.test(name.replace(/\.json$/, '')))
+      out.push({
+        file: `applications/${name}`,
+        field: '(file name)',
+        message: 'expected <company-kebab>-<6 base32 chars>.json',
+      });
   }
   return out;
 }
