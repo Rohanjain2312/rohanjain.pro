@@ -121,22 +121,58 @@ test.describe('CSP in a real browser', () => {
 
   test('detector check: an injected inline script is blocked and reported', async ({ page }) => {
     // Proves the CSP is enforced by the browser and that the listener above would catch a violation.
+    // require-trusted-types-for 'script' makes a raw string assignment throw before CSP is consulted, so
+    // the script text goes through a pass-through Trusted Types policy (the CSP has no trusted-types
+    // directive, so the browser allows creating one). That leaves script-src as the thing under test.
     const seen: string[] = [];
     page.on('console', (msg) => seen.push(msg.text()));
     await page.goto(`${origin}/`);
-    await page.evaluate(() => {
+    const policyAvailable = await page.evaluate(() => {
+      // The DOM lib in this repo has no Trusted Types typings, so describe the part used here.
+      const tt = (
+        window as unknown as {
+          trustedTypes?: {
+            createPolicy(
+              name: string,
+              rules: { createScript(text: string): string },
+            ): { createScript(text: string): string };
+          };
+        }
+      ).trustedTypes;
+      if (!tt) return false;
       document.addEventListener('securitypolicyviolation', (e) => {
         console.error(`CSP violation event: ${e.violatedDirective}`);
       });
+      const policy = tt.createPolicy('qa-detector', { createScript: (text) => text });
       const s = document.createElement('script');
-      s.textContent = 'window.__inlineRan = true';
+      s.textContent = policy.createScript('window.__inlineRan = true');
       document.head.append(s);
+      return true;
     });
-    await expect
-      .poll(() => seen.join('\n'))
-      .toMatch(/content security policy|CSP violation event/i);
+    expect(policyAvailable, 'the browser must support Trusted Types for this check').toBe(true);
+    await expect.poll(() => seen.join('\n')).toMatch(/CSP violation event: script-src/i);
     expect(
       await page.evaluate(() => (window as unknown as { __inlineRan?: boolean }).__inlineRan),
+    ).toBeUndefined();
+  });
+
+  test('Trusted Types: assigning a raw string to a script is rejected', async ({ page }) => {
+    // require-trusted-types-for 'script' turns DOM XSS sinks into TypeErrors.
+    await page.goto(`${origin}/`);
+    const outcome = await page.evaluate(() => {
+      const s = document.createElement('script');
+      try {
+        s.textContent = 'window.__rawRan = true';
+        document.head.append(s);
+        return { threw: false, message: '' };
+      } catch (err) {
+        return { threw: true, message: String((err as Error).message) };
+      }
+    });
+    expect(outcome.threw).toBe(true);
+    expect(outcome.message).toMatch(/TrustedScript/);
+    expect(
+      await page.evaluate(() => (window as unknown as { __rawRan?: boolean }).__rawRan),
     ).toBeUndefined();
   });
 });
