@@ -15,8 +15,8 @@ export default {
   ],
   coverageAnalysis: 'perTest',
   thresholds: { high: 90, low: 80, break: 80 },
-  incremental: true,
-  incrementalFile: '.stryker-tmp/incremental-fitcheck.json',
+  // No incremental cache: a score must come from a clean run, never from reused results.
+  incremental: false,
   tempDirName: '.stryker-tmp/sandbox-fitcheck',
   reporters: ['clear-text', 'progress', 'html', 'json'],
   htmlReporter: { fileName: 'reports/mutation/fitcheck.html' },

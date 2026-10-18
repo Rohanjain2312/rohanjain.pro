@@ -2,6 +2,7 @@
 // Expected verdicts come from docs/qa/fit-rubric.md, written before the engine ran on any posting.
 // A failure here means the engine and the rubric disagree. Fix aliases or tiers first (R-407).
 // Change a threshold only with an ADR in the same PR (R-404).
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { analyze, extras } from '../../src/lib/fitcheck/index.ts';
 import {
@@ -75,6 +76,14 @@ describe('rubric self-check (no engine)', () => {
       expect(rubricVerdict(e.proven.length, e.gaps.length + e.unlisted.length)).toBe(e.expected);
     },
   );
+  it('verdicts.json names the same rubric version as docs/qa/fit-rubric.md', () => {
+    const rubric = readFileSync('docs/qa/fit-rubric.md', 'utf8');
+    const latest = [...rubric.matchAll(/^\| (\d+) \| \d{4}-\d{2}-\d{2} \|/gm)].map((m) =>
+      Number(m[1]),
+    );
+    expect(verdicts.rubricVersion).toBe(Math.max(...latest));
+    expect(rubric).toContain(`Version ${verdicts.rubricVersion},`);
+  });
   it('records that the Reader Advocate has not rated yet', () => {
     expect(verdicts.raters.qa).toBe('done');
     expect(verdicts.raters.readerAdvocate).toBe('not yet rated');
