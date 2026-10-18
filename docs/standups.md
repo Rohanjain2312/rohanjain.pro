@@ -66,3 +66,8 @@ One entry at the start and end of each session (skill `session-protocol`).
 - Done: Phase 3 closed (`v0.3.0`); Phase 4: #216 plan, #217 hook exception and private repo, #218 `npm run for`, #219 résumé dialog, PDFs and `/for` pages. Gate record written.
 - Next: merge the memory sweep and gate PRs, release `v0.4.0`, start Phase 6.
 - Blockers: none. Client: nothing required; optional 5-second test and recruiter rating packets in `docs/needs-client.md`.
+
+## 2026-10-19 end (Phase 6)
+- Done: merged #236 (SEO, accessibility, performance), #250 (fit-check plain-word context, ADR-0030), #254 (Phase 7 prep, ADR-0032), #255 (gitleaks, Trusted Types CSP), #257 (handoff, ADR-0031, R-513 active); status-data ruleset created; Low-fix PRs #260 to #264 opened.
+- Next: review and merge #260 to #264, then the Phase 6 gate and v0.9.0.
+- Blockers: none. Stopped for usage limits. Client: nothing required.
