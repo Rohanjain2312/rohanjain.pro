@@ -23,7 +23,7 @@
       },
       {
         "figure": "{{tariff-exact-match.value}}%",
-        "caption": "exact tariff codes from TariffAgent on unseen rulings, vs {{tariff-zero-shot.value}}% zero-shot"
+        "caption": "exact tariff codes from TariffAgent on unseen rulings, vs {{tariff-zero-shot.value}}% zero-shot (the model given no examples)"
       }
     ],
     "credentials": "IEEE-published · MS Applied ML, University of Maryland · mentored {{interns-offers.value}} interns to full-time offers"
@@ -38,12 +38,12 @@
       "items": [
         {
           "lead": "Settlement model.",
-          "text": "SVM with SMOTE. {{settlement-pending-trades-reduction}}, {{settlement-penalty-savings}}.",
+          "text": "SVM, with SMOTE (extra synthetic examples of the rare failures) to balance the data. {{settlement-pending-trades-reduction}}, {{settlement-penalty-savings}}.",
           "link": { "label": "rebuild", "projectId": "settle", "linkLabel": "code" }
         },
         {
           "lead": "Loan servicing AI agent.",
-          "text": "GPT-4 with RAG, {{loan-v1-tools}}, human approvals; {{loan-v1-hours-saved}}."
+          "text": "GPT-4 with RAG, {{loan-v1-tools}}, human approvals; {{loan-v1-hours-saved}}. RAG means it looks up relevant text before answering."
         },
         {
           "lead": "KYC OCR.",
@@ -71,12 +71,15 @@
         },
         {
           "sign": "+",
-          "text": "{{loan-v2-agents.value}} LangGraph agents, {{loan-v2-tools.value}} least-privilege tools"
+          "text": "{{loan-v2-agents.value}} agents on LangGraph (a framework that sequences agent steps), {{loan-v2-tools.value}} least-privilege tools"
         },
         { "sign": "-", "text": "{{loan-v1-approvals}} across {{loan-v1-checks}}" },
         { "sign": "+", "text": "{{loan-v2-approvals}} across {{loan-v2-checks}}" },
         { "sign": "+", "text": "Pydantic at every boundary, idempotent writes" },
-        { "sign": "+", "text": "{{loan-v2-deploy}}" }
+        {
+          "sign": "+",
+          "text": "{{loan-v2-deploy}} (GKE Autopilot is Google's managed Kubernetes; A2A lets agents talk to each other)"
+        }
       ],
       "note": "same problem, rebuilt with twice the human approvals"
     }
@@ -95,6 +98,21 @@
       { "claimId": "goldman-tenure", "label": "Goldman Sachs" },
       { "claimId": "edu-umd", "label": "MS, Maryland" }
     ]
+  },
+  "glosses": {
+    "projects": {
+      "settle": "PR-AUC is how well the model ranks the true fails first.",
+      "tariff": "MCP is a standard way for AI tools to call outside services.",
+      "med": "LoRA trains a small add-on instead of the whole model.",
+      "gb": "Both are RAG methods: they look facts up before answering."
+    },
+    "figures": {
+      "settle-pr-curves": "PR-AUC is how well a model ranks the true fails first.",
+      "settle-shap": "SHAP shows which inputs drove each prediction.",
+      "fc-latency": "INT8 stores the model's numbers as small whole numbers, so it is smaller and faster.",
+      "mr-bars": "MCC is one score that punishes lucky guessing.",
+      "gb-bars": "GraphRAG and GNN-RAG answer by looking facts up in a graph first."
+    }
   },
   "background": {
     "title": "Education and publication",
