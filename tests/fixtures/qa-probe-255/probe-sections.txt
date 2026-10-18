@@ -1,0 +1,14 @@
+Synthetic QA probe for PR 255. Made-up company, made-up role. Not a real posting.
+
+Senior Widget Engineer, Example Corp (fictional)
+
+About the role
+Example Corp builds imaginary widgets for an imaginary market.
+
+Responsibilities
+- Build widgets.
+- Review other widgets.
+
+Qualifications
+- Five years of widget experience.
+- Comfort with fictional tooling.
