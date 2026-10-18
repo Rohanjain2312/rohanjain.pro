@@ -11,7 +11,7 @@ Date: 2026-10-18. Criteria from `docs/spec/11-phases.md` (Phase 3) and skill `ph
 | XSS payload tests pass | Pass | PR #208: 7 payloads in the Frontend tests, 13 more tried by QA (page and brief), all rendered as inert text; no HTML sink, storage or network call in the shipped script |
 | Brief prints to one page in Chromium and WebKit | Pass with a limit | PR #208: realistic worst case 802 and 871 px of 919 on one page in Chromium and WebKit; WebKit checked by layout measurement because Playwright cannot print a PDF there; 80 + 80 unbroken wide capitals overflow to 2 pages, logged for a Design Lead ruling (#195) |
 | Keyboard-only flow works | Pass | `tests/component/fitcheck.spec.ts` (PR #208), checked by QA including focus return and Escape |
-| Fit-rating packet ready in `docs/needs-client.md` | Pass | Optional item added; does not block. The résumé PDF it names does not exist until Phase 4, so the packet uses the home page text |
+| Fit-rating packet ready in `docs/needs-client.md` | Pass | Optional item added; does not block. The résumé PDF it names does not exist until Phase 4, so the packet uses the home page fold screenshot (`.shots/home-1280-fold.png`) |
 
 ## Also checked
 | Item | Result | Evidence |
