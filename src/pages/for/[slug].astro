@@ -1,0 +1,143 @@
+---
+// Per-application page (F-07, design spec 8.1 and 8.4, architecture 5.5, R-503). Built only from result files
+// in APPLICATIONS_DIR (ADR-0016); with none there are no /for pages. Every field is rendered as text by Astro,
+// never as HTML. An expired result renders the notice only: no company, verdict, evidence or gaps.
+import '../../styles/for.css';
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ExternalLink from '../../components/ExternalLink.astro';
+import { loadRoles, loadSite } from '../../components/data.ts';
+import { fillSlots } from '../../components/fit-view.ts';
+import home from '../../components/copy/home.json';
+import copy from '../../components/copy/for.json';
+import { isExpired, SLUG_PATTERN, type ApplicationResult } from '../../lib/applications/index.ts';
+
+export async function getStaticPaths() {
+  const now = new Date();
+  const entries = await getCollection('applications');
+  return entries.map((e) => {
+    if (!SLUG_PATTERN.test(e.id)) {
+      throw new Error(
+        `applications/${e.id}.json is not a valid slug (<company>-<6 base32 chars>).`,
+      );
+    }
+    const result = e.data as ApplicationResult;
+    return {
+      params: { slug: e.id },
+      props: { slug: e.id, expired: isExpired(result, now), result },
+    };
+  });
+}
+
+const { slug, expired, result } = Astro.props;
+const { site } = await loadSite();
+const defaultRole = (await loadRoles()).find((r) => r.id === 'ml');
+if (!defaultRole) throw new Error('roles.json has no ML Engineer entry.');
+const slots = { company: result.company, role: result.role };
+const month = new Date(`${result.created}T00:00:00Z`).toLocaleDateString('en-US', {
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+const mailto = `mailto:${site.email}?subject=${encodeURIComponent(`${result.company}: ${result.role}`)}`;
+const counts = fillSlots(home.fit.counts, {
+  proven: String(result.counts.proven),
+  gaps: String(result.counts.gaps),
+});
+const ROBOTS = 'noindex, nofollow';
+---
+
+{expired ? (
+  <Base title={copy.expired.title} description={copy.description} robots={ROBOTS}>
+    <main class="crash">
+      <div class="crash__column">
+        <p class="meta">{copy.expired.label}</p>
+        <h1 class="crash__title">{copy.expired.heading}</h1>
+        <p class="for__expired-text">{copy.expired.body}</p>
+        <a class="back-link" href="/">
+          {copy.expired.back}
+        </a>
+      </div>
+    </main>
+  </Base>
+) : (
+  <Base title={fillSlots(copy.title, slots)} description={copy.description} robots={ROBOTS}>
+    <header class="for-bar">
+      <div class="for-bar__inner">
+        <span>{fillSlots(copy.topbar, slots)}</span>
+        <span class="for-bar__where">
+          rohanjain.pro/for/{slug} · {month}
+        </span>
+      </div>
+    </header>
+    <main class="for">
+      <section class="for__intro" aria-label="Introduction">
+        <p class="meta">{fillSlots(copy.label, slots)}</p>
+        <h1 class="for__title">{fillSlots(copy.heading, slots)}</h1>
+        <div class="actions">
+          <a class="btn" href={`/resume/${defaultRole.pdfFile}`}>
+            {fillSlots(copy.resume, { role: defaultRole.title })}
+          </a>
+          <a class="text-link" href={mailto}>
+            {site.email}
+          </a>
+        </div>
+      </section>
+      <section class="for__fit" aria-label={copy.evidenceLabel}>
+        <div class="fit__verdict-row">
+          <div class="verdict" data-verdict={result.verdict.key}>
+            <p class="meta verdict__kicker">{copy.verdictLabel}</p>
+            <p class="verdict__label">{result.verdict.label}</p>
+            <p class="verdict__counts">{counts}</p>
+          </div>
+          <p class="fit__note">{copy.note}</p>
+        </div>
+        {result.evidenceRows.length > 0 && (
+          <ul class="evidence">
+            {result.evidenceRows.map((row) => (
+              <li class="evidence__row">
+                <div class="evidence__info">
+                  <p class="evidence__name">
+                    <span aria-hidden="true">● </span>
+                    {row.name}
+                  </p>
+                  <p class="evidence__proof">{row.proof}</p>
+                  {row.href && row.linkLabel && (
+                    <ExternalLink
+                      class="row__link"
+                      href={row.href}
+                      label={row.linkLabel}
+                      context={row.name}
+                    />
+                  )}
+                </div>
+                <ul class="chips" aria-label={fillSlots(home.fit.labels.tags, { name: row.name })}>
+                  {row.tags.map((t) => (
+                    <li class="chip">{t}</li>
+                  ))}
+                </ul>
+              </li>
+            ))}
+          </ul>
+        )}
+        {result.gaps.length > 0 && (
+          <div class="for__gaps">
+            <p class="for__gaps-lead">
+              <span aria-hidden="true">○ </span>
+              {copy.gapsLead}
+            </p>
+            <ul class="chips">
+              {result.gaps.map((g) => (
+                <li class="chip chip--gap">{g}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </section>
+      <footer class="for__foot">
+        <span>{copy.footerLeft}</span>
+        <ExternalLink href="/" label={copy.footerLink} />
+      </footer>
+    </main>
+  </Base>
+)}

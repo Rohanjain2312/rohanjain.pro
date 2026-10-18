@@ -13,9 +13,11 @@ interface Props {
   description: string;
   /** Adds robots noindex. Used by the 404 page. */
   noindex?: boolean;
+  /** Overrides the robots content, for example "noindex, nofollow" on /for pages. */
+  robots?: string;
 }
 
-const { title, description, noindex = false } = Astro.props;
+const { title, description, noindex = false, robots } = Astro.props;
 ---
 
 <!doctype html>
@@ -27,7 +29,7 @@ const { title, description, noindex = false } = Astro.props;
     <meta name="description" content={description} />
     <!-- Placeholder until the Design Lead ships public/favicon.svg (design spec 13.2). Stops the /favicon.ico 404 in the console. -->
     <link rel="icon" href="data:," />
-    {noindex && <meta name="robots" content="noindex" />}
+    {(robots || noindex) && <meta name="robots" content={robots ?? 'noindex'} />}
     <link
       rel="preload"
       href="/fonts/newsreader-roman.woff2"

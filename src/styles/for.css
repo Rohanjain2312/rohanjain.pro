@@ -1,0 +1,129 @@
+/* /for/<slug> and its expiry page (design spec 8.1, 8.4, 12.3). Tokens only for color (R-601). */
+
+.for-bar {
+  --focus: var(--paper);
+
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.for-bar__inner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-8);
+  box-sizing: border-box;
+  max-width: 70rem;
+  margin: 0 auto;
+  padding: var(--space-16) var(--gutter);
+  font-family: var(--stack-mono);
+  font-size: var(--fs-xs);
+}
+
+.for-bar__where {
+  color: var(--on-ink-muted);
+}
+
+.for {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-56);
+  box-sizing: border-box;
+  max-width: 70rem;
+  margin: 0 auto;
+  padding: var(--space-48) var(--gutter) var(--space-72);
+}
+
+.for__intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.for__fit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+}
+
+.for__title {
+  font-size: var(--fs-page);
+  font-weight: var(--weight-medium);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  overflow-wrap: anywhere;
+}
+
+.for__gaps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.for__gaps-lead {
+  font-weight: var(--weight-strong);
+}
+
+.for__foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-8) var(--space-24);
+  padding-top: var(--space-16);
+  border-top: var(--rule-w-strong) solid var(--ink);
+  color: var(--muted);
+  font-family: var(--stack-mono);
+  font-size: var(--fs-xs);
+}
+
+.for__foot a {
+  color: var(--ink);
+}
+
+@media print {
+  .for-bar {
+    background: var(--print-paper);
+    color: var(--ink);
+  }
+
+  .for-bar__where {
+    color: var(--ink);
+  }
+
+  .for .verdict {
+    border: var(--rule-w-strong) solid var(--ink);
+    background: var(--print-paper);
+    color: var(--ink);
+  }
+
+  .for .chip {
+    border: var(--rule-w) solid var(--ink);
+    background: transparent;
+  }
+
+  .for a[href]::after {
+    content: ' (' attr(href) ')';
+  }
+
+  .for .btn {
+    border: var(--rule-w-strong) solid var(--ink);
+    background: transparent;
+    color: var(--ink);
+  }
+}
+
+.verdict .verdict__kicker {
+  color: var(--on-ink-muted);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
+.for__expired-text {
+  max-width: var(--measure-read);
+  font-size: var(--fs-body);
+  color: var(--ink-2);
+}
+
+.for .evidence {
+  border-top: var(--rule-w-strong) solid var(--ink);
+}
