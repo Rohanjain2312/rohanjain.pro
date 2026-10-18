@@ -10,7 +10,7 @@
 # which is data and is not executed under script-src.
 
 /*
-  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src https://*.hf.space; frame-ancestors 'none'; base-uri 'none'; form-action 'none'; manifest-src 'self'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src https://*.hf.space; frame-ancestors 'none'; base-uri 'none'; form-action 'none'; manifest-src 'self'; require-trusted-types-for 'script'; upgrade-insecure-requests
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin

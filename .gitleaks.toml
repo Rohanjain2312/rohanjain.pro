@@ -1,0 +1,44 @@
+# gitleaks config. Owned by Security. Read by the pre-commit hook (.husky/checks/pre-commit.mjs)
+# and by the CI secret scan (gitleaks-action reads .gitleaks.toml at the repo root).
+# Controls: R-508 (secrets), R-501 (job description text). Notes: docs/security/gitleaks-fixtures/README.md.
+
+title = "rohanjain.pro gitleaks config"
+
+[extend]
+useDefault = true
+
+# R-501: job description text is never committed. The path block (postings/, *.jd.txt) catches
+# files by name; these rules catch the text itself when it lands in any other file.
+
+# Allowlists: each job-description rule has one, for the positive test fixtures only, by path. They are
+# rule-level on purpose: CI runs gitleaks 8.24.3, which predates the global [[allowlists]] targetRules
+# syntax, and a global [allowlist] would also switch off the default secret rules for those files.
+# There is no allowlist for postings/ or *.jd.txt. Fixtures hold synthetic text for a made-up company.
+
+[[rules]]
+id = "job-description-sections"
+description = "A responsibilities heading and a qualifications heading close together (R-501)"
+# Two heading-only lines (optionally markdown or bold), one of each family, within 1000 characters,
+# in either order. One repeated heading (for example several "Requirements:" lists) does not match.
+regex = '''(?im)^[ \t>*#_-]*(?:(?:key |your |job |main |core )?(?:responsibilities|duties)|what you['’]ll do)[ \t:*_]*$(?s:.{1,1000}?)^[ \t>*#_-]*(?:(?:minimum |basic |preferred |required |nice to have )?(?:qualifications|requirements)|what you['’]ll bring|who you are)[ \t:*_]*$|^[ \t>*#_-]*(?:(?:minimum |basic |preferred |required |nice to have )?(?:qualifications|requirements)|what you['’]ll bring|who you are)[ \t:*_]*$(?s:.{1,1000}?)^[ \t>*#_-]*(?:(?:key |your |job |main |core )?(?:responsibilities|duties)|what you['’]ll do)[ \t:*_]*$'''
+keywords = ["responsibilities", "duties", "what you"]
+tags = ["job-description", "R-501"]
+
+[rules.allowlist]
+description = "Positive job-description test fixture (synthetic text)"
+paths = [
+  '''(?:^|/)docs/security/gitleaks-fixtures/positive-[a-z-]+\.txt$''',
+]
+
+[[rules]]
+id = "job-description-eeo"
+description = "Equal opportunity employer statement, boilerplate of a job posting (R-501)"
+regex = '''(?i)\bequal[ -]opportunity[ -](?:employer|workplace)\b'''
+keywords = ["equal"]
+tags = ["job-description", "R-501"]
+
+[rules.allowlist]
+description = "Positive job-description test fixture (synthetic text)"
+paths = [
+  '''(?:^|/)docs/security/gitleaks-fixtures/positive-[a-z-]+\.txt$''',
+]
