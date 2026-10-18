@@ -54,7 +54,7 @@ describe('layout and page', () => {
   it('allow set:html only in the JSON-LD component, for one ld+json script', () => {
     const text = readFileSync(`src/components/${JSON_LD}`, 'utf8');
     const body = text.slice(text.indexOf('\n---', 4) + 4);
-    expect(body.match(/<script[^>]*>/g)).toEqual([
+    expect(body.match(/<script[^>]*>/gi)).toEqual([
       '<script type="application/ld+json" set:html={text} />',
     ]);
     expect(body).not.toMatch(/<style|define:vars|is:inline|\sstyle=/);
