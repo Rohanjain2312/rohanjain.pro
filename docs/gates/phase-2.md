@@ -10,7 +10,7 @@ Date: 2026-10-18. Criteria from `docs/spec/11-phases.md` (Phases 2 and 5, merged
 | Zero axe violations | Pass | `tests/a11y/` (`npm run test:frontend`): home, privacy and 404 at 390 and 1280 px, folds closed and open; runs in `verify` and the CI `e2e` job (PR #187); QA ran 15 repeats with no flake |
 | Lighthouse budgets met locally | Pass | `tests/a11y/README.md`, run 2026-10-18 on `main` at `210ae48`: home 100/100/100/100, LCP 1.5 s, CLS 0; privacy 100/100/100/100, LCP 1.4 s; 404 SEO 60 by design (`noindex`) |
 | Claims check and copy lint green | Pass | CI `build` and `static` on every merged PR; `check-claims: OK (3 page(s))`; 7 new claims verified in `docs/qa/claims-verification.md` (QA) |
-| Real 5-second test packet ready in `docs/needs-client.md` | Pass | Optional item added; does not block |
+| Real 5-second test packet ready in `docs/needs-client.md` | Pass | Optional item added, following skill `external-validation` (audience, 390 and 1280 px, 4 of 5 pass rule); first-click part waits for "View résumé" (Phase 4); does not block |
 
 ## Phase 5 gate criteria (folded in)
 | Criterion | Result | Evidence |
