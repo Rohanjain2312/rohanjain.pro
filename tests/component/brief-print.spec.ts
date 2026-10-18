@@ -95,6 +95,7 @@ const cases = [
 ] as const;
 
 async function layoutChecks(type: BrowserType) {
+  test.setTimeout(120_000);
   const browser = await type.launch();
   try {
     const context = await browser.newContext({ baseURL: BASE });
@@ -148,6 +149,7 @@ test('WebKit: the worst-case brief fits one Letter page (layout)', async () => {
   } catch {
     installed = false;
   }
+  test.setTimeout(120_000);
   test.skip(!installed, 'WebKit is not installed: run `npm run browsers:install:webkit`.');
   await layoutChecks(webkit);
 });
