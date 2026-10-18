@@ -32,7 +32,7 @@ Serve `dist/` with gzip, as Cloudflare Pages will. `scripts/preview.mjs` does no
 npx --yes lighthouse@latest http://localhost:PORT/ --chrome-flags="--headless=new --no-sandbox" --output=json --output-path=lh-home.json
 ```
 
-Run on 2026-10-17 with Lighthouse 13.5.0, mobile defaults, gzip static server:
+Run on 2026-10-18 with Lighthouse 13.5.0 (after the demo dialog, footer status and glosses; numbers unchanged), mobile defaults, gzip static server:
 
 | Page        | Performance | Accessibility | Best practices | SEO | LCP   | CLS | TBT  |
 | ----------- | ----------- | ------------- | -------------- | --- | ----- | --- | ---- |
