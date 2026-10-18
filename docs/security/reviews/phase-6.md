@@ -6,26 +6,28 @@ Scope: `docs/spec/08-security.md` 8.9, run against a local build (`npm ci --igno
 
 ## Verdict
 
-**No Critical, High or Medium finding. Security passes the Phase 6 local assessment (R-511: nothing blocks).** Six Lows (two with their own issues, four on the Phase 6 Low backlog #233), eight Info items. Four checks were not run; see "Not run".
+**One Medium finding is open: 232-L6 (#251), the guard-bash tripwire gaps. Security does not pass the Phase 6 assessment until #251 is closed (R-511).** No Critical or High. Five Lows (#241, #242 and 232-L3 to L5 on the Phase 6 Low backlog #233), eight Info items, each with a tracking line. Seven checks were not run or were replaced; see "Not run".
+
+Re-rated after the QA review of PR #237 (head 83bbb96): 232-L6 was first rated Low. ADR-0018 item 2 says the tripwires match raw text so that wrappers and substitution do not hide review and label spoofing; the three gap classes defeat exactly those targets, which is the reasoning behind #60 and #61 (both Medium). RR-2 (one account, forged approvals) is why the server-side checks do not cover it: review-gate accepts any REVIEW block from the owner account plus the matching `approved:<role>` label, and both are reachable through these forms.
 
 ## Findings
 
 | ID | Severity | Finding | Tracked in | Owner | Target |
 |---|---|---|---|---|---|
 | 232-L1 | Low | CSP has no `require-trusted-types-for 'script'`; threat model 6.1 and section 9 item 1 said add it or record why not. No DOM sink exists in `src/`, so defence in depth only | #241 | security-engineer | 2026-10-30 |
-| 232-L2 | Low | Branch `status-data` is unprotected (`protected=false`; ruleset 25204664 targets only the default branch). Tampered `status.json` can show a false date, up/down state or text in the footer, not script | #242 (ruleset recommendation inside) | supervisor | before Phase 7 (2026-11-06) |
+| 232-L2 | Low | Branch `status-data` is unprotected (`protected=false`; ruleset 25204664 targets only the default branch). Tampered `status.json` can show a false date, up/down state or text in the footer, not script | #242 (ruleset recommendation inside) | supervisor | before Phase 7 starts |
 | 232-L3 | Low | `/.well-known/security.txt` (spec 8.8) does not exist; `public/` holds only `_headers` and `fonts/`; the route returns 404 | #233 | platform-engineer | 2026-10-30 |
 | 232-L4 | Low | CodeQL alerts 14 and 15 (`js/incomplete-multi-character-sanitization`, `src/lib/claims/check.ts`) still open; 165-L1 asked to clear them before Phase 6. Input is the site's own build output | #233 | supervisor | 2026-10-30 |
-| 232-L5 | Low | `.gitleaks.toml` still missing; CI gitleaks uses default rules, R-501 has no content rule (ADR-0028 made it non-blocking) | #111, #233 | security-engineer | Phase 7 prep |
-| 232-L6 | Low | guard-bash tripwire gaps re-confirmed (below): attached short flags in the `gh api` parser, absolute path to `gh` or `git`, wrapper class. Fix the cheap structural ones before Phase 7 | #215, #54, #47, #233 | supervisor | before Phase 7 |
-| 232-I1 | Info | CSP evaluator: `script-src 'self'` may allow JSONP or uploaded scripts. Not applicable (no JSONP, no upload, no Angular) | none | none | none |
-| 232-I2 | Info | `npm audit` (all): 9 high, one advisory (GHSA-vfj7-8cjw-p6xm, `braces` 3.0.3, dev only); waived by ADR-0021 to 2027-01-15; no fixed `braces` exists. `--omit=dev`: 0. OSV finds the same one | RR-12 | none | 2027-01-15 |
-| 232-I3 | Info | The emulator (`scripts/preview.mjs`) differs from Cloudflare Pages: serves `/_headers` (200); answers POST, PUT, DELETE, TRACE with the page (200); sends no security headers on 404s for rejected paths (`%2f`, `%00`, bad `%` escapes, `..%2f`). Emulator only | none | none | re-test on production in Phase 7 |
-| 232-I4 | Info | `tests/component/brief-print.spec.ts` hard-codes `localhost:4322` (two layout tests fail on another port). Not security | none | qa-engineer | note for #230 |
+| 232-L5 | Low | `.gitleaks.toml` still missing; CI gitleaks uses default rules, R-501 has no content rule (ADR-0028, Consequences: the gitleaks rule for job-description text stays a Low on the Phase 3 backlog and is not a precondition) | #111, #233 | security-engineer | Phase 7 prep |
+| 232-L6 | **Medium** | guard-bash tripwires are bypassed by an absolute path to `gh` or `git`, by attached short flags in the `gh api` parser (`-flabels[]=approved:supervisor`, `-X=PUT`), and by a `REVIEW:` or `Reviewer:` line inside a multi-line comment body. A role can merge, set another role's approval label and post another role's REVIEW block. Wrapper forms (`timeout`, `nice`, `( )`, `{ }`) are the same class | **#251** (also #215, #54, #47) | security-engineer (patch), supervisor (applies it under R-112) | before Phase 6 closes |
+| 232-I1 | Info | CSP evaluator: `script-src 'self'` may allow JSONP or uploaded scripts. Not applicable (no JSONP, no upload, no Angular) | #233 line | security-engineer | no action; re-check if the site ever hosts uploads |
+| 232-I2 | Info | `npm audit` (all): 9 high, one advisory (GHSA-vfj7-8cjw-p6xm, `braces` 3.0.3, dev only); waived by ADR-0021 to 2027-01-15; no fixed `braces` exists. `--omit=dev`: 0. OSV finds the same one | RR-12 (listed in `docs/needs-client.md`, ADR-0021) | security-engineer | 2027-01-15 |
+| 232-I3 | Info | The emulator (`scripts/preview.mjs`) differs from Cloudflare Pages: serves `/_headers` (200); answers POST, PUT, DELETE, TRACE with the page (200); sends no security headers on 404s for rejected paths (`%2f`, `%00`, bad `%` escapes, `..%2f`). Emulator only | #233 line, RR-15 | security-engineer | re-test on production in Phase 7 |
+| 232-I4 | Info | `tests/component/brief-print.spec.ts` hard-codes `localhost:4322` (two layout tests fail on another port). Not security | #233 line (#230 is open; QA reads #233) | qa-engineer | with #230 |
 | 232-I5 | Info | No `robots.txt` or sitemap yet (SEO is #229). When added: sitemap must not list `/for/*` or `/print/*` (R-503) | #229 | frontend-engineer | Phase 6 PR A |
-| 232-I6 | Info | Git author email `rohanjain2312@gmail.com` appears on 80 commits (GitHub web squash commits). It is the public contact address on the site; no other personal email exists in tree or history | none | none | none |
+| 232-I6 | Info | Git author email `rohanjain2312@gmail.com` appears on 80 commits (GitHub web squash commits). It is the public contact address on the site; no other personal email exists in tree or history | #233 line, RR-5 | security-engineer | no action |
 | 232-I7 | Info | Playwright browsers download from the Playwright CDN with no pinned hash (`npm run browsers:install`; also in `release.yml`, read-only token). Same class as RR-4 | RR-4 | none | monthly review |
-| 232-I8 | Info | Settings: `strict_required_status_checks_policy: false` (branches need not be up to date); Actions `allowed_actions: all` (pins are enforced instead); `required_approving_review_count: 0` (single owner, Scorecard alerts CodeReview and BranchProtection) | none | none | none |
+| 232-I8 | Info | Settings: `strict_required_status_checks_policy: false` (branches need not be up to date); Actions `allowed_actions: all` (pins are enforced instead); `required_approving_review_count: 0` (single owner, Scorecard alerts CodeReview and BranchProtection) | #233 line | supervisor | revisit at Phase 7 |
 
 ## Checks run
 
@@ -53,7 +55,7 @@ Scope: `docs/spec/08-security.md` 8.9, run against a local build (`npm ci --igno
 
 ### 2. OWASP ZAP baseline and manual replacement
 
-- **Not run: ZAP.** `docker --version` reports 29.8.1, but the daemon is not running (`failed to connect to the docker API at unix:///var/run/docker.sock`). I did not start Docker Desktop or pull the 1.5 GB image on the client's machine, and installed nothing.
+- **Not run: ZAP.** `docker --version` reports 29.8.1, but the daemon is not running (`failed to connect to the docker API at unix:///var/run/docker.sock`). I did not start Docker Desktop or pull the ZAP image on the client's machine, and installed nothing.
 - Replacement: the raw HTTP probes above (missing headers, cookies, information leakage, directory listing, method handling, traversal, CORS/Host headers) and the cookie and mixed-content checks below. These cover the passive ZAP rules; they do not replace its active rules or spider. Repeat with ZAP in Phase 7 against production (spec 8.9).
 - Cookies: no `Set-Cookie` on any route; `document.cookie` is empty in the browser tests. Mixed content: the page loads with `upgrade-insecure-requests`; the only third-party origin is the click-loaded `*.hf.space` iframe. No request left the origin in any browser run.
 
@@ -119,13 +121,14 @@ Scope: `docs/spec/08-security.md` 8.9, run against a local build (`npm ci --igno
 
 | Class | Forms probed | Result |
 |---|---|---|
-| Controls | `gh api -X POST` to another repo, `gh pr merge`, `gh api -X DELETE`, GraphQL `mutation`, `gh pr comment ... REVIEW:`, token printing, issue transfer | all denied |
+| Controls | `gh api -X POST` to another repo, `gh pr merge`, `gh api -X DELETE`, GraphQL `mutation`, `gh pr comment --body 'REVIEW: x'` (single line, no Reviewer line), token printing, issue transfer | all denied. Real newlines inside a quoted body are also checked: a `REVIEW:` block naming another role is denied R-203, one with no Reviewer line R-202, and `$(printf ...)` bodies R-202 |
+| Review blocks hidden by quoting | `gh pr comment 5 --body $'intro\nREVIEW: APPROVED\nReviewer: supervisor\nHead: abcdef1\nChecked:\n- x'` as qa-engineer; the same starting with `REVIEW:`; the same naming the caller's own role | **all 3 allowed**: the hook reads `\n` inside `$'...'` as a backslash and `n` (bash makes a newline), and the `$` prefix hides a first-line `REVIEW:`. Reproduces the multi-line probes in the QA review of PR #237 |
 | Attached short flags in the `gh api` parser | `-ftitle=x`, `-Ftitle=x`, `-f=title=x`, `-X=POST`, `-X=PUT` on `pulls/1/merge`, `-flabels[]=approved:qa`, `-f=labels[]=...`, `-X=DELETE` on a ruleset, `gh api user/repos -fname=x` | **all 9 allowed** (the parser ignores them, so the call looks like a read) |
 | Absolute path | `/opt/homebrew/bin/gh` with `pr merge`, `api -X DELETE`, `repo delete`, `repo edit --visibility private`, forged `pr comment REVIEW:` | **all 5 allowed** (the gh section tests `t[0] === 'gh'`); `auth token` and `issue transfer` still denied by the raw-text rules |
 | Wrapper class | `timeout`, `nice`, `( ... )`, `{ ...; }`, `env -u FOO`, `echo $(...)`, `if ...; then ...; fi`, `find -exec`; for git: `timeout`, `/usr/bin/git`, `(git push --force ...)` | **all allowed**; `env -i`, `command`, `bash -lc`, `x=1 gh`, `\gh` and `xargs` are denied |
 | Legit use | `gh pr view`, `gh api` read, `gh issue create --label severity:low`, supervisor `gh pr merge` | allowed (no false positive) |
 
-  Rating (ADR-0018): Low. The hooks are tripwires; the ruleset, the 11 required checks (including `review-gate`), the interaction limit (`collaborators_only`, expires 2027-04-18) and fork approval (`all_external_contributors`) are the boundary, and RR-11 already accepts interpreter indirection. **Which to fix before launch:** all three classes are reachable by a plain mistake, not only by a steered agent, and each fix is small. Do them in one PR before Phase 7 (232-L6): match `basename` of the command for `gh` and `git`; add `timeout`, `nice`, `sudo`, `stdbuf` and `env` option arguments to the wrapper list; start a segment after `(`, `{`, `$(`, `then`, `do`, `else`; parse `-fk=v`, `-Fk=v`, `-f=k=v`, `-X=V`. The remaining items in #47, #54, #63 and #153 can stay in Phase 8 (ADR-0024).
+  Rating: **Medium (232-L6, #251)**. First written as Low; re-rated after the QA review. ADR-0018 item 2 says these tripwires match raw text so that wrappers and substitution do not hide review and label spoofing, merge and other-repo writes. Three plain forms hide exactly those: the absolute path, the attached short flags and the `$'...\n...'` review body. The server-side checks do not close it: there is one account (RR-2), review-gate accepts any REVIEW block from the owner account plus the matching `approved:<role>` label, and both are reachable through these forms, so a role can merge, label and review as another role. #60 and #61 were Medium for the same reason. RR-11 (interpreter indirection) stays accepted; it is a different route and does not cover accidental, plain forms. **Fix before Phase 6 closes**, in one patch to `guard-bash.mjs` with cases in `test-hooks.mjs` (acceptance in #251): `basename` of the command word for `gh` and `git`; attached short flags in the `gh api` loop; `$'...'` escape decoding and a review-block check on any line of a body. The wrapper forms (`timeout`, `nice`, `( )`, `{ }`, `env -u`, `find -exec`) go in the same patch where cheap, and the rest of #47, #54, #63 and #153 stay Low in Phase 8 (ADR-0024). `.claude/hooks/**` is Supervisor-owned (R-112), so Security writes the patch and the Supervisor applies it.
 - Live GitHub settings read at the end of the run: interaction limit `collaborators_only` expires 2027-04-18; `sha_pinning_required: true`; default workflow permissions `read`, Actions cannot approve PRs; fork PR approval `all_external_contributors`; ruleset 25204664 active with no bypass actors (deletion, non_fast_forward, linear history, pull_request, required_signatures, required_status_checks); token scopes gist, project, read:org, repo, workflow.
 
 ### 10. Supply chain
@@ -157,4 +160,4 @@ None found by someone else in this review. Process notes: the scratchpad directo
 ## Carried forward
 
 - Phase 7: ZAP and header checks on production (spec 8.9); re-test `//for`, case variants and methods on Cloudflare; HSTS and analytics origins; `v*` tag ruleset; #72.
-- Before launch: #241, #242, 232-L3 to L6 as in the table. Renew the interaction limit before 2027-04-18.
+- Before the Phase 6 gate: #251 (Medium, blocks) fixed, merged, and its probes rerun at the fix head. Before Phase 7: #241, #242, 232-L3 to L5 as in the table. Renew the interaction limit before 2027-04-18.
