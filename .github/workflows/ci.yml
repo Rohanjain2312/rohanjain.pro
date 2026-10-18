@@ -34,7 +34,7 @@ jobs:
       - name: Hooks self-test (R-101, R-105, R-106, R-501)
         run: node .claude/hooks/test-hooks.mjs
       - name: Phase gate, CI check and PR process self-tests (R-103, R-201, R-209, R-504, R-511, R-804)
-        run: node --test .github/lint-fixtures/ci-gates.test.mjs .github/lint-fixtures/pr-process.test.mjs
+        run: node --test .github/lint-fixtures/ci-gates.test.mjs .github/lint-fixtures/pr-process.test.mjs .github/lint-fixtures/status.test.mjs
 
   static:
     name: static
@@ -171,17 +171,14 @@ jobs:
       - name: Build
         run: npm run build
       - name: Playwright browsers
-        run: |
-          if find tests/e2e -name '*.spec.*' 2>/dev/null | grep -q .; then
-            npm run browsers:install
-          else
-            echo "No e2e specs yet. Skipping browser install."
-          fi
-      - name: e2e, accessibility and visual tests (R-505, R-605, R-606)
+        run: npm run browsers:install
+      - name: e2e tests (R-505)
         run: npm run test:e2e
+      - name: Frontend suite, axe zero violations, layout, screenshots (R-605, R-606)
+        run: npm run test:frontend
       - name: Lighthouse CI (R-607)
         run: |
-          echo "R-607: Lighthouse budgets arrive in Phase 2 (no lighthouserc yet). Passing trivially."
+          echo "R-607: Lighthouse runs locally for now (tests/a11y/README.md). No pinned dependency yet. Passing trivially."
 
   security:
     name: security

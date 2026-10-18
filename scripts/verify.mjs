@@ -30,6 +30,7 @@ const steps = [
   ['copy lint, build output', 'npm', ['run', 'lint:copy', '--', '--require-dist']],
   ['html-validate', 'node', ['.github/scripts/html-validate.mjs']],
   ['e2e tests', 'npm', ['run', 'test:e2e']],
+  ['frontend suite: axe, layout, screenshots (R-605, R-606)', 'npm', ['run', 'test:frontend']],
 ];
 
 function run(cmd, args) {
