@@ -27,6 +27,7 @@ test('collectLinks keeps only own repos and Spaces, deduplicated and sorted', ()
 });
 
 const commit = (date) => ({ ok: true, json: async () => [{ commit: { committer: { date } } }] });
+const isApi = (url) => new URL(url).hostname === 'api.github.com';
 const now = new Date('2026-10-17T12:00:00Z');
 const links = { repos: ['alpha', 'beta'], demos: ['https://huggingface.co/spaces/rohanjain2312/alpha-demo'] };
 
@@ -45,16 +46,16 @@ test('buildStatus takes the newest commit date and records demo state', async ()
 
 test('an unreachable or failing demo is up:false, not an error', async () => {
   for (const demo of [async () => ({ ok: false }), async () => Promise.reject(new Error('down'))]) {
-    const fetchFn = async (url) => (url.includes('api.github.com') ? commit('2026-10-01T00:00:00Z') : demo());
+    const fetchFn = async (url) => (isApi(url) ? commit('2026-10-01T00:00:00Z') : demo());
     const s = await buildStatus(links, fetchFn, now);
     assert.equal(s.demos[0].up, false);
   }
 });
 
 test('one repo failing is skipped; all failing throws', async () => {
-  const some = async (url) => (url.includes('/alpha/') ? { ok: false, status: 403 } : url.includes('api.github.com') ? commit('2026-10-05T00:00:00Z') : { ok: true });
+  const some = async (url) => (url.includes('/alpha/') ? { ok: false, status: 403 } : isApi(url) ? commit('2026-10-05T00:00:00Z') : { ok: true });
   assert.equal((await buildStatus(links, some, now)).lastUpdated, '2026-10-05');
-  const none = async (url) => (url.includes('api.github.com') ? { ok: false, status: 500 } : { ok: true });
+  const none = async (url) => (isApi(url) ? { ok: false, status: 500 } : { ok: true });
   await assert.rejects(buildStatus(links, none, now), /any featured repo/);
 });
 
@@ -62,8 +63,8 @@ test('the token is sent to the GitHub API only', async () => {
   const seen = [];
   const fetchFn = async (url, opts) => {
     seen.push([url, opts.headers.authorization]);
-    return url.includes('api.github.com') ? commit('2026-10-05T00:00:00Z') : { ok: true };
+    return isApi(url) ? commit('2026-10-05T00:00:00Z') : { ok: true };
   };
   await buildStatus(links, fetchFn, now, 'tok');
-  for (const [url, auth] of seen) assert.equal(auth, url.includes('api.github.com') ? 'Bearer tok' : undefined);
+  for (const [url, auth] of seen) assert.equal(auth, isApi(url) ? 'Bearer tok' : undefined);
 });
