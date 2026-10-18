@@ -26,3 +26,4 @@
 - [PR process gate review (PR #135)](project-pr-process-gate-pr135.md): comment-strip bypass found at 3135510; re-check cases and Low items
 - [PR #165 claims fixes](project-pr165-claims-fixes.md): approved dc071e7; QA log re-date owed after merge; check-claims probe recipe
 - [QA tooling status](project-qa-tooling-gaps.md): copy lint is on main but skipped when earlier CI steps fail (audit 1, PR #168); lychee status; verify limits.
+- [Fit-check QA, PR #201](project-fitcheck-qa-pr201.md): golden set, rubric, properties, Stryker setup; vitest/Stryker snags; engine-vs-rubric gaps
