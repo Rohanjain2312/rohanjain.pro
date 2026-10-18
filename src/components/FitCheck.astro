@@ -1,0 +1,144 @@
+---
+// 03 · Check fit (design spec 7.9). The markup ships with the controls hidden; the island in
+// fit-check.ts unhides them. Without JavaScript the section is the label, heading, intro and a notice.
+import Fold from './Fold.astro';
+import { config } from '../lib/fitcheck/index.ts';
+import type { EvidenceItem, RoleFamily } from '../lib/fitcheck/types.ts';
+import { fillSlots } from './fit-view.ts';
+import type { FitCopy } from './fit-copy.ts';
+
+interface Props {
+  copy: FitCopy;
+  name: string;
+  evidence: EvidenceItem[];
+  /** Role summaries by family, for the brief. */
+  roles: Record<RoleFamily, string>;
+}
+
+const { copy, name, evidence, roles } = Astro.props;
+const cap = config.maxChars;
+const data = JSON.stringify({
+  name,
+  cap,
+  limits: copy.limits,
+  counts: copy.counts,
+  labels: copy.labels,
+  notes: copy.notes,
+  brief: {
+    title: copy.brief.title,
+    defaultRole: copy.brief.defaultRole,
+    atCompany: copy.brief.atCompany,
+    gapsMore: copy.brief.gapsMore,
+  },
+  evidence,
+  roles,
+});
+const forward = `mailto:?subject=${encodeURIComponent(fillSlots(copy.forward.subject, { name }))}`;
+---
+
+<section class="fit" id="fit" aria-labelledby="fit-heading" data-fit={data}>
+  <p class="meta fit__label" data-ordinal={copy.ordinal}>
+    {copy.label}
+  </p>
+  <h2 id="fit-heading">{copy.heading}</h2>
+  <p class="fit__intro">{copy.intro}</p>
+  <noscript>
+    <p class="fit__notice">{copy.noScript}</p>
+  </noscript>
+  <div class="fit__controls" data-fit-controls hidden>
+    <div class="fit__samples" role="group" aria-label={copy.samplesLabel}>
+      <span class="meta">{copy.tryLabel}</span>
+      {copy.samples.map((s) => (
+        <button
+          type="button"
+          class="sample"
+          aria-pressed="false"
+          data-fit-sample
+          data-jd={s.jd}
+          data-company={s.company}
+          data-title={s.title}
+        >
+          {s.label}
+        </button>
+      ))}
+    </div>
+    <label class="sr-only" for="fit-text">
+      {copy.textareaLabel}
+    </label>
+    <textarea
+      class="field field--area"
+      id="fit-text"
+      rows="6"
+      maxlength={cap}
+      placeholder={copy.placeholder}
+      aria-describedby="fit-count"
+      data-fit-text
+    ></textarea>
+    <p class="fit__count" id="fit-count" data-fit-count></p>
+    <Fold title={copy.optionalSummary} id="fit-optional">
+      <div class="fit__fields">
+        <div class="fit__field">
+          <label class="meta" for="fit-company">
+            {copy.companyLabel}
+          </label>
+          <input
+            class="field"
+            id="fit-company"
+            type="text"
+            maxlength={copy.limits.field}
+            autocomplete="off"
+            data-fit-company
+          />
+        </div>
+        <div class="fit__field">
+          <label class="meta" for="fit-role">
+            {copy.roleLabel}
+          </label>
+          <input
+            class="field"
+            id="fit-role"
+            type="text"
+            maxlength={copy.limits.field}
+            autocomplete="off"
+            data-fit-role
+          />
+        </div>
+      </div>
+    </Fold>
+    <div>
+      <button type="button" class="btn btn--solid" data-fit-run>
+        {copy.check}
+      </button>
+    </div>
+    <p class="sr-only" role="status" data-fit-status></p>
+    <div class="fit__report" data-fit-report hidden>
+      <div class="fit__verdict-row">
+        <div class="verdict" data-fit-box data-verdict="none">
+          <span class="verdict__label" data-fit-verdict></span>
+          <span class="verdict__counts" data-fit-counts></span>
+        </div>
+        <p class="fit__note" data-fit-note></p>
+      </div>
+      <ul class="evidence" data-fit-rows hidden></ul>
+      <div class="gaps" data-fit-gaps hidden>
+        <span class="gaps__lead">
+          <span aria-hidden="true">○ </span>
+          {copy.rampUp}
+        </span>
+        <ul class="chips" data-fit-gap-list></ul>
+      </div>
+      <div class="fit__actions">
+        <button type="button" class="btn btn--solid" data-fit-brief-open>
+          {copy.openBrief}
+        </button>
+        <a class="text-link" href={forward}>
+          {copy.forward.label}
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import './fit-check.ts';
+</script>

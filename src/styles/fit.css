@@ -1,0 +1,439 @@
+/*
+  03 · Check fit and the one-page brief (design spec 7.9, 7.14, 12.2). Tokens only (R-601).
+  State is carried by data attributes and aria attributes; nothing here is set from a style attribute (R-505).
+*/
+
+/* The author rules below set display on elements that script hides with the hidden attribute. */
+.fit [hidden],
+.sheet [hidden] {
+  display: none;
+}
+
+/* The section number comes from data-ordinal: a section number is not a claim (R-301 reads page text). */
+.fit__label::before {
+  content: attr(data-ordinal) ' · ';
+}
+
+/* Buttons that share the .btn metrics with links */
+
+button.btn {
+  border: 0;
+  cursor: pointer;
+}
+
+.btn--solid {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.btn--outlined {
+  border: var(--rule-w-strong) solid var(--paper);
+  background: transparent;
+  color: var(--paper);
+}
+
+/* Section */
+
+.fit {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.fit__intro {
+  max-width: var(--measure-read);
+  color: var(--ink-2);
+}
+
+.fit__notice {
+  color: var(--ink-2);
+  font-family: var(--stack-mono);
+  font-size: var(--fs-sm);
+}
+
+.fit__controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+}
+
+.fit__samples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-8);
+}
+
+.sample {
+  min-height: var(--control-height);
+  padding: 0 var(--space-16);
+  border: var(--rule-w) solid var(--ink);
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--stack-mono);
+  font-size: var(--fs-xs);
+  cursor: pointer;
+}
+
+.sample[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.field {
+  width: 100%;
+  height: var(--control-height);
+  padding: 0 var(--space-16);
+  border: var(--rule-w-strong) solid var(--ink);
+  border-radius: 0;
+  background: var(--card);
+  color: var(--ink);
+  font-family: var(--stack-mono);
+  font-size: var(--fs-sm);
+}
+
+.field--area {
+  height: auto;
+  padding: var(--space-16);
+  line-height: 1.6;
+  resize: vertical;
+}
+
+.field::placeholder {
+  color: var(--muted);
+}
+
+.fit__count {
+  color: var(--muted);
+  font-family: var(--stack-mono);
+  font-size: var(--fs-xs);
+  text-align: right;
+}
+
+.fit__count:empty {
+  display: none;
+}
+
+#fit-optional > .fold__summary {
+  border-top: 0;
+  color: var(--ink-2);
+  font-size: var(--fs-xs);
+}
+
+.fit__fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(13.75rem, 100%), 1fr));
+  gap: var(--space-16);
+  padding-bottom: var(--space-8);
+}
+
+.fit__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Report (appears after a run) */
+
+.fit__report {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding-top: var(--space-16);
+  border-top: var(--rule-w-strong) solid var(--ink);
+}
+
+.fit__verdict-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: var(--space-24);
+}
+
+.verdict {
+  display: flex;
+  flex: 1 1 15rem;
+  flex-direction: column;
+  gap: var(--space-8);
+  min-width: 0;
+  padding: var(--space-24);
+  background: var(--verdict-none);
+  color: var(--paper);
+}
+
+.verdict[data-verdict='strong'] {
+  background: var(--verdict-strong);
+}
+
+.verdict[data-verdict='good'] {
+  background: var(--verdict-good);
+}
+
+.verdict[data-verdict='weak'] {
+  background: var(--verdict-weak);
+}
+
+.verdict[data-verdict='none'] {
+  background: var(--verdict-none);
+}
+
+.verdict__label {
+  font-size: var(--fs-verdict);
+  font-weight: var(--weight-medium);
+  line-height: 1.05;
+}
+
+.verdict__counts {
+  font-family: var(--stack-mono);
+  font-size: var(--fs-xs);
+}
+
+.fit__note {
+  flex: 999 1 23.75rem;
+  min-width: 0;
+  color: var(--ink-2);
+  font-size: var(--fs-body);
+}
+
+.evidence,
+.chips,
+.sheet__rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.evidence {
+  border-top: var(--rule-w) solid var(--rule);
+}
+
+.evidence__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8) var(--space-24);
+  padding: var(--space-16) 0;
+  border-bottom: var(--rule-w) solid var(--rule);
+}
+
+.evidence__info {
+  display: flex;
+  flex: 1 1 14.375rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  min-width: 0;
+}
+
+.evidence__name {
+  font-weight: var(--weight-strong);
+}
+
+.evidence__proof {
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: var(--space-4);
+}
+
+.evidence .chips {
+  flex: 999 1 21.25rem;
+  min-width: 0;
+}
+
+.chip {
+  padding: 2px var(--space-8);
+  border: var(--rule-w) solid var(--rule);
+  background: var(--card);
+  color: var(--ink-2);
+  font-family: var(--stack-mono);
+  font-size: var(--fs-xs);
+}
+
+.chip--gap {
+  border-style: dashed;
+  border-color: var(--rule-strong);
+  background: transparent;
+}
+
+.gaps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.gaps__lead {
+  padding-right: var(--space-8);
+  font-weight: var(--weight-strong);
+}
+
+.fit__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-8) var(--space-24);
+}
+
+@media (hover: hover) {
+  .sample:hover {
+    background: var(--card);
+  }
+
+  .sample[aria-pressed='true']:hover {
+    background: var(--ink-3);
+  }
+
+  .btn--solid:hover {
+    background: var(--ink-3);
+    text-decoration: underline;
+    text-underline-offset: var(--space-4);
+  }
+
+  .btn--outlined:hover {
+    background: var(--ink-3);
+  }
+}
+
+/* Dialog shell (7.13 and 7.14): the column sits on the overlay, a toolbar above a white sheet. */
+
+.sheet-dialog {
+  --focus: var(--paper);
+
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: var(--space-16);
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  overflow-y: auto;
+}
+
+.sheet-dialog::backdrop {
+  background: var(--overlay);
+}
+
+html:has(.sheet-dialog[open]) {
+  overflow: hidden;
+}
+
+.sheet-dialog__column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  max-width: 51.25rem;
+  margin: 0 auto;
+}
+
+.sheet-dialog__toolbar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--space-8);
+  padding: var(--space-8);
+  background: var(--ink);
+}
+
+/* Brief sheet (12.2) */
+
+.sheet {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding: var(--space-24);
+  background: var(--print-paper);
+  color: var(--ink);
+  font-family: var(--stack-serif);
+  font-size: var(--fs-md);
+  line-height: 1.5;
+}
+
+.sheet__head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-bottom: var(--space-16);
+  border-bottom: var(--rule-w-strong) solid var(--ink);
+}
+
+.sheet__label,
+.sheet__heading {
+  color: var(--muted);
+  font-family: var(--stack-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--tracking-label);
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.sheet__date {
+  text-transform: none;
+}
+
+.sheet__title {
+  font-size: 1.875rem;
+  font-weight: var(--weight-strong);
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+
+.sheet__contact,
+.sheet__counts,
+.sheet__tags,
+.sheet__provenance {
+  font-family: var(--stack-mono);
+  font-size: var(--fs-xs);
+}
+
+.sheet__contact {
+  color: var(--ink-2);
+}
+
+.sheet__tags,
+.sheet__provenance {
+  color: var(--muted);
+}
+
+.sheet__verdict {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-8) var(--space-24);
+}
+
+.sheet__verdict strong {
+  font-size: var(--fs-h3);
+  font-weight: var(--weight-strong);
+}
+
+.sheet__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.sheet__rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+@media (width >= 48em) {
+  .sheet-dialog {
+    padding: var(--space-32) var(--space-16);
+  }
+
+  .sheet {
+    padding: var(--space-48) var(--space-56);
+  }
+}

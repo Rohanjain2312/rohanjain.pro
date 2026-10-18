@@ -9,8 +9,16 @@ import MoreProjects from '../components/MoreProjects.astro';
 import Figures from '../components/Figures.astro';
 import Background from '../components/Background.astro';
 import Contact from '../components/Contact.astro';
+import FitCheck from '../components/FitCheck.astro';
+import FitBrief from '../components/FitBrief.astro';
 import PrintFolds from '../components/PrintFolds.astro';
+import { join } from 'node:path';
+import { getCollection } from 'astro:content';
 import { buildTimeline, loadSite } from '../components/data.ts';
+import { loadEvidence } from '../lib/content/load.ts';
+import { fill, formatPhone, lowerFirst } from '../components/lib.ts';
+import { briefTitle } from '../components/fit-view.ts';
+import type { FitCopy } from '../components/fit-copy.ts';
 import copy from '../components/copy/home.json';
 
 const data = await loadSite();
@@ -18,6 +26,24 @@ const { site, resume, projects, figures, claims } = data;
 const featured = projects.filter((p) => p.featured);
 const more = projects.filter((p) => !p.featured);
 const timeline = buildTimeline(data, copy.figures.plain);
+
+// Fit check: evidence items and role summaries are curated content, built here and handed to the island.
+const fitCopy = copy.fit as FitCopy;
+const evidence = loadEvidence(join(process.cwd(), 'src', 'content'));
+const roleList = (await getCollection('roles')).map(
+  (e) => e.data as { id: string; summary: string },
+);
+const roleSummary = (id: string) => {
+  const r = roleList.find((x) => x.id === id);
+  if (!r) throw new Error(`roles.json has no "${id}".`);
+  return r.summary;
+};
+const briefContact = [
+  site.email,
+  formatPhone(site.phone),
+  site.location,
+  lowerFirst(site.availability),
+];
 
 // Education lines come from resume.json; each takes its dates from the claim named here.
 const educationClaims = ['edu-umd', 'edu-pes'];
@@ -59,6 +85,12 @@ const education = resume.education.map((e, i) => ({
         />
       </div>
     </section>
+    <FitCheck
+      copy={fitCopy}
+      name={site.name}
+      evidence={evidence}
+      roles={{ ai: roleSummary('ai'), ml: roleSummary('ml'), ds: roleSummary('ds') }}
+    />
     <Background
       claims={claims}
       title={copy.background.title}
@@ -68,5 +100,11 @@ const education = resume.education.map((e, i) => ({
     <Contact email={site.email} phone={site.phone} profiles={site.profiles} copy={copy.contact} />
   </main>
   <SiteFooter profiles={site.profiles} privacyLabel={copy.footer.privacy} />
+  <FitBrief
+    copy={fitCopy.brief}
+    title={briefTitle(site.name, '', '', fitCopy.brief)}
+    contact={briefContact}
+    background={fill(fitCopy.brief.background, claims)}
+  />
   <PrintFolds />
 </Base>

@@ -30,3 +30,38 @@
     color: var(--ink);
   }
 }
+
+/* One-page brief (12.2): when the brief dialog is open, only its sheet prints. */
+@media print {
+  html:has(.brief[open]) {
+    overflow: visible;
+  }
+
+  body:has(.brief[open]) > :not(.brief) {
+    display: none;
+  }
+
+  .brief[open] {
+    position: absolute;
+    inset: 0 auto auto 0;
+    height: auto;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .brief .sheet-dialog__column {
+    max-width: none;
+  }
+
+  .brief .sheet {
+    padding: 0;
+  }
+
+  .sheet__label,
+  .sheet__heading,
+  .sheet__contact,
+  .sheet__tags,
+  .sheet__provenance {
+    color: var(--ink);
+  }
+}

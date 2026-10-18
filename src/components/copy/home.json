@@ -96,6 +96,78 @@
       { "claimId": "edu-umd", "label": "MS, Maryland" }
     ]
   },
+  "fit": {
+    "ordinal": "03",
+    "label": "check fit",
+    "heading": "Hiring? Paste the job description.",
+    "intro": "It counts a skill only when shipped work proves it, and it will tell you if I’m not a fit. Nothing leaves your browser.",
+    "noScript": "The fit check runs in your browser and needs JavaScript. Turn it on to try it.",
+    "tryLabel": "try:",
+    "samplesLabel": "Sample postings",
+    "samples": [
+      {
+        "id": "ai",
+        "label": "AI Engineer",
+        "company": "Sample Co",
+        "title": "AI Engineer, Agents",
+        "jd": "AI Engineer, Agents. Build and ship LLM agents to production with LangGraph. Design RAG over internal documents using embeddings and a vector database. Own evaluation: build evaluation datasets, agent evaluation, and LLM-as-a-judge scoring. Add guardrails and human-in-the-loop review. Integrate tools through MCP. Deploy with Docker and Kubernetes on AWS. Serve open models with vLLM. Strong Python and SQL."
+      },
+      {
+        "id": "ds",
+        "label": "Data Scientist",
+        "company": "Sample Co",
+        "title": "Data Scientist, Marketplace",
+        "jd": "Data Scientist, Marketplace. Use SQL and Python to analyze marketplace data. Design and analyze A/B testing and experimental design, including power analysis. Apply causal inference to measure impact. Build predictive modeling and forecasting for supply and demand with XGBoost. Define KPIs and business metrics, build dashboards in Tableau, and communicate findings to stakeholders. Experience with Snowflake and dbt is a plus."
+      },
+      {
+        "id": "ios",
+        "label": "iOS Engineer",
+        "company": "Sample Co",
+        "title": "Senior iOS Engineer",
+        "jd": "Senior iOS Engineer. Build our consumer app in Swift and SwiftUI. Own UIKit components, Core Data persistence and offline sync. Work in Xcode with CI, ship to the App Store, and partner with designers on accessibility. Experience with Kotlin or Android is a plus."
+      }
+    ],
+    "textareaLabel": "job description",
+    "placeholder": "Paste the full posting here.",
+    "optionalSummary": "add company and role title for the brief",
+    "companyLabel": "company",
+    "roleLabel": "role title",
+    "check": "Check fit",
+    "limits": {
+      "counterFrom": 7000,
+      "field": 80,
+      "briefGaps": 8,
+      "briefTags": 6
+    },
+    "counts": "{proven} proven · {gaps} to ramp up",
+    "notes": {
+      "strong": "Most of what this role asks for, I have already shipped or run in production. Evidence below, with links.",
+      "good": "I have shipped the core of this role. The gaps are listed plainly so you can judge them.",
+      "weak": "Honest answer: this role leans on skills I have not proven yet. Happy to talk if your team also needs applied ML or agents.",
+      "none": "Paste the full posting, including the requirements, and run it again."
+    },
+    "rampUp": "To ramp up",
+    "labels": { "tags": "Skills matched for {name}", "linkFor": " for {name}" },
+    "openBrief": "Open the one-page brief",
+    "forward": {
+      "label": "Forward to the hiring manager",
+      "subject": "Candidate: {name}"
+    },
+    "brief": {
+      "save": "Save as PDF",
+      "close": "Close",
+      "eyebrow": "Candidate brief",
+      "title": "{name} for {role}{company}",
+      "defaultRole": "your role",
+      "atCompany": " at {company}",
+      "evidenceHeading": "Evidence for your requirements",
+      "gapsHeading": "Where I would need ramp-up",
+      "gapsMore": "{list} and {n} more.",
+      "backgroundHeading": "Background",
+      "background": "Data Scientist at Goldman Sachs, {{goldman-tenure.value}}. MS in Applied Machine Learning, University of Maryland, {{edu-umd.value}}. IEEE-published.",
+      "provenance": "Generated from verified project data. Proven means a shipped project or production work backs it."
+    }
+  },
   "background": {
     "title": "Education and publication",
     "publication": {

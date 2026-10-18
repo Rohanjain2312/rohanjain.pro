@@ -17,6 +17,7 @@
     "test:e2e": "playwright test --pass-with-no-tests",
     "test:frontend": "playwright test --config tests/a11y/playwright.config.ts",
     "browsers:install": "npx --no-install playwright install chromium",
+    "browsers:install:webkit": "npx --no-install playwright install webkit",
     "validate:content": "node scripts/validate-content.ts && npm run claims:verified",
     "check:claims": "node scripts/check-claims.ts",
     "claims:verified": "node --test tests/fixtures/claims/check-verification-log.test.mjs",
