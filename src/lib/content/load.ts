@@ -1,9 +1,20 @@
 // Reads content files from disk. The applications directory is optional (ADR-0016).
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import type { EvidenceItem } from '../fitcheck/types.ts';
+import { buildEvidence } from './evidence.ts';
 import type { RawContent } from './validate.ts';
 
-const SINGLE = ['claims', 'projects', 'skills', 'roles', 'figures', 'resume', 'site'] as const;
+const SINGLE = [
+  'claims',
+  'projects',
+  'skills',
+  'roles',
+  'figures',
+  'resume',
+  'site',
+  'evidence',
+] as const;
 
 export class ContentParseError extends Error {
   readonly file: string;
@@ -50,4 +61,10 @@ export function loadRawContent(
     }
   }
   return { ...raw, applications };
+}
+
+/** Evidence items for `analyze`, built from evidence.json, projects.json and claims.json. */
+export function loadEvidence(contentDir: string): EvidenceItem[] {
+  const raw = loadRawContent(contentDir, {});
+  return buildEvidence(raw.evidence, raw.projects, raw.claims);
 }

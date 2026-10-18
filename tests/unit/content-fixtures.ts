@@ -115,6 +115,9 @@ export function validContent(): { [K in keyof RawContent]-?: any } {
       },
       showPhoto: false,
     },
+    evidence: [
+      { id: 'fake-project', proofClaimIds: ['fake-claim-a', 'fake-claim-b'], link: 'demo' },
+    ],
     applications: { 'fakeco-abc234.json': validApplication() },
   };
 }

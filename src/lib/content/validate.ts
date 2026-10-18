@@ -1,8 +1,10 @@
 // Parses content files and checks references across them. Pure: callers pass raw JSON.
 import type { ZodType } from 'astro/zod';
+import { projectLinkUrl } from './evidence.ts';
 import {
   applicationSchema,
   claimsSchema,
+  evidenceSchema,
   figuresSchema,
   projectsSchema,
   resumeSchema,
@@ -19,6 +21,7 @@ export type RawContent = {
   figures?: unknown;
   resume?: unknown;
   site?: unknown;
+  evidence?: unknown;
   /** File name (for example "acme-abc234.json") to parsed JSON. */
   applications?: Record<string, unknown>;
 };
@@ -30,7 +33,19 @@ export type Problem = { file: string; field: string; message: string };
 
 // Shapes of parsed records after schema validation. Only the fields this module reads are listed.
 type Claim = { id: string };
-type Project = { id: string; headlineClaimId: string; contextClaimIds: string[] };
+type Project = {
+  id: string;
+  headlineClaimId: string;
+  contextClaimIds: string[];
+  links: { label: string; url: string }[];
+  demo?: { url: string };
+};
+type Evidence = {
+  id: string;
+  name?: string;
+  proofClaimIds: string[];
+  link?: 'code' | 'demo' | 'model' | 'write-up';
+};
 type Skill = { name: string; evidence: string[] };
 type Figure = { id: string; projectId: string; claimIds: string[] };
 type Bullet = { claimIds: string[] };
@@ -65,6 +80,7 @@ export function validateContent(raw: RawContent): Problem[] {
   const figures = parse<Figure[]>('figures.json', figuresSchema, raw.figures, out);
   const resume = parse<Resume>('resume.json', resumeSchema, raw.resume, out);
   parse('site.json', siteSchema, raw.site, out);
+  const evidence = parse<Evidence[]>('evidence.json', evidenceSchema, raw.evidence, out);
   const apps: [string, Application][] = [];
   for (const [name, data] of Object.entries(raw.applications ?? {})) {
     const a = parse<Application>(`applications/${name}`, applicationSchema, data, out);
@@ -96,6 +112,12 @@ export function validateContent(raw: RawContent): Problem[] {
       'skills.json',
       'name',
       skills.map((s) => s.name),
+    );
+  if (evidence)
+    dupes(
+      'evidence.json',
+      'id',
+      evidence.map((e) => e.id),
     );
   if (figures)
     dupes(
@@ -138,6 +160,52 @@ export function validateContent(raw: RawContent): Problem[] {
         }
       }),
     );
+  }
+  evidence?.forEach((e, i) => {
+    claimRefs('evidence.json', `${i}.proofClaimIds`, e.proofClaimIds);
+    const project = projects?.find((p) => p.id === e.id);
+    if (projects && !project && !EVIDENCE_SOURCES.has(e.id))
+      out.push({
+        file: 'evidence.json',
+        field: `${i}.id`,
+        message: `"${e.id}" is not a project ID`,
+      });
+    if (!project && !e.name)
+      out.push({
+        file: 'evidence.json',
+        field: `${i}.name`,
+        message: 'name is required without a project',
+      });
+    if (e.link && projects && !(project && projectLinkUrl(project, e.link)))
+      out.push({
+        file: 'evidence.json',
+        field: `${i}.link`,
+        message: `no "${e.link}" link on project "${e.id}"`,
+      });
+  });
+  // Ids must equal the project and Goldman/IEEE ids used by skills.json evidence[].
+  if (evidence && skills && projectIds) {
+    const used = new Set(
+      skills
+        .flatMap((s) => s.evidence)
+        .filter((id) => projectIds.has(id) || EVIDENCE_SOURCES.has(id)),
+    );
+    const have = new Set(evidence.map((e) => e.id));
+    for (const id of used)
+      if (!have.has(id))
+        out.push({
+          file: 'evidence.json',
+          field: '(file)',
+          message: `no item for skill evidence "${id}"`,
+        });
+    evidence.forEach((e, i) => {
+      if (!used.has(e.id))
+        out.push({
+          file: 'evidence.json',
+          field: `${i}.id`,
+          message: `"${e.id}" is not used by any skill`,
+        });
+    });
   }
   if (resume) {
     resume.experience.forEach((e, i) =>

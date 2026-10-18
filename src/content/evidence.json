@@ -1,0 +1,63 @@
+[
+  {
+    "id": "goldman",
+    "name": "Goldman Sachs, production",
+    "proofClaimIds": ["settlement-pending-trades-reduction", "loan-v1-hours-saved"]
+  },
+  {
+    "id": "loan",
+    "proofClaimIds": [
+      "loan-v2-agents",
+      "loan-v2-tools",
+      "loan-v2-approvals",
+      "loan-v2-checks",
+      "loan-v2-deploy"
+    ],
+    "link": "code"
+  },
+  {
+    "id": "tariff",
+    "proofClaimIds": ["tariff-exact-match", "tariff-zero-shot", "tariff-rulings-eval"],
+    "link": "code"
+  },
+  {
+    "id": "settle",
+    "proofClaimIds": ["settle-pr-auc", "settle-pr-auc-lift", "settle-trades"],
+    "link": "demo"
+  },
+  {
+    "id": "cua",
+    "proofClaimIds": ["cua-discovery-calls", "cua-replay-seconds"],
+    "link": "code"
+  },
+  {
+    "id": "fc",
+    "proofClaimIds": ["fc-size-ratio", "fc-latency-before", "fc-latency-after"],
+    "link": "demo"
+  },
+  {
+    "id": "shca",
+    "proofClaimIds": ["shca-after-repair", "shca-first-try"],
+    "link": "demo"
+  },
+  {
+    "id": "mr",
+    "proofClaimIds": ["mr-accuracy", "mr-baselines"],
+    "link": "code"
+  },
+  {
+    "id": "med",
+    "proofClaimIds": ["med-base", "med-lora-params"],
+    "link": "model"
+  },
+  {
+    "id": "gb",
+    "proofClaimIds": ["gb-graphrag-em", "gb-gnn-rag-em", "gb-questions"],
+    "link": "code"
+  },
+  {
+    "id": "ieee",
+    "name": "IEEE publication",
+    "proofClaimIds": ["ieee-accuracy", "ieee-scans"]
+  }
+]
