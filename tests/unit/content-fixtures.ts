@@ -124,15 +124,21 @@ export function validContent(): { [K in keyof RawContent]-?: any } {
 
 export function validApplication(): Record<string, unknown> {
   return {
-    slug: 'fakeco-abc234',
     company: 'FakeCo',
-    roleTitle: 'Fake Engineer',
-    createdOn: '2000-01-01',
-    expiresOn: '2000-04-01',
-    verdict: 'Strong fit',
-    provenSkills: ['FakeSkill'],
+    role: 'Fake Engineer',
+    created: '2000-01-01',
+    expires: '2000-04-01',
+    verdict: { label: 'Strong fit', key: 'strong' },
+    counts: { proven: 1, gaps: 1 },
+    evidenceRows: [
+      {
+        id: 'fake-project',
+        name: 'Fake row',
+        proof: 'Fake proof.',
+        matchCount: 1,
+        tags: ['FakeSkill'],
+      },
+    ],
     gaps: ['OtherSkill'],
-    evidenceRows: [{ title: 'Fake row', claimIds: ['fake-claim-a'], tags: ['FakeSkill'] }],
-    roleFamily: 'ai',
   };
 }

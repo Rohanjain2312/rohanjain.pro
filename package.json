@@ -22,6 +22,7 @@
     "browsers:install": "npx --no-install playwright install chromium",
     "browsers:install:webkit": "npx --no-install playwright install webkit",
     "validate:content": "node scripts/validate-content.ts && npm run claims:verified",
+    "for": "node scripts/for.ts",
     "check:claims": "node scripts/check-claims.ts",
     "claims:verified": "node --test tests/fixtures/claims/check-verification-log.test.mjs",
     "docs:lint": "node scripts/lint-docs.mjs",
