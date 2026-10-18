@@ -72,6 +72,7 @@ Every "must" and "never" in this project lives here, with exactly one home. 86 r
 | **R-510** | No piping downloads into a shell; no recursive deletes outside the repo. | here | guard-bash hook | active |
 | **R-511** ★ | No merge or launch while a Medium or higher security finding is open. | here | phase-gate script checks open severity labels; Security veto; fix-PR terms in ADR-0017 | phase-1 |
 | **R-512** | Third-party embeds are only *.hf.space, loaded on click, sandboxed. | here | CSP test; e2e test | phase-5 |
+| **R-513** | The only repo creation is the Supervisor creating the private applications repo `Rohanjain2312/rohanjain.pro-applications`; repo visibility never changes from the shell or API. | here | guard-bash hook (exact-command match); hook tests | phase-4 |
 | **R-601** ★ | Colors come only from tokens; red is only for margin notes; no gradients, box shadows or emoji. | here | Stylelint rules; copy lint | phase-1 |
 | R-602 | Every visible PR passes the anti-slop checklist. | `.claude/agents/design-lead.md` | judgment | prose |
 | **R-603** ★ | Banned words in site copy: passionate, cutting-edge, leverage, seamless, unlock, delve, synergy, world-class, robust (as filler), game-changer. | here | copy lint CI | phase-1 |

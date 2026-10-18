@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// PreToolUse guard for Bash. Enforces: R-101 R-102 R-103 R-106 R-109 R-110 R-111 R-116 R-202 R-203 R-207 R-210 R-501 R-509 R-510
+// PreToolUse guard for Bash. Enforces: R-101 R-102 R-103 R-106 R-109 R-110 R-111 R-116 R-202 R-203 R-207 R-210 R-501 R-509 R-510 R-513
 import { join, isAbsolute, resolve } from 'node:path';
 import { readInput, roleOf, PREFIX, LABEL_ROLE, tokenize, segments, currentBranch, headSha, gitTop, readIfExists, deny, allow, projectDir } from './lib.mjs';
 
@@ -219,7 +219,12 @@ for (let t of segs.flatMap((s) => expand(s))) {
     // Untrusted input can steer agents; keep the token and other repos out of reach (#45).
     if (t[1] === 'auth' && (t[2] === 'token' || t.includes('--show-token') || t.includes('-t'))) deny(input, 'R-509', 'Printing the GitHub token is blocked.');
     if (t[1] === 'auth' && ['login', 'logout', 'refresh', 'setup-git', 'switch'].includes(t[2])) deny(input, 'R-509', 'Changing GitHub CLI auth is a client-only step (docs/needs-client.md).');
-    if (t[1] === 'repo' && ['delete', 'rename', 'archive', 'unarchive', 'create', 'fork', 'set-default', 'deploy-key'].includes(t[2])) deny(input, 'R-509', `gh repo ${t[2]} is blocked.`);
+    // R-513: the one repo creation allowed is the Supervisor creating the private applications repo (ADR-0016). The whole command must match: no wrappers, chaining, substitution or extra flags.
+    const PRIVATE_APPS_CREATE = /^gh repo create Rohanjain2312\/rohanjain\.pro-applications(?: --private(?: --description "[A-Za-z0-9 .,:()_\/'-]*")?| --description "[A-Za-z0-9 .,:()_\/'-]*" --private)$/;
+    const allowPrivateCreate = role === 'supervisor' && !/[\n\r]/.test(cmd) && PRIVATE_APPS_CREATE.test(cmd.trim());
+    if (t[1] === 'repo' && t[2] === 'create' && !allowPrivateCreate) deny(input, 'R-513', 'gh repo create is blocked. The only allowed form, for the Supervisor: gh repo create Rohanjain2312/rohanjain.pro-applications --private [--description "..."] (ADR-0016).');
+    if (t[1] === 'repo' && ['delete', 'rename', 'archive', 'unarchive', 'fork', 'set-default', 'deploy-key'].includes(t[2])) deny(input, 'R-509', `gh repo ${t[2]} is blocked.`);
+    if (t[1] === 'repo' && t[2] === 'edit' && t.some((a) => /^--(visibility|accept-visibility-change-consequences)\b/i.test(a))) deny(input, 'R-513', 'Repository visibility never changes from the shell (ADR-0016): change it in the GitHub settings if ever needed.');
     if (t[1] === 'repo' && t[2] === 'edit') {
       const target = t.slice(3).find((a) => !a.startsWith('-') && a.includes('/'));
       if (role !== 'supervisor') deny(input, 'R-111', 'Only the Supervisor edits repository settings.');
@@ -311,6 +316,8 @@ for (let t of segs.flatMap((s) => expand(s))) {
     const m = path.match(/^repos\/([^/]+\/[^/]+)/);
     if (write && m && m[1].toLowerCase() !== THIS_REPO && !/^\{owner\}\/\{repo\}$/.test(m[1])) deny(input, 'R-509', `API writes may target only ${THIS_REPO}.`);
     if (write && /^(user|orgs|users|authorizations|applications|gists)(\/|$)/.test(path)) deny(input, 'R-509', 'API writes outside this repository are blocked.');
+    if (write && /^repos\/[^/]+\/[^/]+\/(forks|generate|transfer)$/i.test(path)) deny(input, 'R-513', 'Creating, forking or transferring repositories through the API is blocked.');
+    if (write && /^repos\/[^/]+\/[^/]+$/i.test(path) && (hasInput || fields.some((f) => /^(private|visibility)\b/i.test(f)))) deny(input, 'R-513', 'Repository visibility never changes through the API (ADR-0016).');
     if (path === 'graphql') {
       const q = [...fields, inputText, cmd].join('\n');
       if (/\bmutation\b/i.test(q) || hasInput) deny(input, 'R-203', 'GraphQL mutations are blocked. Use the gh pr and gh issue commands.');
