@@ -123,3 +123,25 @@ test('capture the brief as printed (680 px, Letter content width)', async ({ pag
   await page.evaluate(() => document.fonts.ready);
   await page.screenshot({ path: 'tests/visual/screenshots/brief-print.png' });
 });
+
+// Résumé dialog (7.13) and the print route as the PDF source (12.1).
+for (const width of [390, 768, 1280]) {
+  test(`capture résumé dialog at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/');
+    await page.locator('.hero [data-resume-open]').click();
+    await page.evaluate(() => document.fonts.ready);
+    await page.screenshot({ path: `tests/visual/screenshots/resume-dialog-${width}.png` });
+  });
+
+  test(`capture résumé print preview at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto('/print/resume/ml/');
+    await page.emulateMedia({ media: 'print' });
+    await page.evaluate(() => document.fonts.ready);
+    await page.screenshot({
+      path: `tests/visual/screenshots/resume-print-${width}.png`,
+      fullPage: true,
+    });
+  });
+}

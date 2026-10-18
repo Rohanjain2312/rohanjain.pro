@@ -177,9 +177,14 @@ function pageText(content: string, fonts: Map<string, CMap>): string {
   let out = '';
   let operands: Token[] = [];
   let y = Number.NaN;
-  const newLine = (ny: number): void => {
+  let x = 0;
+  let size = 12;
+  // A move on the same line wider than 1.5 em is a gap between words (Chromium positions runs and glyphs one by one).
+  const move = (nx: number, ny: number): void => {
     if (Number.isNaN(y) || Math.abs(ny - y) > 1) out += '\n';
+    else if (nx - x > 1.5 * size && out && !/\s$/.test(out)) out += ' ';
     y = ny;
+    x = nx;
   };
   for (const tok of toks) {
     if (tok.t !== 'op') {
@@ -190,13 +195,14 @@ function pageText(content: string, fonts: Map<string, CMap>): string {
     switch (tok.v) {
       case 'Tf':
         font = fonts.get(String(operands[0]?.v ?? ''));
+        size = nums[0] ?? size;
         break;
       case 'Tm':
-        newLine(nums[5] ?? y);
+        move(nums[4] ?? x, nums[5] ?? y);
         break;
       case 'Td':
       case 'TD':
-        newLine((Number.isNaN(y) ? 0 : y) + (nums[1] ?? 0));
+        move(x + (nums[0] ?? 0), (Number.isNaN(y) ? 0 : y) + (nums[1] ?? 0));
         break;
       case 'T*':
         out += '\n';
