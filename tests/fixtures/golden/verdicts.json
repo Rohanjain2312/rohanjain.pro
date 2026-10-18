@@ -1,6 +1,6 @@
 {
   "rubric": "docs/qa/fit-rubric.md",
-  "rubricVersion": 3,
+  "rubricVersion": 4,
   "raters": { "qa": "done", "readerAdvocate": "not yet rated" },
   "postings": {
     "ai-01": {
@@ -54,7 +54,6 @@
       "expected": "Not a strong fit",
       "proven": [
         "Multi-agent systems",
-        "State management",
         "Agent observability",
         "LangSmith",
         "Vertex AI",

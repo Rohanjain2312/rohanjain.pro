@@ -8,7 +8,7 @@ This rubric gives the expected verdict for each golden posting in `tests/fixture
 
 | Rater | Status |
 |---|---|
-| QA Engineer | Done. Version 3, 2026-10-18. |
+| QA Engineer | Done. Version 4, 2026-10-18. |
 | Reader Advocate (second rater, §9.4) | Not yet rated. Rate the 20 postings and 3 samples from this rubric, record disagreements below, and QA will resolve each in a new rubric version. |
 | Real recruiter ratings | None yet. They replace this rubric as ground truth when they arrive (skill `external-validation`, §9.4 item 7). |
 
@@ -33,7 +33,7 @@ Read each requirement line and list the skills it names. Then count.
 7. **Unlisted technologies.** A named language, framework, platform or tool that is not in `skills.json` is one gap. Techniques and domain words that are not in `skills.json` (Bayesian methods, ranking, fraud, churn) are not counted. Lab equipment, degrees, years of experience and personality traits are not counted.
 8. **Ratio and bands.** `ratio = proven / (proven + gaps)`. Fewer than 4 counted skills: "Not enough to go on". Ratio 0.80 or more: "Strong fit". 0.55 to below 0.80: "Good fit, with gaps". Below 0.55: "Not a strong fit". These are the values in ADR-0029. Only an ADR changes them (R-404).
 
-9. **Plain words need context (version 3, issue #243, ADR-0030).** Twelve skills are ordinary English words: Accuracy, Precision, Recall, Calibration, Mentoring, Deployments, Benchmarking, Probability, Forecasting, Guardrails, Classification and Clustering. A line that names one of them counts it (as proven or as a gap) only when the posting also names at least 2 other proven skills that are not on this list. Studied skills and unlisted technologies never give that context. A posting made only of these words counts nothing and reads "Not enough to go on". The list and the number 2 live in `src/lib/fitcheck/thresholds.ts`; a change to either needs an ADR (R-404) and a rubric version.
+9. **Plain words need context (version 3, issue #243, ADR-0030).** Twenty-four skills are ordinary English words or everyday business phrases (`plainWordSkills`): Accuracy, Precision, Recall, Calibration, Mentoring, Deployments, Benchmarking, Probability, Forecasting, Guardrails, Classification, Clustering, Data analysis, Data quality, Stakeholder management, Workflow automation, Executive presentation, Requirements gathering, Root-cause analysis, Cost optimization, Business analytics, Document processing, State management and Error analysis. A line that names one of them counts it (as proven or as a gap) only when the posting also names at least 2 different skills from the curated technical list (`technicalContextSkills`: 33 named tools, languages, libraries and methods such as Python, SQL, PyTorch, Docker, Kubernetes and RAG). The skill must be shipped or work. Phrases like "Data analysis" never give context. Studied skills and unlisted technologies never give context either. A posting made only of plain words counts nothing and reads "Not enough to go on". The lists and the number 2 live in `src/lib/fitcheck/thresholds.ts`; a change to any of them needs an ADR (R-404) and a rubric version. Version 4 changed the context from "any 2 other proven skills" to this technical list (PR #250 review: a sales or nurse text with business phrases unlocked the plain words).
 
 A "plus" or "preferred" requirement counts like any other line. The engine cannot tell them apart, so the rubric does not either.
 
@@ -47,7 +47,7 @@ The full skill lists for each posting are in `tests/fixtures/golden/verdicts.jso
 |---|---|---|---|---|---|
 | ai-01 | ai | Strong fit | 18 / 19 | 0.947 | 4 |
 | ai-02 | ai | Good fit, with gaps | 15 / 19 | 0.789 | 1 |
-| ai-03 | ai | Not a strong fit | 7 / 13 | 0.538 | 1 |
+| ai-03 | ai | Not a strong fit | 6 / 12 | 0.500 | 2 |
 | ai-04 | ai | Good fit, with gaps | 8 / 14 | 0.571 | 1 |
 | ml-01 | ml | Good fit, with gaps | 11 / 20 | 0.550 | 1 |
 | ml-02 | ml | Not a strong fit | 6 / 14 | 0.429 | 4 |
@@ -79,7 +79,7 @@ The Data Scientist sample comes out "Not a strong fit" under the current tiers. 
 ## Edge cases and why they were called this way
 
 - **ai-02 (0.789, strong needs 0.80).** One more counted skill makes it "Strong fit". FastAPI is counted as an unlisted gap. "Route requests between models" is a paraphrase and does not count as Model routing.
-- **ai-03 (0.538, good needs 0.55).** GCP is an unlisted gap, so it counts. Without it the posting is "Good fit, with gaps". "Tool boundaries and orchestration" and "tracing" do not count, by rules 4 and 5.
+- **ai-03 (0.500, good needs 0.55).** GCP is an unlisted gap, so it counts. "Tool boundaries and orchestration" and "tracing" do not count, by rules 4 and 5. Version 4: "state management" is now a plain phrase (rule 9) and the posting names only one skill from the technical list (Kubernetes), so State management no longer counts. Counts go from 7 / 13 (0.538) to 6 / 12 (0.500). The verdict does not change. Without GCP the posting is 6 / 11 (0.545), still "Not a strong fit". The cost is a genuinely proven agent skill dropping out of an agent posting, because the technical list holds few agent tools. If recruiters read that as an error, widen the list by ADR.
 - **ai-04 (0.571).** TypeScript is an unlisted gap. "Parsing", "citations back to source passages", "evaluate retrieval quality" and "hallucination rates" do not count, by rules 4 and 5.
 - **ml-01 (0.550, exactly on the good edge).** Counted: batch inference, training pipelines and inference pipelines by rule 2. "Train and deploy ... models" is not Model deployment, because the words are not adjacent.
 - **ml-03.** "Deploy models behind REST APIs" counts as Model deployment by rule 1. "Time-series forecasting" counts Time-series analysis through its alias "time series".
@@ -149,3 +149,4 @@ If App/Data prefers not to add the three coordinated phrases, ml-01 would come o
 | 1 | 2026-10-17 | First rubric by QA. Written before the engine ran on any posting. Reader Advocate not yet rated. |
 | 2 | 2026-10-17 | Made after the first engine run, to fix one error of mine: "CI" is ambiguous (confidence interval), so rule 4 no longer counts it. The iOS sample goes from 1 / 8 to 0 / 7. No expected verdict changed. The engine's output did not change any verdict in the rubric. |
 | 3 | 2026-10-18 | PR #250 (issue #243). Added rule 9 (plain words need context, ADR-0030) and two negative controls, neg-nurse and neg-lab, both "Not enough to go on". ds-04 loses two gap words (Clustering, Probability), 1 / 6 to 1 / 4. No expected verdict changed. The rule comes from the issue's acceptance criteria, not from the engine's output. Reader Advocate rating of the two new postings is still owed. |
+| 4 | 2026-10-18 | PR #250 fix (commit 38df83b, ADR-0030 rewrite). Rule 9 now takes context only from the 33-skill technical list and the plain list grows from 12 to 24. ai-03 loses State management, 7 / 13 to 6 / 12, margin 1 to 2. No expected verdict changed. The golden consistency test now checks the technical list. |

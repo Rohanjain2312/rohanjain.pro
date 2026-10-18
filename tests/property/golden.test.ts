@@ -146,13 +146,17 @@ describe('rubric rule 9: plain-word skills in the expected lists need context', 
     ...Object.entries(verdicts.postings),
     ...Object.entries(verdicts.samples).map(([id, e]) => [`sample ${id}`, e] as const),
   ];
-  it.each(entries)('%s lists a plain-word skill only beside 2 other proven skills', (_id, e) => {
-    const listed = [...e.proven, ...e.gaps];
-    if (!listed.some((n) => plain.has(n))) return;
-    expect(e.proven.filter((n) => !plain.has(n)).length).toBeGreaterThanOrEqual(
-      config.minContextMatches,
-    );
-  });
+  const technical = new Set(config.technicalContextSkills);
+  it.each(entries)(
+    '%s lists a plain-word skill only beside 2 technical-list skills it also proves',
+    (_id, e) => {
+      const listed = [...e.proven, ...e.gaps];
+      if (!listed.some((n) => plain.has(n))) return;
+      expect(e.proven.filter((n) => technical.has(n)).length).toBeGreaterThanOrEqual(
+        config.minContextMatches,
+      );
+    },
+  );
 });
 
 describe('engine against the rubric: on-site samples', () => {
