@@ -10,6 +10,11 @@ useDefault = true
 # R-501: job description text is never committed. The path block (postings/, *.jd.txt) catches
 # files by name; these rules catch the text itself when it lands in any other file.
 
+# Allowlists: each job-description rule has one, for the positive test fixtures only, by path. They are
+# rule-level on purpose: CI runs gitleaks 8.24.3, which predates the global [[allowlists]] targetRules
+# syntax, and a global [allowlist] would also switch off the default secret rules for those files.
+# There is no allowlist for postings/ or *.jd.txt. Fixtures hold synthetic text for a made-up company.
+
 [[rules]]
 id = "job-description-sections"
 description = "A responsibilities heading and a qualifications heading close together (R-501)"
@@ -19,6 +24,12 @@ regex = '''(?im)^[ \t>*#_-]*(?:(?:key |your |job |main |core )?(?:responsibiliti
 keywords = ["responsibilities", "duties", "what you"]
 tags = ["job-description", "R-501"]
 
+[rules.allowlist]
+description = "Positive job-description test fixture (synthetic text)"
+paths = [
+  '''(?:^|/)docs/security/gitleaks-fixtures/positive-[a-z-]+\.txt$''',
+]
+
 [[rules]]
 id = "job-description-eeo"
 description = "Equal opportunity employer statement, boilerplate of a job posting (R-501)"
@@ -26,12 +37,8 @@ regex = '''(?i)\bequal[ -]opportunity[ -](?:employer|workplace)\b'''
 keywords = ["equal"]
 tags = ["job-description", "R-501"]
 
-# The one allowlist. It covers the two positive test fixtures only, by exact path, and only for the
-# two job-description rules above. It does not cover postings/ or *.jd.txt, and default secret rules
-# still apply to these files. Fixtures hold synthetic text for a made-up company, no real posting.
-[[allowlists]]
-description = "Positive job-description test fixtures (synthetic text)"
-targetRules = ["job-description-sections", "job-description-eeo"]
+[rules.allowlist]
+description = "Positive job-description test fixture (synthetic text)"
 paths = [
   '''(?:^|/)docs/security/gitleaks-fixtures/positive-[a-z-]+\.txt$''',
 ]

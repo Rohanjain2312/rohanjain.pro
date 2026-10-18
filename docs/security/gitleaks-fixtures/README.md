@@ -22,7 +22,7 @@ The script copies the fixtures to a temp folder, scans them with `.gitleaks.toml
 
 ## Allowlist
 
-`.gitleaks.toml` has one allowlist. It covers `positive-*.txt` in this folder, by path, for the two job-description rules only, so the repo scan and CI do not fail on the test inputs. There is no allowlist for `postings/` or `*.jd.txt`. The path block (`.gitignore`, pre-commit, guard-bash) still stops those files by name.
+Each job-description rule in `.gitleaks.toml` has a rule-level allowlist for `positive-*.txt` in this folder, by path, so the repo scan and CI do not fail on the test inputs. Default secret rules still apply to these files. The allowlist is rule-level because CI runs gitleaks 8.24.3, which predates the global `[[allowlists]]` syntax. There is no allowlist for `postings/` or `*.jd.txt`. The path block (`.gitignore`, pre-commit, guard-bash) still stops those files by name.
 
 ## Limits
 
