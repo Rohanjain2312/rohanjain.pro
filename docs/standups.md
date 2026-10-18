@@ -61,3 +61,8 @@ One entry at the start and end of each session (skill `session-protocol`).
 - Done: Phase 2 closed (`v0.2.0`); Phase 3: #199 plan, #202 ADR-0028, #201 engine and tests (mutation 97.19), #206 plain-words copy, #208 fit-check UI and brief. Gate record and rating packet written.
 - Next: merge the gate PR, release `v0.3.0`, Phase 3 memory sweep, start Phase 4.
 - Blockers: none. Client: nothing required; optional recruiter rating packet and the 5-second test.
+
+## 2026-10-18 end (Phase 4)
+- Done: Phase 3 closed (`v0.3.0`); Phase 4: #216 plan, #217 hook exception and private repo, #218 `npm run for`, #219 résumé dialog, PDFs and `/for` pages. Gate record written.
+- Next: merge the memory sweep and gate PRs, release `v0.4.0`, start Phase 6.
+- Blockers: none. Client: nothing required; optional 5-second test and recruiter rating packets in `docs/needs-client.md`.
