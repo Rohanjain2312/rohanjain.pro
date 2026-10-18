@@ -6,14 +6,14 @@
 | PR | Issue | Owners | Scope |
 |---|---|---|---|
 | A | #212 | App/Data | `npm run for` generator: result schema (R-502), random slug (R-503), expiry, JD read-analyze-discard (R-501); sample application from a synthetic golden posting in a temp directory; end-to-end tests |
-| B | #213 | Frontend, App/Data (PDF script), Design Lead (PDF layout) | Résumé dialog with three tabs and a no-JS fallback; `scripts/resume-pdf.ts` and `/print/resume/[role]`; PDFs in `public/resume/`; `/for/[slug]` page and expiry notice; noindex and sitemap exclusion; `X-Robots-Tag` in `public/_headers` (Security review) |
+| B | #213 | Frontend, App/Data (PDF script), Design Lead (PDF layout) | Résumé dialog with three tabs and a no-JS fallback; `scripts/resume-pdf.ts` and `/print/resume/[role]`; PDFs generated at build into `public/resume/` (ADR-0010, §5.8); one sample `/for` page rendered from a synthetic fixture result in tests, to prove the flow end to end; `/for/[slug]` page and expiry notice; noindex and sitemap exclusion; `X-Robots-Tag` in `public/_headers` (Security review) |
 | C | #214 | Platform, Security | Narrow Supervisor-only hook exception to create the private repo `Rohanjain2312/rohanjain.pro-applications` (ADR-0016); then the Supervisor creates it |
 
 Carried Phase 3 Lows that matter here: the `external-validation` skill gets a fallback line for the missing résumé PDF; once the PDFs exist, the recruiter rating packet can use them (`docs/validation/phase-3-rating-packet.md`).
 
 ## Order
 1. PR A and PR C start together (disjoint files). PR B starts once PR A's result schema is on `main` (the `/for` page reads it); the résumé dialog and PDF script do not depend on PR A and may start first.
-2. At most two PRs in review (ADR-0024). Security reviews PR B's `_headers` change and PR C (hook change).
+2. One PR in review while the next slice builds (ADR-0024). Security reviews PR B's `_headers` change and PR C (hook change; the label `needs:security-review` is added by hand because no labeler rule covers hook files).
 3. Gate record `docs/gates/phase-4.md`, `node scripts/phase-gate.mjs 4`, release `v0.4.0`.
 
 ## Risks
