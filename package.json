@@ -14,6 +14,7 @@
     "test": "vitest run --passWithNoTests",
     "test:coverage": "vitest run --coverage --coverage.include=src/lib/**/*.ts --coverage.thresholds.lines=90",
     "test:e2e": "playwright test --pass-with-no-tests",
+    "shots": "node tests/visual/shots.mjs",
     "test:frontend": "playwright test --config tests/a11y/playwright.config.ts",
     "browsers:install": "npx --no-install playwright install chromium",
     "validate:content": "node scripts/validate-content.ts && npm run claims:verified",
