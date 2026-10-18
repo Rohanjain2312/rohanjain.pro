@@ -23,6 +23,7 @@ import { fill, formatPhone, lowerFirst } from '../components/lib.ts';
 import { briefTitle } from '../components/fit-view.ts';
 import type { FitCopy } from '../components/fit-copy.ts';
 import copy from '../components/copy/home.json';
+import { SITE_ORIGIN, personJsonLd } from '../components/seo.ts';
 
 const data = await loadSite();
 const { site, resume, claims } = data;
@@ -73,9 +74,16 @@ const education = resume.education.map((e, i) => ({
   degree: e.degree,
   claimId: educationClaims[i] ?? '',
 }));
+const person = personJsonLd({
+  site,
+  resume,
+  origin: SITE_ORIGIN,
+  jobTitle: copy.hero.role,
+  description: copy.meta.description,
+});
 ---
 
-<Base title={copy.meta.title} description={copy.meta.description}>
+<Base title={copy.meta.title} description={copy.meta.description} jsonLd={person}>
   <SiteHeader name={site.name} nav={copy.nav} home />
   <main class="main">
     <Hero

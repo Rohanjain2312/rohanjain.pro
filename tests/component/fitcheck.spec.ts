@@ -272,7 +272,10 @@ test.describe('XSS payloads render as inert text (R-405)', () => {
       fired: (window as unknown as { __xss?: number }).__xss ?? 0,
       injected: document.querySelectorAll('#injected, [onerror], [onload], [srcdoc]').length,
       jsLinks: document.querySelectorAll('a[href^="javascript:" i]').length,
-      scripts: Array.from(document.scripts).filter((s) => !s.src).length,
+      // JSON-LD is data, not code: the one inline script the CSP allows.
+      scripts: Array.from(document.scripts).filter(
+        (s) => !s.src && s.type !== 'application/ld+json',
+      ).length,
       iframes: document.querySelectorAll('iframe').length,
     }));
 

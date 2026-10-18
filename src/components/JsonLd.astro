@@ -1,0 +1,15 @@
+---
+// The only inline script on the site: JSON-LD (F-12). It is data, not code, so the CSP does not govern it
+// (public/_headers; the headers test allows exactly type="application/ld+json"). Kept in its own file so the
+// layout and page guards in src/styles/assets.test.ts can stay strict everywhere else.
+import { jsonLdText } from './seo.ts';
+
+interface Props {
+  data: object;
+}
+const { data } = Astro.props;
+const text = jsonLdText(data);
+---
+
+{/* eslint-disable-next-line no-restricted-syntax -- R-405 targets user input. This is build-time site content, "<" is escaped by jsonLdText, and the CSP never executes JSON. Astro cannot emit unescaped script text any other way. */}
+<script type="application/ld+json" set:html={text} />
