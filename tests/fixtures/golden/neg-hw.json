@@ -1,0 +1,13 @@
+{
+  "id": "neg-hw",
+  "roleFamily": "unrelated",
+  "company": "semiconductor, San Jose",
+  "requirements": [
+    "Design digital logic in Verilog and verify it on FPGA boards",
+    "Write embedded firmware in C and C++",
+    "Bring up PCBs and debug with oscilloscopes and logic analyzers",
+    "Experience with ROS and robotics sensor integration",
+    "Understand timing closure and low-power design",
+    "Bachelor's in electrical engineering"
+  ]
+}

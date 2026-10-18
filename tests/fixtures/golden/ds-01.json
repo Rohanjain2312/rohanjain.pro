@@ -1,0 +1,14 @@
+{
+  "id": "ds-01",
+  "roleFamily": "ds",
+  "company": "consumer subscription, NYC",
+  "requirements": [
+    "Design and analyze A/B tests, including power analysis and experimental design",
+    "Apply causal inference to measure product impact",
+    "Strong SQL and Python with pandas",
+    "Define KPIs and business metrics and build dashboards in Tableau",
+    "Predictive modeling for churn using logistic regression and XGBoost",
+    "Communicate findings to stakeholders",
+    "Experience with Snowflake and dbt"
+  ]
+}

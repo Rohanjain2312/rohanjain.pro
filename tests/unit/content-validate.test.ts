@@ -18,6 +18,11 @@ describe('validateContent', () => {
   it('accepts the Goldman Sachs and IEEE evidence IDs', () => {
     const d = clone();
     d.skills[0].evidence = ['goldman', 'ieee'];
+    d.evidence = ['goldman', 'ieee'].map((id) => ({
+      id,
+      name: id,
+      proofClaimIds: ['fake-claim-a'],
+    }));
     expect(validateContent(d)).toEqual([]);
   });
 
@@ -111,7 +116,16 @@ describe('loading and CLI', () => {
     while (dirs.length) rmSync(dirs.pop()!, { recursive: true, force: true });
   });
   const write = (dir: string, d: any) => {
-    for (const k of ['claims', 'projects', 'skills', 'roles', 'figures', 'resume', 'site']) {
+    for (const k of [
+      'claims',
+      'projects',
+      'skills',
+      'roles',
+      'figures',
+      'resume',
+      'site',
+      'evidence',
+    ]) {
       writeFileSync(join(dir, `${k}.json`), JSON.stringify(d[k]));
     }
   };

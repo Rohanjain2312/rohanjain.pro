@@ -1,0 +1,14 @@
+{
+  "id": "ai-02",
+  "roleFamily": "ai",
+  "company": "healthcare software, remote US",
+  "requirements": [
+    "Prototype and productionize generative AI features using the OpenAI API and Anthropic API",
+    "Prompt engineering with structured outputs and JSON schema validation",
+    "Build RAG pipelines with chunking, reranking and a vector store such as pgvector",
+    "Fine-tune open models with LoRA or QLoRA when prompting is not enough",
+    "Track cost and latency of LLM calls and route requests between models",
+    "Experience with Azure OpenAI is a plus",
+    "Python, FastAPI and PostgreSQL"
+  ]
+}

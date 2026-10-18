@@ -1,0 +1,14 @@
+{
+  "id": "ai-01",
+  "roleFamily": "ai",
+  "company": "fintech, NYC",
+  "requirements": [
+    "Build and ship LLM agents to production using LangGraph or a similar framework",
+    "Design retrieval-augmented generation over internal documents with embeddings and a vector database",
+    "Own evaluation: build evaluation datasets, agent evaluation and LLM-as-a-judge scoring",
+    "Add guardrails and human-in-the-loop review for risky actions",
+    "Integrate tools through MCP and function calling",
+    "Deploy with Docker and Kubernetes on AWS",
+    "Strong Python and SQL"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "ml-03",
+  "roleFamily": "ml",
+  "company": "logistics, Seattle",
+  "requirements": [
+    "Time-series forecasting and anomaly detection for demand and capacity",
+    "Build data pipelines with Kafka and Spark",
+    "Deploy models behind REST APIs with CI/CD",
+    "Cross-validation, hyperparameter tuning and calibration",
+    "Experience with XGBoost and LightGBM",
+    "SQL and BigQuery or Snowflake",
+    "MLOps practices: model registry, reproducibility, testing"
+  ]
+}

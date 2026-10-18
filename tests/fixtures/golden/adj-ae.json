@@ -1,0 +1,13 @@
+{
+  "id": "adj-ae",
+  "roleFamily": "adjacent",
+  "company": "B2B software, Denver",
+  "requirements": [
+    "Own the dbt project and the semantic layer",
+    "Advanced SQL and data modeling",
+    "Build Looker explores and dashboards",
+    "Partner with analysts and finance on metric definitions",
+    "Document datasets and lineage",
+    "Fivetran and Redshift experience"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "id": "ml-02",
+  "roleFamily": "ml",
+  "company": "ad tech, Austin",
+  "requirements": [
+    "Own the lifecycle of recommendation models from research to serving",
+    "Optimize latency of model serving and batch inference",
+    "Distributed training with Ray or FSDP on GPUs",
+    "Hands-on CUDA or TensorRT optimization is a plus",
+    "Write production Python and C++",
+    "AWS SageMaker experience",
+    "Offline evaluation and A/B testing of model changes"
+  ]
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "id": "ai",
+    "label": "AI Engineer",
+    "company": "Sample Co",
+    "title": "AI Engineer, Agents",
+    "jd": "AI Engineer, Agents. Build and ship LLM agents to production with LangGraph. Design RAG over internal documents using embeddings and a vector database. Own evaluation: build evaluation datasets, agent evaluation, and LLM-as-a-judge scoring. Add guardrails and human-in-the-loop review. Integrate tools through MCP. Deploy with Docker and Kubernetes on AWS. Serve open models with vLLM. Strong Python and SQL."
+  },
+  {
+    "id": "ds",
+    "label": "Data Scientist",
+    "company": "Sample Co",
+    "title": "Data Scientist, Marketplace",
+    "jd": "Data Scientist, Marketplace. Use SQL and Python to analyze marketplace data. Design and analyze A/B testing and experimental design, including power analysis. Apply causal inference to measure impact. Build predictive modeling and forecasting for supply and demand with XGBoost. Define KPIs and business metrics, build dashboards in Tableau, and communicate findings to stakeholders. Experience with Snowflake and dbt is a plus."
+  },
+  {
+    "id": "ios",
+    "label": "iOS Engineer",
+    "company": "Sample Co",
+    "title": "Senior iOS Engineer",
+    "jd": "Senior iOS Engineer. Build our consumer app in Swift and SwiftUI. Own UIKit components, Core Data persistence and offline sync. Work in Xcode with CI, ship to the App Store, and partner with designers on accessibility. Experience with Kotlin or Android is a plus."
+  }
+]

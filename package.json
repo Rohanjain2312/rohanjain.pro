@@ -11,8 +11,11 @@
     "build": "astro build && node scripts/check-claims.ts --require-dist",
     "preview": "node scripts/preview.mjs",
     "check": "astro check && tsc --noEmit",
-    "test": "vitest run --passWithNoTests",
-    "test:coverage": "vitest run --coverage --coverage.include=src/lib/**/*.ts --coverage.thresholds.lines=90",
+    "test": "vitest run --passWithNoTests && npm run test:property",
+    "test:property": "vitest run --config tests/property/vitest.config.ts",
+    "test:coverage": "vitest run --coverage --coverage.include=src/lib/**/*.ts --coverage.thresholds.lines=90 && npm run test:property",
+    "mutation": "rm -rf .stryker-tmp && stryker run --testRunner command --coverageAnalysis off --force",
+    "mutation:other": "rm -rf .stryker-tmp && stryker run stryker.config.other.mjs --testRunner command --coverageAnalysis off --force",
     "test:e2e": "playwright test --pass-with-no-tests",
     "shots": "node tests/visual/shots.mjs",
     "test:frontend": "playwright test --config tests/a11y/playwright.config.ts",
@@ -44,12 +47,15 @@
     "@commitlint/config-conventional": "21.2.3",
     "@eslint/js": "9.39.5",
     "@playwright/test": "1.64.1",
+    "@stryker-mutator/core": "10.0.0",
+    "@stryker-mutator/vitest-runner": "10.0.0",
     "@types/node": "26.6.5",
     "@vitest/coverage-v8": "5.0.5",
     "eslint": "9.39.5",
     "eslint-plugin-astro": "1.7.0",
     "eslint-plugin-jsx-a11y": "6.10.2",
     "eslint-plugin-security": "4.2.0",
+    "fast-check": "4.10.2",
     "globals": "17.13.0",
     "html-validate": "11.16.2",
     "husky": "9.1.7",
@@ -62,5 +68,8 @@
     "typescript": "5.9.3",
     "typescript-eslint": "8.71.1",
     "vitest": "5.0.5"
+  },
+  "overrides": {
+    "qs": "6.16.0"
   }
 }

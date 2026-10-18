@@ -1,0 +1,12 @@
+{
+  "id": "neg-ios",
+  "roleFamily": "unrelated",
+  "company": "consumer apps, NYC",
+  "requirements": [
+    "Build our consumer app in Swift and SwiftUI",
+    "Own UIKit components, Core Data persistence and offline sync",
+    "Work in Xcode and ship to the App Store",
+    "Partner with designers on accessibility",
+    "Kotlin or Android experience is a plus"
+  ]
+}

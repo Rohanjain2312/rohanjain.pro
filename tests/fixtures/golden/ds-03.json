@@ -1,0 +1,14 @@
+{
+  "id": "ds-03",
+  "roleFamily": "ds",
+  "company": "insurance, Hartford",
+  "requirements": [
+    "Build classification and regression models for risk and pricing",
+    "Feature engineering, cross-validation and model selection",
+    "Translate business problems into modeling problems",
+    "Statistical modeling with statsmodels and scikit-learn",
+    "Explain model results with SHAP and feature importance",
+    "SQL, Python and Jupyter notebooks",
+    "Excel modeling experience"
+  ]
+}

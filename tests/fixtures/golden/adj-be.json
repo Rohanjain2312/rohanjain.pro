@@ -1,0 +1,14 @@
+{
+  "id": "adj-be",
+  "roleFamily": "adjacent",
+  "company": "payments, Atlanta",
+  "requirements": [
+    "Build backend services in Java and Spring Boot",
+    "Design REST and GraphQL APIs",
+    "PostgreSQL and Redis in production",
+    "Deploy on Kubernetes with CI/CD",
+    "Write unit and integration tests",
+    "Be on call for production services",
+    "Kafka event streaming experience"
+  ]
+}

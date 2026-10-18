@@ -26,11 +26,11 @@
 - [PR process gate review (PR #135)](project-pr-process-gate-pr135.md): comment-strip bypass found at 3135510; re-check cases and Low items
 - [PR #165 claims fixes](project-pr165-claims-fixes.md): approved dc071e7; QA log re-date owed after merge; check-claims probe recipe
 - [QA tooling status](project-qa-tooling-gaps.md): copy lint is on main but skipped when earlier CI steps fail (audit 1, PR #168); lychee status; verify limits.
+- [Fit-check QA, PR #201](project-fitcheck-qa-pr201.md): golden set, rubric, properties, Stryker setup; vitest/Stryker snags; engine-vs-rubric gaps
 - [Spec change sweep](feedback-spec-change-sweep.md): when a spec rule changes, grep agents, skills, rules and phase plans for the old wording and probe R-112 (PR #202).
 - [Golden set review (PR #202)](project-spec-sourcing-pr202.md): synthetic golden set Mediums (R-112 write conflict, stale posting instructions, #111 gitleaks absent); re-check at next head.
 - [ADR-0027 deploy owner (PR #189)](project-adr-0027-deploy-owner-pr189.md): unnamed Phase 7 deploy workflow conflicts with ADR-0016 and 10-cicd 10.2; re-check on the status fetch.
 - [Brief vs issue wording](feedback-brief-vs-issue-wording.md): when a review brief and the issue text disagree, flag both readings in Findings; do not pick one silently.
-- [Fit-check QA, PR #201](project-fitcheck-qa-pr201.md): golden set, rubric, properties, Stryker setup; vitest/Stryker snags; engine-vs-rubric gaps
 - [Golden set PR #202](project-golden-set-pr202.md): ADR-0028 Decision still said App/Data writes fixtures; R-509 vs spec 9.4 read conflict; round 2 CHANGES REQUESTED.
 - [Medium fixes check every cited source](feedback-medium-fix-check-all-sources.md): on re-review, grep each source a Medium named; PR #189 left spec 11 line 65 stale.
 - [Named stale lines (PR #185)](feedback-named-stale-lines.md): a "fixes these lines" PR can pass CI with most lines still stale; grep each named location at head.

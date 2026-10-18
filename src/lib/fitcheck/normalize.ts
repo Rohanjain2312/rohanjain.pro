@@ -1,0 +1,18 @@
+// Input cleaning (docs/spec/06-architecture.md section 5.4). Pure string work.
+import { config } from './thresholds.ts';
+
+/**
+ * Trim, NFKC, lowercase, collapse whitespace, cap at maxChars.
+ * The raw text is cut first, so any input gives the same result as its first maxChars characters.
+ * The result is cut again because NFKC can lengthen text.
+ */
+export function normalizeText(text: string, maxChars: number = config.maxChars): string {
+  const cut = text.slice(0, maxChars);
+  const clean = cut.normalize('NFKC').toLowerCase().replace(/\s+/g, ' ').trim();
+  return clean.length > maxChars ? clean.slice(0, maxChars) : clean;
+}
+
+/** Same cleaning for curated terms, without a cap. */
+export function normalizeTerm(term: string): string {
+  return term.normalize('NFKC').toLowerCase().replace(/\s+/g, ' ').trim();
+}

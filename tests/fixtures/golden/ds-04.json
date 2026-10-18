@@ -1,0 +1,14 @@
+{
+  "id": "ds-04",
+  "roleFamily": "ds",
+  "company": "media streaming, Los Angeles",
+  "requirements": [
+    "Run online experimentation and analyze engagement metrics",
+    "Build recommendation and clustering models",
+    "Bayesian methods and probability for decision making",
+    "Query large datasets in BigQuery and Spark",
+    "Visualization with Tableau",
+    "Work with product managers and present results",
+    "PhD or equivalent experience preferred"
+  ]
+}

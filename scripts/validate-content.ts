@@ -13,7 +13,16 @@ const strict = args.includes('--strict');
 const problems: Problem[] = [];
 try {
   if (strict) {
-    for (const k of ['claims', 'projects', 'skills', 'roles', 'figures', 'resume', 'site']) {
+    for (const k of [
+      'claims',
+      'projects',
+      'skills',
+      'roles',
+      'figures',
+      'resume',
+      'site',
+      'evidence',
+    ]) {
       if (!existsSync(join(dir, `${k}.json`)))
         problems.push({ file: `${k}.json`, field: '(file)', message: 'file is missing' });
     }

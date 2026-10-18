@@ -57,6 +57,20 @@ export const skillSchema = z
   .strict();
 export const skillsSchema = z.array(skillSchema);
 
+// Fit-check proof items (docs/spec/06-architecture.md section 5.4). The id is a project id or "goldman" / "ieee"
+// and must match the ids in skills.json evidence[]. The proof line is built from the claims' display text, so
+// no number lives here (R-301). A project item takes its name and link from projects.json; others state a name.
+export const evidenceLinkKind = z.enum(['code', 'demo', 'model', 'write-up']);
+export const evidenceItemSchema = z
+  .object({
+    id: slug,
+    name: nonEmpty.optional(),
+    proofClaimIds: z.array(slug).min(1),
+    link: evidenceLinkKind.optional(),
+  })
+  .strict();
+export const evidenceSchema = z.array(evidenceItemSchema);
+
 export const roleSchema = z
   .object({ id: roleFamily, title: nonEmpty, summary: nonEmpty, pdfFile: nonEmpty })
   .strict();
@@ -199,6 +213,7 @@ export const applicationSchema = z
 export type Claim = z.infer<typeof claimSchema>;
 export type Project = z.infer<typeof projectSchema>;
 export type Skill = z.infer<typeof skillSchema>;
+export type EvidenceRecord = z.infer<typeof evidenceItemSchema>;
 export type Role = z.infer<typeof roleSchema>;
 export type Figure = z.infer<typeof figureSchema>;
 export type Resume = z.infer<typeof resumeSchema>;
