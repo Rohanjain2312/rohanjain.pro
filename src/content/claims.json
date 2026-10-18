@@ -446,7 +446,7 @@
   {
     "id": "fc-f1-cost",
     "value": 0.7712,
-    "display": "F1 0.8876 to 0.7712 for the INT8 student",
+    "display": "validation F1 0.8876 to 0.7712 for the INT8 student",
     "source": "Repo FinCompress README results table; figure 01_pruning_curve.png",
     "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
     "verifiedOn": "2026-10-17",
