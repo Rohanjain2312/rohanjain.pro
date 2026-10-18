@@ -63,8 +63,16 @@ export const analyze: Analyze = (text, skills, extras, evidence) => {
   const provenSkills: { name: string; evidence: readonly string[] }[] = [];
   const familyCounts: Record<RoleFamily, number> = { ai: 0, ml: 0, ds: 0 };
 
-  for (const { skill, terms } of matcher.skills) {
-    if (!matchesAny(haystack, terms)) continue;
+  const hits = matcher.skills.filter(({ terms }) => matchesAny(haystack, terms));
+  const extraHits = matcher.extras.filter(({ terms }) => matchesAny(haystack, terms));
+  // Plain-English skill names count only beside proven technical matches (issue #243).
+  // Only shipped and work skills give context, so adding a gap term never changes the proven count.
+  const context = hits.filter(
+    (h) => !h.needsContext && (h.skill.tier === 'shipped' || h.skill.tier === 'work'),
+  ).length;
+  const contextOk = context >= config.minContextMatches;
+
+  for (const { skill } of hits.filter((h) => contextOk || !h.needsContext)) {
     // Only shipped and work count as proven. Studied and anything else is a gap (R-403).
     const isProven = skill.tier === 'shipped' || skill.tier === 'work';
     if (isProven) {
@@ -76,8 +84,8 @@ export const analyze: Analyze = (text, skills, extras, evidence) => {
     for (const family of skill.roles) familyCounts[family] += 1;
   }
   const seen = new Set([...proven, ...gaps].map((n) => n.toLowerCase()));
-  for (const { extra, terms } of matcher.extras) {
-    if (seen.has(extra.name.toLowerCase()) || !matchesAny(haystack, terms)) continue;
+  for (const { extra } of extraHits) {
+    if (seen.has(extra.name.toLowerCase())) continue;
     seen.add(extra.name.toLowerCase());
     gaps.push(extra.name);
   }

@@ -48,6 +48,8 @@ export function containsTerm(text: string, term: string): boolean {
 export interface CompiledSkill {
   skill: Skill;
   terms: string[];
+  /** True when the skill counts only with a technical context (config.plainWordSkills). */
+  needsContext: boolean;
 }
 export interface CompiledExtra {
   extra: Extra;
@@ -65,11 +67,16 @@ function uniq(values: string[]): string[] {
 /** Build the term lists once. Skills named in config.nameNeedsAlias match through aliases only. */
 export function compileMatcher(skills: readonly Skill[], extras: readonly Extra[]): Matcher {
   const aliasOnly = new Set(config.nameNeedsAlias.map(normalizeTerm));
+  const plain = new Set(config.plainWordSkills.map(normalizeTerm));
   return {
     skills: skills.map((skill) => {
       const name = normalizeTerm(skill.name);
       const own = aliasOnly.has(name) ? [] : [name];
-      return { skill, terms: uniq([...own, ...skill.aliases.map(normalizeTerm)]) };
+      return {
+        skill,
+        terms: uniq([...own, ...skill.aliases.map(normalizeTerm)]),
+        needsContext: plain.has(name),
+      };
     }),
     extras: extras.map((extra) => {
       const name = normalizeTerm(extra.name);

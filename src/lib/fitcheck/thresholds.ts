@@ -29,6 +29,26 @@ export const config = {
     'Algorithms',
     'Data structures',
   ] as readonly string[],
+  /**
+   * Skills whose name (and aliases) are ordinary English words. They count only when the text
+   * also matches at least `minContextMatches` other proven (shipped or work) skills (issue #243).
+   */
+  plainWordSkills: [
+    'Accuracy',
+    'Precision',
+    'Recall',
+    'Calibration',
+    'Mentoring',
+    'Deployments',
+    'Benchmarking',
+    'Probability',
+    'Forecasting',
+    'Guardrails',
+    'Classification',
+    'Clustering',
+  ] as readonly string[],
+  /** Proven technical matches (outside plainWordSkills) the text needs before a plain-word skill counts. */
+  minContextMatches: 2,
 };
 
 export type Config = typeof config;
