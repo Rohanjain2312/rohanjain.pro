@@ -16,7 +16,17 @@ import { buildTimeline, loadSite } from '../components/data.ts';
 import copy from '../components/copy/home.json';
 
 const data = await loadSite();
-const { site, resume, projects, figures, claims } = data;
+const { site, resume, claims } = data;
+// Plain-words clauses for jargon (copy/home.json "glosses"), appended to card lines and figure captions.
+const withGloss = (text: string, gloss?: string): string => (gloss ? `${text} ${gloss}` : text);
+const projects = data.projects.map((p) => ({
+  ...p,
+  oneLiner: withGloss(p.oneLiner, (copy.glosses.projects as Record<string, string>)[p.id]),
+}));
+const figures = data.figures.map((f) => ({
+  ...f,
+  caption: withGloss(f.caption, (copy.glosses.figures as Record<string, string>)[f.id]),
+}));
 const featured = projects.filter((p) => p.featured);
 const more = projects.filter((p) => !p.featured);
 const timeline = buildTimeline(data, copy.figures.plain);
