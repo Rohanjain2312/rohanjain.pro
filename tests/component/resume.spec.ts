@@ -153,9 +153,10 @@ test.describe('print route', () => {
     expect(css).toMatch(/margin:\s*18mm/);
   });
 
-  test('the sitemap does not list /print (the site has none)', async ({ request }) => {
-    const res = await request.get('/sitemap-index.xml');
-    if (res.ok()) expect(await res.text()).not.toContain('/print/');
+  test('sitemap.xml does not list /print', async ({ request }) => {
+    const res = await request.get('/sitemap.xml');
+    expect(res.ok()).toBe(true);
+    expect(await res.text()).not.toContain('/print/');
   });
 });
 

@@ -11,7 +11,7 @@ import { chromium, expect, test, webkit, type BrowserType, type Page } from '@pl
 import { loadEvidence } from '../../src/lib/content/load.ts';
 import { extras } from '../../src/lib/fitcheck/extras.ts';
 
-const BASE = 'http://localhost:4322';
+const BASE = `http://localhost:${process.env['PW_PORT'] ?? 4322}`;
 const MM = 96 / 25.4;
 // Letter is 215.9 by 279.4 mm. Margins are 18 mm (design spec 12).
 const PAGE_W = Math.floor((215.9 - 36) * MM);

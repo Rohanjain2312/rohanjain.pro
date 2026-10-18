@@ -29,6 +29,78 @@ export const config = {
     'Algorithms',
     'Data structures',
   ] as readonly string[],
+  /**
+   * Skills whose name (and aliases) are ordinary English words or everyday business phrases. They count only when the text
+   * also matches at least `minContextMatches` other proven (shipped or work) skills (issue #243).
+   */
+  plainWordSkills: [
+    'Accuracy',
+    'Precision',
+    'Recall',
+    'Calibration',
+    'Mentoring',
+    'Deployments',
+    'Benchmarking',
+    'Probability',
+    'Forecasting',
+    'Guardrails',
+    'Classification',
+    'Clustering',
+    'Data analysis',
+    'Data quality',
+    'Stakeholder management',
+    'Workflow automation',
+    'Executive presentation',
+    'Requirements gathering',
+    'Root-cause analysis',
+    'Cost optimization',
+    'Business analytics',
+    'Document processing',
+    'State management',
+    'Error analysis',
+  ] as readonly string[],
+  /**
+   * The only skills that give context to a plain-word skill. Named tools, languages, libraries and
+   * methods that ordinary business or lab text does not use. Phrases such as "Data analysis" or
+   * "Stakeholder management" are left out on purpose (issue #243).
+   */
+  technicalContextSkills: [
+    'Python',
+    'SQL',
+    'Pandas',
+    'SciPy',
+    'statsmodels',
+    'scikit-learn',
+    'PyTorch',
+    'XGBoost',
+    'Hugging Face',
+    'LangGraph',
+    'Git',
+    'GitHub Actions',
+    'CI/CD',
+    'Docker',
+    'Kubernetes',
+    'AWS',
+    'PostgreSQL',
+    'Parquet',
+    'Tableau',
+    'Pydantic',
+    'Logistic regression',
+    'Gradient boosting',
+    'Neural networks',
+    'Transformers',
+    'Embeddings',
+    'Large Language Models',
+    'RAG',
+    'Vector databases',
+    'MLOps',
+    'ETL',
+    'OCR',
+    'SHAP',
+    'LoRA',
+  ] as readonly string[],
+  /** Distinct technicalContextSkills the text needs before a plain-word skill counts. */
+  minContextMatches: 2,
 };
 
 export type Config = typeof config;

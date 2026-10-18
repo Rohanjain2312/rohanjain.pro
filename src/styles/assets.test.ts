@@ -31,22 +31,33 @@ describe('base and print styles', () => {
   });
 });
 
+// The one inline script allowed: JSON-LD data (public/_headers, F-12).
+const JSON_LD = 'JsonLd.astro';
+
 describe('layout and page', () => {
   it('avoid constructs that need CSP exceptions', () => {
     for (const f of ['src/layouts/Base.astro', 'src/pages/index.astro']) {
       expect(readFileSync(f, 'utf8'), f).not.toMatch(
-        /define:vars|is:inline|set:html|style=|<script/,
+        /define:vars|is:inline|set:html|style=|<script/i,
       );
     }
   });
   it('keep styles out of .astro files and scripts bundled', () => {
     const dirs = ['src/components', 'src/layouts', 'src/pages'];
     for (const d of dirs) {
-      for (const f of readdirSync(d).filter((n) => n.endsWith('.astro'))) {
+      for (const f of readdirSync(d).filter((n) => n.endsWith('.astro') && n !== JSON_LD)) {
         const text = readFileSync(join(d, f), 'utf8');
         expect(text, f).not.toMatch(/<style|define:vars|is:inline|set:html|\sstyle=/);
       }
     }
+  });
+  it('allow set:html only in the JSON-LD component, for one ld+json script', () => {
+    const text = readFileSync(`src/components/${JSON_LD}`, 'utf8');
+    const body = text.slice(text.indexOf('\n---', 4) + 4);
+    expect(body.match(/<script[^>]*>/gi)).toEqual([
+      '<script type="application/ld+json" set:html={text} />',
+    ]);
+    expect(body).not.toMatch(/<style|define:vars|is:inline|\sstyle=/);
   });
 });
 

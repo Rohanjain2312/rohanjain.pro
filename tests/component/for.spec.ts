@@ -164,12 +164,15 @@ test('there is no index of /for pages and unknown slugs are 404', async ({ reque
   }
 });
 
-test('nothing links to /for and there is no sitemap', async ({ request }) => {
-  for (const path of ['/sitemap.xml', '/sitemap-index.xml', '/sitemap-0.xml']) {
+test('nothing links to /for, the sitemap omits it and robots.txt only disallows it', async ({
+  request,
+}) => {
+  for (const path of ['/sitemap-index.xml', '/sitemap-0.xml']) {
     expect((await request.get(`${BASE}${path}`)).status(), path).toBe(404);
   }
-  const robots = await request.get(`${BASE}/robots.txt`);
-  if (robots.ok()) expect(await robots.text()).not.toContain('/for');
+  expect(await (await request.get(`${BASE}/sitemap.xml`)).text()).not.toContain('/for');
+  const robots = (await (await request.get(`${BASE}/robots.txt`)).text()).split('\n');
+  expect(robots.filter((l) => l.includes('/for'))).toEqual(['Disallow: /for/']);
   for (const path of ['/', '/privacy/', '/404.html', `/for/${live}/`, `/for/${expired}/`]) {
     const html = await (await request.get(`${BASE}${path}`)).text();
     expect(html, path).not.toMatch(/href="\/for\b/);

@@ -1,0 +1,15 @@
+{
+  "id": "neg-nurse",
+  "roleFamily": "plain-words",
+  "company": "hospital, intensive care",
+  "requirements": [
+    "Registered nurse, ICU.",
+    "Accuracy in medication dosing,",
+    "calibration of infusion pumps,",
+    "precision charting,",
+    "recall of patient histories,",
+    "mentoring new nurses,",
+    "unit and integration of care teams,",
+    "deployments to float pools."
+  ]
+}

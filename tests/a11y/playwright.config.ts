@@ -4,7 +4,8 @@
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from '@playwright/test';
 
-const port = 4322;
+// PW_PORT lets two worktrees run the suite at once; the default is unchanged.
+const port = Number(process.env['PW_PORT'] ?? 4322);
 
 export default defineConfig({
   testDir: '..',
