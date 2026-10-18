@@ -38,6 +38,8 @@ jobs:
           cache: npm
       - name: Install (R-507)
         run: npm ci --ignore-scripts
+      - name: Playwright browsers (the build renders the resume PDFs)
+        run: npm run browsers:install
       - name: Build site
         run: npm run build
       - name: Generate CycloneDX SBOM

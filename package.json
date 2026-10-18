@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node tests/component/resume-pdf.ts && node scripts/check-claims.ts --require-dist",
+    "build": "astro build && node scripts/resume-pdf.ts && node scripts/check-claims.ts --require-dist",
     "preview": "node scripts/preview.mjs",
     "check": "astro check && tsc --noEmit",
     "test": "vitest run --passWithNoTests && npm run test:property",

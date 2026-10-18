@@ -2,7 +2,7 @@
 import { readFileSync } from 'node:fs';
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test, type Page } from '@playwright/test';
-import { extractPdfText } from './pdf-text.ts';
+import { extractPdfText } from '../../scripts/pdf-text.ts';
 
 type Role = { id: string; title: string; summary: string; pdfFile: string };
 const roles = JSON.parse(readFileSync('src/content/roles.json', 'utf8')) as Role[];
