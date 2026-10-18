@@ -1,21 +1,20 @@
-// Usage: node tests/component/resume-pdf.ts [--dist dist] [--out dist/resume]
+// Usage: node scripts/resume-pdf.ts [--dist dist] [--out dist/resume]
 // Résumé PDFs (F-15, ADR-0010, architecture 5.8). After `astro build`, serves dist/ locally and prints each
 // /print/resume/<role>/ with Playwright (Chromium) to <out>/<pdfFile>. Run by `npm run build`.
-// The hook R-112 stopped Frontend from creating scripts/resume-pdf.ts, so this lives here until App/Data moves it
-// (`git mv`, then fix the two relative imports and the build script). It writes to dist/ only: public/ is copied
-// by Astro before this step, and public/resume/*.pdf has no .gitignore entry yet (Platform owns .gitignore).
+// It writes to dist/ only. File paths never come from request or argument data: the server answers from a map
+// built by walking dist/, and each PDF name comes from a fixed role-to-file table.
 // Checks each PDF: 1 to 2 pages, the name, email, employers, degrees and role summary present, no placeholder
 // text, and every number in the PDF text traces to a claim (R-301).
 import {
   createReadStream,
   existsSync,
   mkdirSync,
+  readdirSync,
   readFileSync,
-  statSync,
   writeFileSync,
 } from 'node:fs';
 import { createServer } from 'node:http';
-import { extname, join, normalize, resolve, sep } from 'node:path';
+import { extname, isAbsolute, join, relative, resolve, sep } from 'node:path';
 import { chromium } from '@playwright/test';
 import {
   buildClaimIndex,
@@ -23,14 +22,14 @@ import {
   formatFinding,
   type AllowEntry,
   type ClaimLike,
-} from '../../src/lib/claims/check.ts';
+} from '../src/lib/claims/check.ts';
 import {
   claimsAllowlistSchema,
   claimsSchema,
   resumeSchema,
   rolesSchema,
   siteSchema,
-} from '../../src/lib/content/schemas.ts';
+} from '../src/lib/content/schemas.ts';
 import { extractPdfText } from './pdf-text.ts';
 
 const args = process.argv.slice(2);
@@ -67,23 +66,59 @@ const TYPES: Record<string, string> = {
   '.svg': 'image/svg+xml',
 };
 
-/** Minimal static server for dist/. Directories answer with their index.html. */
+/** Every file under root, keyed by its URL path. Request data is only ever a lookup key. */
+function indexFiles(root: string): Map<string, string> {
+  const files = new Map<string, string>();
+  const walk = (dir: string): void => {
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      const full = join(dir, entry.name);
+      if (entry.isDirectory()) walk(full);
+      else if (entry.isFile()) files.set('/' + relative(root, full).split(sep).join('/'), full);
+    }
+  };
+  walk(root);
+  return files;
+}
+
+/** Minimal static server for dist/. A path ending in "/" answers with its index.html. */
 function serve(root: string) {
+  const files = indexFiles(root);
   return createServer((req, res) => {
-    const path = decodeURIComponent((req.url ?? '/').split('?')[0] ?? '/');
-    let file = normalize(join(root, path));
-    if (file !== root && !file.startsWith(root + sep)) {
-      res.writeHead(403).end();
+    let url: string;
+    try {
+      url = decodeURIComponent((req.url ?? '/').split('?')[0] ?? '/');
+    } catch {
+      res.writeHead(400).end();
       return;
     }
-    if (existsSync(file) && statSync(file).isDirectory()) file = join(file, 'index.html');
-    if (!existsSync(file)) {
+    const file =
+      files.get(url.endsWith('/') ? url + 'index.html' : url) ?? files.get(url + '/index.html');
+    if (!file) {
       res.writeHead(404).end();
       return;
     }
     res.writeHead(200, { 'content-type': TYPES[extname(file)] ?? 'application/octet-stream' });
     createReadStream(file).pipe(res);
   });
+}
+
+/** Fixed role-to-file table. The output name never comes from argv, env or a URL. */
+const PDF_FILES: Readonly<Record<string, string>> = {
+  ai: 'Rohan-Jain-AI-Engineer.pdf',
+  ml: 'Rohan-Jain-ML-Engineer.pdf',
+  ds: 'Rohan-Jain-Data-Scientist.pdf',
+};
+
+/** Output path for a role: the table name, resolved under `out`, which must stay inside it. */
+function pdfPath(roleId: string): string {
+  const name = Object.hasOwn(PDF_FILES, roleId) ? PDF_FILES[roleId] : undefined;
+  if (!name) throw new Error(`resume-pdf: unknown role "${roleId}".`);
+  const target = resolve(out, name);
+  const rel = relative(out, target);
+  if (rel === '' || rel.startsWith('..') || isAbsolute(rel)) {
+    throw new Error('resume-pdf: output path escapes the output directory.');
+  }
+  return target;
 }
 
 const problems: string[] = [];
@@ -114,7 +149,9 @@ try {
       tagged: true,
     });
     await page.close();
-    writeFileSync(join(out, role.pdfFile), pdf);
+    if (role.pdfFile !== PDF_FILES[role.id])
+      problems.push(`${role.id}: pdfFile does not match the fixed table.`);
+    writeFileSync(pdfPath(role.id), pdf);
 
     const { pages, text } = extractPdfText(pdf);
     const flat = text.replace(/\s+/g, ' ');
