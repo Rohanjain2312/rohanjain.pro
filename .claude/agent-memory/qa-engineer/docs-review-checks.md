@@ -18,3 +18,5 @@ For docs PRs, run these in addition to the link and copy checks in the issue's t
 
 **Why:** PR #84 round 1 caught present-tense feature claims and a narrow LICENSE carve-out, but missed the "no tracking" claim that conflicts with ADR-0008. Rounds 1 and 2 also missed the "enforced by hooks" claim that conflicts with ADR-0018 (see [[escaped-defects]]).
 **How to apply:** use with the run-review skill, before writing the Checked list.
+8. Skill-vs-artifact (for example the 5-second packet against skill `external-validation`): list every sentence of the skill section, including tool lines such as "a free form (Google Forms with timed image links)". A packet that names none of the required tools does not match, even if the audience, sizes and pass rule match. Check the gate row's "following skill X" claim against the same list.
+9. Lows: before writing "logged on #N", grep issue N for the item. A Low that is not in the issue is not logged.

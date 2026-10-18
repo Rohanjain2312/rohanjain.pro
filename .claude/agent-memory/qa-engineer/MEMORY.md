@@ -42,3 +42,9 @@
 - [Residual headings after a fix](feedback-residual-headings-after-fix.md): on re-review, grep whole files for retired duties; a fix can leave a sibling heading stale (PR #185).
 - [Retired-process sweep](feedback-retired-process-sweep.md): after a retirement, grep the whole tree (agent descriptions, plan.md, phase specs), not only named files (PR #185).
 - [Shots script review (PR #198)](project-shots-script-pr198.md): port collision and unreadable full-page PNG; round 2 checks
+- [Phase 4 plan review (PR #216)](project-phase4-plan-pr216.md): CHANGES REQUESTED on hook Security-review wording in status (labeler does not cover hooks); Lows on #215.
+- [Fit-check review (PR #201)](project-fitcheck-review-pr201.md): mutation 79.65 in a clean run vs claimed 82.46; clean-run recipe for round 2
+- [PR #218 for CLI](project-pr218-for-cli.md): output-dir guard bypassed by path case and `..x` dirs; recheck recipe
+- [Five-second fallback (PR #204)](project-five-second-fallback-pr204.md): when an instrument changes, check each pass clause the new method cannot measure (first click)
+- [Re-review negative control](feedback-rereview-negative-control.md): run the defect check on the requested-changes SHA too; it must flag the old defect (PR #207).
+- [Memory sweep review checks](feedback-memory-sweep-review-checks.md): PR #207 sweep: every memory file needs an index line; checker recipe; guard-evasion wording.
