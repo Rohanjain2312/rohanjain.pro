@@ -166,7 +166,7 @@ jobs:
           else
             echo "::warning::status.json not available; the site builds without a status line"
           fi
-      # Same steps as `npm run build`, split so check-claims can skip /for (issue #221, docs/runbooks/launch.md section 3).
+      # Same steps as `npm run build`, split so the claims check runs after the PDFs exist (issue #221, ADR-0031, docs/runbooks/launch.md section 3).
       - name: Build site and PDFs
         working-directory: site
         env:
@@ -174,14 +174,13 @@ jobs:
         run: |
           npx astro build
           node scripts/resume-pdf.ts
-      # R-301 on everything except /for. The /for numbers come from the schema-bounded engine output, not claims.json.
-      - name: Claims check (R-301), site and PDFs
+      # R-301 on the whole of dist, /for pages included (ADR-0031). Only the counts line is exempt from the numeric match.
+      # Proof text on /for pages stays checked, so a stale result file fails here and must be regenerated.
+      # How the check tells the counts line from other text is decided in the Phase 7 deploy workflow plan
+      # and tested in the private repo with a fixture result. Until then this runs the unchanged check.
+      - name: Claims check (R-301), site, /for pages and PDFs
         working-directory: site
-        run: |
-          mkdir "$RUNNER_TEMP/claims-dist"
-          cp -R dist/. "$RUNNER_TEMP/claims-dist/"
-          rm -rf "$RUNNER_TEMP/claims-dist/for"
-          node scripts/check-claims.ts --dist "$RUNNER_TEMP/claims-dist" --require-dist
+        run: node scripts/check-claims.ts --dist dist --require-dist
       - name: Guard the output
         working-directory: site
         run: |
