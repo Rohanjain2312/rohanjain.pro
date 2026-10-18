@@ -8,6 +8,16 @@ npm run test:frontend
 
 This runs axe (`tests/a11y/`), behavior and layout checks (`tests/component/`) and screenshot capture (`tests/visual/`, output in `tests/visual/screenshots/`). CI wiring is in PR B (Platform).
 
+## Screenshots for the Reader Advocate
+
+```
+npm run shots
+```
+
+Builds if `dist/` is missing or older than `src/` or `public/`, serves it through `scripts/preview.mjs` on port 4323, and writes to `.shots/` (gitignored). The Reader Advocate reads only this folder.
+
+Files, for each of `home` (`/`), `privacy` (`/privacy/`) and `404` (`/404.html`) at widths 390 and 1280: `<page>-<width>.png` (full page, every fold open) and `<page>-<width>.txt` (rendered `innerText` of the body). Example: `home-390.png`, `home-390.txt`.
+
 ## Lighthouse (mobile, local)
 
 Serve `dist/` with gzip, as Cloudflare Pages will. `scripts/preview.mjs` does not compress, which adds about 0.3 s to LCP. Then run, per page:
