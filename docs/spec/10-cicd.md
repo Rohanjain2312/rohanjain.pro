@@ -66,6 +66,7 @@ Generated from `docs/rules.md`. Hooks marked active already exist in `.claude/ho
 | R-508 | gitleaks pre-commit and CI; GitHub push protection | phase-0 |
 | R-511 | phase-gate script checks open severity labels; Security veto | phase-1 |
 | R-512 | CSP test; e2e test | phase-5 |
+| R-513 | guard-bash hook exact-command match; hook tests | phase-4 |
 | R-601 | Stylelint rules; copy lint | phase-1 |
 | R-603 | copy lint CI | phase-1 |
 | R-605 | e2e JS-disabled test | phase-2 |

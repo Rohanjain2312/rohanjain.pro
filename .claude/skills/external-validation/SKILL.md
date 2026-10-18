@@ -16,7 +16,7 @@ description: Use after Phase 2 (5-second test), after Phase 3 (recruiter fit rat
 
 ## Recruiter fit ratings (after Phase 3)
 - Packet: 10 golden postings (synthetic, ADR-0028) plus the résumé PDF. Raters choose Strong fit, Good fit with gaps, or Not a strong fit, without seeing the engine.
-- Send to at least 3 recruiters or hiring managers via the client.
+- Send to at least 3 recruiters or hiring managers via the client. Until the résumé PDFs exist (Phase 4), send the home page fold screenshot (`npm run shots`) instead of the PDF; raters then see less than the engine does, so a failed 7-of-10 must be checked against that difference before any alias or tier change.
 - QA computes exact agreement with the majority and Fleiss' kappa. Pass: engine matches the majority on at least 7 of 10 and never says "Strong fit" where the majority says "Not a strong fit". Failures become alias or tier fixes, or a threshold ADR.
 
 ## Reply-rate tracking (after launch)
