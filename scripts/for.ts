@@ -3,7 +3,7 @@
 // Runs the fit-check engine on a job description and writes only the result to
 // <APPLICATIONS_DIR>/<slug>.json (ADR-0016). The job description is read, analyzed and discarded:
 // it is never written, logged or echoed in an error (R-501, R-502).
-import { mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { readFileSync, statSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
@@ -14,12 +14,14 @@ import {
   listExpired,
   MAX_EXPIRY_DAYS,
 } from '../src/lib/applications/expiry.ts';
-import { makeSlug } from '../src/lib/applications/slug.ts';
+import { writeResult } from '../src/lib/applications/write.ts';
 import { loadEvidence, loadRawContent } from '../src/lib/content/load.ts';
 import { skillsSchema } from '../src/lib/content/schemas.ts';
 import { analyze, extras } from '../src/lib/fitcheck/index.ts';
 
-const MAX_JD_BYTES = 1_000_000;
+const MAX_JD_BYTES = 2_000_000;
+// eslint-disable-next-line no-control-regex
+const CONTROL = /[\u0000-\u001f\u007f-\u009f\u2028\u2029]/;
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 function fail(message: string): never {
@@ -70,6 +72,9 @@ function main(): void {
   if (!company || !role || !values.jd) {
     return fail('--company, --role and --jd are required.');
   }
+  if (CONTROL.test(company) || CONTROL.test(role)) {
+    return fail('--company and --role must not contain control characters.');
+  }
   let days = DEFAULT_EXPIRY_DAYS;
   if (values.expires !== undefined) {
     days = Number(values.expires);
@@ -81,7 +86,9 @@ function main(): void {
   let text: string;
   try {
     const path = resolve(values.jd);
-    if (statSync(path).size > MAX_JD_BYTES) return fail('the job description file is too large.');
+    const st = statSync(path);
+    if (!st.isFile()) return fail('the job description must be a regular file.');
+    if (st.size > MAX_JD_BYTES) return fail('the job description file is too large.');
     text = readFileSync(path, 'utf8');
   } catch {
     return fail('could not read the job description file.');
@@ -107,21 +114,15 @@ function main(): void {
   }
   text = '';
 
-  mkdirSync(dir, { recursive: true });
-  for (let attempt = 0; attempt < 5; attempt++) {
-    const slug = makeSlug(company);
-    try {
-      writeFileSync(join(dir, `${slug}.json`), `${JSON.stringify(result, null, 2)}\n`, {
-        flag: 'wx',
-      });
-      console.log(`${slug}  ${result.verdict.label}  expires ${result.expires}`);
-      console.log(`page: /for/${slug}`);
-      return;
-    } catch (e) {
-      if ((e as NodeJS.ErrnoException).code !== 'EEXIST') break;
-    }
+  let slug: string | undefined;
+  try {
+    slug = writeResult(dir, company, result);
+  } catch {
+    return fail('could not write the result file.');
   }
-  fail('could not write the result file.');
+  if (!slug) return fail('could not write the result file.');
+  console.log(`${slug}  ${result.verdict.label}  expires ${result.expires}`);
+  console.log(`page: /for/${slug}`);
 }
 
 main();

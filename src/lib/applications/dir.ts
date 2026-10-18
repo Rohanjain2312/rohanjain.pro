@@ -2,7 +2,7 @@
 // Where result files go (ADR-0016). The directory must be outside this repo's work tree.
 import { execFileSync } from 'node:child_process';
 import { existsSync, realpathSync } from 'node:fs';
-import { basename, dirname, join, relative, resolve, isAbsolute } from 'node:path';
+import { basename, dirname, join, relative, resolve, isAbsolute, sep } from 'node:path';
 
 export class ApplicationsDirError extends Error {}
 
@@ -16,7 +16,7 @@ function realish(p: string): string {
     if (up === cur) break;
     cur = up;
   }
-  return join(realpathSync(cur), ...tail);
+  return join(realpathSync.native(cur), ...tail);
 }
 
 function git(args: string[], cwd: string): string | undefined {
@@ -39,9 +39,13 @@ export function repoRoots(repoRoot: string): string[] {
   return roots;
 }
 
+const FOLD_CASE = process.platform === 'darwin' || process.platform === 'win32';
+const fold = (p: string): string => (FOLD_CASE ? p.toLowerCase() : p);
+
+/** True when child is parent or below it. Case-insensitive on macOS and Windows. */
 export function isInside(child: string, parent: string): boolean {
-  const rel = relative(parent, child);
-  return rel === '' || (!rel.startsWith('..') && !isAbsolute(rel));
+  const rel = relative(fold(parent), fold(child));
+  return rel === '' || (rel !== '..' && !rel.startsWith('..' + sep) && !isAbsolute(rel));
 }
 
 /** The default from ADR-0016: `rohanjain.pro-applications/applications` next to the main checkout. */

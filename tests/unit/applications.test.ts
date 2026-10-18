@@ -1,5 +1,6 @@
 import { spawnSync } from 'node:child_process';
 import {
+  existsSync,
   mkdirSync,
   mkdtempSync,
   readdirSync,
@@ -23,7 +24,8 @@ import {
   SLUG_PATTERN,
 } from '../../src/lib/applications/index.ts';
 import { addDays } from '../../src/lib/applications/expiry.ts';
-import { resolveApplicationsDir } from '../../src/lib/applications/dir.ts';
+import { isInside, resolveApplicationsDir } from '../../src/lib/applications/dir.ts';
+import { writeResult } from '../../src/lib/applications/write.ts';
 import { sampleStrong } from '../../src/lib/fitcheck/samples.ts';
 
 const repoRoot = resolve(import.meta.dirname, '..', '..');
@@ -241,6 +243,106 @@ function runFor(args: string[], env: Record<string, string>) {
     env: { ...process.env, APPLICATIONS_DIR: '', ...env },
   });
 }
+
+describe('writeResult', () => {
+  const same = () => Uint8Array.from([0, 0, 0, 0, 0, 0]);
+  it('never overwrites an existing file; it retries with a new suffix', () => {
+    const dir = tmp();
+    const r = applicationResultSchema.parse(valid());
+    expect(writeResult(dir, 'Acme', r, same)).toBe('acme-aaaaaa');
+    const marker = join(dir, 'acme-aaaaaa.json');
+    writeFileSync(marker, 'KEEP');
+    let n = 0;
+    const next = () => Uint8Array.from(n++ < 2 ? [0, 0, 0, 0, 0, 0] : [1, 1, 1, 1, 1, 1]);
+    expect(writeResult(dir, 'Acme', r, next)).toBe('acme-bbbbbb');
+    expect(readFileSync(marker, 'utf8')).toBe('KEEP');
+  });
+  it('gives up after repeated collisions without touching the file', () => {
+    const dir = tmp();
+    const r = applicationResultSchema.parse(valid());
+    writeFileSync(join(dir, 'acme-aaaaaa.json'), 'KEEP');
+    expect(writeResult(dir, 'Acme', r, same, 3)).toBeUndefined();
+    expect(readFileSync(join(dir, 'acme-aaaaaa.json'), 'utf8')).toBe('KEEP');
+  });
+});
+
+describe('npm run for (guards)', () => {
+  const args = (jd: string, extra: string[] = []) => [
+    '--company',
+    'A',
+    '--role',
+    'B',
+    '--jd',
+    jd,
+    ...extra,
+  ];
+  const posting = (): string => {
+    const jd = join(tmp(), 'p.txt');
+    writeFileSync(jd, syntheticText());
+    return jd;
+  };
+  it('refuses the repo path typed in another case (macOS, Windows)', () => {
+    const swapped = repoRoot.replace(/[a-z]/g, (c) => c.toUpperCase());
+    if (swapped === repoRoot || !existsSync(swapped)) return; // case-sensitive filesystem
+    const jd = posting();
+    const before = snapshot();
+    const out = join(swapped, 'leak');
+    expect(() => resolveApplicationsDir({ out, env: {}, repoRoot })).toThrow(/repo tree/);
+    const r = runFor(args(jd, ['--out', out]), {});
+    expect(r.status).toBe(1);
+    expect(snapshot()).toBe(before);
+    expect(existsSync(join(repoRoot, 'leak'))).toBe(false);
+  });
+  it('refuses a directory named ..x inside the repo', () => {
+    const jd = posting();
+    const before = snapshot();
+    const out = join(repoRoot, '..x');
+    expect(existsSync(out)).toBe(false);
+    expect(() => resolveApplicationsDir({ out, env: {}, repoRoot })).toThrow(/repo tree/);
+    expect(runFor(args(jd, ['--out', out]), {}).status).toBe(1);
+    expect(existsSync(out)).toBe(false);
+    expect(snapshot()).toBe(before);
+  });
+  it('isInside treats ..x as inside and a sibling or parent as outside', () => {
+    expect(isInside('/a/b/..x', '/a/b')).toBe(true);
+    expect(isInside('/a/c', '/a/b')).toBe(false);
+    expect(isInside('/a', '/a/b')).toBe(false);
+  });
+  it('accepts 365 days and rejects 366', () => {
+    const jd = posting();
+    const env = { APPLICATIONS_DIR: join(tmp(), 'apps') };
+    expect(runFor(args(jd, ['--expires', '366']), env).status).toBe(1);
+    expect(runFor(args(jd, ['--expires', '365']), env).status).toBe(0);
+  });
+  it('rejects control characters in company and role', () => {
+    const jd = posting();
+    const apps = join(tmp(), 'apps');
+    for (const bad of ['A\nB', 'A B', 'A\tB', 'A\u0085B']) {
+      const c = runFor(['--company', bad, '--role', 'B', '--jd', jd], { APPLICATIONS_DIR: apps });
+      const r = runFor(['--company', 'A', '--role', bad, '--jd', jd], { APPLICATIONS_DIR: apps });
+      expect(r.status).toBe(1);
+      expect(c.status).toBe(1);
+      expect(c.stderr).toMatch(/control characters/);
+    }
+    expect(existsSync(apps)).toBe(false);
+  });
+  it('rejects non-regular and oversized job description files fast', () => {
+    const work = tmp();
+    const env = { APPLICATIONS_DIR: join(work, 'apps') };
+    const big = join(work, 'big.txt');
+    writeFileSync(big, 'a'.repeat(2_100_000));
+    const ok = join(work, 'ok.txt');
+    writeFileSync(ok, 'a'.repeat(1_900_000) + ' python');
+    const dev = runFor(args('/dev/zero'), env);
+    expect(dev.status).toBe(1);
+    expect(dev.stderr).toMatch(/regular file/);
+    expect(runFor(args(work), env).status).toBe(1);
+    const tooBig = runFor(args(big), env);
+    expect(tooBig.status).toBe(1);
+    expect(tooBig.stderr).toMatch(/too large/);
+    expect(runFor(args(ok), env).status).toBe(0);
+  });
+});
 
 describe('npm run for (end to end)', () => {
   it('writes one result to APPLICATIONS_DIR and nothing under the repo tree', () => {
