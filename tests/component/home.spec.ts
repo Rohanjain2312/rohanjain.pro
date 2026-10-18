@@ -73,9 +73,9 @@ test.describe('layout', () => {
   test('boxed controls are 48 px high', async ({ page }) => {
     await page.goto('/');
     const heights = await page.evaluate(() =>
-      Array.from(document.querySelectorAll<HTMLElement>('.btn, .fold__summary')).map((el) =>
-        Math.round(el.getBoundingClientRect().height),
-      ),
+      Array.from(document.querySelectorAll<HTMLElement>('.btn, .fold__summary'))
+        .filter((el) => el.offsetParent !== null)
+        .map((el) => Math.round(el.getBoundingClientRect().height)),
     );
     expect(heights.length).toBeGreaterThan(0);
     for (const h of heights) expect(h).toBeGreaterThanOrEqual(48);

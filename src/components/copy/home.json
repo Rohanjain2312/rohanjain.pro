@@ -78,7 +78,7 @@
         { "sign": "+", "text": "Pydantic at every boundary, idempotent writes" },
         { "sign": "+", "text": "{{loan-v2-deploy}}" }
       ],
-      "note": "same problem, rebuilt with twice the human checks"
+      "note": "same problem, rebuilt with twice the human approvals"
     }
   },
   "work": {
@@ -109,6 +109,17 @@
     "emailSubject": "Role for Rohan Jain"
   },
   "footer": {
-    "privacy": "Privacy"
+    "privacy": "Privacy",
+    "updated": "last updated",
+    "demosChecked": "demos checked",
+    "demoDown": "demo down, checked"
+  },
+  "demo": {
+    "dialogLabel": "Live demo",
+    "load": "Load live demo",
+    "wake": "Free demos can take up to a minute to wake.",
+    "close": "Close",
+    "direct": "live demo",
+    "frameTitle": "Live demo"
   }
 }
