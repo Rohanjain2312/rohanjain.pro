@@ -33,3 +33,4 @@ Format: context, decision, consequences, alternatives. New ADRs take the next nu
 | [0027](0027-status-data-branch.md) | Status data goes to a data branch, not a daily PR |
 | [0028](0028-synthetic-golden-set.md) | The golden set is synthetic: no real posting text, URLs or companies |
 | [0029](0029-fitcheck-initial-thresholds.md) | Fit-check initial thresholds (spec 5.4 values, untuned) |
+| [0031](0031-claims-check-on-for-pages.md) | Claims check on /for pages: counts line exempt, proof text checked |
