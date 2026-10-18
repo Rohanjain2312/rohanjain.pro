@@ -1,6 +1,6 @@
 # Threat model
 
-Owner: security-engineer · Issue: #5 · Date: 2026-10-15 · Status: Phase 0, checked against `main` 989cc69; row 3.4 and RR-8 updated against `main` a3eb096 and the live token scopes (2026-10-16)
+Owner: security-engineer · Issue: #5 · Date: 2026-10-15 · Status: Phase 0, checked against `main` 989cc69; row 3.4 and RR-8 updated against `main` a3eb096 and the live token scopes (2026-10-16); residual risks and rows 5.3 and 6.1 updated by the Phase 6 assessment against `main` 40d79e8 (2026-10-18)
 Expands `docs/spec/08-security.md` §8.1. Sources: `docs/spec/06-architecture.md`, `docs/spec/10-cicd.md`, `docs/rules.md`, `.claude/hooks/`, `.claude/settings.json`, `.claude/skills/`, ADR-0001 to ADR-0014 and ADR-0016 to ADR-0018 (all on `main`), and live repo settings read through `gh api` on 2026-10-15.
 
 Review this file at every phase gate and whenever a trust boundary changes (new workflow, new secret, new third-party origin, new agent tool). Changes need Security review. Check every status against current `origin/main` and live `gh api` settings, not against a PR's base.
@@ -88,7 +88,7 @@ Data flows:
 | 1.2 | T | Force push or delete `main` | Hook deny; ruleset blocks | R-102 guard-bash, ruleset | active |
 | 1.3 | T | Agent skips git hooks (`--no-verify`, `HUSKY=0`, `-c core.hooksPath`) | `--no-verify` denied; CI reruns every hook check | R-116 guard-bash; CI | active for `--no-verify`; `HUSKY=0` and `core.hooksPath` open #47 (Low); CI phase-1 |
 | 1.4 | E | Role edits paths it does not own | Edit/Write tool deny | R-112 guard-write | active, except `..` in absolute worktree paths open #51 (Low) and shell writes open #47 (Low); CI backstop phase-1 (#14) |
-| 1.5 | E | Role merges, approves for another role, or posts a review as another role | Hook deny on `gh pr`, `gh issue`, `gh api`, GraphQL, file and wrapper forms | R-111, R-202, R-203 guard-bash; review-gate CI | active (closed #9 (PR #2), closed #32 (PR #37)); stdin, expansion and wrapper routes and fail-open on hang open #54 (Low); review-gate phase-1 |
+| 1.5 | E | Role merges, approves for another role, or posts a review as another role | Hook deny on `gh pr`, `gh issue`, `gh api`, GraphQL, file and wrapper forms | R-111, R-202, R-203 guard-bash; review-gate CI | active (closed #9 (PR #2), closed #32 (PR #37)); stdin, expansion and wrapper routes and fail-open on hang open #54 (Low); absolute `gh` path, attached short flags and `$'...\n...'` review bodies open #251 (Medium, TM-5); review-gate phase-1 |
 | 1.6 | I | Agent reads `.env`, keys or postings | Settings deny for Read; hook deny for listed shell verbs and Read/Grep/Glob | R-509 settings, guard-read, guard-bash | active; interpreters, `git show`, globs and `~/.ssh` open #47 (Low); keychain reads open #63 (Low) |
 | 1.7 | E | Agent pipes a download into a shell or deletes outside the repo | Hook deny | R-510 guard-bash | active |
 | 1.8 | E | Agent prints the gh token or writes to another client repo | Input-side controls first (2.1); tripwires deny token printing, credential helpers, other-repo writes and remote overrides | guard-bash, ADR-0018 | closed #45, #60, #61 (PR #53); `gh alias`, keychain and clone-dir targeting open #63 (Low); interpreter indirection accepted (ADR-0018, RR-11) |
@@ -137,7 +137,7 @@ Data flows:
 |---|---|---|---|---|---|
 | 5.1 | E | Workflow token over-scoped | Default workflow permissions `read`; Actions cannot approve PRs (both verified); write per job only | repo settings; R-504 | active; check phase-1 |
 | 5.2 | E, I | Fork PR runs workflows or reaches secrets | Fork PR approval `all_external_contributors` (verified); never `pull_request_target` with PR code; no secret in this repo can read application data | repo settings; ADR-0016; `deploy.yml` review | active; phase-7 |
-| 5.3 | T | `status.yml` writes data without role review; fetched data shapes site content | `status.json` holds only booleans and dates computed by the workflow, never response bodies; schema-validated; the workflow writes only the `status-data` branch, never `main` (ADR-0027), and the build treats the file as optional data | Security review of `status.yml` | phase-1 or 2 (Info, see 9.4) |
+| 5.3 | T | `status.yml` writes data without role review; fetched data shapes site content | `status.json` holds only booleans and dates computed by the workflow, never response bodies; schema-validated; the workflow writes only the `status-data` branch, never `main` (ADR-0027), and the build treats the file as optional data | Security review of `status.yml` | active; `status-data` has no ruleset, open #242 (Low, 232-L2); the Phase 7 private build must re-validate the file |
 | 5.4 | E | Cloudflare token used by a non-release job | Token held in the private repo's `production` environment (ADR-0016); scoped to Pages edit on one account; 90-day rotation | §8.5, ADR-0016, `docs/runbooks/rotate-secrets.md` | phase-7 |
 | 5.5 | I | Secret printed in logs, or application data in public logs and artifacts | No secrets until Phase 7; GitHub masks secrets; gitleaks in CI; this repo's builds use fixtures only | R-508, ADR-0016 | active (no secrets); phase-1 |
 | 5.6 | T | Code scanning gaps | CodeQL on PRs and weekly; Scorecard weekly, target 8+ | `codeql.yml`, `scorecard.yml` | phase-1 (#15) |
@@ -146,7 +146,7 @@ Data flows:
 
 | # | S/T/R/I/D/E | Threat | Mitigation | Enforced by | Status |
 |---|---|---|---|---|---|
-| 6.1 | T, E | XSS or injected third-party script | Strict CSP (`default-src 'none'`, `script-src 'self'`, no `unsafe-inline` or `unsafe-eval`); add `require-trusted-types-for 'script'` (named in §8.1, missing from the §8.2 header) | R-505 headers test | phase-1 (#18, #29) |
+| 6.1 | T, E | XSS or injected third-party script | Strict CSP (`default-src 'none'`, `script-src 'self'`, no `unsafe-inline` or `unsafe-eval`); add `require-trusted-types-for 'script'` (named in §8.1, missing from the §8.2 header) | R-505 headers test | active (CSP checked in Phase 6: evaluator, 11 XSS payload sets, no DOM sink in `src/`); Trusted Types open #241 (Low) |
 | 6.2 | T | Clickjacking | `frame-ancestors 'none'`, `X-Frame-Options: DENY` | R-505 | phase-1 |
 | 6.3 | I | Referrer or cross-origin leaks | `Referrer-Policy`, COOP, CORP, `Permissions-Policy` | R-505 | phase-1 |
 | 6.4 | T, E | Hugging Face iframe abuses the page | Created only on click; `sandbox`; `*.hf.space` only in `frame-src`; `referrerpolicy="no-referrer"`; COOP same-origin | R-512 CSP and e2e tests | phase-5 |
@@ -249,10 +249,13 @@ Findings from this threat model:
 | TM-2 | Medium | Public GitHub content can steer agents; the agents' token reaches all client repos and the hook did not restrict it | #45 (follow-ups #60, #61, Medium) | supervisor | Closed (PR #53, ADR-0018). Interaction limit, fork approval, author rule, hook tripwires. Interpreter indirection accepted (RR-11). Follow-ups #63 (Low, open). |
 | TM-3 | Medium | Local npm installs ran install scripts on the client machine; Dependabot patch auto-merge had no cooldown | #46 | platform, supervisor | Closed (PR #52). `.npmrc` `ignore-scripts=true`, 7-day cooldown. Follow-ups #57 (Low, closed), #58 (Low, open). |
 | TM-4 | Low | Hook gaps: R-116 via `HUSKY=0` and `core.hooksPath`, R-509 via interpreters, globs, `git show` and home-directory keys, R-112 via shell writes | #47 | supervisor, platform | Open. Target 2026-10-29. |
+| TM-5 | Medium | guard-bash tripwires for merge, label and review spoofing and other-repo writes are bypassed by an absolute path to `gh` or `git`, attached short flags in the `gh api` parser (`-flabels[]=approved:supervisor`, `-X=PUT`) and `$'...\n...'` review bodies. ADR-0018 item 2 names these targets; one account (RR-2) means review-gate does not close the gap (232-L6, rows 1.5 and 1.8) | #251 | security-engineer (patch), supervisor (applies, R-112) | Open. Blocks the Phase 6 gate (R-511). |
 
 Related open Low findings from reviews that change row statuses above: #51 (guard-write `..` paths, row 1.4), #54 (hook routes and fail-open, rows 1.5 and 1.9), #56 (fit-check field cap, row 7.2), #58 (install scripts re-enabled, row 4.1), #63 (keychain, `gh alias`, clone-dir targeting, rows 1.6 and 1.8), #42 (labeler security paths, rows 1.9 and 2.5).
 
-No Medium or higher finding from this threat model is open. Medium findings block merge and launch until fixed or accepted by an ADR listed in `docs/needs-client.md` (R-511); fix PRs may merge under ADR-0017.
+Phase 6 assessment (2026-10-18, `docs/security/reviews/phase-6.md`): one Medium, TM-5 below (#251). Lows: #241 (Trusted Types, row 6.1), #242 (`status-data` ruleset, row 5.3), and 232-L3 to L5 on #233 (security.txt, CodeQL alerts 14 and 15, `.gitleaks.toml` #111).
+
+One Medium finding from this threat model is open (TM-5, #251). Medium findings block merge and launch until fixed or accepted by an ADR listed in `docs/needs-client.md` (R-511); fix PRs may merge under ADR-0017.
 
 ## 8. Residual risks
 
@@ -271,6 +274,7 @@ No Medium or higher finding from this threat model is open. Medium findings bloc
 | RR-12 | Dev-only `braces` advisory GHSA-vfj7-8cjw-p6xm is waived in CI (ADR-0021) | No fixed version; dev toolchain only, repo-controlled globs | security-engineer | 2027-01-15 or when a fix ships |
 | RR-13 | The lockfile holds packages under 7 days old until 2026-10-22 (ADR-0023) | Re-lock churn for a gap that closes by itself; signatures, `ignore-scripts=true` and 0 audit findings (RR-4) | security-engineer | age check on or after 2026-10-22 |
 | RR-14 | Bounded reviews, docs-only haiku re-checks, no context audit (ADR-0026), tripwire gaps open to Phase 8 (ADR-0024) | Speed, requested by the client; a Medium or higher finding still blocks anywhere (R-511) | supervisor | each phase gate; Phase 6 assessment |
+| RR-15 | Phase 6 ran without OWASP ZAP (Docker daemon not running) and against the local emulator, not Cloudflare. Header matching for `//for/<slug>`, upper-case paths, non-GET methods and encoded slashes is Cloudflare's, so it is untested | Local-only assessment by design (§8.9); manual HTTP probes replaced the passive ZAP rules (`docs/security/reviews/phase-6.md`) | security-engineer | Phase 7: ZAP baseline and the path/method probes on production |
 | RR-11 | A steered agent can reach the all-repo gh token through interpreter indirection (`node -e`, `python3 -c`) | A command denylist cannot be complete; accepted by ADR-0018. Mitigation available to the client: the optional repo-scoped fine-grained token in `docs/needs-client.md` (step corrections tracked in #63) | supervisor; client informed via `docs/needs-client.md` | Phase 1 retro (sandbox decision), each phase gate |
 
 ## 9. Requirements handed to other issues
