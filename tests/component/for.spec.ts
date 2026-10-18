@@ -129,7 +129,7 @@ test('live page renders result text as text, with no job description in the HTML
   const html = await (await request.get(`${BASE}/for/${live}/`)).text();
   expect(html).not.toContain(JD_MARKER);
   expect(html).not.toContain('retrieval augmented generation');
-  expect(html).not.toMatch(/<script[^>]*>[^<]/);
+  expect(html).not.toMatch(/<script[^>]*>[^<]/i);
   expect(html).not.toContain('style="');
 });
 
