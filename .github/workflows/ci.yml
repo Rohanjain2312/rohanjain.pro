@@ -34,7 +34,7 @@ jobs:
       - name: Hooks self-test (R-101, R-105, R-106, R-501)
         run: node .claude/hooks/test-hooks.mjs
       - name: Phase gate, CI check and PR process self-tests (R-103, R-201, R-209, R-504, R-511, R-804)
-        run: node --test .github/lint-fixtures/ci-gates.test.mjs .github/lint-fixtures/pr-process.test.mjs .github/lint-fixtures/status.test.mjs
+        run: node --test .github/lint-fixtures/ci-gates.test.mjs .github/lint-fixtures/pr-process.test.mjs .github/lint-fixtures/status.test.mjs .github/lint-fixtures/lighthouse.test.mjs
 
   static:
     name: static
@@ -180,7 +180,7 @@ jobs:
         run: npm run test:frontend
       - name: Lighthouse CI (R-607)
         run: |
-          echo "R-607: Lighthouse runs locally for now (tests/a11y/README.md). No pinned dependency yet. Passing trivially."
+          echo "R-607: Lighthouse budgets run locally with npm run lighthouse (docs/runbooks/local-preview.md). Not a CI job: LCP on / sits at the 1.8 s budget and TBT is noisy on shared runners. Passing trivially."
 
   security:
     name: security
