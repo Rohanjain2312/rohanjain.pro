@@ -8,7 +8,7 @@ A static portfolio site for Rohan Jain (ML Engineer, AI Engineer, Data Scientist
 
 - Home page, project pages, a fit check that runs in the visitor's browser, a print view, three résumé PDFs made at build time, and a privacy page.
 - Personal `/for/<name>` pages: one page per job application, with a fit result for that role. Their addresses carry a random suffix. They are not listed in the sitemap and tell search engines not to index them.
-- Security headers, accessibility, performance and cross-browser tests that run on every pull request.
+- Security headers and accessibility tests that run on every pull request. Lighthouse budgets and the cross-browser matrix (`npm run test:browsers`) are not enforced in CI yet; Claude Code runs them locally before launch.
 - A daily status check of the demo links, written to the `status-data` branch.
 - Production workflow, Cloudflare plan, DNS plan and launch runbook, prepared and waiting for you (section 3).
 
@@ -31,8 +31,8 @@ npm run verify     # every check CI runs
 Three short steps, details and exact commands in `docs/runbooks/launch.md` section 1:
 
 1. Create a free Cloudflare account with a passkey or 2FA, and add `rohanjain.pro`.
-2. At Porkbun, replace the nameservers with the two Cloudflare shows, and later paste one DNSSEC record.
-3. Create one Cloudflare API token from a prepared link and store it with a `gh secret set` command Claude Code prepares.
+2. At Porkbun, turn DNSSEC off, replace the nameservers with the two Cloudflare shows, and later paste one DS record.
+3. Create one Cloudflare API token from a prepared link and store it, with the account ID, using two `gh secret set` commands Claude Code prepares.
 
 Claude Code does the rest: DNS records, DNSSEC, CAA, email-hardening records, deploy, analytics, external header scans, smoke tests and tag `v1.0.0`.
 
