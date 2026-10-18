@@ -26,3 +26,5 @@
 - [PR process gate review (PR #135)](project-pr-process-gate-pr135.md): comment-strip bypass found at 3135510; re-check cases and Low items
 - [PR #165 claims fixes](project-pr165-claims-fixes.md): approved dc071e7; QA log re-date owed after merge; check-claims probe recipe
 - [QA tooling status](project-qa-tooling-gaps.md): copy lint is on main but skipped when earlier CI steps fail (audit 1, PR #168); lychee status; verify limits.
+- [Spec change sweep](feedback-spec-change-sweep.md): when a spec rule changes, grep agents, skills, rules and phase plans for the old wording and probe R-112 (PR #202).
+- [Golden set review (PR #202)](project-spec-sourcing-pr202.md): synthetic golden set Mediums (R-112 write conflict, stale posting instructions, #111 gitleaks absent); re-check at next head.

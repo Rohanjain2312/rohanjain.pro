@@ -19,6 +19,16 @@ Log of defects that passed a QA review and were found later, plus the defects a 
 **Why:** doc PRs contain many claims. The builder's self-check and the first QA pass both focused on copy and links, and missed claims that conflict with ADRs.
 **How to apply:** for any docs PR, compare each privacy, stack, licence and "what the site does" claim with docs/adr/ and docs/spec/ and record the result. See [[docs-review-checks]].
 
+## PR #185 (Phase 2 plan and ADR-0026 doc cleanup, heads dd8591c, 30a3836, 01364993, 8bfeef6, bd36743)
+- Round 1 (dd8591c) caught the 182-L2 to L4 stale process text in run-review, rules, qa-engineer, cicd, threat-model and needs-client. It missed the same retired duties in three agent headers (design-lead, reader-advocate, qa-engineer), in plan.md, and in the 11-phases gate lines. Round 2 (30a3836) caught them.
+- Round 3 (01364993) renamed the reader-advocate per-PR heading "Review a PR as two people" to "Check the rendered site as two people" with no trigger. Round 4 (8bfeef6, CHANGES REQUESTED, Medium) found that the "(when the Supervisor asks)" qualifier sat on the next heading, which covers only lines 25 to 28. Round 5 (bd36743, approved) moved it onto line 20.
+- Pattern: a qualifier on a heading covers only the lines under that heading. Check that the qualifier sits on the line that governs the block, not on the next heading.
+- Low that stayed off the tracker: `docs/design/spec.md` line 632 (Reader Advocate reviews) was a round-2 Low and was not on #163 until round 5. Post every round's Lows to #163 in the round they are raised.
+- Low not caught in round 1: `docs/status.md` "Open PRs" lists only #185, while PR #186 was opened before the head. Check the open-PR list against `gh pr list --state open` at the head time.
+
+**Why:** the rules for retired duties are spread across agent headers, skills, specs and the threat model. A fix in one file is not a fix for the rule.
+**How to apply:** for a process-retirement PR, grep every file in the retirement list for the retired terms (R-206, R-807, R-704, "probe test", "audit 2", per-PR review verbs), not just the files the builder names.
+
 ## PR #164 (do-not-merge audit PR, head bc03846)
 - A bundle labelled "copy and style refresh" hid 6 High and 4 Medium defects: unclaimed number, claim value changed against display, vacuous test (`r.success || !r.success`), CSP `'unsafe-inline'`, unpinned action tag, wrong location, low-contrast token, stronger claim display, em dash, wrong issue link.
 - Tell: the PR body described scope vaguely and the suite stayed green only because a test was weakened. Run build and claims check in a clean export; diff each hunk against its rule, not against the body.
