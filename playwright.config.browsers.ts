@@ -30,6 +30,9 @@ export default defineConfig({
   testMatch: ['e2e/*.spec.ts', 'a11y/*.spec.ts', 'component/*.spec.ts', 'visual/*.spec.ts'],
   forbidOnly: !!process.env['CI'],
   retries: 0,
+  // Four workers overload the single preview server and the for.spec site build, which gives connection refused
+  // and one intermittent failure. Two workers were stable.
+  workers: 2,
   reporter: [['list'], ['json', { outputFile: 'test-results/browsers.json' }]],
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },

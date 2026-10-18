@@ -180,7 +180,7 @@ jobs:
         run: npm run test:frontend
       - name: Lighthouse CI (R-607)
         run: |
-          echo "R-607: Lighthouse runs locally for now (tests/a11y/README.md). No pinned dependency yet. Passing trivially."
+          echo "R-607: Lighthouse budgets run locally with npm run lighthouse (docs/runbooks/local-preview.md). Not a CI job: LCP on / sits at the 1.8 s budget and TBT is noisy on shared runners. Passing trivially."
 
   security:
     name: security
