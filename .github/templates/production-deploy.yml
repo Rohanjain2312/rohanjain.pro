@@ -1,0 +1,225 @@
+# TEMPLATE. Not a workflow of this repo. Copy to Rohanjain2312/rohanjain.pro-applications/.github/workflows/deploy.yml
+# in Phase 7 (docs/runbooks/launch.md). That repo is private (ADR-0016); this file is the reviewed draft.
+#
+# What it does: checks out this public repo at a release tag, adds the result files from the private repo,
+# fetches status.json from the status-data branch (ADR-0027), builds in Actions (Chromium for the three PDFs),
+# uploads dist as a one-day artifact and deploys it to Cloudflare Pages. Monthly, it first removes expired
+# result files. It calls the public repo's own scripts and does not copy their logic.
+#
+# Secrets (repository secrets of the private repo): CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID.
+# Variables: SITE_TAG (release tag to deploy, for example v1.0.0), CF_PAGES_PROJECT (Pages project name).
+# Only the `deploy` job reads the secrets. It runs no repo code except a pinned wrangler.
+name: Deploy production
+
+on:
+  push:
+    branches: [main]
+    paths: ['applications/**']
+  schedule:
+    - cron: '23 5 1 * *' # monthly: remove expired result files, then redeploy
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag of Rohanjain2312/rohanjain.pro (defaults to the SITE_TAG variable)
+        required: false
+        type: string
+
+permissions: read-all
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+env:
+  PUBLIC_REPO: Rohanjain2312/rohanjain.pro
+  WRANGLER_VERSION: 4.149.0 # older than 7 days when pinned (ADR-0023)
+  TAG: ${{ inputs.tag || vars.SITE_TAG }}
+
+jobs:
+  # Lists expired result files by calling the public repo's own script. It only reads.
+  list-expired:
+    name: list-expired
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Check the tag
+        run: |
+          [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "TAG must look like v1.0.0"; exit 1; }
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ env.PUBLIC_REPO }}
+          ref: ${{ env.TAG }}
+          path: site
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          path: apps
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: site/.nvmrc
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - name: Install (R-507)
+        working-directory: site
+        run: npm ci --ignore-scripts
+      - name: List expired files (names only)
+        working-directory: site
+        env:
+          APPLICATIONS_DIR: ${{ github.workspace }}/apps/applications
+        run: |
+          npm run --silent for -- --list-expired | sed -n 's/^expired //p' > "$RUNNER_TEMP/expired.txt"
+          echo "expired files: $(wc -l < "$RUNNER_TEMP/expired.txt")"
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: expired
+          path: ${{ runner.temp }}/expired.txt
+          if-no-files-found: error
+          retention-days: 1
+
+  # Holds the only write permission. Runs no repo code: validates names, removes files, pushes.
+  remove-expired:
+    name: remove-expired
+    needs: list-expired
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          persist-credentials: true
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: expired
+          path: ${{ runner.temp }}/incoming
+      - name: Remove expired files
+        env:
+          LIST: ${{ runner.temp }}/incoming/expired.txt
+        run: |
+          removed=0
+          while IFS= read -r name; do
+            [ -z "$name" ] && continue
+            [[ "$name" =~ ^[a-z0-9-]+\.json$ ]] || { echo "Unexpected file name in list"; exit 1; }
+            [ -f "applications/$name" ] || continue
+            git rm -q -- "applications/$name"
+            removed=$((removed + 1))
+          done < "$LIST"
+          echo "removed: $removed"
+          if [ "$removed" -gt 0 ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -q -m "chore: remove expired application results"
+            git push origin HEAD:main
+          fi
+
+  build:
+    name: build
+    needs: [list-expired, remove-expired]
+    # Run on every trigger. The cleanup jobs are skipped on a push; a failed cleanup stops the deploy.
+    if: ${{ !cancelled() && !contains(needs.*.result, 'failure') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+    steps:
+      - name: Check the tag
+        run: |
+          [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "TAG must look like v1.0.0"; exit 1; }
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ env.PUBLIC_REPO }}
+          ref: ${{ env.TAG }}
+          path: site
+          persist-credentials: false
+      # Result files stay outside the public checkout: the generator and loader refuse paths inside it (ADR-0016).
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: main
+          path: apps
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: site/.nvmrc
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+      - name: Install (R-507)
+        working-directory: site
+        run: npm ci --ignore-scripts
+      - name: Chromium for the resume PDFs
+        working-directory: site
+        run: npm run browsers:install
+      # ADR-0027. The public repo needs no token. A missing file only hides the footer status line.
+      - name: Fetch status.json from the status-data branch
+        working-directory: site
+        run: |
+          if curl -fsSL --max-time 30 -o "$RUNNER_TEMP/status.json" \
+            "https://raw.githubusercontent.com/${PUBLIC_REPO}/status-data/status.json" \
+            && node -e 'JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"))' "$RUNNER_TEMP/status.json"; then
+            cp "$RUNNER_TEMP/status.json" public/status.json
+            echo "status.json added"
+          else
+            echo "::warning::status.json not available; the site builds without a status line"
+          fi
+      # Same steps as `npm run build`, split so check-claims can skip /for (issue #221, docs/runbooks/launch.md section 3).
+      - name: Build site and PDFs
+        working-directory: site
+        env:
+          APPLICATIONS_DIR: ${{ github.workspace }}/apps/applications
+        run: |
+          npx astro build
+          node scripts/resume-pdf.ts
+      # R-301 on everything except /for. The /for numbers come from the schema-bounded engine output, not claims.json.
+      - name: Claims check (R-301), site and PDFs
+        working-directory: site
+        run: |
+          mkdir "$RUNNER_TEMP/claims-dist"
+          cp -R dist/. "$RUNNER_TEMP/claims-dist/"
+          rm -rf "$RUNNER_TEMP/claims-dist/for"
+          node scripts/check-claims.ts --dist "$RUNNER_TEMP/claims-dist" --require-dist
+      - name: Guard the output
+        working-directory: site
+        run: |
+          test -f dist/_headers || { echo "dist/_headers is missing"; exit 1; }
+          # Raw result files must never ship. Only rendered pages under dist/for are expected.
+          if find dist -name '*.json' -path '*applications*' | grep -q .; then
+            echo "Result JSON found in dist"; exit 1
+          fi
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: dist
+          path: site/dist
+          if-no-files-found: error
+          retention-days: 1
+
+  deploy:
+    name: deploy
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24.21.0 # keep equal to .nvmrc of the public repo
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: dist
+          path: dist
+      - name: Deploy to Cloudflare Pages
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CF_PAGES_PROJECT: ${{ vars.CF_PAGES_PROJECT }}
+          NPM_CONFIG_IGNORE_SCRIPTS: 'true'
+          WRANGLER_SEND_METRICS: 'false'
+        run: |
+          npx --yes "wrangler@${WRANGLER_VERSION}" pages deploy dist \
+            --project-name "$CF_PAGES_PROJECT" --branch main --commit-dirty=true
