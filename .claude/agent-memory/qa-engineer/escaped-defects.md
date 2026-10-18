@@ -29,6 +29,14 @@ Log of defects that passed a QA review and were found later, plus the defects a 
 **Why:** the rules for retired duties are spread across agent headers, skills, specs and the threat model. A fix in one file is not a fix for the rule.
 **How to apply:** for a process-retirement PR, grep every file in the retirement list for the retired terms (R-206, R-807, R-704, "probe test", "audit 2", per-PR review verbs), not just the files the builder names.
 
+## PR #204 (Phase 2 gate record and 5-second packet, round 1 ddaa561, round 2 083f1f3)
+- Round 1 (ddaa561, CHANGES REQUESTED) caught the first-click part running in Phase 2 with no button to click. Round 2 (083f1f3) deferred it in the skill header, question list and Pass line, and the packet and gate row agreed.
+- Self-correction: my round-1 review said "a static screenshot cannot produce a first click". That is wrong in general, since first-click tests often use static images. The real reason is that the "View résumé" button does not exist before Phase 4. Round 2 logged the wording as a Low on #163.
+- Open Low at 083f1f3, predates the round: the Phase 6 repeat and the first-click pass criterion appear only in the skill. Spec 01 criterion 9 and spec 11 Phase 6 do not name them.
+
+**Why:** a timing deferral can be right while its stated reason is wrong. A reviewer's own rationale is a claim too.
+**How to apply:** when a review says why a test cannot run, check that the reason holds in general, not only for the case in front of you. Log the wrong reason as a Low and fix the wording.
+
 ## PR #164 (do-not-merge audit PR, head bc03846)
 - A bundle labelled "copy and style refresh" hid 6 High and 4 Medium defects: unclaimed number, claim value changed against display, vacuous test (`r.success || !r.success`), CSP `'unsafe-inline'`, unpinned action tag, wrong location, low-contrast token, stronger claim display, em dash, wrong issue link.
 - Tell: the PR body described scope vaguely and the suite stayed green only because a test was weakened. Run build and claims check in a clean export; diff each hunk against its rule, not against the body.

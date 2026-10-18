@@ -17,11 +17,6 @@ For PRs that add or change `review-gate`, `labeler`, `pr-hygiene`, `branch-name`
 - Re-run the ruleset jq on the live ruleset; do not run the PUT. Check that every required context is a real job name.
 - The gate does not re-run on comments, so say "re-run review-gate before merge" in the review when a CHANGES REQUESTED could land late.
 
-PR #182 (ADR-0026, lean gates, approved 2026-10-17, Lows 182-L1 and L2 on #163):
-- `globToRegExp` has no `s` flag, so a path with a newline matches no glob, not even `**`. Probe newline paths and a trailing newline.
-- When a rule is retired, grep the old rule IDs across `.claude/`, `docs/spec/` and `docs/security/`; run-review R-205, `.claude/rules/ci.md`, qa-engineer.md and the threat model still described the old controls. Threat-model rows are mine to fix.
-- Paths still outside the labeler: `.github/actions/**`, `_redirects`, `_routes.json`, `functions/`, `wrangler.toml`, `astro.config.*`.
-
 **Why:** the gate checks the shape of a review, not its truth, and every agent shares one account, so leniency in the parser is the main weakness.
 
 **How to apply:** start from the criteria, then probe leniency, then trust boundaries. Related: [[severity-calibration]], [[hook-review-checklist]].
