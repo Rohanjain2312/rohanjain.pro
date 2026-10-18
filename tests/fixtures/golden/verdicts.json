@@ -1,0 +1,342 @@
+{
+  "rubric": "docs/qa/fit-rubric.md",
+  "rubricVersion": 1,
+  "raters": { "qa": "done", "readerAdvocate": "not yet rated" },
+  "postings": {
+    "ai-01": {
+      "expected": "Strong fit",
+      "proven": [
+        "AI agents",
+        "Large Language Models",
+        "LangGraph",
+        "RAG",
+        "Embeddings",
+        "Vector databases",
+        "Evaluation datasets",
+        "Agent evaluation",
+        "Guardrails",
+        "Human-in-the-loop",
+        "MCP (Model Context Protocol)",
+        "Tool calling",
+        "Function calling",
+        "Docker",
+        "Kubernetes",
+        "AWS",
+        "Python",
+        "SQL"
+      ],
+      "gaps": ["LLM-as-a-judge"],
+      "unlisted": []
+    },
+    "ai-02": {
+      "expected": "Good fit, with gaps",
+      "proven": [
+        "OpenAI API",
+        "Anthropic API",
+        "Generative AI",
+        "Prompt engineering",
+        "Structured outputs",
+        "JSON Schema",
+        "RAG",
+        "Chunking",
+        "Vector databases",
+        "pgvector",
+        "Supervised fine-tuning",
+        "LoRA",
+        "Large Language Models",
+        "Python",
+        "PostgreSQL"
+      ],
+      "gaps": ["Re-ranking", "QLoRA", "Azure OpenAI"],
+      "unlisted": ["FastAPI"]
+    },
+    "ai-03": {
+      "expected": "Not a strong fit",
+      "proven": [
+        "Multi-agent systems",
+        "State management",
+        "Agent observability",
+        "LangSmith",
+        "Vertex AI",
+        "Kubernetes",
+        "Technical documentation"
+      ],
+      "gaps": [
+        "Agent memory",
+        "LangChain",
+        "LlamaIndex",
+        "Microsoft Agent Framework",
+        "Prompt injection defense"
+      ],
+      "unlisted": ["GCP"]
+    },
+    "ai-04": {
+      "expected": "Good fit, with gaps",
+      "proven": [
+        "Document AI",
+        "OCR",
+        "Information extraction",
+        "Golden datasets",
+        "Supervised fine-tuning",
+        "Model quantization",
+        "CI/CD",
+        "Python"
+      ],
+      "gaps": ["Hybrid search", "vLLM", "Elasticsearch", "Pinecone", "Terraform"],
+      "unlisted": ["TypeScript"]
+    },
+    "ml-01": {
+      "expected": "Good fit, with gaps",
+      "proven": [
+        "Gradient boosting",
+        "Neural networks",
+        "Python",
+        "PyTorch",
+        "scikit-learn",
+        "Feature engineering",
+        "Batch inference",
+        "Training pipelines",
+        "Inference pipelines",
+        "Docker",
+        "Kubernetes"
+      ],
+      "gaps": [
+        "TensorFlow",
+        "Feature stores",
+        "Real-time inference",
+        "Airflow",
+        "Apache Spark",
+        "Model monitoring",
+        "Drift detection",
+        "MLflow",
+        "Experiment tracking"
+      ],
+      "unlisted": []
+    },
+    "ml-02": {
+      "expected": "Not a strong fit",
+      "proven": [
+        "Latency optimization",
+        "Model serving",
+        "Batch inference",
+        "Python",
+        "AWS",
+        "Offline evaluation"
+      ],
+      "gaps": ["Distributed training", "Ray", "FSDP", "SageMaker", "A/B testing"],
+      "unlisted": ["CUDA", "TensorRT", "C++"]
+    },
+    "ml-03": {
+      "expected": "Good fit, with gaps",
+      "proven": [
+        "Time-series analysis",
+        "Data pipelines",
+        "Model deployment",
+        "CI/CD",
+        "Cross-validation",
+        "Hyperparameter tuning",
+        "Calibration",
+        "XGBoost",
+        "SQL",
+        "MLOps",
+        "Model registry",
+        "Reproducibility"
+      ],
+      "gaps": [
+        "Forecasting",
+        "Anomaly detection",
+        "Apache Spark",
+        "Kafka",
+        "REST APIs",
+        "LightGBM",
+        "BigQuery",
+        "Snowflake"
+      ],
+      "unlisted": []
+    },
+    "ml-04": {
+      "expected": "Strong fit",
+      "proven": [
+        "Supervised fine-tuning",
+        "Transformers",
+        "Text classification",
+        "Classification",
+        "Hugging Face",
+        "Hugging Face Transformers",
+        "PyTorch",
+        "Model quantization",
+        "Knowledge distillation",
+        "Error analysis",
+        "Explainability",
+        "SHAP",
+        "Transfer learning",
+        "Imbalanced-data handling",
+        "AWS",
+        "Docker"
+      ],
+      "gaps": ["Responsible AI", "Data privacy"],
+      "unlisted": []
+    },
+    "ds-01": {
+      "expected": "Good fit, with gaps",
+      "proven": [
+        "SQL",
+        "Python",
+        "Pandas",
+        "KPI definition",
+        "Business metrics",
+        "Tableau",
+        "Predictive modeling",
+        "Logistic regression",
+        "XGBoost"
+      ],
+      "gaps": [
+        "A/B testing",
+        "Power analysis",
+        "Experimental design",
+        "Causal inference",
+        "Snowflake",
+        "dbt"
+      ],
+      "unlisted": []
+    },
+    "ds-02": {
+      "expected": "Good fit, with gaps",
+      "proven": [
+        "Time-series analysis",
+        "Statistical analysis",
+        "Exploratory data analysis",
+        "Data analysis",
+        "Data storytelling",
+        "SQL window functions",
+        "SQL",
+        "Data cleaning",
+        "Python"
+      ],
+      "gaps": ["Forecasting", "Hypothesis testing", "Regression analysis", "R"],
+      "unlisted": ["Power BI", "Looker"]
+    },
+    "ds-03": {
+      "expected": "Strong fit",
+      "proven": [
+        "Classification",
+        "Feature engineering",
+        "Cross-validation",
+        "Model selection",
+        "Translating business problems into ML/AI problems",
+        "Statistical modeling",
+        "statsmodels",
+        "scikit-learn",
+        "SHAP",
+        "Feature importance",
+        "SQL",
+        "Python",
+        "Jupyter / notebook-based workflows"
+      ],
+      "gaps": [],
+      "unlisted": ["Excel modeling"]
+    },
+    "ds-04": {
+      "expected": "Not a strong fit",
+      "proven": ["Tableau"],
+      "gaps": ["Online experimentation", "Clustering", "Probability", "BigQuery", "Apache Spark"],
+      "unlisted": []
+    },
+    "neg-ios": {
+      "expected": "Not a strong fit",
+      "proven": [],
+      "gaps": [],
+      "unlisted": ["Swift", "UIKit", "Core Data", "Xcode", "Kotlin", "Android"]
+    },
+    "neg-hw": {
+      "expected": "Not a strong fit",
+      "proven": [],
+      "gaps": [],
+      "unlisted": ["Verilog", "FPGA", "C", "C++", "ROS"]
+    },
+    "neg-game": {
+      "expected": "Not a strong fit",
+      "proven": [],
+      "gaps": [],
+      "unlisted": ["Unity", "C#", "Android", "iOS"]
+    },
+    "adj-de": {
+      "expected": "Not a strong fit",
+      "proven": [
+        "Data pipelines",
+        "SQL",
+        "Python",
+        "Workflow orchestration",
+        "AWS",
+        "Data quality"
+      ],
+      "gaps": ["Airflow", "Snowflake", "dbt", "Kafka", "Apache Spark", "Terraform"],
+      "unlisted": []
+    },
+    "adj-ae": {
+      "expected": "Not a strong fit",
+      "proven": ["SQL"],
+      "gaps": ["dbt"],
+      "unlisted": ["Looker", "Fivetran", "Redshift"]
+    },
+    "adj-be": {
+      "expected": "Not a strong fit",
+      "proven": ["PostgreSQL", "Kubernetes", "CI/CD", "Unit testing", "Integration testing"],
+      "gaps": ["REST APIs", "Kafka", "Redis"],
+      "unlisted": ["Java", "Spring Boot", "GraphQL"]
+    }
+  },
+  "samples": {
+    "ai": {
+      "expected": "Strong fit",
+      "proven": [
+        "AI agents",
+        "Large Language Models",
+        "LangGraph",
+        "RAG",
+        "Embeddings",
+        "Vector databases",
+        "Evaluation datasets",
+        "Agent evaluation",
+        "Guardrails",
+        "Human-in-the-loop",
+        "MCP (Model Context Protocol)",
+        "Docker",
+        "Kubernetes",
+        "AWS",
+        "Python",
+        "SQL"
+      ],
+      "gaps": ["LLM-as-a-judge", "vLLM"],
+      "unlisted": []
+    },
+    "ds": {
+      "expected": "Not a strong fit",
+      "proven": [
+        "SQL",
+        "Python",
+        "Predictive modeling",
+        "XGBoost",
+        "KPI definition",
+        "Business metrics",
+        "Tableau"
+      ],
+      "gaps": [
+        "A/B testing",
+        "Experimental design",
+        "Power analysis",
+        "Causal inference",
+        "Forecasting",
+        "Snowflake",
+        "dbt"
+      ],
+      "unlisted": []
+    },
+    "ios": {
+      "expected": "Not a strong fit",
+      "proven": ["CI/CD"],
+      "gaps": [],
+      "unlisted": ["iOS", "Swift", "UIKit", "Core Data", "Xcode", "Kotlin", "Android"]
+    }
+  }
+}
