@@ -31,6 +31,9 @@ const steps = [
   ['html-validate', 'node', ['.github/scripts/html-validate.mjs']],
   ['e2e tests', 'npm', ['run', 'test:e2e']],
   ['frontend suite: axe, layout, screenshots (R-605, R-606)', 'npm', ['run', 'test:frontend']],
+  // Captures are re-encoded on every run and differ by a few bytes. They are review aids, not asserted.
+  // Restore the tracked files so the clean-tree check below holds. Commit new captures by hand when the UI changes.
+  ['restore tracked screenshots', 'git', ['checkout', '--', 'tests/visual/screenshots']],
 ];
 
 function run(cmd, args) {
