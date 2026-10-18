@@ -23,7 +23,7 @@
       },
       {
         "figure": "{{tariff-exact-match.value}}%",
-        "caption": "exact tariff codes from TariffAgent on unseen rulings, vs {{tariff-zero-shot.value}}% zero-shot (the model given no examples)"
+        "caption": "exact tariff codes from TariffAgent on unseen rulings, vs {{tariff-zero-shot.value}}% zero-shot (an AI model asked with no tools and no rulings to look up)"
       }
     ],
     "credentials": "IEEE-published · MS Applied ML, University of Maryland · mentored {{interns-offers.value}} interns to full-time offers"
@@ -78,7 +78,7 @@
         { "sign": "+", "text": "Pydantic at every boundary, idempotent writes" },
         {
           "sign": "+",
-          "text": "{{loan-v2-deploy}} (GKE Autopilot is Google's managed Kubernetes; A2A lets agents talk to each other)"
+          "text": "{{loan-v2-deploy}} (GKE Autopilot is Google's service that runs the app's containers for you; A2A lets agents talk to each other)"
         }
       ],
       "note": "same problem, rebuilt with twice the human approvals"
@@ -103,7 +103,8 @@
     "projects": {
       "settle": "PR-AUC is how well the model ranks the true fails first.",
       "tariff": "MCP is a standard way for AI tools to call outside services.",
-      "med": "LoRA trains a small add-on instead of the whole model.",
+      "fc": "INT8 stores the model's numbers as small whole numbers, so it is smaller and faster.",
+      "med": "LoRA: a small trainable add-on, not a full retrain.",
       "gb": "Both are RAG methods: they look facts up before answering."
     },
     "figures": {
