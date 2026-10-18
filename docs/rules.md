@@ -1,6 +1,6 @@
 # Rule inventory
 
-Every "must" and "never" in this project lives here, with exactly one home. 86 rules: 69 are enforced by a hook, CI check or ruleset; 17 need judgment and live in the file of the agent or procedure that applies them. 40 rules marked ★ were prose in plan v2.3 and are now enforced.
+Every "must" and "never" in this project lives here, with exactly one home. 87 rules: 70 are enforced by a hook, CI check or ruleset; 17 need judgment and live in the file of the agent or procedure that applies them. 40 rules marked ★ were prose in plan v2.3 and are now enforced.
 
 **How homes work**
 - Rules whose home is this file are defined here (bold ID) and enforced by the listed check. Agents do not need to memorize them: the check blocks the action and its message cites the rule ID.

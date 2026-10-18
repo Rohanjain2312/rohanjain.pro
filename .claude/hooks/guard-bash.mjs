@@ -222,7 +222,7 @@ for (let t of segs.flatMap((s) => expand(s))) {
     // R-513: the one repo creation allowed is the Supervisor creating the private applications repo (ADR-0016). The whole command must match: no wrappers, chaining, substitution or extra flags.
     const PRIVATE_APPS_CREATE = /^gh repo create Rohanjain2312\/rohanjain\.pro-applications(?: --private(?: --description "[A-Za-z0-9 .,:()_\/'-]*")?| --description "[A-Za-z0-9 .,:()_\/'-]*" --private)$/;
     const allowPrivateCreate = role === 'supervisor' && !/[\n\r]/.test(cmd) && PRIVATE_APPS_CREATE.test(cmd.trim());
-    if (t[1] === 'repo' && t[2] === 'create' && !allowPrivateCreate) deny(input, 'R-513', 'gh repo create is blocked. The only allowed form, for the Supervisor: gh repo create Rohanjain2312/rohanjain.pro-applications --private [--description "..."] (ADR-0016).');
+    if (t[1] === 'repo' && ['create', 'new'].includes(t[2]) && !allowPrivateCreate) deny(input, 'R-513', 'gh repo create (and its alias gh repo new) is blocked. The only allowed form, for the Supervisor: gh repo create Rohanjain2312/rohanjain.pro-applications --private [--description "..."] (ADR-0016).');
     if (t[1] === 'repo' && ['delete', 'rename', 'archive', 'unarchive', 'fork', 'set-default', 'deploy-key'].includes(t[2])) deny(input, 'R-509', `gh repo ${t[2]} is blocked.`);
     if (t[1] === 'repo' && t[2] === 'edit' && t.some((a) => /^--(visibility|accept-visibility-change-consequences)\b/i.test(a))) deny(input, 'R-513', 'Repository visibility never changes from the shell (ADR-0016): change it in the GitHub settings if ever needed.');
     if (t[1] === 'repo' && t[2] === 'edit') {
