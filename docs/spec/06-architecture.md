@@ -69,7 +69,7 @@ Stack, repository layout, content model, engine and generator specs, and the ADR
 │  └─ styles/                # tokens.css, base.css, print.css
 ├─ tests/
 │  ├─ unit/  e2e/  property/  a11y/  visual/
-│  └─ fixtures/postings/     # anonymized requirement summaries (`docs/spec/09-quality.md` §9.4)
+│  └─ fixtures/golden/       # synthetic requirement lists, ADR-0028 (`docs/spec/09-quality.md` §9.4)
 ├─ CLAUDE.md                 # always loaded, small
 ├─ plan.md                   # index and load map
 ├─ README.md  CONTRIBUTING.md  SECURITY.md  CHANGELOG.md  LICENSE
