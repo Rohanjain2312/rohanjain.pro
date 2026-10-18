@@ -1,0 +1,54 @@
+---
+// One dialog for every demo (design spec 7.6). It holds no iframe: demos.ts creates one only after the
+// visitor clicks "Load live demo", and removes it when the dialog closes.
+interface Props {
+  copy: {
+    dialogLabel: string;
+    load: string;
+    wake: string;
+    close: string;
+    direct: string;
+    frameTitle: string;
+  };
+}
+
+const { copy } = Astro.props;
+---
+
+<dialog
+  class="demo"
+  aria-label={copy.dialogLabel}
+  data-demo-dialog
+  data-frame-title={copy.frameTitle}
+>
+  <div class="demo__column">
+    <div class="demo__toolbar">
+      <span class="demo__name" data-demo-title></span>
+      <span class="demo__actions">
+        <a class="text-link" href="/" data-demo-direct>
+          {copy.direct}
+          <span aria-hidden="true"> ↗</span>
+        </a>
+        <button type="button" class="btn btn--outlined" data-demo-close>
+          {copy.close}
+        </button>
+      </span>
+    </div>
+    <div class="demo__sheet">
+      <p class="meta demo__url" data-demo-address></p>
+      <div class="demo__stage" data-demo-stage>
+        <p class="demo__what" data-demo-what></p>
+      </div>
+      <div class="demo__foot">
+        <button type="button" class="btn" data-demo-load>
+          {copy.load}
+        </button>
+        <p class="demo__wake">{copy.wake}</p>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  import './demos.ts';
+</script>

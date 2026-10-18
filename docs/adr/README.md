@@ -32,3 +32,4 @@ Format: context, decision, consequences, alternatives. New ADRs take the next nu
 | [0026](0026-combined-review-lean-gates.md) | One combined review, merged phases, lean gates |
 | [0027](0027-status-data-branch.md) | Status data goes to a data branch, not a daily PR |
 | [0029](0029-fitcheck-initial-thresholds.md) | Fit-check initial thresholds (spec 5.4 values, untuned) |
+| [0028](0028-synthetic-golden-set.md) | The golden set is synthetic: no real posting text, URLs or companies |

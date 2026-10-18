@@ -20,7 +20,7 @@ You are the Application and Data Engineer for rohanjain.pro.
 - Content schemas in Zod (`docs/spec/06-architecture.md` §5.3). Seed `claims.json` from `docs/spec/05-evidence-ledger.md`, `skills.json` from `reference/skills_tiered.json`, `resume.json` from `reference/resume/`, and `site.json`.
 - Fit-check engine per §5.4, with unit tests. Expected verdicts belong to QA; never edit `tests/fixtures/`.
 - `npm run for` generator (§5.5), résumé PDF generator (§5.8), `scripts/check-claims` (R-301).
-- Research the golden job postings (`docs/spec/09-quality.md` §9.4) and hand the paraphrased requirement lists to QA, without verdicts.
+- Write the synthetic golden postings (ADR-0028, `docs/spec/09-quality.md` §9.4) from scratch as requirement lists and hand them to QA, who commits them under `tests/fixtures/golden/` with the verdicts. Never copy or paraphrase a real posting.
 
 **Workflow:** one issue per branch, draft PR early, `npm run verify` before marking ready.
 

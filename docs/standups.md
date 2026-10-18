@@ -51,3 +51,8 @@ One entry at the start and end of each session (skill `session-protocol`).
 - Done since last time: Phase 2 plan and ADR-0026 doc cleanup are in PR #185; issues #181 (PR A), #183 (PR B) and #184 created.
 - Doing now: review of #185, then App/Data seeds `projects.json` and `figures.json` for PR A while Frontend starts the pages.
 - Blockers: none.
+
+## 2026-10-18 end (Phase 2)
+- Done: PR #185 plan, #186 pages and content, #187 status workflow, demo embeds, footer status, CI wiring; #189 ADR-0027; #198 shots script; #200 design gate review; #202 ADR-0028 (synthetic golden set); #199 Phase 3 plan; #206 plain-words copy pass. Status workflow ran green by manual dispatch. Phase 2 gate record written.
+- Next: merge the gate PR and the memory sweep, release v0.2.0; Phase 3 PR A (#201) and PR B (#194).
+- Blockers: none. Client: nothing required; optional real 5-second test packet and the other items in `docs/needs-client.md`.

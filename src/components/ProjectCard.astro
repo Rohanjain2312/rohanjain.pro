@@ -1,13 +1,18 @@
 ---
 import ExternalLink from './ExternalLink.astro';
 import type { ProjectView } from './data.ts';
+import { dayLabel, embedUrl } from './status.ts';
 
 interface Props {
   project: ProjectView;
   demoLabel: string;
+  /** Check date (YYYY-MM-DD) when status.json says the demo is down. The trigger then stays a plain link. */
+  downSince?: string | undefined;
+  downText: string;
 }
 
-const { project, demoLabel } = Astro.props;
+const { project, demoLabel, downSince, downText } = Astro.props;
+const embed = project.demo && !downSince ? embedUrl(project.demo.url) : undefined;
 ---
 
 <article class="card">
@@ -20,15 +25,26 @@ const { project, demoLabel } = Astro.props;
   </p>
   <div class="links">
     {project.demo && (
-      <ExternalLink
+      <a
         class="text-link"
         href={project.demo.url}
-        label={demoLabel}
-        context={project.name}
-      />
+        data-demo-url={embed ? project.demo.url : undefined}
+        data-demo-embed={embed}
+        data-demo-name={embed ? project.name : undefined}
+        data-demo-what={embed ? project.demo.what : undefined}
+      >
+        {demoLabel}
+        <span class="sr-only"> for {project.name}</span>
+        <span aria-hidden="true"> ↗</span>
+      </a>
     )}
     {project.links.map((l) => (
       <ExternalLink class="text-link" href={l.url} label={l.label} context={project.name} />
     ))}
   </div>
+  {downSince && (
+    <p class="meta">
+      {downText} <time datetime={downSince}>{dayLabel(downSince)}</time>
+    </p>
+  )}
 </article>

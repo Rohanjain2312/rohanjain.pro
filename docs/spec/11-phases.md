@@ -30,7 +30,7 @@ Owners: Frontend (UI), App/Data (wiring)
 **Gate:** design review passes the anti-slop checklist at 390/768/1280 px; Reader Advocate's simulated 5-second test passes; zero axe violations; Lighthouse budgets met locally; claims check and copy lint green. The real 5-second test packet is ready in `docs/needs-client.md` (does not block).
 
 ### Phase 3: Fit check and brief
-Owners: App/Data (engine and golden set), Frontend (UI), Design Lead (brief layout)
+Owners: App/Data (engine, golden drafts), QA (golden set, rubric, tests), Frontend (UI), Design Lead (brief layout)
 - Engine per `docs/spec/06-architecture.md` §5.4; golden set per `docs/spec/09-quality.md` §9.4; ReDoS test.
 - UI: samples, textarea, optional fields, verdict, evidence rows, gaps, brief with print stylesheet.
 **Gate:** golden tests and alias audit pass; property tests pass; mutation score at or above threshold; XSS payload tests pass; brief prints to one page in Chromium and WebKit; keyboard-only flow works. The fit-rating packet is ready in `docs/needs-client.md` (does not block).
