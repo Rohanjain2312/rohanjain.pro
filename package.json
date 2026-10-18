@@ -21,6 +21,8 @@
     "test:frontend": "playwright test --config tests/a11y/playwright.config.ts",
     "browsers:install": "npx --no-install playwright install chromium",
     "browsers:install:webkit": "npx --no-install playwright install webkit",
+    "browsers:install:all": "npx --no-install playwright install chromium firefox webkit",
+    "test:browsers": "playwright test --config playwright.config.browsers.ts",
     "validate:content": "node scripts/validate-content.ts && npm run claims:verified",
     "for": "node scripts/for.ts",
     "check:claims": "node scripts/check-claims.ts",
