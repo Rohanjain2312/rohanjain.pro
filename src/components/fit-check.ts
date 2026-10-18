@@ -160,6 +160,8 @@ function init(root: HTMLElement): void {
       company: clampField(company.value.trim(), cfg.limits.field),
       roleTitle: clampField(role.value.trim(), cfg.limits.field),
     };
+    // The résumé dialog opens on this role family (design spec 7.13).
+    if (result.enough) document.body.dataset['fitFamily'] = result.roleFamily;
     showResult(result);
   }
 

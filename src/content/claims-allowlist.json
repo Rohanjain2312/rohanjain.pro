@@ -3,5 +3,40 @@
     "page": "/404",
     "number": "404",
     "reason": "status code and traceback decoration"
+  },
+  {
+    "page": "/",
+    "number": "9.1",
+    "reason": "Client-decided résumé sentence 'Compressed FinBERT ... 9.1x from 437.9 MB to 47.7 MB' (R-302). Claim fc-size-ratio is displayed as '9.1x smaller' on the site."
+  },
+  {
+    "page": "/print/resume/ai/",
+    "number": "9.1",
+    "reason": "Client-decided résumé sentence 'Compressed FinBERT ... 9.1x from 437.9 MB to 47.7 MB' (R-302). Claim fc-size-ratio is displayed as '9.1x smaller' on the site."
+  },
+  {
+    "page": "/print/resume/ml/",
+    "number": "9.1",
+    "reason": "Client-decided résumé sentence 'Compressed FinBERT ... 9.1x from 437.9 MB to 47.7 MB' (R-302). Claim fc-size-ratio is displayed as '9.1x smaller' on the site."
+  },
+  {
+    "page": "/print/resume/ds/",
+    "number": "9.1",
+    "reason": "Client-decided résumé sentence 'Compressed FinBERT ... 9.1x from 437.9 MB to 47.7 MB' (R-302). Claim fc-size-ratio is displayed as '9.1x smaller' on the site."
+  },
+  {
+    "page": "/resume/Rohan-Jain-AI-Engineer.pdf",
+    "number": "9.1",
+    "reason": "Client-decided résumé sentence 'Compressed FinBERT ... 9.1x from 437.9 MB to 47.7 MB' (R-302). Claim fc-size-ratio is displayed as '9.1x smaller' on the site."
+  },
+  {
+    "page": "/resume/Rohan-Jain-ML-Engineer.pdf",
+    "number": "9.1",
+    "reason": "Client-decided résumé sentence 'Compressed FinBERT ... 9.1x from 437.9 MB to 47.7 MB' (R-302). Claim fc-size-ratio is displayed as '9.1x smaller' on the site."
+  },
+  {
+    "page": "/resume/Rohan-Jain-Data-Scientist.pdf",
+    "number": "9.1",
+    "reason": "Client-decided résumé sentence 'Compressed FinBERT ... 9.1x from 437.9 MB to 47.7 MB' (R-302). Claim fc-size-ratio is displayed as '9.1x smaller' on the site."
   }
 ]

@@ -1,0 +1,21 @@
+{
+  "topbar": "prepared for {company} · {role}",
+  "label": "for your {role} role",
+  "heading": "Rohan Jain, for {company}",
+  "title": "Rohan Jain for {company}",
+  "description": "Rohan Jain, ML and AI Engineer.",
+  "resume": "View the {role} résumé",
+  "verdictLabel": "Verdict on your posting",
+  "note": "I ran your posting through the same check that is on my site. It only counts a skill as proven when a shipped project or my production work backs it. Here is what came back, gaps included.",
+  "evidenceLabel": "Evidence for your requirements",
+  "gapsLead": "Where I would need to ramp up",
+  "footerLeft": "built from your posting and my verified project data",
+  "footerLink": "see everything else",
+  "expired": {
+    "label": "expired",
+    "heading": "This page has expired",
+    "body": "This page was made for one application and is no longer available.",
+    "back": "← back to rohanjain.pro",
+    "title": "Page expired"
+  }
+}

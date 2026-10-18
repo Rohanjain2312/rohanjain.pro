@@ -4,6 +4,8 @@ import { getCollection, getEntry } from 'astro:content';
 import type { ImageMetadata } from 'astro';
 import type { Claim, Figure, Project, Resume, Site } from '../lib/content/schemas.ts';
 import figureOrder from '../content/figures.json';
+import roleOrder from '../content/roles.json';
+import type { RoleEntry } from './resume-view.ts';
 import {
   claimMap,
   claimOf,
@@ -118,6 +120,14 @@ export async function loadSite() {
     });
 
   return { claims, site, resume, projects, figures };
+}
+
+/** Roles in the order of roles.json (AI Engineer, ML Engineer, Data Scientist); collections come back sorted by id. */
+export async function loadRoles(): Promise<RoleEntry[]> {
+  const order = roleOrder.map((r) => r.id);
+  return (await getCollection('roles'))
+    .map((e) => e.data as RoleEntry)
+    .sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
 }
 
 type Loaded = Awaited<ReturnType<typeof loadSite>>;
