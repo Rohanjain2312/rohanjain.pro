@@ -176,39 +176,8 @@ export const siteSchema = z
   })
   .strict();
 
-// Never contains job description text (R-502): strict keys and short bounded strings.
-const shortText = z.string().trim().min(1).max(200);
-export const applicationSchema = z
-  .object({
-    slug: z
-      .string()
-      .regex(/^[a-z0-9]+(-[a-z0-9]+)*-[a-z2-7]{6}$/, 'expected <company-kebab>-<6 base32 chars>'),
-    company: shortText,
-    roleTitle: shortText,
-    createdOn: isoDate,
-    expiresOn: isoDate,
-    verdict: z.enum([
-      'Strong fit',
-      'Good fit, with gaps',
-      'Not a strong fit',
-      'Not enough to go on',
-    ]),
-    provenSkills: z.array(shortText).max(100),
-    gaps: z.array(shortText).max(100),
-    evidenceRows: z
-      .array(
-        z
-          .object({
-            title: shortText,
-            claimIds: z.array(slug).max(20),
-            tags: z.array(shortText).max(8),
-          })
-          .strict(),
-      )
-      .max(4),
-    roleFamily,
-  })
-  .strict();
+// Application results live in src/lib/applications/schema.ts (R-502). Re-exported for the content collection.
+export { applicationResultSchema as applicationSchema } from '../applications/schema.ts';
 
 export type Claim = z.infer<typeof claimSchema>;
 export type Project = z.infer<typeof projectSchema>;
@@ -218,4 +187,4 @@ export type Role = z.infer<typeof roleSchema>;
 export type Figure = z.infer<typeof figureSchema>;
 export type Resume = z.infer<typeof resumeSchema>;
 export type Site = z.infer<typeof siteSchema>;
-export type Application = z.infer<typeof applicationSchema>;
+export type { ApplicationResult as Application } from '../applications/schema.ts';

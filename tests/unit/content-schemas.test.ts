@@ -62,13 +62,10 @@ describe('field rules', () => {
   });
   it('rejects job-description-sized application text (R-502)', () => {
     expect(
-      applicationSchema.safeParse({ ...validApplication(), roleTitle: 'x'.repeat(201) }).success,
+      applicationSchema.safeParse({ ...validApplication(), role: 'x'.repeat(201) }).success,
     ).toBe(false);
     expect(
       applicationSchema.safeParse({ ...validApplication(), jobDescription: 'text' }).success,
     ).toBe(false);
-    expect(applicationSchema.safeParse({ ...validApplication(), slug: 'fakeco' }).success).toBe(
-      false,
-    );
   });
 });

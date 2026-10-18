@@ -66,22 +66,19 @@ describe('validateContent', () => {
       'projects.0.bullets.0.claimIds.0',
     ],
     [
-      'application claim',
-      (d) => (d.applications['fakeco-abc234.json'].evidenceRows[0].claimIds = ['nope']),
-      'applications/fakeco-abc234.json',
-      'evidenceRows.0.claimIds.0',
-    ],
-    [
-      'application slug mismatch',
-      (d) => (d.applications['fakeco-abc234.json'].slug = 'other-abc234'),
-      'applications/fakeco-abc234.json',
-      'slug',
+      'application file name',
+      (d) => {
+        d.applications['fakeco.json'] = d.applications['fakeco-abc234.json'];
+        delete d.applications['fakeco-abc234.json'];
+      },
+      'applications/fakeco.json',
+      '(file name)',
     ],
     [
       'application dates',
-      (d) => (d.applications['fakeco-abc234.json'].expiresOn = '1999-01-01'),
+      (d) => (d.applications['fakeco-abc234.json'].expires = '1999-01-01'),
       'applications/fakeco-abc234.json',
-      'expiresOn',
+      'expires',
     ],
     [
       'application extra field',
