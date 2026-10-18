@@ -6,7 +6,8 @@ import { loadSite } from '../components/data.ts';
 import home from '../components/copy/home.json';
 import copy from '../components/copy/privacy.json';
 
-const { site } = await loadSite();
+const { site, projects } = await loadSite();
+const demoList = projects.flatMap((p) => (p.demo ? [{ url: p.demo.url, name: p.name }] : []));
 const updated = new Date(`${copy.updated}T00:00:00Z`);
 const updatedText = updated.toLocaleDateString('en-US', {
   month: 'short',
@@ -43,5 +44,5 @@ const updatedText = updated.toLocaleDateString('en-US', {
       ))}
     </div>
   </main>
-  <SiteFooter profiles={site.profiles} privacyLabel={home.footer.privacy} />
+  <SiteFooter profiles={site.profiles} copy={home.footer} demos={demoList} />
 </Base>

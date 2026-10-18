@@ -92,7 +92,7 @@ export function checkGate({ phase, root, fixture = null, nextGate = null, now = 
   const lim = data.limit || {};
   if (lim.limit !== 'collaborators_only') {
     failures.push(
-      `ADR-0018 interaction limit is "${lim.limit ?? 'none'}", expected collaborators_only. Renew it (skill phase-gate step 8).`,
+      `ADR-0018 interaction limit is "${lim.limit ?? 'none'}", expected collaborators_only. Renew it (skill phase-gate step 5).`,
     );
   } else {
     const gate = nextGate ? Date.parse(nextGate) : now + 60 * 86400000;

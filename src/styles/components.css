@@ -78,6 +78,10 @@
   font-weight: var(--weight-medium);
   text-decoration: none;
   overflow-wrap: anywhere;
+  border: 0;
+  background: var(--ink);
+  color: var(--paper);
+  cursor: pointer;
 }
 
 .btn--inverted {
@@ -117,6 +121,7 @@
 
 .fold__count {
   color: var(--muted);
+  white-space: nowrap;
 }
 
 @media (hover: hover) {

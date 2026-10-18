@@ -51,7 +51,7 @@
     "order": 4,
     "oneLiner": "A financial language model made small enough for cheap CPUs, with the accuracy cost measured.",
     "headlineClaimId": "fc-size-ratio",
-    "contextClaimIds": ["fc-latency-before", "fc-latency-after"],
+    "contextClaimIds": ["fc-latency-ratio", "fc-f1-cost"],
     "links": [
       { "label": "write-up", "url": "https://medium.com/p/f17dfbe74d04" },
       { "label": "code", "url": "https://github.com/Rohanjain2312/FinCompress" }

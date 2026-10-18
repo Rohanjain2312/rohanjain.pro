@@ -45,7 +45,7 @@ A personal portfolio site whose only job is to get Rohan Jain hired as an ML Eng
 | 7 | Handwriting font | No. Use Newsreader italic. |
 | 8 | Résumé conflicts | Use résumé values: FinCompress 50% of heads, +0.9 Macro F1; Market Regime 88.4% F1; Goldman ~4 years. |
 | 9 | Résumé PDFs indexable | Yes. |
-| 10 | Golden job postings | Claude Code researches them online (`docs/spec/09-quality.md` §9.4). |
+| 10 | Golden job postings | Claude Code writes synthetic ones from scratch (ADR-0028, `docs/spec/09-quality.md` §9.4). |
 
 ## Budget
 | Item | Cost |

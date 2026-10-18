@@ -31,3 +31,4 @@ Format: context, decision, consequences, alternatives. New ADRs take the next nu
 | [0025](0025-gate-time-releases.md) | Gate-time releases instead of release-please |
 | [0026](0026-combined-review-lean-gates.md) | One combined review, merged phases, lean gates |
 | [0027](0027-status-data-branch.md) | Status data goes to a data branch, not a daily PR |
+| [0028](0028-synthetic-golden-set.md) | The golden set is synthetic: no real posting text, URLs or companies |
