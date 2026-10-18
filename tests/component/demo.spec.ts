@@ -17,7 +17,7 @@ test.describe('demo dialog', () => {
     page.on('request', (r) => requests.push(r.url()));
     await page.goto('/');
     await page.getByRole('link', { name: /try it here for FinCompress/ }).waitFor();
-    expect(await page.locator('iframe').count()).toBe(0);
+    await expect(page.locator('iframe')).toHaveCount(0);
     expect(requests.filter((u) => u.includes('hf.space'))).toEqual([]);
   });
 
@@ -37,7 +37,7 @@ test.describe('demo dialog', () => {
       'href',
       /^https:\/\/huggingface\.co\/spaces\//,
     );
-    expect(await page.locator('iframe').count()).toBe(0);
+    await expect(page.locator('iframe')).toHaveCount(0);
   });
 
   test('Load live demo creates a sandboxed iframe on the hf.space host; closing removes it', async ({
@@ -55,7 +55,7 @@ test.describe('demo dialog', () => {
     await expect(frame).toHaveAttribute('title', /FinCompress/);
     await page.keyboard.press('Escape');
     await expect(page.getByRole('dialog')).toBeHidden();
-    expect(await page.locator('iframe').count()).toBe(0);
+    await expect(page.locator('iframe')).toHaveCount(0);
     await expect(page.getByRole('link', { name: /try it here for FinCompress/ })).toBeFocused();
   });
 
