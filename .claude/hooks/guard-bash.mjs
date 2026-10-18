@@ -31,7 +31,12 @@ function decodeAnsiC(s) {
           if (m) { text += String.fromCharCode(parseInt(m[0], 16)); j += m[0].length; } else text += '\\x';
         } else if (e === 'u' || e === 'U') {
           const m = new RegExp(`^[0-9a-fA-F]{1,${e === 'u' ? 4 : 8}}`).exec(s.slice(j + 1));
-          if (m) { text += String.fromCodePoint(parseInt(m[0], 16)); j += m[0].length; } else text += '\\' + e;
+          if (m) {
+            // fromCodePoint throws above U+10FFFF, which would crash the hook and let the command through.
+            const cp = parseInt(m[0], 16);
+            text += cp > 0x10ffff ? '�' : String.fromCodePoint(cp);
+            j += m[0].length;
+          } else text += '\\' + e;
         } else if (/[0-7]/.test(e)) {
           const m = /^[0-7]{1,3}/.exec(s.slice(j));
           text += String.fromCharCode(parseInt(m[0], 8) & 255); j += m[0].length - 1;
