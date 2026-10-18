@@ -176,7 +176,11 @@ function main() {
     const stream = createReadStream(target);
     stream.on('error', () => res.destroy());
     const type = String(res.getHeader('Content-Type'));
-    if (gzip && /text|json|javascript|svg|xml/.test(type) && /\bgzip\b/.test(req.headers['accept-encoding'] ?? '')) {
+    if (
+      gzip &&
+      /text|json|javascript|svg|xml/.test(type) &&
+      /\bgzip\b/.test(req.headers['accept-encoding'] ?? '')
+    ) {
       res.setHeader('Content-Encoding', 'gzip');
       res.setHeader('Vary', 'Accept-Encoding');
       stream.pipe(createGzip()).pipe(res);
