@@ -14,9 +14,9 @@ The hero, results strip and contact are not vetoed. No work-authorization mentio
 ### Medium
 1. The Settlement caption "the SVM I shipped holds up" sat under XGBoost PR-AUC 0.333 vs random 0.045 on `main`. Resolved in PR #187: the caption now lists XGBoost 0.333, RBF SVM 0.319 and logistic regression 0.305.
 2. The privacy page mentioned a fit check and analytics that do not exist. Resolved in PR #187 (page rewritten to what exists now).
-3. Jargon past the fold at 390 px: SMOTE, PR-AUC, SHAP, INT8, LoRA, A2A, GKE Autopilot, LangGraph, MCP, RAG, zero-shot, MCC appear in section headlines and figure captions without a plain-words clause. Open: copy pass before the Phase 2 gate (issue below).
+3. Jargon past the fold at 390 px: SMOTE, PR-AUC, SHAP, INT8, LoRA, A2A, GKE Autopilot, LangGraph, MCP, RAG, zero-shot, MCC appear in section headlines and figure captions without a plain-words clause. Resolved: plain-words glosses added in PR #206 (issue #205); QA re-checked the built page text and the Reader Advocate finding is closed. The Reader Advocate has not re-run the test on the glossed page.
 
-### Low (on issue #190)
+### Low (posted on issue #190)
 - The third hero number (82.5% vs 15% zero-shot) is TariffAgent's, but its card under "More projects" shows no number.
 - The hero says "ML and AI Engineer" while the job entry says "Data Scientist".
 - "Mentored 3 interns to full-time offers" appears three times.

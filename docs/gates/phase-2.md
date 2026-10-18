@@ -5,7 +5,7 @@ Date: 2026-10-18. Criteria from `docs/spec/11-phases.md` (Phases 2 and 5, merged
 ## Phase 2 gate criteria
 | Criterion | Result | Evidence |
 |---|---|---|
-| Design review passes the anti-slop checklist at 390/768/1280 px | Pass | `docs/design/phase-2-gate-review.md` (PR #200): pages and footer pass; two Mediums in the demo dialog (unstyled button, invisible focus ring) fixed in PR #187 (`d3dba98`), QA checked the focus screenshots; Lows on #190 |
+| Design review passes the anti-slop checklist at 390/768/1280 px | Pass | `docs/design/phase-2-gate-review.md` (PR #200): pages and footer pass; two Mediums in the demo dialog (unstyled button, invisible focus ring) fixed in PR #187 (`d3dba98`), QA checked the focus screenshots and the CSS on `main`; the Design Lead has not re-run its review file, which still reads "Not PASS yet" for those two items; Lows on #190 |
 | Reader Advocate simulated 5-second test passes | Pass | `docs/reader/phase-2-simulated-5-second-test.md`: PASS on the hero; Medium 1 and 2 fixed in PR #187, Medium 3 (jargon) fixed in PR #206 (#205) and re-checked by QA |
 | Zero axe violations | Pass | `tests/a11y/` (`npm run test:frontend`): home, privacy and 404 at 390 and 1280 px, folds closed and open; runs in `verify` and the CI `e2e` job (PR #187); QA ran 15 repeats with no flake |
 | Lighthouse budgets met locally | Pass | `tests/a11y/README.md`, run 2026-10-18 on `main` at `210ae48`: home 100/100/100/100, LCP 1.5 s, CLS 0; privacy 100/100/100/100, LCP 1.4 s; 404 SEO 60 by design (`noindex`) |
