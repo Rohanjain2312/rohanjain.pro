@@ -28,6 +28,8 @@ if (dialog && typeof dialog.showModal === 'function') {
     load.hidden = false;
   };
 
+  const SPACES = 'https://huggingface.co/spaces/';
+
   const isEmbedHost = (url: string): boolean => {
     try {
       const u = new URL(url);
@@ -57,7 +59,9 @@ if (dialog && typeof dialog.showModal === 'function') {
             : [document.createTextNode(part)],
         ),
       );
-      direct.href = a.dataset['demoUrl'] ?? a.href;
+      // The direct link goes only to a Hugging Face Space; anything else keeps the link's own href.
+      const spaceUrl = a.dataset['demoUrl'] ?? '';
+      direct.href = spaceUrl.startsWith(SPACES) ? spaceUrl : a.href;
       reset();
       opener = a;
       dialog.showModal();
@@ -76,6 +80,9 @@ if (dialog && typeof dialog.showModal === 'function') {
     what.hidden = true;
     load.hidden = true;
     stage.append(frame);
+    // The button that had focus is now hidden. Focus the stage, not the iframe: keys pressed inside an
+    // iframe never reach the dialog, so Escape would stop closing it (audit A-1).
+    stage.focus();
   });
 
   close.addEventListener('click', () => dialog.close());

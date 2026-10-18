@@ -47,7 +47,7 @@ describe('layout and page', () => {
     for (const d of dirs) {
       for (const f of readdirSync(d).filter((n) => n.endsWith('.astro') && n !== JSON_LD)) {
         const text = readFileSync(join(d, f), 'utf8');
-        expect(text, f).not.toMatch(/<style|define:vars|is:inline|set:html|\sstyle=/);
+        expect(text, f).not.toMatch(/<style|define:vars|is:inline|set:html|\sstyle=/i);
       }
     }
   });
@@ -57,7 +57,7 @@ describe('layout and page', () => {
     expect(body.match(/<script[^>]*>/gi)).toEqual([
       '<script type="application/ld+json" set:html={text} />',
     ]);
-    expect(body).not.toMatch(/<style|define:vars|is:inline|\sstyle=/);
+    expect(body).not.toMatch(/<style|define:vars|is:inline|\sstyle=/i);
   });
 });
 
