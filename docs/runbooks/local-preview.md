@@ -45,9 +45,10 @@ npx playwright test --config playwright.config.browsers.ts --project=webkit   # 
 
 ```
 npm run lighthouse             # builds, serves dist/ with gzip, mobile Lighthouse x3 per page, median asserted
+npm run lighthouse -- --runs 5 # odd values only
 ```
 
-Budgets are in `.github/lighthouse-budgets.json` (9.3, R-607). Lighthouse is pinned in `package.json`. It uses the Chromium that Playwright installed. Simulated throttling makes results stable to about 1 ms per page between sessions, but TBT can spike on a loaded machine; the median of three absorbs one spike.
+Budgets are in `.github/lighthouse-budgets.json` (9.3, R-607). Lighthouse is pinned in `package.json`. It uses the Chromium that Playwright installed. Results vary by session: home LCP measured 1806 to 1810 ms in one session and about 1665 ms in another, against the 1800 ms budget, so it passes or fails by session. TBT can spike on a loaded machine. A run with a Lighthouse error or a missing metric is dropped; a page needs at least 2 valid runs of 3. The median is taken over valid runs. Asserted: the four scores, LCP, CLS and TBT. **Not asserted:** the 9.3 size budgets (JS 30 KB, CSS 20 KB, fonts 120 KB, images 120 KB gzipped); check them by hand until an issue adds them.
 
 ## Limits
 

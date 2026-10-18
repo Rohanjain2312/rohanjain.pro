@@ -2,6 +2,7 @@
 // Lighthouse budgets (R-607, docs/spec/09-quality.md 9.3). Run `npm run lighthouse` (builds first).
 // Serves dist/ with gzip through scripts/preview.mjs, runs mobile Lighthouse (the default profile) on each page in
 // .github/lighthouse-budgets.json with the Chromium that Playwright installed, and fails when the median of the runs misses a budget.
+// Asserted: scores and LCP, CLS, TBT. Not asserted: the 9.3 size budgets (JS, CSS, fonts, images); see the runbook.
 // Lighthouse is a pinned exact devDependency. Nothing is fetched at run time.
 // Usage: node .github/scripts/lighthouse.mjs [--runs 3] [--json out.json]
 import { spawn } from 'node:child_process';
@@ -10,10 +11,15 @@ import { createServer } from 'node:net';
 import { launch } from 'chrome-launcher';
 import lighthouse from 'lighthouse';
 import { chromium } from '@playwright/test';
+import { isValidRun, median, minValidRuns } from './lighthouse-lib.mjs';
 
 const args = process.argv.slice(2);
 const opt = (name, fallback) => (args.includes(name) ? args[args.indexOf(name) + 1] : fallback);
 const runs = Number(opt('--runs', '3'));
+if (!Number.isInteger(runs) || runs < 1 || runs % 2 === 0) {
+  console.error('lighthouse: --runs must be an odd number (1, 3, 5), so the median is a real run.');
+  process.exit(2);
+}
 const jsonOut = opt('--json', '');
 const budgets = JSON.parse(
   readFileSync(new URL('../lighthouse-budgets.json', import.meta.url), 'utf8'),
@@ -64,31 +70,48 @@ try {
     const categories = Object.keys(budgets.scores).filter((c) => !page.skip.includes(c));
     const rows = [];
     for (let i = 0; i < runs; i++) {
-      const result = await lighthouse(
-        `http://localhost:${port}${page.path}`,
-        { port: chrome.port, output: 'json', logLevel: 'error', onlyCategories: categories },
-        undefined,
-      );
-      const lhr = result.lhr;
-      const row = { path: page.path, run: i + 1 };
-      for (const c of categories) row[c] = Math.round((lhr.categories[c].score ?? 0) * 100);
-      for (const id of Object.keys(budgets.metrics)) {
-        row[id] = Math.round((lhr.audits[id].numericValue ?? Number.NaN) * 1000) / 1000;
+      let row = { path: page.path, run: i + 1, valid: false };
+      try {
+        const result = await lighthouse(
+          `http://localhost:${port}${page.path}`,
+          { port: chrome.port, output: 'json', logLevel: 'error', onlyCategories: categories },
+          undefined,
+        );
+        const lhr = result?.lhr;
+        const values = {};
+        for (const c of categories) {
+          const score = lhr?.categories?.[c]?.score;
+          values[c] = typeof score === 'number' ? Math.round(score * 100) : Number.NaN;
+        }
+        for (const id of Object.keys(budgets.metrics)) {
+          const v = lhr?.audits?.[id]?.numericValue;
+          values[id] = typeof v === 'number' ? Math.round(v * 1000) / 1000 : Number.NaN;
+        }
+        row = { ...row, ...values, valid: isValidRun(lhr, values) };
+        if (lhr?.runtimeError) row.error = lhr.runtimeError.code;
+      } catch (error) {
+        row.error = String(error?.message ?? error).slice(0, 120);
       }
       rows.push(row);
-      table.push(row);
       console.log(JSON.stringify(row));
     }
-    // The budget applies to the median run, as Lighthouse CI does, so one noisy run does not fail the check.
-    const median = (key) =>
-      rows.map((r) => r[key]).sort((x, y) => x - y)[Math.floor(rows.length / 2)];
+    table.push(...rows);
+    // Failed runs (a runtime error or a missing metric) are dropped, never averaged in.
+    const good = rows.filter((r) => r.valid);
+    if (good.length < minValidRuns(runs)) {
+      failures.push(
+        `${page.path}: only ${good.length} of ${runs} runs were valid, need ${minValidRuns(runs)}`,
+      );
+      continue;
+    }
+    // The budget applies to the median of the valid runs, as Lighthouse CI does.
+    const mid = (key) => median(good.map((r) => r[key]));
     for (const c of categories) {
-      if (median(c) < budgets.scores[c])
-        failures.push(`${page.path}: ${c} ${median(c)}, budget ${budgets.scores[c]}+`);
+      if (!(mid(c) >= budgets.scores[c]))
+        failures.push(`${page.path}: ${c} ${mid(c)}, budget ${budgets.scores[c]}+`);
     }
     for (const [id, max] of Object.entries(budgets.metrics)) {
-      if (!(median(id) < max))
-        failures.push(`${page.path}: ${id} ${median(id)}, budget under ${max}`);
+      if (!(mid(id) < max)) failures.push(`${page.path}: ${id} ${mid(id)}, budget under ${max}`);
     }
   }
 } finally {

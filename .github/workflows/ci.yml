@@ -34,7 +34,7 @@ jobs:
       - name: Hooks self-test (R-101, R-105, R-106, R-501)
         run: node .claude/hooks/test-hooks.mjs
       - name: Phase gate, CI check and PR process self-tests (R-103, R-201, R-209, R-504, R-511, R-804)
-        run: node --test .github/lint-fixtures/ci-gates.test.mjs .github/lint-fixtures/pr-process.test.mjs .github/lint-fixtures/status.test.mjs
+        run: node --test .github/lint-fixtures/ci-gates.test.mjs .github/lint-fixtures/pr-process.test.mjs .github/lint-fixtures/status.test.mjs .github/lint-fixtures/lighthouse.test.mjs
 
   static:
     name: static
