@@ -9,7 +9,7 @@ Status: accepted · 2026-10-17 · Supervisor (R-004), closes issue #162
 The golden set is synthetic. App/Data writes 18 or more postings from scratch as short requirement lists, from the skills data, the Evidence Ledger and the three on-site samples. Nobody reads real postings for this: R-509 stays as written (Claude Code never reads postings), so there is no source to copy and no near-copy check to run. QA commits the lists as `tests/fixtures/golden/<id>.json` (QA owns that path, R-112) with the verdicts. Nothing from a real posting is stored: no text, paraphrase, URL, retrieval date or company name. The rest of §9.4 is unchanged: QA writes the rubric and expected verdicts, the alias audit runs against the negative controls, and thresholds change only by ADR.
 
 ## Consequences
-- R-501 needs no exception: the path block still applies (`postings/` and `*.jd.txt` stay blocked). The content control is QA's review of each fixture for near-copies. The gitleaks rule for job-description text (#111) stays a Low on the Phase 3 backlog and is not a precondition.
+- R-501 needs no exception: the path block still applies (`postings/` and `*.jd.txt` stay blocked). The content control is QA's review of each fixture for realism and for any real names or URLs (§9.4 item 2). The gitleaks rule for job-description text (#111) stays a Low on the Phase 3 backlog and is not a precondition.
 - App/Data writes the lists; QA commits them (QA owns `tests/fixtures/`, R-112).
 - The set tests the engine against realistic skill mixes, not against any one employer's wording. Real recruiter ratings (skill `external-validation`) remain the ground truth once they arrive.
 - If a real posting is ever needed as a fixture, it stays out of this repo and out of the golden set.
