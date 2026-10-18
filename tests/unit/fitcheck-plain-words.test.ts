@@ -45,10 +45,14 @@ describe('plain-word skills need technical context (#243)', () => {
 });
 
 describe('invisible characters (195-f)', () => {
+  // Built from code points so the source holds no invisible characters.
+  const ch = (...codes: number[]) => String.fromCodePoint(...codes);
   it('strips zero-width, soft-hyphen and bidi characters', () => {
-    expect(normalizeText('Py​Torch')).toBe('pytorch');
-    expect(normalizeText('Dock­er ‍﻿Kuber⁠netes')).toBe('docker kubernetes');
-    expect(normalizeText('a‎‪b⁤c᠎d')).toBe('abcd');
+    expect(normalizeText(`Py${ch(0x200b)}Torch`)).toBe('pytorch');
+    expect(normalizeText(`Dock${ch(0xad)}er ${ch(0x200d, 0xfeff)}Kuber${ch(0x2060)}netes`)).toBe(
+      'docker kubernetes',
+    );
+    expect(normalizeText(`a${ch(0x200e, 0x202a)}b${ch(0x2064)}c${ch(0x180e)}d`)).toBe('abcd');
   });
   it('finds a skill split by a zero-width character', () => {
     const skills: Skill[] = [
@@ -61,6 +65,7 @@ describe('invisible characters (195-f)', () => {
         aliases: [],
       },
     ];
-    expect(analyze('We use Py​Torch daily', skills, [], []).proven).toEqual(['PyTorch']);
+    const text = `We use Py${ch(0x200b)}Torch daily`;
+    expect(analyze(text, skills, [], []).proven).toEqual(['PyTorch']);
   });
 });
