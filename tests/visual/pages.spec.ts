@@ -60,3 +60,19 @@ for (const width of [390, 768, 1280]) {
       .screenshot({ path: `tests/visual/screenshots/${name}-${width}.png` });
   });
 }
+
+// Keyboard focus on the demo dialog: the sheet button (ink ring on white) and a toolbar control (paper ring on ink).
+test('capture demo dialog focus rings at 1280px', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/');
+  await page.getByRole('link', { name: /try it here for FinCompress/ }).click();
+  const dialog = page.locator('dialog.demo');
+  await page.getByRole('button', { name: 'Load live demo' }).focus();
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Tab');
+  await dialog.screenshot({ path: 'tests/visual/screenshots/demo-focus-button-1280.png' });
+  await dialog.locator('.demo__toolbar button, .demo__toolbar a').first().focus();
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Tab');
+  await dialog.screenshot({ path: 'tests/visual/screenshots/demo-focus-toolbar-1280.png' });
+});

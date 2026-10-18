@@ -44,8 +44,6 @@ body:has(dialog[open]) {
 }
 
 .demo {
-  --focus: var(--paper);
-
   box-sizing: border-box;
   width: 100%;
   max-width: none;
@@ -72,6 +70,8 @@ body:has(dialog[open]) {
 }
 
 .demo__toolbar {
+  --focus: var(--paper);
+
   position: sticky;
   top: calc(-1 * var(--space-32));
   z-index: 1;
@@ -109,7 +109,7 @@ body:has(dialog[open]) {
 .demo__url {
   padding: var(--space-8);
   border-bottom: var(--rule-w) solid var(--rule);
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 .demo__stage {

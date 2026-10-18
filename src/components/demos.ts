@@ -46,7 +46,15 @@ if (dialog && typeof dialog.showModal === 'function') {
       embed = target;
       title.textContent = a.dataset['demoName'] ?? '';
       what.textContent = a.dataset['demoWhat'] ?? '';
-      address.textContent = (a.dataset['demoUrl'] ?? '').replace(/^https:\/\//, '');
+      // Break opportunities after each slash only (no mid-word breaks).
+      const parts = (a.dataset['demoUrl'] ?? '').replace(/^https:\/\//, '').split('/');
+      address.replaceChildren(
+        ...parts.flatMap((part, i) =>
+          i < parts.length - 1
+            ? [document.createTextNode(`${part}/`), document.createElement('wbr')]
+            : [document.createTextNode(part)],
+        ),
+      );
       direct.href = a.dataset['demoUrl'] ?? a.href;
       reset();
       dialog.showModal();
