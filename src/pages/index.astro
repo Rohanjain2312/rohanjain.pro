@@ -11,7 +11,7 @@ import Background from '../components/Background.astro';
 import Contact from '../components/Contact.astro';
 import FitCheck from '../components/FitCheck.astro';
 import FitBrief from '../components/FitBrief.astro';
-import PrintFolds from '../components/PrintFolds.astro';
+import ClientScripts from '../components/ClientScripts.astro';
 import { join } from 'node:path';
 import ResumeDialog from '../components/ResumeDialog.astro';
 import { buildResumeView } from '../components/resume-view.ts';
@@ -153,5 +153,5 @@ const person = personJsonLd({
     contact={briefContact}
     background={fill(fitCopy.brief.background, claims)}
   />
-  <PrintFolds />
+  <ClientScripts />
 </Base>

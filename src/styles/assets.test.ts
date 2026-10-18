@@ -38,7 +38,7 @@ describe('layout and page', () => {
   it('avoid constructs that need CSP exceptions', () => {
     for (const f of ['src/layouts/Base.astro', 'src/pages/index.astro']) {
       expect(readFileSync(f, 'utf8'), f).not.toMatch(
-        /define:vars|is:inline|set:html|style=|<script/,
+        /define:vars|is:inline|set:html|style=|<script/i,
       );
     }
   });
