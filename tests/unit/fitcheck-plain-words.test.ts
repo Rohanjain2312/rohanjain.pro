@@ -52,7 +52,14 @@ describe('invisible characters (195-f)', () => {
   });
   it('finds a skill split by a zero-width character', () => {
     const skills: Skill[] = [
-      { name: 'PyTorch', category: 'test', tier: 'shipped', evidence: [], roles: ['ml'], aliases: [] },
+      {
+        name: 'PyTorch',
+        category: 'test',
+        tier: 'shipped',
+        evidence: [],
+        roles: ['ml'],
+        aliases: [],
+      },
     ];
     expect(analyze('We use Py​Torch daily', skills, [], []).proven).toEqual(['PyTorch']);
   });

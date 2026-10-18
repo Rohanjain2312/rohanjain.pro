@@ -11,7 +11,12 @@ const INVISIBLE = /[\u00ad\u180e\u200b-\u200f\u202a-\u202e\u2060-\u2064\ufeff]/g
 
 export function normalizeText(text: string, maxChars: number = config.maxChars): string {
   const cut = text.slice(0, maxChars);
-  const clean = cut.replace(INVISIBLE, '').normalize('NFKC').toLowerCase().replace(/\s+/g, ' ').trim();
+  const clean = cut
+    .replace(INVISIBLE, '')
+    .normalize('NFKC')
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim();
   return clean.length > maxChars ? clean.slice(0, maxChars) : clean;
 }
 
