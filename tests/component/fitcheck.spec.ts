@@ -272,7 +272,7 @@ test.describe('XSS payloads render as inert text (R-405)', () => {
       await expect(page.locator('dialog[data-brief]')).toBeVisible();
       const title = page.locator('[data-brief-title]');
       expect(await title.locator('*').count()).toBe(0);
-      expect(await title.textContent()).toContain(payload.slice(0, 20).replace('$&', '$&'));
+      expect(await title.textContent()).toContain(payload.slice(0, 20));
       expect(await injectedAfter(page)).toEqual({
         fired: 0,
         injected: 0,
