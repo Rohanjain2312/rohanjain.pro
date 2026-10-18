@@ -21,8 +21,11 @@ const svgs = [
 ].filter((f) => existsSync(f));
 
 describe('brand SVG colors', () => {
-  // The files arrive with the Design Lead's PR (#203); with none present there is nothing to check.
-  it.skipIf(svgs.length === 0).each(svgs)('%s uses only token colors', (file) => {
+  it('has token colors to compare against, and the favicon is checked', () => {
+    expect(tokens.size).toBeGreaterThan(0);
+    expect(svgs).toContain('public/favicon.svg');
+  });
+  it.each(svgs)('%s uses only token colors', (file) => {
     const found = hex(readFileSync(file, 'utf8'));
     expect(found.length).toBeGreaterThan(0);
     for (const h of found) expect(tokens, `${file}: ${h}`).toContain(h);
