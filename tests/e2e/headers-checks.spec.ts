@@ -8,7 +8,9 @@ import {
   checkCsp,
   checkRouteHeaders,
   expectedHeaders,
+  decodeEntities,
   findInlineCode,
+  isJavascriptUrl,
   parseCsp,
   type HeaderMap,
   type RouteKind,
@@ -164,6 +166,56 @@ test.describe('inline code scan', () => {
   test('event handlers and javascript: URLs fail', () => {
     expect(findInlineCode(page('<button onclick="go()">x</button>'))).toHaveLength(1);
     expect(findInlineCode(page('<a href="javascript:go()">x</a>'))).toHaveLength(1);
+  });
+
+  test('javascript: URLs written with entities or hidden whitespace fail (issue #249, 156-2)', () => {
+    for (const href of [
+      'java&#9;script:go()',
+      'java&#x09;script:go()',
+      'java&Tab;script:go()',
+      'java&NewLine;script:go()',
+      '&#106;avascript:go()',
+      '&#x6A;avascript:go()',
+      'javascript&colon;go()',
+      '&#32;javascript:go()',
+      '&#1;javascript:go()',
+      'JaVaScRiPt:go()',
+      'java\tscript:go()',
+      'java\nscript:go()',
+    ]) {
+      expect(findInlineCode(page(`<a href="${href}">x</a>`)), href).toHaveLength(1);
+    }
+  });
+
+  test('a link that only mentions javascript is not a javascript: URL', () => {
+    for (const href of [
+      '/docs/javascript:intro',
+      'https://example.com/?u=javascript:x',
+      'javascripts:go()',
+      'java script:go()',
+      '&amp;javascript:go()',
+      '&unknown;javascript:go()',
+    ]) {
+      expect(findInlineCode(page(`<a href="${href}">x</a>`)), href).toEqual([]);
+    }
+  });
+
+  test('entity decoding handles numeric, hex and the named forms a URL scheme can hide in', () => {
+    expect(decodeEntities('a&#9;b&#x41;&#66;&colon;&Tab;')).toBe('a\tbAB:\t');
+    expect(decodeEntities('&#0;&#1114112;&#xD800;')).toBe('&#0;&#1114112;&#xD800;');
+    expect(isJavascriptUrl('&#x6A;avascript:1')).toBe(true);
+    expect(isJavascriptUrl('/x')).toBe(false);
+  });
+
+  test('inline code in an SVG document fails the same scan (issue #249, 156-1)', () => {
+    const svg = (inner: string): string =>
+      `<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8">${inner}</svg>`;
+    expect(findInlineCode(svg('<path d="M0 0h8v8H0z" fill="#fff"/>'))).toEqual([]);
+    expect(findInlineCode(svg('<style>path{fill:red}</style><path d="M0 0"/>'))).toHaveLength(1);
+    expect(findInlineCode(svg('<path style="fill:red" d="M0 0"/>'))).toHaveLength(1);
+    expect(findInlineCode(svg('<script>alert(1)</script>'))).toHaveLength(1);
+    expect(findInlineCode(svg('<rect onload="go()"/>'))).toHaveLength(1);
+    expect(findInlineCode(svg('<a xlink:href="java&#9;script:go()"><rect/></a>'))).toHaveLength(1);
   });
 
   test('a style attribute inside a tag attribute value or text is not double counted or missed', () => {

@@ -75,6 +75,12 @@ describe('containsTerm: word characters', () => {
     expect(containsTerm('java x', 'java')).toBe(true);
     expect(containsTerm('x java', 'java')).toBe(true);
   });
+  it('a match that starts inside a word does not hide a later overlapping match (issue #249, 195-g)', () => {
+    // 'a a' first occurs inside "ba a a" (after "b", so not a word start). The next candidate overlaps it by
+    // one character and is clean. A scan that resumes at `at + term.length` would skip it.
+    expect(containsTerm('ba a a', 'a a')).toBe(true);
+    expect(containsTerm('ba a ab', 'a a')).toBe(false);
+  });
   it('an empty term never matches, even in empty text or text ending in a space', () => {
     expect(containsTerm('', '')).toBe(false);
     expect(containsTerm('a ', '')).toBe(false);

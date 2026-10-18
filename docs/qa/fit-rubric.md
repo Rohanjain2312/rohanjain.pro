@@ -136,6 +136,19 @@ Recommended fixes, all in aliases and extras (R-407). A scratch copy with these 
 
 If App/Data prefers not to add the three coordinated phrases, ml-01 would come out "Not a strong fit". That would need a rubric v3 that drops counting rule 2, with the Reader Advocate's rating on record.
 
+## Accepted list-level differences (issue #249)
+
+The golden test compares the engine's proven and gap lists with `verdicts.json`, not only the verdict. At head 50890ab it finds four postings where a list differs. None moves a verdict or a margin that matters. They are accepted, and the test pins each one exactly (`ACCEPTED_LIST_DIFFERENCES` in `tests/property/golden.test.ts`). A fifth difference, or one of these closing, fails the test. Close one by changing the aliases or extras (R-407) and removing its row here and in the test, in the same change.
+
+"Gaps" below means the rubric's gaps plus its unlisted technologies.
+
+| Posting | Only in the engine | Only in the rubric | Why it stays |
+|---|---|---|---|
+| adj-be | none | REST APIs | The line reads "REST and GraphQL APIs". The rubric counts the coordinated phrase as REST APIs (rule 2). The aliases are "rest api" and "restful", which do not match it. One gap. Verdict stays "Not a strong fit". |
+| ds-04 | PhD | none | The engine counts PhD as a gap (ported from the mockup list). The rubric does not count degrees (rule 7). Verdict stays "Not a strong fit". |
+| ml-02 | none | Ray | Ray is alias-only (`nameNeedsAlias`), so the bare name does not match. One gap. Verdict stays "Not a strong fit". |
+| neg-hw | Embedded firmware, Robotics | C, Verilog | Neither C nor Verilog is in `skills.json` or the extras list, so the engine cannot count them as unlisted technologies (rule 7). The engine counts Robotics and Embedded firmware from its extras list; the rubric treats those as domain words and does not. Verdict stays "Not a strong fit". |
+
 ## Change control
 
 - A change to an expected verdict needs a new rubric version, a reason, and the Reader Advocate's rating on record. The engine disagreeing is not a reason by itself. First decide whether the engine or the rubric is wrong at skill level.

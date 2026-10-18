@@ -103,6 +103,86 @@ describe('engine against the rubric: golden postings', () => {
   });
 });
 
+/**
+ * The four known list-level differences between the engine and the rubric (docs/qa/fit-rubric.md, section
+ * "Accepted list-level differences"). Each moves no verdict. A new difference, or one of these closing, fails
+ * the test, so the table is updated with the rubric and never drifts on its own.
+ */
+const ACCEPTED_LIST_DIFFERENCES: Record<
+  string,
+  { engineGapOnly?: string[]; rubricGapOnly?: string[] }
+> = {
+  'adj-be': { rubricGapOnly: ['REST APIs'] },
+  'ds-04': { engineGapOnly: ['PhD'] },
+  'ml-02': { rubricGapOnly: ['Ray'] },
+  'neg-hw': { engineGapOnly: ['Embedded firmware', 'Robotics'], rubricGapOnly: ['C', 'Verilog'] },
+};
+
+const only = (a: readonly string[], b: readonly string[]): string[] =>
+  a.filter((x) => !b.includes(x)).sort();
+
+/** What differs between the engine's lists and the rubric's. The rubric's gaps are its gaps plus unlisted. */
+function listDifferences(
+  report: { proven: string[]; gaps: string[] },
+  e: { proven: string[]; gaps: string[]; unlisted: string[] },
+): Record<string, string[]> {
+  const rubricGaps = [...e.gaps, ...e.unlisted];
+  const all = {
+    engineProvenOnly: only(report.proven, e.proven),
+    rubricProvenOnly: only(e.proven, report.proven),
+    engineGapOnly: only(report.gaps, rubricGaps),
+    rubricGapOnly: only(rubricGaps, report.gaps),
+  };
+  return Object.fromEntries(Object.entries(all).filter(([, v]) => v.length > 0));
+}
+
+describe('engine against the rubric: proven and gap lists', () => {
+  const rows = [
+    ...postings.map((p) => [p.id, postingText(p), verdicts.postings[p.id]] as const),
+    ...samples.map((s) => [`sample ${s.id}`, s.jd, verdicts.samples[s.id]] as const),
+  ];
+  it.each(rows)(
+    '%s: the lists match the rubric, apart from the accepted differences',
+    (id, text, e) => {
+      expect(e, id).toBeDefined();
+      if (!e) return;
+      const report = analyze(text, skills, extras, []);
+      expect(listDifferences(report, e)).toEqual(ACCEPTED_LIST_DIFFERENCES[id] ?? {});
+    },
+  );
+  it('accepts exactly four postings, each with a reason in the rubric', () => {
+    expect(Object.keys(ACCEPTED_LIST_DIFFERENCES).sort()).toEqual([
+      'adj-be',
+      'ds-04',
+      'ml-02',
+      'neg-hw',
+    ]);
+    const doc = readFileSync('docs/qa/fit-rubric.md', 'utf8');
+    const start = doc.indexOf('## Accepted list-level differences');
+    expect(start).toBeGreaterThan(0);
+    const rubric = doc.slice(start, doc.indexOf('## Change control'));
+    for (const id of Object.keys(ACCEPTED_LIST_DIFFERENCES)) {
+      expect(rubric, id).toMatch(new RegExp(`^\\| ${id} \\|`, 'm'));
+    }
+  });
+  it('flags a wrong, a missing and an extra skill in the lists (seeded defects)', () => {
+    const e = { proven: ['Python', 'SQL'], gaps: ['Spark'], unlisted: ['GCP'] };
+    expect(listDifferences({ proven: ['Python', 'SQL'], gaps: ['Spark', 'GCP'] }, e)).toEqual({});
+    expect(listDifferences({ proven: ['Python'], gaps: ['Spark', 'GCP'] }, e)).toEqual({
+      rubricProvenOnly: ['SQL'],
+    });
+    expect(
+      listDifferences({ proven: ['Python', 'SQL', 'Docker'], gaps: ['Spark', 'GCP'] }, e),
+    ).toEqual({ engineProvenOnly: ['Docker'] });
+    expect(listDifferences({ proven: ['Python', 'SQL'], gaps: ['Spark'] }, e)).toEqual({
+      rubricGapOnly: ['GCP'],
+    });
+    expect(
+      listDifferences({ proven: ['Python', 'SQL'], gaps: ['Spark', 'GCP', 'PhD'] }, e),
+    ).toEqual({ engineGapOnly: ['PhD'] });
+  });
+});
+
 describe('engine against the rubric: negative controls', () => {
   const controls = postings.filter(isNegativeControl);
   it('has six negative controls', () => {

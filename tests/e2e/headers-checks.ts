@@ -209,9 +209,54 @@ export function* scanTags(html: string): Generator<Tag> {
   }
 }
 
+const NAMED_ENTITIES: Readonly<Record<string, string>> = {
+  tab: '\t',
+  newline: '\n',
+  colon: ':',
+  lpar: '(',
+  rpar: ')',
+  period: '.',
+  sol: '/',
+  amp: '&',
+  quot: '"',
+  apos: "'",
+  lt: '<',
+  gt: '>',
+  nbsp: '\u00a0',
+};
+
+/**
+ * Decodes numeric (`&#9;`, `&#x6A;`) and the named entities that matter for a URL scheme (`&Tab;`, `&NewLine;`,
+ * `&colon;`), as a browser does before it reads an attribute value. A missing semicolon is accepted for the
+ * numeric forms, as in HTML. One pass only, as a browser does.
+ */
+export function decodeEntities(value: string): string {
+  return value
+    .replace(/&#x([0-9a-f]{1,6});?/gi, (m, h: string) => codePoint(parseInt(h, 16)) ?? m)
+    .replace(/&#(\d{1,7});?/g, (m, d: string) => codePoint(parseInt(d, 10)) ?? m)
+    .replace(/&([a-z]{2,8});/gi, (m, n: string) => NAMED_ENTITIES[n.toLowerCase()] ?? m);
+}
+
+function codePoint(n: number): string | undefined {
+  return n > 0 && n <= 0x10ffff && !(n >= 0xd800 && n <= 0xdfff)
+    ? String.fromCodePoint(n)
+    : undefined;
+}
+
+/**
+ * True when a browser would read the attribute value as a `javascript:` URL: decode entities, drop the tab,
+ * line feed and carriage return the URL parser removes everywhere, and ignore leading control characters and
+ * spaces.
+ */
+export function isJavascriptUrl(value: string): boolean {
+  const decoded = decodeEntities(value).replace(/[\t\n\r]/g, '');
+  // eslint-disable-next-line no-control-regex
+  return /^[\u0000-\u0020]*javascript:/i.test(decoded);
+}
+
 /**
  * Lists inline code in one HTML document: any `<style>`, any `style=` attribute, any inline `on*=` handler,
- * any `javascript:` URL, and any `<script>` without `src` other than JSON-LD (`application/ld+json`).
+ * any `javascript:` URL (entities decoded first), and any `<script>` without `src` other than JSON-LD (`application/ld+json`).
  */
 export function findInlineCode(html: string): string[] {
   const problems: string[] = [];
@@ -226,7 +271,7 @@ export function findInlineCode(html: string): string[] {
       if (attr === 'style') problems.push(`style attribute on <${name}>: ${where}`);
       else if (/^on[a-z]+$/.test(attr))
         problems.push(`inline event handler ${attr} on <${name}>: ${where}`);
-      else if (/^\s*javascript:/i.test(value))
+      else if (isJavascriptUrl(value))
         problems.push(`javascript: URL in ${attr} on <${name}>: ${where}`);
     }
   }
