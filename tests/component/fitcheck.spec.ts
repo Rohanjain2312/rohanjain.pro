@@ -244,7 +244,7 @@ test.describe('privacy', () => {
     const src = await page.evaluate(async () => {
       const urls = Array.from(document.scripts)
         .map((s) => s.src)
-        .filter((u) => u.includes('FitCheck'));
+        .filter((u) => u.includes('/_astro/'));
       const texts: string[] = [];
       for (const u of urls) texts.push(await (await fetch(u)).text());
       return texts.join('\n');
@@ -427,8 +427,15 @@ test.describe('brief dialog', () => {
 });
 
 test.describe('keyboard only', () => {
-  test('samples, textarea, fields, check, brief, Escape and focus return', async ({ page }) => {
+  test('samples, textarea, fields, check, brief, Escape and focus return', async ({
+    page,
+    browserName,
+  }) => {
     await open(page);
+    // Safari on macOS skips buttons and links with Tab unless Option is held (its default setting).
+    // Option+Tab is the same step through every control, so the test presses that there.
+    const tabKey = browserName === 'webkit' && process.platform === 'darwin' ? 'Alt+Tab' : 'Tab';
+    const tab = () => page.keyboard.press(tabKey);
     const focused = () =>
       page.evaluate(() => {
         const a = document.activeElement as HTMLElement | null;
@@ -438,21 +445,21 @@ test.describe('keyboard only', () => {
       });
     // Start at the first sample and tab forward.
     await page.locator('[data-fit-sample]').first().focus();
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('Tab');
+    await tab();
+    await tab();
+    await tab();
     expect(await focused()).toBe('fit-text');
     await page.keyboard.type('Python Docker Kubernetes AWS SQL LangGraph');
-    await page.keyboard.press('Tab');
+    await tab();
     expect(await page.evaluate(() => document.activeElement?.tagName)).toBe('SUMMARY');
     await page.keyboard.press('Enter');
-    await page.keyboard.press('Tab');
+    await tab();
     expect(await focused()).toBe('fit-company');
     await page.keyboard.type('Acme');
-    await page.keyboard.press('Tab');
+    await tab();
     expect(await focused()).toBe('fit-role');
     await page.keyboard.type('ML Engineer');
-    await page.keyboard.press('Tab');
+    await tab();
     expect(await focused()).toBe('run');
     await page.keyboard.press('Enter');
     await expect(page.locator('[data-fit-report]')).toBeVisible();
@@ -474,7 +481,7 @@ test.describe('keyboard only', () => {
       true,
     );
     for (let i = 0; i < 6; i++) {
-      await page.keyboard.press('Tab');
+      await tab();
       expect(await inside()).toBe(true);
     }
     await page.keyboard.press('Escape');

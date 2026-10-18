@@ -18,6 +18,8 @@ if (dialog && typeof dialog.showModal === 'function') {
   const close = q<HTMLButtonElement>('[data-demo-close]');
   let embed = '';
   let frame: HTMLIFrameElement | null = null;
+  // Safari does not focus a link on click, so the browser has nothing to restore focus to. Track the opener.
+  let opener: HTMLElement | null = null;
 
   const reset = (): void => {
     frame?.remove();
@@ -57,6 +59,7 @@ if (dialog && typeof dialog.showModal === 'function') {
       );
       direct.href = a.dataset['demoUrl'] ?? a.href;
       reset();
+      opener = a;
       dialog.showModal();
     });
   }
@@ -76,7 +79,10 @@ if (dialog && typeof dialog.showModal === 'function') {
   });
 
   close.addEventListener('click', () => dialog.close());
-  dialog.addEventListener('close', reset);
+  dialog.addEventListener('close', () => {
+    reset();
+    opener?.focus();
+  });
   // A click on the backdrop (the dialog element itself, outside the column) closes it.
   dialog.addEventListener('click', (e) => {
     if (e.target === dialog) dialog.close();
