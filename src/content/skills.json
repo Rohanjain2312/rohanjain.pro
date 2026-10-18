@@ -557,7 +557,7 @@
     "tier": "shipped",
     "evidence": ["mr", "fc"],
     "roles": ["ml", "ai"],
-    "aliases": []
+    "aliases": ["self-attention", "attention mechanism", "attention mechanisms"]
   },
   {
     "name": "TensorFlow",
@@ -909,7 +909,7 @@
     "tier": "shipped",
     "evidence": ["loan", "shca"],
     "roles": ["ai"],
-    "aliases": ["agent orchestrat"]
+    "aliases": ["orchestrating agents"]
   },
   {
     "name": "State management",
@@ -2221,7 +2221,7 @@
     "tier": "studied",
     "evidence": [],
     "roles": ["ml"],
-    "aliases": []
+    "aliases": ["ray serve", "ray train", "ray data", "ray cluster", "anyscale ray"]
   },
   {
     "name": "PySpark",
@@ -2269,7 +2269,7 @@
     "tier": "studied",
     "evidence": [],
     "roles": ["ai", "ml"],
-    "aliases": []
+    "aliases": ["aws lambda", "lambda functions"]
   },
   {
     "name": "Terraform",
@@ -2317,7 +2317,7 @@
     "tier": "studied",
     "evidence": [],
     "roles": ["ai", "ml"],
-    "aliases": []
+    "aliases": ["monitoring and alerting", "production monitoring"]
   },
   {
     "name": "OpenTelemetry",
@@ -2373,7 +2373,7 @@
     "tier": "studied",
     "evidence": [],
     "roles": ["ai", "ml"],
-    "aliases": []
+    "aliases": ["data structures and algorithms"]
   },
   {
     "name": "Algorithms",
@@ -2381,7 +2381,7 @@
     "tier": "studied",
     "evidence": [],
     "roles": ["ai", "ml"],
-    "aliases": []
+    "aliases": ["algorithms and data structures"]
   },
   {
     "name": "API development",

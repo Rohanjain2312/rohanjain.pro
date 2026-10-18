@@ -17,7 +17,19 @@ export const config = {
    * Skills whose bare name is a common English word. They match only through their aliases (R-406).
    * Filled from the alias audit.
    */
-  nameNeedsAlias: ['Go', 'React', 'Swift', 'Unity', 'Triton'] as readonly string[],
+  nameNeedsAlias: [
+    'Go',
+    'React',
+    'Swift',
+    'Unity',
+    'Triton',
+    'Attention',
+    'Ray',
+    'Lambda',
+    'Monitoring',
+    'Algorithms',
+    'Data structures',
+  ] as readonly string[],
 };
 
 export type Config = typeof config;

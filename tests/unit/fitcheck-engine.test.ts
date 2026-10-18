@@ -98,9 +98,13 @@ describe('pattern safety (R-402)', () => {
       '\ud83d'.repeat(8000),
     ];
     for (const input of inputs) {
-      const start = performance.now();
-      analyze(input, real, extras, []);
-      expect(performance.now() - start).toBeLessThan(50);
+      // Best of three, so a scheduler pause on a busy runner does not fail a linear-time scan.
+      const times = [0, 1, 2].map(() => {
+        const start = performance.now();
+        analyze(input, real, extras, []);
+        return performance.now() - start;
+      });
+      expect(Math.min(...times)).toBeLessThan(50);
     }
   });
 });
@@ -240,6 +244,49 @@ describe('evidence rows and role family', () => {
     expect(analyze('x1 x2', skills, [], []).roleFamily).toBe('ai');
     expect(analyze('x2 x3', skills, [], []).roleFamily).toBe('ds');
     expect(analyze('x1', skills, [], []).roleFamily).toBe('ai');
+  });
+});
+
+describe('alias hygiene (R-406 inputs)', () => {
+  const real = JSON.parse(readFileSync('src/content/skills.json', 'utf8')) as Skill[];
+  const suspects = [
+    'production',
+    'deploy',
+    'tools',
+    'search',
+    'analysis',
+    'analytics',
+    'metrics',
+    'agents',
+    'documents',
+    'pipelines',
+    'evaluation',
+    'stakeholders',
+    'containers',
+  ];
+  it('no alias or extra term is a known broad word on its own', () => {
+    const terms = [
+      ...real.flatMap((s) => s.aliases),
+      ...extras.flatMap((x) => [x.name, ...x.aliases]),
+    ].map((t) => t.toLowerCase());
+    expect(terms.filter((t) => suspects.includes(t))).toEqual([]);
+  });
+  it('every name listed in nameNeedsAlias has at least one alias', () => {
+    for (const name of config.nameNeedsAlias) {
+      const owner =
+        real.find((s) => s.name === name)?.aliases ?? extras.find((x) => x.name === name)?.aliases;
+      expect(owner, name).toBeDefined();
+      expect(owner?.length, name).toBeGreaterThan(0);
+    }
+  });
+  it('the bare words in nameNeedsAlias do not match on their own', () => {
+    const r = analyze(
+      'pay attention to detail, go to market, react quickly, a swift reply, the unity of the team, ray of light, lambda, monitoring',
+      real,
+      extras,
+      [],
+    );
+    expect([...r.proven, ...r.gaps]).toEqual([]);
   });
 });
 
