@@ -91,9 +91,44 @@ The Data Scientist sample comes out "Not a strong fit" under the current tiers. 
 - **Adjacent roles are weak.** Data, analytics and backend engineer postings share SQL, Python, Kubernetes and CI/CD with Rohan but ask mostly for studied or unlisted tools.
 - **Unrelated roles show no proven skill.** All three have at least four counted gaps, so they read "Not a strong fit", not "Not enough to go on".
 
-## First engine run (19da6ab plus thresholds rename)
+## First engine run (head 55aa81d)
 
-No expected verdict was changed because of the engine. Four postings disagreed: ai-02 (engine Strong fit), ai-04 and ml-01 (engine Not a strong fit), and neg-game (engine Not enough to go on). The causes are missing aliases (fine-tune, quantize, distillation, KPIs, time-series, Spark, "A/B tests", coordinated phrases such as "unit and integration tests"), missing extras (FastAPI, GCP) and Unity being alias-only. With those additions in a scratch copy, the engine agreed with the rubric on all 18 postings and 3 samples. The fixes belong to App/Data (R-407).
+No expected verdict was changed because of the engine. Rubric v2 changed one input (CI) before looking at any verdict, and it moved no verdict. Golden tests: 14 of 18 postings and 3 of 3 samples agree with the rubric. Four postings disagree, so 5 golden tests fail (neg-game fails in two tests). They stay failing; they are not marked as expected to fail.
+
+| Posting | Rubric | Engine | Count (rubric / engine) | Cause |
+|---|---|---|---|---|
+| ai-02 | Good fit, with gaps (0.789) | Strong fit (0.824) | 15/19 / 14/17 | Missing alias for "fine-tune" (Supervised fine-tuning). FastAPI is not in the extras list. |
+| ai-04 | Good fit, with gaps (0.571) | Not a strong fit (0.500) | 8/14 / 6/12 | Missing aliases for "fine-tune" and "quantize". |
+| ml-01 | Good fit, with gaps (0.550) | Not a strong fit (0.529) | 11/20 / 9/17 | Coordinated phrases not matched ("batch and real-time inference", "training and inference pipelines"); "Spark" is not an alias of Apache Spark. |
+| neg-game | Not a strong fit | Not enough to go on | 0/4 / 0/3 | "Unity" is alias-only (config.nameNeedsAlias), so only C#, iOS and Android match: 3 matches, under the minimum of 4. |
+
+Other skill-level differences that do not change a verdict: ai-03 (Agent observability, GCP), ds-01 and the DS sample (KPI definition from "KPIs"; A/B testing from "A/B tests"), ds-02 and ml-03 ("time-series", "forecast"), ds-03 ("Translate business problems", "Jupyter notebooks"), ml-02 ("optimize latency"; Ray is alias-only), ml-04 ("distillation", "imbalanced data handling"), adj-be ("unit and integration tests"), adj-de ("orchestrate workflows"; "Spark"). The engine counts PhD as a gap (ported from the mockup list); the rubric does not count degree lines. This changes no verdict (ds-04 stays "Not a strong fit").
+
+The engine has no skill that the rubric lacks except PhD, so it has no false positive on these 21 texts.
+
+Recommended fixes, all in aliases and extras (R-407). A scratch copy with these additions agreed with the rubric on all 18 postings and 3 samples. None of the new terms matches more than one negative control.
+
+- `Supervised fine-tuning`: `fine-tune`, `fine tune`, `finetune`.
+- `Model quantization`: `quantize`, `quantise`.
+- `Knowledge distillation`: `distillation`.
+- `Imbalanced-data handling`: `imbalanced data`.
+- `KPI definition`: `kpi`, `kpis`.
+- `Time-series analysis`: `time-series`.
+- `Forecasting`: `forecast`.
+- `A/B testing`: `a/b tests`.
+- `Apache Spark`: `spark`.
+- `Latency optimization`: `optimize latency`.
+- `Agent observability`: `observability for agents`.
+- `Model deployment`: `deploy models`.
+- `Translating business problems into ML/AI problems`: `translate business problems`.
+- `Jupyter / notebook-based workflows`: `jupyter`.
+- `Workflow orchestration`: `orchestrate workflows`.
+- Coordinated phrases as aliases of both skills: `batch and real-time inference` (Batch inference), `training and inference pipelines` (Training pipelines and Inference pipelines), `unit and integration tests` (Unit testing and Integration testing).
+- Extras: `FastAPI`, `GCP` (aliases `gcp`, `google cloud`).
+- `Unity`: take it out of `nameNeedsAlias` (bare "unity" matched 1 of 6 controls) or add a context alias. Without this, neg-game stays "Not enough to go on".
+- `Ray` stays alias-only. The engine misses one gap in ml-02 and the verdict is unchanged.
+
+If App/Data prefers not to add the three coordinated phrases, ml-01 would come out "Not a strong fit". That would need a rubric v3 that drops counting rule 2, with the Reader Advocate's rating on record.
 
 ## Change control
 

@@ -10,6 +10,8 @@ export default {
     'src/lib/fitcheck/**/*.ts',
     '!src/lib/fitcheck/samples.ts',
     '!src/lib/fitcheck/index.ts',
+    // extras.ts is a table of strings. Its terms are exercised by the golden set and the alias audit.
+    '!src/lib/fitcheck/extras.ts',
   ],
   coverageAnalysis: 'perTest',
   thresholds: { high: 90, low: 80, break: 80 },
