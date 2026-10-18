@@ -15,7 +15,6 @@ describe('personJsonLd', () => {
   it('takes every field from content', () => {
     expect(person.name).toBe(site.name);
     expect(person.email).toBe(site.email);
-    expect(person.telephone).toBe(site.phone);
     expect(person.sameAs).toEqual(Object.values(site.profiles));
     expect(person.address.addressLocality).toBe('New York');
     expect(person.address.addressRegion).toBe('NY');
@@ -23,6 +22,21 @@ describe('personJsonLd', () => {
       'University of Maryland',
       'PES University',
     ]);
+  });
+});
+
+describe('phone number (R-305)', () => {
+  it('is absent from the JSON-LD, whatever the formatting', () => {
+    const person = personJsonLd({
+      site: site as Site,
+      resume: resume as unknown as Resume,
+      origin: 'https://example.test',
+      jobTitle: 'Role',
+      description: 'Text',
+    });
+    expect(person).not.toHaveProperty('telephone');
+    const digits = (t: string) => t.replace(/\D/g, '');
+    expect(digits(jsonLdText(person))).not.toContain(digits(site.phone));
   });
 });
 

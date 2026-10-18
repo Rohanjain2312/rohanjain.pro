@@ -4,7 +4,6 @@ import { expect, test, type Page } from '@playwright/test';
 
 const ORIGIN = 'https://rohanjain.pro';
 const meta = (page: Page, sel: string) => page.locator(`head meta[${sel}]`).getAttribute('content');
-const hasOg = existsSync('dist/og.png');
 
 for (const [path, canonical] of [
   ['/', `${ORIGIN}/`],
@@ -22,12 +21,12 @@ for (const [path, canonical] of [
     expect(await meta(page, 'property="og:url"')).toBe(canonical);
     expect(await meta(page, 'property="og:type"')).toBe('website');
     expect(await meta(page, 'name="twitter:title"')).toBe(title);
-    if (hasOg) {
-      expect(await meta(page, 'property="og:image"')).toBe(`${ORIGIN}/og.png`);
-      expect(await meta(page, 'property="og:image:alt"')).toBe('Rohan Jain, ML and AI Engineer');
-      expect(await meta(page, 'name="twitter:card"')).toBe('summary_large_image');
-      expect(await meta(page, 'name="twitter:image"')).toBe(`${ORIGIN}/og.png`);
-    }
+    // The image is required: a missing dist/og.png fails here instead of skipping the checks.
+    expect(existsSync('dist/og.png')).toBe(true);
+    expect(await meta(page, 'property="og:image"')).toBe(`${ORIGIN}/og.png`);
+    expect(await meta(page, 'property="og:image:alt"')).toBe('Rohan Jain, ML and AI Engineer');
+    expect(await meta(page, 'name="twitter:card"')).toBe('summary_large_image');
+    expect(await meta(page, 'name="twitter:image"')).toBe(`${ORIGIN}/og.png`);
   });
 }
 
@@ -67,6 +66,19 @@ test('home carries one JSON-LD Person block built from the site content', async 
   expect(person.email).toBe(site.email);
   expect(person.sameAs).toEqual(Object.values(site.profiles));
   expect(person.url).toBe(ORIGIN);
+});
+
+test('the phone number is in no JSON-LD block and no meta tag (R-305)', async ({ page }) => {
+  const site = JSON.parse(readFileSync('src/content/site.json', 'utf8'));
+  const digits = (t: string) => t.replace(/\D/g, '');
+  await page.goto('/');
+  const ld = (await page.locator('script[type="application/ld+json"]').textContent()) ?? '';
+  const metas = await page
+    .locator('head meta')
+    .evaluateAll((els) => els.map((e) => e.getAttribute('content') ?? ''));
+  expect(ld.length).toBeGreaterThan(0);
+  expect(metas.length).toBeGreaterThan(0);
+  for (const text of [ld, ...metas]) expect(digits(text)).not.toContain(digits(site.phone));
 });
 
 test('only the home page has JSON-LD', async ({ page }) => {

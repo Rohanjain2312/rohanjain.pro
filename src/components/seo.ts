@@ -46,7 +46,6 @@ export function personJsonLd(args: {
     jobTitle,
     description,
     email: site.email,
-    telephone: site.phone,
     address: address(site.location),
     alumniOf: resume.education.map((e) => ({
       '@type': 'CollegeOrUniversity',
