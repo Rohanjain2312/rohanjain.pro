@@ -164,6 +164,18 @@ test.describe('section', () => {
     await expect(page.locator('[data-fit-note]')).toHaveText(copy.notes['none'] ?? 'missing');
     await expect(page.locator('[data-fit-rows]')).toBeHidden();
     await expect(page.locator('[data-fit-gaps]')).toBeHidden();
+    // A no-match run is the verdict box and note only (design spec 7.9): no brief, no forward link.
+    await expect(page.locator('[data-fit-brief-open]')).toBeHidden();
+    await expect(page.getByRole('link', { name: 'Forward to the hiring manager' })).toBeHidden();
+    await expect(page.locator('[data-fit-run]')).toBeVisible();
+  });
+
+  test('the actions come back when a later run has enough to go on', async ({ page }) => {
+    await open(page);
+    await runCheck(page, '');
+    await expect(page.locator('[data-fit-brief-open]')).toBeHidden();
+    await page.getByRole('button', { name: 'AI Engineer', exact: true }).click();
+    await expect(page.locator('[data-fit-brief-open]')).toBeVisible();
   });
 
   test('evidence rows link only to https URLs from the evidence list', async ({ page }) => {
@@ -196,7 +208,12 @@ test.describe('privacy', () => {
     await open(page);
     await page.waitForLoadState('networkidle');
     const before = requests.length;
-    await runCheck(page, 'marker-posting-text Python Docker', 'MarkerCo', 'MarkerRole');
+    await runCheck(
+      page,
+      'marker-posting-text Python Docker Kubernetes AWS SQL LangGraph',
+      'MarkerCo',
+      'MarkerRole',
+    );
     await page.locator('[data-fit-brief-open]').click();
     await page.keyboard.press('Escape');
     for (const s of samples) await page.getByRole('button', { name: s.label, exact: true }).click();
@@ -338,8 +355,10 @@ test.describe('property 9: any string renders only curated strings and adds no e
       await page.locator('#fit-company').fill(company);
       await page.locator('#fit-role').fill(role);
       await page.locator('[data-fit-run]').click();
-      await page.locator('[data-fit-brief-open]').click();
-      await page.keyboard.press('Escape');
+      if (await page.locator('[data-fit-brief-open]').isVisible()) {
+        await page.locator('[data-fit-brief-open]').click();
+        await page.keyboard.press('Escape');
+      }
       const r = await shape();
       for (const leaf of r.reportLeaves) {
         const bare = leaf.replace(/^[●○]\s*/, '').replace(/\s*↗$/, '');

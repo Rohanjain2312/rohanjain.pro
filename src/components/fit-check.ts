@@ -107,6 +107,7 @@ function init(root: HTMLElement): void {
   const rowsEl = pick<HTMLElement>(root, '[data-fit-rows]');
   const gapsEl = pick<HTMLElement>(root, '[data-fit-gaps]');
   const gapList = pick<HTMLElement>(root, '[data-fit-gap-list]');
+  const actions = pick<HTMLElement>(root, '[data-fit-actions]');
   const openBrief = pick<HTMLButtonElement>(root, '[data-fit-brief-open]');
 
   // The brief dialog sits outside this section, at the end of the body.
@@ -139,6 +140,8 @@ function init(root: HTMLElement): void {
     rowsEl.hidden = r.evidenceRows.length === 0;
     gapList.replaceChildren(...r.gaps.map((g) => el('li', 'chip chip--gap', g)));
     gapsEl.hidden = r.gaps.length === 0;
+    // A run with too little to go on shows the verdict box and note only (design spec 7.9).
+    actions.hidden = !r.enough;
     report.hidden = false;
     // A live region that changes while it is being shown is not reliably read, so a separate status
     // line is cleared and then filled a moment later.
@@ -215,7 +218,7 @@ function init(root: HTMLElement): void {
   }
 
   openBrief.addEventListener('click', () => {
-    if (!last) return;
+    if (!last?.report.enough) return;
     fillBrief(last);
     opener = openBrief;
     dialog.showModal();
