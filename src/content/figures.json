@@ -7,9 +7,9 @@
     "src": "reference/figures/settle_pr.png",
     "alt": "Precision-recall curves for XGBoost, RBF SVM and logistic regression on settlement fails",
     "axisLabel": "precision against recall",
-    "caption": "XGBoost PR-AUC 0.333 against random 0.045.",
+    "caption": "XGBoost PR-AUC 0.333, RBF SVM 0.319, logistic regression 0.305. Random list 0.045.",
     "note": "the SVM I shipped holds up",
-    "claimIds": ["settle-pr-auc", "settle-pr-auc-random"]
+    "claimIds": ["settle-pr-auc", "settle-pr-auc-svm", "settle-pr-auc-lr", "settle-pr-auc-random"]
   },
   {
     "id": "settle-shap",
@@ -55,9 +55,9 @@
     "src": "reference/figures/fc_pruning.png",
     "alt": "Macro F1 against the share of attention heads pruned",
     "axisLabel": "macro F1 against share of heads pruned",
-    "caption": "Macro F1 as more attention heads are pruned.",
+    "caption": "Macro F1 peaks at 0.8966 with 29.2% of heads pruned, above the 0.8876 full model.",
     "note": "less model, better score",
-    "claimIds": []
+    "claimIds": ["fc-pruning-peak-f1", "fc-pruning-peak-share", "fc-f1-baseline"]
   },
   {
     "id": "fc-latency",
@@ -92,13 +92,23 @@
     "projectId": "mr",
     "kind": "bars",
     "title": "Market Regime",
-    "alt": "Bar chart: CNN-Transformer accuracy 81.78%",
-    "bars": [{ "label": "CNN-Transformer", "value": 81.78, "display": "81.78%" }],
+    "alt": "Bar chart of test accuracy: baseline 61.16%, CNN-Transformer 81.78%",
+    "bars": [
+      { "label": "baseline", "value": 61.16, "display": "61.16%" },
+      { "label": "CNN-Transformer", "value": 81.78, "display": "81.78%" }
+    ],
     "axisMax": 100,
-    "axisLabel": "accuracy, percent",
-    "caption": "0.480 MCC on 24 years of S&P 500 data.",
+    "axisLabel": "accuracy, test window Sep 2022 to Oct 2025",
+    "caption": "0.480 MCC against -0.036 for the baseline, on 24 years of S&P 500 data.",
     "note": "splits kept in time order",
-    "claimIds": ["mr-accuracy", "mr-mcc", "mr-years"]
+    "claimIds": [
+      "mr-accuracy",
+      "mr-mcc",
+      "mr-years",
+      "mr-baseline-accuracy",
+      "mr-baseline-mcc",
+      "mr-test-window"
+    ]
   },
   {
     "id": "gb-bars",

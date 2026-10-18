@@ -276,6 +276,22 @@
     "verifiedOn": "2026-10-15"
   },
   {
+    "id": "settle-pr-auc-svm",
+    "value": 0.319,
+    "display": "RBF SVM 0.319",
+    "source": "Repo trade-settlement-fail-predictor, blog post results table (docs/blog/predicting-trade-settlement-fails.md)",
+    "sourceUrl": "https://github.com/Rohanjain2312/trade-settlement-fail-predictor/blob/main/docs/blog/predicting-trade-settlement-fails.md",
+    "verifiedOn": "2026-10-17"
+  },
+  {
+    "id": "settle-pr-auc-lr",
+    "value": 0.305,
+    "display": "logistic regression PR-AUC 0.305",
+    "source": "Repo trade-settlement-fail-predictor, blog post results table (docs/blog/predicting-trade-settlement-fails.md)",
+    "sourceUrl": "https://github.com/Rohanjain2312/trade-settlement-fail-predictor/blob/main/docs/blog/predicting-trade-settlement-fails.md",
+    "verifiedOn": "2026-10-17"
+  },
+  {
     "id": "settle-pr-auc-random",
     "value": 0.045,
     "display": "random 0.045",
@@ -398,7 +414,7 @@
   {
     "id": "fc-latency-before",
     "value": "286.9 ms",
-    "display": "CPU latency 286.9 ms",
+    "display": "286.9 ms full model",
     "source": "Résumé, client-confirmed; repo FinCompress",
     "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
     "verifiedOn": "2026-10-15"
@@ -406,7 +422,7 @@
   {
     "id": "fc-latency-after",
     "value": "19.8 ms",
-    "display": "19.8 ms",
+    "display": "19.8 ms INT8",
     "source": "Résumé, client-confirmed; repo FinCompress",
     "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
     "verifiedOn": "2026-10-15"
@@ -414,10 +430,44 @@
   {
     "id": "fc-latency-ratio",
     "value": "14.5x",
-    "display": "14.5x",
+    "display": "14.5x faster on CPU",
     "source": "Résumé, client-confirmed; repo FinCompress",
     "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
     "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "fc-f1-baseline",
+    "value": 0.8876,
+    "display": "validation Macro F1 0.8876 for the full model",
+    "source": "Repo FinCompress README results table; figure 01_pruning_curve.png",
+    "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
+    "verifiedOn": "2026-10-17"
+  },
+  {
+    "id": "fc-f1-cost",
+    "value": 0.7712,
+    "display": "F1 0.8876 to 0.7712 for the INT8 student",
+    "source": "Repo FinCompress README results table; figure 01_pruning_curve.png",
+    "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
+    "verifiedOn": "2026-10-17",
+    "note": "Full model val Macro F1 0.8876 to INT8 student (PTQ, 47.7 MB) 0.7712, repo README results table. The mockup rounded this to 0.89 to 0.77."
+  },
+  {
+    "id": "fc-pruning-peak-f1",
+    "value": 0.8966,
+    "display": "Macro F1 peaks at 0.8966",
+    "source": "Repo FinCompress README results table; figure 01_pruning_curve.png",
+    "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
+    "verifiedOn": "2026-10-17",
+    "note": "Chart peak at 29.2% of heads pruned. The résumé claim (50%, +0.9 points) stays as the client chose it (R-302)."
+  },
+  {
+    "id": "fc-pruning-peak-share",
+    "value": 29.2,
+    "display": "29.2% of heads pruned",
+    "source": "Repo FinCompress README results table; figure 01_pruning_curve.png",
+    "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
+    "verifiedOn": "2026-10-17"
   },
   {
     "id": "fc-pruning-heads",
@@ -540,6 +590,31 @@
     "source": "Résumé, client-confirmed; repo transformer-market-regime",
     "sourceUrl": "https://github.com/Rohanjain2312/transformer-market-regime",
     "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "mr-baseline-accuracy",
+    "value": 61.16,
+    "display": "61.16% baseline accuracy",
+    "source": "Repo transformer-market-regime README, all-models table and split section",
+    "sourceUrl": "https://github.com/Rohanjain2312/transformer-market-regime",
+    "verifiedOn": "2026-10-17"
+  },
+  {
+    "id": "mr-baseline-mcc",
+    "value": -0.036,
+    "display": "-0.036 MCC for the baseline",
+    "source": "Repo transformer-market-regime README, all-models table and split section",
+    "sourceUrl": "https://github.com/Rohanjain2312/transformer-market-regime",
+    "verifiedOn": "2026-10-17"
+  },
+  {
+    "id": "mr-test-window",
+    "value": "Sep 2022 to Oct 2025",
+    "display": "test window Sep 2022 to Oct 2025",
+    "source": "Repo transformer-market-regime README, all-models table and split section",
+    "sourceUrl": "https://github.com/Rohanjain2312/transformer-market-regime",
+    "verifiedOn": "2026-10-17",
+    "note": "README test set: Sep 21, 2022 to Oct 3, 2025 (15% time-ordered split)."
   },
   {
     "id": "mr-baselines",
