@@ -28,3 +28,17 @@
 - [QA tooling status](project-qa-tooling-gaps.md): copy lint is on main but skipped when earlier CI steps fail (audit 1, PR #168); lychee status; verify limits.
 - [Spec change sweep](feedback-spec-change-sweep.md): when a spec rule changes, grep agents, skills, rules and phase plans for the old wording and probe R-112 (PR #202).
 - [Golden set review (PR #202)](project-spec-sourcing-pr202.md): synthetic golden set Mediums (R-112 write conflict, stale posting instructions, #111 gitleaks absent); re-check at next head.
+- [ADR-0027 deploy owner (PR #189)](project-adr-0027-deploy-owner-pr189.md): unnamed Phase 7 deploy workflow conflicts with ADR-0016 and 10-cicd 10.2; re-check on the status fetch.
+- [Brief vs issue wording](feedback-brief-vs-issue-wording.md): when a review brief and the issue text disagree, flag both readings in Findings; do not pick one silently.
+- [Fit-check QA, PR #201](project-fitcheck-qa-pr201.md): golden set, rubric, properties, Stryker setup; vitest/Stryker snags; engine-vs-rubric gaps
+- [Golden set PR #202](project-golden-set-pr202.md): ADR-0028 Decision still said App/Data writes fixtures; R-509 vs spec 9.4 read conflict; round 2 CHANGES REQUESTED.
+- [Medium fixes check every cited source](feedback-medium-fix-check-all-sources.md): on re-review, grep each source a Medium named; PR #189 left spec 11 line 65 stale.
+- [Named stale lines (PR #185)](feedback-named-stale-lines.md): a "fixes these lines" PR can pass CI with most lines still stale; grep each named location at head.
+- [PR #187 demo dialog](project-pr187-demo-dialog.md): flaky close-event e2e, CodeQL on test mocks; re-check recipe
+- [PR #200 gate record review](project-pr200-phase2-gate-review.md): approved at c341e6b; Mediums fixed at d3dba98; Lows on #190; favicon timing open.
+- [PR #206 jargon gloss review](project-pr206-jargon-gloss-review.md): round 1 Mediums (zero-shot wording, INT8 on FinCompress card); recheck list
+- [Phase 3 plan review (PR #199)](project-phase3-plan-pr199.md): #162 golden-set precondition, RA verdict omission, property 8 gap; check before #193 and #194.
+- [Pin shared branch SHA](feedback-pin-shared-branch-sha.md): branch refs move during reviews (shared worktree refs); pin the SHA and re-read the tip before the verdict.
+- [Residual headings after a fix](feedback-residual-headings-after-fix.md): on re-review, grep whole files for retired duties; a fix can leave a sibling heading stale (PR #185).
+- [Retired-process sweep](feedback-retired-process-sweep.md): after a retirement, grep the whole tree (agent descriptions, plan.md, phase specs), not only named files (PR #185).
+- [Shots script review (PR #198)](project-shots-script-pr198.md): port collision and unreadable full-page PNG; round 2 checks
