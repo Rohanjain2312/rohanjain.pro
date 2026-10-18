@@ -1,3 +1,4 @@
 - [Mockup citations](feedback_mockup_citations.md): grep exact mockup line numbers before citing; sandbox rejects git+loop shell commands
 - [Mockup vs rules conflicts](project_mockup_conflicts.md): all closed in spec + ADR-0015; judge against spec first, then mockup
+- [Reviews: write first](feedback_review_write_first.md): write the record and open the draft PR before optional tooling (lost a worktree on #192)
 - [Branch prefix](feedback_branch_prefix.md): use `design/`, not `design-lead/`; hook R-103 blocks the latter

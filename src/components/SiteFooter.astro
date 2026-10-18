@@ -1,17 +1,40 @@
 ---
 import { profileLinks, type Profiles } from './profiles.ts';
+import { loadStatusFile } from './status-file.ts';
+import { dayLabel } from './status.ts';
 
 interface Props {
   profiles: Profiles;
-  privacyLabel: string;
+  copy: { privacy: string; updated: string; demosChecked: string; demoDown: string };
+  /** Demo addresses and project names, to name a demo that is down. */
+  demos?: { url: string; name: string }[];
 }
 
-const { profiles, privacyLabel } = Astro.props;
+const { profiles, copy, demos = [] } = Astro.props;
 const links = profileLinks(profiles);
+const status = loadStatusFile();
+const down = status
+  ? status.demos
+      .filter((d) => !d.up)
+      .map((d) => ({ ...d, name: demos.find((x) => x.url === d.url)?.name ?? d.url }))
+  : [];
 ---
 
 <footer class="site-footer">
   <div class="site-footer__inner">
+    {status && (
+      <p class="meta site-footer__status">
+        {copy.updated} <time datetime={status.lastUpdated}>{dayLabel(status.lastUpdated)}</time>
+        <span aria-hidden="true"> · </span>
+        {copy.demosChecked} <time datetime={status.checkedAt}>{dayLabel(status.checkedAt)}</time>
+        {down.map((d) => (
+          <>
+            <span aria-hidden="true"> · </span>
+            {d.name} {copy.demoDown} <time datetime={d.checkedAt}>{dayLabel(d.checkedAt)}</time>
+          </>
+        ))}
+      </p>
+    )}
     <nav aria-label="Elsewhere" class="site-footer__links">
       {links.map((l) => (
         <a class="footer-link" href={l.url}>
@@ -19,7 +42,7 @@ const links = profileLinks(profiles);
         </a>
       ))}
       <a class="footer-link" href="/privacy/">
-        {privacyLabel}
+        {copy.privacy}
       </a>
     </nav>
   </div>

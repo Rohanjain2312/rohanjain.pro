@@ -104,7 +104,7 @@ Dropped (ADR 3 and 4): `#E7E2D4` (404 graph paper), `#F4F1E8` (404 page), `#F08A
 
 **Graph-paper line color (Q-03): `#E9E4D6`.** It is the value in the figures section (L150), the only place graph paper is allowed (07-design §7.3). `#E7E2D4` belonged to the 404, which loses its grid. Contrast with paper is 1.15, so the grid is texture only; nothing depends on it (ink on it: 13.7).
 
-**Graph-paper tile (ADR 3):** `src/assets/brand/graph-paper.svg`, a 24 by 24 viewBox holding two filled rectangles, `0 0 24 1` and `0 0 1 24`, in any opaque color. CSS uses it as a mask so the line color stays a token and no gradient exists:
+**Graph-paper tile (ADR 3):** `src/assets/graph-paper.svg`, a 24 by 24 viewBox holding two filled rectangles, `0 0 24 1` and `0 0 1 24`, in any opaque color. CSS uses it as a mask so the line color stays a token and no gradient exists:
 - the figures panel (7.8) gets a `::before` positioned over its whole box, behind the content (`z-index: -1` inside an isolated stacking context);
 - `mask-image: url(...)`, `mask-size: 24px 24px`, `mask-repeat: repeat`, plus the `-webkit-` prefixed pair; `background-color: var(--grid-line)`.
 Cell size 24 and line width 1 are the mockup's (L150). The lines run from the panel's top-left corner, as in the mockup.
@@ -206,6 +206,13 @@ H2 stays well above the 22 px H3 at 390 (28 vs 22), so the hierarchy holds on a 
 | Brief verdict | serif | `--fs-h3` | 600 | | | L350 |
 
 `/for` evidence proof (15, For L51) and the `/for` email link (15, For L36) snap to the Main values (14) so one component has one size (DL).
+
+### 2.4 Arrows and dots use the system font (accepted, issue #126 item 1)
+The Latin subsets do not hold U+2190 ←, U+2192 →, U+2193 ↓, U+2197 ↗, U+25CF ● and U+25CB ○. They render from the system monospace or symbol face. Accepted at the Phase 2 gate review (`docs/design/phase-2-gate-review.md`); measured on macOS, where they come from Menlo in text style and text color.
+- Each glyph sits next to words and is decoration; where it stands apart it is `aria-hidden`. No meaning rests on it alone.
+- No U+FE0F and no emoji codepoints, so iOS and Android keep text presentation.
+- The family stays `var(--font-mono)` with the generic `monospace` last.
+- If a capture on another platform shows a glyph in a proportional face or taller than the line, add it to the Plex Mono subsets then.
 
 ---
 
@@ -564,7 +571,7 @@ Screenshots at 390 are the R-602 item 6 baseline.
 | Hidden photo slot | F-17 | 7.2 | |
 | Footer | F-10 | 7.12 | |
 | Demo with screenshot | F-09 | 7.6 | |
-| Graph-paper tile | ADR 3 | 1.3 | `src/assets/brand/graph-paper.svg` |
+| Graph-paper tile | ADR 3 | 1.3 | `src/assets/graph-paper.svg` |
 
 ### 13.1 OG image (F-12; Q-53, Q-54)
 - **Size:** 1200 by 630 PNG, one file for every platform. The 2:1 crop some feeds apply trims 15 px at the top and bottom, which falls inside the 64 margin, so nothing is lost.
