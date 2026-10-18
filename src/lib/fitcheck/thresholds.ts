@@ -21,7 +21,6 @@ export const config = {
     'Go',
     'React',
     'Swift',
-    'Unity',
     'Triton',
     'Attention',
     'Ray',

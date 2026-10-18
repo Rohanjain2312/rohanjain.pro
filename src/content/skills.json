@@ -109,7 +109,7 @@
     "tier": "shipped",
     "evidence": ["loan", "settle"],
     "roles": ["ml", "ai"],
-    "aliases": ["unit tests"]
+    "aliases": ["unit tests", "unit and integration tests"]
   },
   {
     "name": "Model testing",
@@ -413,7 +413,7 @@
     "tier": "shipped",
     "evidence": ["settle", "mr", "goldman"],
     "roles": ["ml", "ds"],
-    "aliases": []
+    "aliases": ["imbalanced data"]
   },
   {
     "name": "SMOTE",
@@ -941,7 +941,7 @@
     "tier": "shipped",
     "evidence": ["loan"],
     "roles": ["ai"],
-    "aliases": []
+    "aliases": ["observability for agents"]
   },
   {
     "name": "Agent memory",
@@ -997,7 +997,7 @@
     "tier": "shipped",
     "evidence": ["loan", "goldman"],
     "roles": ["ai"],
-    "aliases": []
+    "aliases": ["orchestrate workflows"]
   },
   {
     "name": "Synthetic data generation",
@@ -1013,7 +1013,7 @@
     "tier": "shipped",
     "evidence": ["fc"],
     "roles": ["ml"],
-    "aliases": []
+    "aliases": ["distillation"]
   },
   {
     "name": "Evaluation datasets",
@@ -1029,7 +1029,15 @@
     "tier": "shipped",
     "evidence": ["med"],
     "roles": ["ai", "ml"],
-    "aliases": ["sft", "fine-tuning", "fine tuning", "finetuning"]
+    "aliases": [
+      "sft",
+      "fine-tuning",
+      "fine tuning",
+      "finetuning",
+      "fine-tune",
+      "fine tune",
+      "finetune"
+    ]
   },
   {
     "name": "PEFT",
@@ -1077,7 +1085,7 @@
     "tier": "shipped",
     "evidence": ["fc", "med"],
     "roles": ["ml", "ai"],
-    "aliases": ["quantization", "quantisation"]
+    "aliases": ["quantization", "quantisation", "quantize", "quantise"]
   },
   {
     "name": "Post-training quantization (PTQ)",
@@ -1133,7 +1141,7 @@
     "tier": "shipped",
     "evidence": ["fc"],
     "roles": ["ml", "ai"],
-    "aliases": []
+    "aliases": ["optimize latency"]
   },
   {
     "name": "LLM-as-a-judge",
@@ -1181,7 +1189,7 @@
     "tier": "studied",
     "evidence": [],
     "roles": ["ml", "ds"],
-    "aliases": []
+    "aliases": ["spark"]
   },
   {
     "name": "Data lakes",
@@ -1357,7 +1365,7 @@
     "tier": "shipped",
     "evidence": ["loan", "med", "settle", "fc"],
     "roles": ["ml", "ai"],
-    "aliases": []
+    "aliases": ["deploy models"]
   },
   {
     "name": "Model serving",
@@ -1397,7 +1405,7 @@
     "tier": "shipped",
     "evidence": ["mr", "fc", "settle"],
     "roles": ["ml"],
-    "aliases": []
+    "aliases": ["training and inference pipelines"]
   },
   {
     "name": "Inference pipelines",
@@ -1405,7 +1413,7 @@
     "tier": "shipped",
     "evidence": ["loan", "fc"],
     "roles": ["ml"],
-    "aliases": []
+    "aliases": ["training and inference pipelines"]
   },
   {
     "name": "LangSmith",
@@ -1469,7 +1477,7 @@
     "tier": "work",
     "evidence": ["goldman"],
     "roles": ["ds"],
-    "aliases": []
+    "aliases": ["kpi", "kpis"]
   },
   {
     "name": "Business metrics",
@@ -1501,7 +1509,7 @@
     "tier": "studied",
     "evidence": [],
     "roles": ["ds"],
-    "aliases": []
+    "aliases": ["forecast"]
   },
   {
     "name": "Tableau",
@@ -1517,7 +1525,7 @@
     "tier": "shipped",
     "evidence": ["settle", "fc", "mr"],
     "roles": ["ds", "ml"],
-    "aliases": []
+    "aliases": ["jupyter"]
   },
   {
     "name": "Data storytelling",
@@ -1533,7 +1541,7 @@
     "tier": "studied",
     "evidence": [],
     "roles": ["ds"],
-    "aliases": ["ab testing", "a/b test", "split testing"]
+    "aliases": ["ab testing", "a/b test", "split testing", "a/b tests"]
   },
   {
     "name": "Experimental design",
@@ -1557,7 +1565,7 @@
     "tier": "shipped",
     "evidence": ["mr"],
     "roles": ["ds", "ml"],
-    "aliases": ["time series"]
+    "aliases": ["time series", "time-series"]
   },
   {
     "name": "Knowledge graphs",
@@ -1637,7 +1645,7 @@
     "tier": "work",
     "evidence": ["goldman"],
     "roles": ["ds", "ai"],
-    "aliases": []
+    "aliases": ["translate business problems"]
   },
   {
     "name": "Stakeholder management",
@@ -1693,7 +1701,7 @@
     "tier": "shipped",
     "evidence": ["cua", "loan"],
     "roles": ["ai", "ml"],
-    "aliases": []
+    "aliases": ["unit and integration tests"]
   },
   {
     "name": "Error analysis",
@@ -1949,7 +1957,7 @@
     "tier": "shipped",
     "evidence": ["tariff"],
     "roles": ["ml"],
-    "aliases": []
+    "aliases": ["batch and real-time inference"]
   },
   {
     "name": "Cost evaluation",

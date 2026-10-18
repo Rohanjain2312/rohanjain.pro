@@ -37,6 +37,8 @@ export const extras: readonly Extra[] = [
   e('GraphQL', 'graphql'),
   e('Spring Boot', 'spring boot'),
   e('Firebase', 'firebase'),
+  e('FastAPI', 'fastapi'),
+  e('GCP', 'gcp', 'google cloud', 'google cloud platform'),
   e('Unity', 'unity3d', 'unity engine'),
   e('ROS', 'ros', 'ros2'),
   e('Robotics', 'robotics'),

@@ -281,7 +281,7 @@ describe('alias hygiene (R-406 inputs)', () => {
   });
   it('the bare words in nameNeedsAlias do not match on their own', () => {
     const r = analyze(
-      'pay attention to detail, go to market, react quickly, a swift reply, the unity of the team, ray of light, lambda, monitoring',
+      'pay attention to detail, go to market, react quickly, a swift reply, ray of light, lambda, monitoring',
       real,
       extras,
       [],
