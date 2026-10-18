@@ -16,3 +16,4 @@ The Phase 7 runbook (PR #254) defined one broad Cloudflare token (Pages, DNS, Zo
 - A compromised deploy job can change the Pages project only.
 - The client still creates one token and runs prepared commands.
 - DNS changes after launch need a new setup token.
+- Rotating the 90-day deploy token also needs a token made by the client, because the deploy token cannot create tokens. Claude Code prepares the steps; the rotation runbook is written in Phase 7.

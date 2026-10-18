@@ -15,8 +15,6 @@ The only things Claude Code cannot do itself. Each item has exact steps. Claude 
 
 - [ ] Phase 7, after v0.9.0 (does not block earlier work). Steps are in `docs/runbooks/launch.md` section 1: (1) Cloudflare account with passkey or 2FA, add `rohanjain.pro`, and send the two nameservers it shows; (2) Porkbun: turn DNSSEC off, set those nameservers, and later paste one DS record; (3) create one Cloudflare setup token from the prepared link and run the prepared command that uses it once on your computer (it sets up DNS and creates a narrow deploy token for GitHub, ADR-0032); revoke the setup token after launch.
 
-- [ ] Optional, before Phase 7: add a branch ruleset for `status-data` (block deletion and non-fast-forward pushes). Settings, Rules, Rulesets, New branch ruleset, target `status-data`. Tracked in #244 and ADR-0027.
-
 ## Optional (speed)
 - [ ] To let the build resume on its own after usage limits (`scripts/autopilot.sh`, #116), install the Claude Code command-line tool. In Terminal run `brew install --cask claude-code`, then `claude --version` to check. The desktop app's copy cannot run from Terminal.
 
