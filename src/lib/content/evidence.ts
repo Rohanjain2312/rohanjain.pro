@@ -11,7 +11,10 @@ export const LINK_LABELS = {
 } as const;
 
 /** The URL a project offers for a link kind, or undefined. "demo" is the demo URL or a link labeled demo. */
-export function projectLinkUrl(project: Project, kind: EvidenceRecord['link']): string | undefined {
+export function projectLinkUrl(
+  project: Pick<Project, 'links'> & { demo?: { url: string } | undefined },
+  kind: EvidenceRecord['link'],
+): string | undefined {
   if (!kind) return undefined;
   if (kind === 'demo') {
     return project.demo?.url ?? project.links.find((l) => l.label === 'demo')?.url;
