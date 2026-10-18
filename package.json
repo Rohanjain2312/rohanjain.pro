@@ -14,6 +14,8 @@
     "test": "vitest run --passWithNoTests && npm run test:property",
     "test:property": "vitest run --config tests/property/vitest.config.ts",
     "test:coverage": "vitest run --coverage --coverage.include=src/lib/**/*.ts --coverage.thresholds.lines=90 && npm run test:property",
+    "mutation": "stryker run --testRunner command --coverageAnalysis off",
+    "mutation:other": "stryker run stryker.config.other.mjs --testRunner command --coverageAnalysis off",
     "test:e2e": "playwright test --pass-with-no-tests",
     "test:frontend": "playwright test --config tests/a11y/playwright.config.ts",
     "browsers:install": "npx --no-install playwright install chromium",
