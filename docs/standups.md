@@ -56,3 +56,8 @@ One entry at the start and end of each session (skill `session-protocol`).
 - Done: PR #185 plan, #186 pages and content, #187 status workflow, demo embeds, footer status, CI wiring; #189 ADR-0027; #198 shots script; #200 design gate review; #202 ADR-0028 (synthetic golden set); #199 Phase 3 plan; #206 plain-words copy pass. Status workflow ran green by manual dispatch. Phase 2 gate record written.
 - Next: merge the gate PR and the memory sweep, release v0.2.0; Phase 3 PR A (#201) and PR B (#194).
 - Blockers: none. Client: nothing required; optional real 5-second test packet and the other items in `docs/needs-client.md`.
+
+## 2026-10-18 end (Phase 3)
+- Done: Phase 2 closed (`v0.2.0`); Phase 3: #199 plan, #202 ADR-0028, #201 engine and tests (mutation 97.19), #206 plain-words copy, #208 fit-check UI and brief. Gate record and rating packet written.
+- Next: merge the gate PR, release `v0.3.0`, Phase 3 memory sweep, start Phase 4.
+- Blockers: none. Client: nothing required; optional recruiter rating packet and the 5-second test.
