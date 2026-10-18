@@ -3,7 +3,8 @@
 import { z } from 'astro/zod';
 
 const nonEmpty = z.string().trim().min(1);
-const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'expected YYYY-MM-DD');
+// z.iso.date() checks the calendar: it rejects 2000-13-45 and 2000-02-30.
+const isoDate = z.iso.date('expected a real date as YYYY-MM-DD');
 const httpsUrl = z.url({ protocol: /^https$/, hostname: /.+/ });
 const slug = z.string().regex(/^[a-z0-9]+(-[a-z0-9]+)*$/, 'expected kebab-case');
 

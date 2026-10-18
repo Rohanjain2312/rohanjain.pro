@@ -717,7 +717,7 @@
     "tier": "shipped",
     "evidence": ["loan", "goldman"],
     "roles": ["ai"],
-    "aliases": ["openai"]
+    "aliases": []
   },
   {
     "name": "Anthropic API",
@@ -725,7 +725,7 @@
     "tier": "shipped",
     "evidence": ["loan", "shca", "cua", "tariff"],
     "roles": ["ai"],
-    "aliases": ["anthropic", "claude api"]
+    "aliases": ["claude api"]
   },
   {
     "name": "Model routing",
@@ -781,7 +781,7 @@
     "tier": "shipped",
     "evidence": ["loan", "tariff", "shca", "goldman"],
     "roles": ["ai"],
-    "aliases": ["tool-calling", "function calling"]
+    "aliases": ["tool-calling"]
   },
   {
     "name": "Guardrails",

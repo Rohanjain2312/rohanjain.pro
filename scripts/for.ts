@@ -9,19 +9,16 @@ import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 import { buildResult } from '../src/lib/applications/build.ts';
 import { resolveApplicationsDir } from '../src/lib/applications/dir.ts';
-import {
-  DEFAULT_EXPIRY_DAYS,
-  listExpired,
-  MAX_EXPIRY_DAYS,
-} from '../src/lib/applications/expiry.ts';
+import { DEFAULT_EXPIRY_DAYS, MAX_EXPIRY_DAYS } from '../src/lib/applications/expiry.ts';
+import { listExpired } from '../src/lib/applications/list-expired.ts';
 import { writeResult } from '../src/lib/applications/write.ts';
 import { loadEvidence, loadRawContent } from '../src/lib/content/load.ts';
 import { skillsSchema } from '../src/lib/content/schemas.ts';
 import { analyze, extras } from '../src/lib/fitcheck/index.ts';
 
 const MAX_JD_BYTES = 2_000_000;
-// eslint-disable-next-line no-control-regex
-const CONTROL = /[\u0000-\u001f\u007f-\u009f\u2028\u2029]/;
+// \p{C}: control, format (zero-width, bidi), private-use and unassigned characters. Plus line and paragraph separators.
+const CONTROL = /[\p{C}\u2028\u2029]/u;
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
 function fail(message: string): never {

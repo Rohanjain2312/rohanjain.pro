@@ -271,6 +271,28 @@ describe('alias hygiene (R-406 inputs)', () => {
     ].map((t) => t.toLowerCase());
     expect(terms.filter((t) => suspects.includes(t))).toEqual([]);
   });
+  it('no term repeats another skill or extra name, and none is a bare company name or a cut stem', () => {
+    const names = new Set(
+      [...real.map((s) => s.name), ...extras.map((x) => x.name)].map((n) => n.toLowerCase()),
+    );
+    for (const s of real)
+      for (const a of s.aliases) {
+        const t = a.toLowerCase();
+        expect(names.has(t) && t !== s.name.toLowerCase(), `${s.name}: ${a}`).toBe(false);
+        expect(['openai', 'anthropic', 'google', 'microsoft', 'meta'], a).not.toContain(t);
+        expect(t.endsWith('orchestrat'), a).toBe(false);
+      }
+  });
+  it('matches every skill on its own terms: there is no longest-match rule', () => {
+    const r = analyze('We use Function calling daily, plus tool-calling.', real, extras, []);
+    expect(r.proven.filter((n) => /calling/i.test(n)).sort()).toEqual([
+      'Function calling',
+      'Tool calling',
+    ]);
+    const one = analyze('Function calling only.', real, extras, []);
+    expect(one.proven).toContain('Function calling');
+    expect(one.proven).not.toContain('Tool calling');
+  });
   it('every name listed in nameNeedsAlias has at least one alias', () => {
     for (const name of config.nameNeedsAlias) {
       const owner =

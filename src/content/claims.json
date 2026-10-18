@@ -3,7 +3,7 @@
     "id": "goldman-tenure",
     "value": "Jan 2021 to Jun 2024",
     "display": "~4 years, Jan 2021 to Jun 2024",
-    "source": "Résumé, client-confirmed",
+    "source": "Résumé dates; \"~4 years\" is a client decision (R-302)",
     "verifiedOn": "2026-10-15",
     "note": "Dates span 3.5 years (Jan 2021 to Jun 2024). Client decision (R-302, R-306): state ~4 years."
   },
@@ -11,7 +11,7 @@
     "id": "goldman-tenure-years",
     "value": 4,
     "display": "~4 years",
-    "source": "Résumé, client-confirmed",
+    "source": "Résumé dates; \"~4 years\" is a client decision (R-302)",
     "verifiedOn": "2026-10-15",
     "note": "Dates span 3.5 years. Client decision (R-302, R-306): state ~4 years."
   },
@@ -181,8 +181,7 @@
     "id": "loan-v2-subgraphs",
     "value": 2,
     "display": "2 parallel subgraphs",
-    "source": "Résumé; repo loan-servicing-agent",
-    "sourceUrl": "https://github.com/Rohanjain2312/loan-servicing-agent",
+    "source": "Résumé",
     "verifiedOn": "2026-10-15",
     "note": "Public repo shows 2 subgraphs (CA and Notice paths); \"parallel\" is the résumé wording."
   },
@@ -222,8 +221,7 @@
     "id": "loan-v2-deploy",
     "value": "Docker on GKE Autopilot via GitHub Actions",
     "display": "Docker on GKE Autopilot via GitHub Actions, A2A",
-    "source": "Résumé; repo loan-servicing-agent",
-    "sourceUrl": "https://github.com/Rohanjain2312/loan-servicing-agent",
+    "source": "Résumé",
     "verifiedOn": "2026-10-15",
     "note": "Public repo does not show Docker, GKE Autopilot, GitHub Actions or A2A. Résumé wording kept (R-302)."
   },
@@ -302,7 +300,7 @@
   {
     "id": "settle-pr-auc-lift",
     "value": "~7x",
-    "display": "~7x",
+    "display": "~7x the random baseline",
     "source": "Résumé; repo trade-settlement-fail-predictor, figures fig3 and fig4",
     "sourceUrl": "https://github.com/Rohanjain2312/trade-settlement-fail-predictor",
     "verifiedOn": "2026-10-15"
@@ -414,7 +412,7 @@
   {
     "id": "fc-latency-before",
     "value": "286.9 ms",
-    "display": "286.9 ms full model",
+    "display": "286.9 ms CPU latency, full model",
     "source": "Résumé, client-confirmed; repo FinCompress",
     "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
     "verifiedOn": "2026-10-15"
@@ -422,7 +420,7 @@
   {
     "id": "fc-latency-after",
     "value": "19.8 ms",
-    "display": "19.8 ms INT8",
+    "display": "19.8 ms CPU latency, INT8",
     "source": "Résumé, client-confirmed; repo FinCompress",
     "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
     "verifiedOn": "2026-10-15"
@@ -603,7 +601,7 @@
     "id": "mr-baselines",
     "value": 6,
     "display": "outperforming 6 baseline architectures",
-    "source": "Résumé, client-confirmed; repo transformer-market-regime",
+    "source": "Résumé; client decision (R-302) over the repo value",
     "sourceUrl": "https://github.com/Rohanjain2312/transformer-market-regime",
     "verifiedOn": "2026-10-15",
     "note": "Repo README: the Engineered Transformer has higher MCC (0.506 vs 0.480), and MCC is the README primary metric."
@@ -612,7 +610,7 @@
     "id": "mr-f1",
     "value": 88.4,
     "display": "88.4% F1 with optimized thresholds",
-    "source": "Résumé, client-confirmed; repo transformer-market-regime",
+    "source": "Résumé; client decision (R-302) over the repo value",
     "sourceUrl": "https://github.com/Rohanjain2312/transformer-market-regime",
     "verifiedOn": "2026-10-15",
     "note": "Repo README: overall F1 is 72.70%; 88.44% is the Bullish-class F1 and is not tied to threshold optimization. Client chose the résumé value (R-302)."

@@ -1,4 +1,4 @@
-import { spawnSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import {
   existsSync,
   mkdirSync,
@@ -18,12 +18,12 @@ import {
   buildResult,
   isExpired,
   kebab,
-  listExpired,
   makeSlug,
   randomSuffix,
   SLUG_PATTERN,
 } from '../../src/lib/applications/index.ts';
-import { addDays } from '../../src/lib/applications/expiry.ts';
+import { addDays, MAX_EXPIRY_DAYS } from '../../src/lib/applications/expiry.ts';
+import { listExpired } from '../../src/lib/applications/list-expired.ts';
 import { isInside, resolveApplicationsDir } from '../../src/lib/applications/dir.ts';
 import { writeResult } from '../../src/lib/applications/write.ts';
 import { sampleStrong } from '../../src/lib/fitcheck/samples.ts';
@@ -137,7 +137,43 @@ describe('result schema (R-502)', () => {
   });
 });
 
+describe('result schema bounds', () => {
+  it('rejects dates that are not on the calendar', () => {
+    const base = valid() as any;
+    for (const bad of ['2000-13-45', '2000-02-30', '2001-02-29', '2000-00-10']) {
+      expect(applicationResultSchema.safeParse({ ...base, created: bad }).success, bad).toBe(false);
+    }
+    expect(applicationResultSchema.safeParse({ ...base, created: '2000-02-29' }).success).toBe(
+      true,
+    );
+  });
+  it('holds names, tags and gaps to 80 characters and gaps to 30 entries', () => {
+    const base = valid() as any;
+    const row = base.evidenceRows[0];
+    const ok = (v: unknown) => applicationResultSchema.safeParse(v).success;
+    expect(ok({ ...base, gaps: ['x'.repeat(80)] })).toBe(true);
+    expect(ok({ ...base, gaps: ['x'.repeat(81)] })).toBe(false);
+    expect(ok({ ...base, gaps: Array.from({ length: 30 }, (_, i) => `g${i}`) })).toBe(true);
+    expect(ok({ ...base, gaps: Array.from({ length: 31 }, (_, i) => `g${i}`) })).toBe(false);
+    expect(ok({ ...base, evidenceRows: [{ ...row, name: 'x'.repeat(81) }] })).toBe(false);
+    expect(ok({ ...base, evidenceRows: [{ ...row, tags: ['x'.repeat(81)] }] })).toBe(false);
+  });
+  it('cuts a long gap list to 30 and keeps the true count', () => {
+    const gaps = Array.from({ length: 45 }, (_, i) => `Gap ${i}`);
+    const r = buildResult(
+      { ...sampleStrong, gaps, gapCount: gaps.length },
+      { company: 'A', role: 'B', expiresInDays: 7 },
+      new Date('2000-01-01T00:00:00Z'),
+    );
+    expect(r.gaps).toHaveLength(30);
+    expect(r.counts.gaps).toBe(45);
+  });
+});
+
 describe('expiry', () => {
+  it('caps the span at 365 days', () => {
+    expect(MAX_EXPIRY_DAYS).toBe(365);
+  });
   it('defaults to 90 days and honours a custom span', () => {
     expect(valid()['expires']).toBe('2000-03-31');
     const r = buildResult(
@@ -257,6 +293,15 @@ describe('writeResult', () => {
     expect(writeResult(dir, 'Acme', r, next)).toBe('acme-bbbbbb');
     expect(readFileSync(marker, 'utf8')).toBe('KEEP');
   });
+  it('keeps an existing file whose suffix the byte source repeats, across all default attempts', () => {
+    const dir = tmp();
+    const r = applicationResultSchema.parse(valid());
+    const file = join(dir, 'acme-aaaaaa.json');
+    writeFileSync(file, 'KEEP');
+    expect(writeResult(dir, 'Acme', r, same)).toBeUndefined();
+    expect(readFileSync(file, 'utf8')).toBe('KEEP');
+    expect(readdirSync(dir)).toEqual(['acme-aaaaaa.json']);
+  });
   it('gives up after repeated collisions without touching the file', () => {
     const dir = tmp();
     const r = applicationResultSchema.parse(valid());
@@ -336,6 +381,11 @@ describe('npm run for (guards)', () => {
     const dev = runFor(args('/dev/zero'), env);
     expect(dev.status).toBe(1);
     expect(dev.stderr).toMatch(/regular file/);
+    const fifo = join(work, 'jd.fifo');
+    execFileSync('mkfifo', [fifo]);
+    const pipe = runFor(args(fifo), env);
+    expect(pipe.status).toBe(1);
+    expect(pipe.stderr).toMatch(/regular file/);
     expect(runFor(args(work), env).status).toBe(1);
     const tooBig = runFor(args(big), env);
     expect(tooBig.status).toBe(1);
