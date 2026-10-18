@@ -6,9 +6,12 @@
 # uploads dist as a one-day artifact and deploys it to Cloudflare Pages. Monthly, it first removes expired
 # result files. It calls the public repo's own scripts and does not copy their logic.
 #
-# Secrets (repository secrets of the private repo): CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID.
+# Secrets (secrets of the `production` environment of the private repo): CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID.
+# CLOUDFLARE_API_TOKEN is the deploy token: Pages edit only, for the one Pages project (ADR-0032). The broad setup
+# token is never stored in GitHub. The `production` environment allows deployment from `main` only (deployment
+# branch policy, docs/runbooks/launch.md section 2).
 # Variables: SITE_TAG (release tag to deploy, for example v1.0.0), CF_PAGES_PROJECT (Pages project name).
-# Only the `deploy` job reads the secrets. It runs no repo code except a pinned wrangler.
+# Only the `deploy` job reads the two deploy secrets. It runs no repo code except a pinned wrangler.
 name: Deploy production
 
 on:
@@ -72,6 +75,7 @@ jobs:
         env:
           APPLICATIONS_DIR: ${{ github.workspace }}/apps/applications
         run: |
+          set -o pipefail
           npm run --silent for -- --list-expired | sed -n 's/^expired //p' > "$RUNNER_TEMP/expired.txt"
           echo "expired files: $(wc -l < "$RUNNER_TEMP/expired.txt")"
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2

@@ -20,13 +20,12 @@ Each step lists what to do and what to send back.
    4. Confirm the transfer lock and auto-renew are on.
    5. In Cloudflare, wait for the status "Active" (minutes to a few hours). Cloudflare also emails you.
    6. Later, Claude Code gives you one DS record (four values). Paste it into the DNSSEC box at Porkbun. This is the only second visit to Porkbun.
-3. One API token.
-   1. Open the template link Claude Code gives you. It creates a token with the permissions listed in section 5. Choose Continue, then Create token. Copy the token once.
-   2. In Terminal, run the two commands Claude Code prepares. Each asks you to paste a value. They look like this:
-      `gh secret set CLOUDFLARE_API_TOKEN --env production --repo Rohanjain2312/rohanjain.pro-applications`
-      `gh secret set CLOUDFLARE_ACCOUNT_ID --env production --repo Rohanjain2312/rohanjain.pro-applications`
-      The second value is the Account ID shown on the right side of the domain overview page in Cloudflare.
-   3. Close the terminal tab. The token is not stored anywhere else.
+3. One setup token (ADR-0032).
+   1. Open the template link Claude Code gives you. It creates a setup token with the permissions listed in section 5. Choose Continue, then Create token. Copy the token once.
+   2. In Terminal, run the one command Claude Code prepares. It asks you to paste the token and the Account ID (shown on the right side of the domain overview page in Cloudflare). The token is used only in that Terminal session. It is never stored in GitHub.
+   3. The command applies the DNS records, DNSSEC, CAA, email records and Web Analytics (section 6). It then creates a second token with Pages edit only, for the one Pages project, and stores that second token and the Account ID as secrets of the `production` environment with `gh secret set`.
+   4. Close the terminal tab.
+   5. After launch, Claude Code gives you the steps to revoke the setup token (Cloudflare, My Profile, API Tokens, the setup token, Delete). DNS changes later need a new setup token.
 
 Passkeys or 2FA: GitHub is done (2026-10-16). Cloudflare is step 1.2. Porkbun needs 2FA too: Account, Security.
 
@@ -35,7 +34,11 @@ Passkeys or 2FA: GitHub is done (2026-10-16). Cloudflare is step 1.2. Porkbun ne
 - Confirm the Phase 6 gate record, tag `v0.9.0`, and a green `npm run verify` on the tag.
 - Copy `.github/templates/production-deploy.yml` to `.github/workflows/deploy.yml` in `Rohanjain2312/rohanjain.pro-applications` (private, already created, ADR-0016). Do not create or push to it from an agent worktree without the Supervisor-only exception.
 - In that repo set variables: `gh variable set SITE_TAG --body v0.9.0 --repo Rohanjain2312/rohanjain.pro-applications` and `CF_PAGES_PROJECT`. The project name is a choice made at launch (suggested: `rohanjain-pro`); it is not recorded anywhere yet.
-- Create the `production` environment (`gh api -X PUT repos/Rohanjain2312/rohanjain.pro-applications/environments/production`). Environments in private repos may need a paid GitHub plan. If the call fails, remove `environment: production` from the deploy job and set the two secrets as repository secrets instead. Only the deploy job reads them.
+- Create the `production` environment and restrict it to `main` (ADR-0032). Two calls, in this order:
+  1. `gh api -X PUT repos/Rohanjain2312/rohanjain.pro-applications/environments/production --input - <<< '{"deployment_branch_policy":{"protected_branches":false,"custom_branch_policies":true}}'`
+  2. `gh api -X POST repos/Rohanjain2312/rohanjain.pro-applications/environments/production/deployment-branch-policies -f name=main -f type=branch`
+
+  The second call is confirmed in the GitHub REST docs (it needs `custom_branch_policies` true, which is why the first call comes first). The JSON body of the first call is from memory of the same docs and is unverified: check it against https://docs.github.com/en/rest/deployments/environments at launch, then read the policy back with `gh api repos/Rohanjain2312/rohanjain.pro-applications/environments/production/deployment-branch-policies`. Environments in private repos may need a paid GitHub plan. If the calls fail, do not fall back silently: record it for Security. The fallback is repository secrets with no other workflow in that repo, dispatch limited to `main`, and `environment: production` removed from the deploy job. Only the deploy job reads the secrets.
 - Security reviews the copied workflow. The template passed `ci-checks.mjs pins` (all actions pinned).
 - Run a dry run with a fixture result (section 3).
 
@@ -49,7 +52,7 @@ The private workflow builds in GitHub Actions and uploads `dist`. Cloudflare Pag
 - Output guard: the build fails if `dist/_headers` is missing or if a result JSON file is in `dist`.
 - No raw result file is ever uploaded. The `dist` artifact keeps one day and holds rendered pages only. The repo is private, so its logs and artifacts are private.
 - Monthly cleanup: `list-expired` runs `npm run for -- --list-expired` (names only, nothing deleted). `remove-expired` validates names, deletes those files, pushes to `main`, and the build job then redeploys.
-- Test before launch: add one fixture result to the private repo (generate it with `npm run for` against a made-up posting), run the workflow with `SITE_TAG` set, and check that `/for/<slug>` is in the deployed preview and that the claims step passes. Only the first real run proves the wrangler step, because no Cloudflare token exists yet.
+- Test before launch: add one fixture result to the private repo (generate it with `npm run for` against a made-up posting), run the workflow with `SITE_TAG` set, and check that `/for/<slug>` is in the deployed preview and that the claims step passes. Only the first real run proves the wrangler step, because no Cloudflare deploy token exists yet.
 
 ## 4. Cloudflare Pages
 
@@ -59,24 +62,28 @@ The private workflow builds in GitHub Actions and uploads `dist`. Cloudflare Pag
 - Turn on Cloudflare Web Analytics for the site. Do not add a cookie. Add its origins to `script-src` and `connect-src` in `_headers` (Security).
 - Always HTTPS and Automatic HTTPS rewrites on; minimum TLS 1.2.
 
-## 5. API token
+## 5. API tokens (ADR-0032)
 
-One token, scoped to the one account and the one zone, 90-day expiry (`docs/spec/08-security.md`). Permissions needed:
+Two tokens. The deploy secret is never the broad one (`docs/spec/08-security.md`: deploy token is Pages edit only).
+
+Setup token. Created by the client from a prepared link, scoped to the one account and the one zone, short expiry (set it to a few days). Used once from the client's Terminal. Never stored in GitHub. Revoked after launch. Permissions:
 
 | Use | Permission | Template key (verify in the Cloudflare permission reference at launch) |
 |---|---|---|
-| Deploy | Account, Cloudflare Pages, Edit | `page` edit |
 | DNS records, CAA, email records | Zone, DNS, Edit | `dns` edit |
 | Zone settings, DNSSEC | Zone, Zone Settings, Edit; Zone, DNSSEC, Edit | `zone_settings` edit; DNSSEC key not documented |
 | Web Analytics | Account, Web Analytics, Edit | not documented |
+| Create the deploy token | Account API Tokens, Edit (name unverified) | not documented |
 
-Template link format: `https://dash.cloudflare.com/profile/api-tokens?permissionGroupKeys=<url-encoded JSON array of {key,type}>&name=rohanjain.pro%20launch`. Claude Code builds and checks the link at launch.
+Deploy token. Created by the setup command with the setup token. Pages edit only (Account, Cloudflare Pages, Edit, key `page` edit), for the one Pages project, 90-day expiry. Only this token and the Account ID are stored, with `gh secret set` into the `production` environment. The deploy job reads only these two secrets. Rotation is in `docs/spec/12-operations.md`, `rotate-secrets.md`.
 
-The deploy workflow and the setup work share this token because the client supplies only one. Open question for the Supervisor and Security: after setup, replace it with a token limited to Pages edit (rotation is in `docs/spec/12-operations.md`, `rotate-secrets.md`).
+Unverified (R-005): the Cloudflare permission names and keys for creating a token from a token, and for DNSSEC and Web Analytics. Phase 7 checks them first, before anything is sent to the client. Fallback if a token cannot create another token: a second prepared link and a second client-created token with Pages edit only. In the same change, update `docs/needs-client.md` and CLAUDE.md client-only item 3 (Supervisor-owned).
+
+Template link format: `https://dash.cloudflare.com/profile/api-tokens?permissionGroupKeys=<url-encoded JSON array of {key,type}>&name=rohanjain.pro%20setup`. Claude Code builds and checks the link at launch.
 
 ## 6. DNS record plan
 
-Set after the zone is Active. Domain has no email (`docs/spec/08-security.md`).
+Set after the zone is Active, by the setup command with the setup token (section 5). The deploy token cannot change DNS. Domain has no email (`docs/spec/08-security.md`).
 
 | Type | Name | Value | Note |
 |---|---|---|---|
@@ -98,7 +105,10 @@ Run the launch checklist in `docs/spec/12-operations.md`. Specifically:
 - Analytics receives a visit and sets no cookie.
 - The status line shows (ADR-0027).
 - Rollback tested once (section 8).
-- Set `SITE_TAG` to the release, deploy, then publish `v1.0.0` (`docs/runbooks/releases.md`); the SBOM attaches to the release.
+- Order. The tag `v1.0.0` does not exist until it is published, and the workflow checks out `SITE_TAG`, so it cannot deploy `v1.0.0` first.
+  1. First deploy and all smoke tests above use `SITE_TAG=v0.9.0` (or the release candidate tag, if one was cut after v0.9.0 and Security accepted it).
+  2. If every check passes, publish `v1.0.0` (`docs/runbooks/releases.md`); the SBOM attaches to the release.
+  3. Set `SITE_TAG` to `v1.0.0` and deploy again; confirm the live site matches. Later deploys keep using `v1.0.0` until the next release.
 - Real 5-second test (skill `external-validation`) passed, or failures fixed and re-tested.
 - Submit HSTS preload only after 30 stable days (Phase 8).
 
@@ -107,13 +117,14 @@ Run the launch checklist in `docs/spec/12-operations.md`. Specifically:
 Rollback never needs the client.
 
 1. Fastest: redeploy the previous tag. `gh workflow run deploy.yml --repo Rohanjain2312/rohanjain.pro-applications -f tag=v0.9.0` (use the last good tag). This rebuilds and deploys in about the build time.
-2. Instant (dashboard or API): in Cloudflare Pages, Deployments, pick the last good deployment, Rollback. Claude Code uses this only if the token allows; otherwise the client does it from the dashboard.
+2. Instant (dashboard or API): in Cloudflare Pages, Deployments, pick the last good deployment, Rollback. The deploy token (Pages edit) should allow it; if not, the client does it from the dashboard.
 3. Leaked or wrong `/for` page: delete the file in the private repo and push to `main`; the workflow redeploys. Pages are `Cache-Control: no-store`.
 4. After any rollback, set `SITE_TAG` back to the good tag so the next push does not redeploy the bad one.
 
 ## Unknowns recorded, not guessed (R-005)
 
 - The Pages project name.
-- The Cloudflare permission keys for DNSSEC and Web Analytics.
+- The Cloudflare permission names and keys for DNSSEC, Web Analytics and creating a token from a token (section 5).
+- The JSON body of the environment update call (section 2).
 - Whether the private repo's GitHub plan supports environments.
 - Whether wrangler `4.149.0` deploys cleanly with install scripts disabled. First deploy confirms.
