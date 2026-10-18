@@ -43,6 +43,41 @@ const r405 = [
     message: 'R-405: writing cookies is banned. Do not store user input.',
   },
   {
+    // 95-L2: computed literal keys reach the same sinks: el["innerHTML"] = x.
+    selector:
+      'AssignmentExpression[left.computed=true][left.property.value=/^(innerHTML|outerHTML|srcdoc)$/i]',
+    message: 'R-405: innerHTML, outerHTML and srcdoc are banned. Render user input as text.',
+  },
+  {
+    selector:
+      'CallExpression[callee.computed=true][callee.property.value=/^(insertAdjacentHTML|setHTMLUnsafe|parseHTMLUnsafe|createContextualFragment|write|writeln)$/]',
+    message: 'R-405: HTML string sinks are banned, including computed names.',
+  },
+  {
+    selector: 'AssignmentExpression[left.property.name="srcdoc"]',
+    message: 'R-405: srcdoc is banned. Render user input as text.',
+  },
+  {
+    selector: 'CallExpression[callee.property.name="setAttribute"][arguments.0.value=/^srcdoc$/i]',
+    message: 'R-405: srcdoc is banned. Render user input as text.',
+  },
+  {
+    selector: 'JSXAttribute[name.name=/^srcdoc$/i]',
+    message: 'R-405: srcdoc is banned. Render user input as text.',
+  },
+  {
+    selector:
+      'CallExpression[callee.property.name=/^(setHTMLUnsafe|parseHTMLUnsafe|createContextualFragment)$/]',
+    message:
+      'R-405: setHTMLUnsafe, parseHTMLUnsafe and createContextualFragment are banned. Render user input as text.',
+  },
+  {
+    // window.document.write and globalThis.document.write.
+    selector:
+      'CallExpression[callee.object.property.name="document"][callee.object.object.name=/^(window|globalThis|self)$/][callee.property.name=/^(write|writeln)$/]',
+    message: 'R-405: document.write is banned.',
+  },
+  {
     // Astro: set:html injects raw HTML.
     selector: 'JSXAttribute[name.namespace.name="set"][name.name.name="html"]',
     message: 'R-405: set:html is banned. Render user input as text.',
@@ -74,10 +109,70 @@ const r401Names = [
   ['requestAnimationFrame', 'clock'],
   ['crypto', 'randomness'],
   ['process', 'environment'],
+  ['Image', 'network'],
+  ['Worker', 'network'],
+  ['SharedWorker', 'network'],
+  ['BroadcastChannel', 'network'],
+  ['importScripts', 'network'],
+  ['cookieStore', 'storage'],
 ].map(([name, kind]) => ({
   name,
   message: `R-401: ${kind} global "${name}" is banned in src/lib/fitcheck/. The engine must be pure.`,
 }));
+
+// R-401: no dynamic import() and no require() inside the engine; a static import is the only way in.
+const r401Syntax = [
+  {
+    selector: 'ImportExpression',
+    message: 'R-401: dynamic import() is banned in src/lib/fitcheck/. Use a static import.',
+  },
+  {
+    selector: 'CallExpression[callee.name="require"]',
+    message: 'R-401: require() is banned in src/lib/fitcheck/. Use a static import.',
+  },
+];
+
+// 95-L1: an inline comment must not switch off a project rule. Only rules that carry a project rule are
+// protected; other rules (such as the fs heuristic) may still be disabled with a reason.
+const PROTECTED =
+  /^(no-restricted-|no-eval$|no-implied-eval$|no-new-func$|jsx-a11y\/|astro\/|local\/)/;
+const noProtectedDisable = {
+  meta: { type: 'problem', schema: [] },
+  create(context) {
+    return {
+      Program() {
+        for (const comment of context.sourceCode.getAllComments()) {
+          const text = comment.value.trim();
+          const directive = /^eslint-(disable|enable)(-next-line|-line)?(?=\s|$)([\s\S]*)$/.exec(
+            text,
+          );
+          const config = comment.type === 'Block' ? /^eslint\s+([\s\S]+)$/.exec(text) : null;
+          let rules = null;
+          if (directive) {
+            rules = directive[3]
+              .split(/\s--\s/)[0]
+              .split(',')
+              .map((r) => r.trim())
+              .filter(Boolean);
+            if (directive[1] === 'enable') continue;
+            // A blanket disable (no rule list) switches off every rule, including the protected ones.
+            if (rules.length === 0) rules = ['(all rules)'];
+          } else if (config) {
+            rules = config[1].split(/[\s,]+/).map((r) => r.replace(/:.*$/, ''));
+          }
+          if (!rules) continue;
+          const hit = rules.find((r) => r === '(all rules)' || PROTECTED.test(r));
+          if (hit) {
+            context.report({
+              loc: comment.loc,
+              message: `R-405: an inline comment cannot disable "${hit}". Fix the code or add a config exception in eslint.config.mjs.`,
+            });
+          }
+        }
+      },
+    };
+  },
+};
 
 export default tseslint.config(
   {
@@ -94,6 +189,7 @@ export default tseslint.config(
       '.github/lint-fixtures/',
     ],
   },
+  { plugins: { local: { rules: { 'no-protected-disable': noProtectedDisable } } } },
   js.configs.recommended,
   tseslint.configs.recommended,
   security.configs.recommended,
@@ -110,6 +206,11 @@ export default tseslint.config(
       'security/detect-object-injection': 'off',
       'astro/no-set-html-directive': 'off', // replaced by the R-405 selector
       'no-restricted-syntax': ['error', ...r405],
+      'local/no-protected-disable': 'error',
+      // 95-L2: the core rules back the R-405 selectors.
+      'no-eval': 'error',
+      'no-implied-eval': 'error',
+      'no-new-func': 'error',
     },
   },
   {
@@ -145,8 +246,16 @@ export default tseslint.config(
     rules: { '@typescript-eslint/no-explicit-any': 'off' },
   },
   {
-    files: ['src/lib/fitcheck/**/*.{js,mjs,ts}'],
+    // JsonLd emits build-time site content (not user input) as script text; "<" is escaped by jsonLdText and
+    // the CSP never runs JSON. Astro has no other way to emit it, so this one file may carry its own comment.
+    files: ['src/components/JsonLd.astro'],
+    rules: { 'local/no-protected-disable': 'off' },
+  },
+  {
+    // 95-L3: every file type in the engine folder, not only js, mjs and ts.
+    files: ['src/lib/fitcheck/**/*'],
     rules: {
+      'no-restricted-syntax': ['error', ...r405, ...r401Syntax],
       'no-restricted-globals': ['error', ...r401Names],
       'no-restricted-properties': [
         'error',
@@ -165,7 +274,19 @@ export default tseslint.config(
         {
           patterns: [
             {
-              group: ['node:*', 'fs', 'http', 'https', 'net', 'crypto', 'child_process'],
+              group: [
+                'node:*',
+                'fs',
+                'fs/*',
+                'http',
+                'https',
+                'net',
+                'crypto',
+                'child_process',
+                'os',
+                'path',
+                'worker_threads',
+              ],
               message: 'R-401: Node I/O modules are banned in src/lib/fitcheck/.',
             },
           ],
