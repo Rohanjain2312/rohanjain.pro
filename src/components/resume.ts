@@ -2,6 +2,8 @@
 // End jump, only the selected tab is in the tab order. All text goes in as text nodes (R-405). Without this
 // script the "View résumé" controls stay plain links to the PDF.
 
+export {};
+
 const dialog = document.querySelector<HTMLDialogElement>('[data-resume-dialog]');
 
 if (dialog && typeof dialog.showModal === 'function') {
