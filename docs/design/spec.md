@@ -575,24 +575,23 @@ Screenshots at 390 are the R-602 item 6 baseline.
 
 ### 13.1 OG image (F-12; Q-53, Q-54)
 - **Size:** 1200 by 630 PNG, one file for every platform. The 2:1 crop some feeds apply trims 15 px at the top and bottom, which falls inside the 64 margin, so nothing is lost.
-- **Content:** no proof numbers (Q-54): an image cannot be checked by R-301 and would go stale. It states who and what, and the site domain.
+- **Content:** the name, the role line and the site domain, nothing else (Q-54, tightened in #203). An image cannot be checked by R-301 and goes stale, so it carries no number, no location, no availability and no lede sentence. The role line and name are read from `home.json` and `site.json` at build time.
 - **Layout** (canvas `--paper`, margin 64 on all sides, content 1072 by 502, left-aligned like the site):
   1. Top rule: 4 px `--ink`, full content width, at y 64.
-  2. Eyebrow, 32 px below: mono 400, 32 px, `--muted`, "ML and AI Engineer · New York, NY · available now" (from `site.json`, as the hero eyebrow L46).
-  3. Name, 24 below: "Rohan Jain", serif 500, 160 px, line height 0.95, tracking -0.03em, `--ink` (the hero H1 style, L47, scaled).
-  4. Lede, 24 below: serif 400, 40 px, line height 1.35, `--ink-2`, max width 880, two lines, the hero lede (L48).
-  5. Bottom, anchored at y 566: a 4 px `--ink` rule, 24 below it `rohanjain.pro` in mono 500, 32 px, `--ink`.
-  The stack from the top rule to the lede is about 384 px and the bottom block is 68 px, leaving about 50 px of air in the middle.
-- **Rationale:** it reads as the hero scaled up: the same name, the same rule, the same two typefaces. No gradient, no photo, no icon, no pattern. The 40 px lede stays legible at a 500 px wide feed thumbnail.
-- **Build:** rendered at build time from an Astro route (`/og`, noindex) by the same Playwright step as the PDFs, at device scale 1, to `public/og.png`. Fonts are the self-hosted ones. Colors are the tokens.
+  2. Role line, 32 px below the rule: mono 400, 40 px, `--muted`, "ML and AI Engineer" (the hero eyebrow, L46, reduced to the role).
+  3. Name, 40 below: "Rohan Jain", serif 500, 224 px, line height 0.95, tracking -0.03em, `--ink` (the hero H1 style, L47, scaled). Its ink ends 16 px inside the right margin, and a build check fails if it ever crosses it. A -8 px left offset aligns the R stem with the rule above it.
+  4. Bottom, anchored at y 566: a 4 px `--ink` rule, 24 below it `rohanjain.pro` in mono 500, 32 px, `--ink`.
+  About 150 px of air sits between the name and the bottom rule. It stays empty on purpose.
+- **Rationale:** it reads as the hero scaled up: the same name, the same rule, the same two typefaces. No gradient, no photo, no icon, no graph-paper tile (that belongs to the figures section only, ADR-0015), no pattern. At a 300 px wide feed thumbnail the name and role line stay readable. Contrast: `--ink` on `--paper` 15.7 to 1, `--muted` on `--paper` 6.2 to 1.
+- **Build:** `node src/assets/brand/build.mjs` renders `src/assets/brand/og.html` and `og.css` with Playwright (Chromium, device scale 1) and writes `public/og.png`. The script injects `tokens.css` and the self-hosted font files, so no color or font is written twice. The PNG is committed; run the script again after a token, font or copy change. It is not part of `npm run build`, so a normal build never rewrites a tracked file. The Astro `/og` route in the first draft of this section is dropped: it would ship a page that exists only to be photographed.
 - `og:image:alt`: "Rohan Jain, ML and AI Engineer". `twitter:card`: `summary_large_image`. `/for` pages use the same file (8.1).
 
 ### 13.2 Favicon (Q-55)
 - **Mark:** a monogram "RJ", square, no rounding (the UI has no radius anywhere). `--ink` square, "RJ" in `--paper`, IBM Plex Mono 600, the wordmark's face (L34). The "+" fold marker was rejected: a plus reads as add or medical in a tab strip, and it names no one. The ink tile works on light and dark tab strips because it brings its own ground.
-- **Geometry (32 by 32 viewBox):** two glyphs at font size 20 occupy 24 by about 14, centered, so the margin is 4 on each side and the cap height is about 14. The glyphs are outlined paths generated from the Fontsource IBM Plex Mono 600 file (OFL) with a script, never hand-drawn and never `<text>`, since SVG favicons cannot load web fonts.
-- **Files:** `public/favicon.svg` (the master, any size), `public/favicon.ico` (16 and 32), `public/favicon-180.png` (apple touch icon, full-bleed ink square, no transparency). Linked with `rel="icon"` for the SVG and ICO and `rel="apple-touch-icon"` for the PNG. There is no web manifest.
+- **Geometry (32 by 32 viewBox):** the first draft set a 20 px font and a 4 px margin on the advance boxes. Measured on the real glyphs, the ink of "RJ" then spans only 20.4, so the margin was 5.8. The built mark uses font size 23.5, which makes the ink 24.0 wide and 16.4 tall (cap height), centered, margin 4.0 each side. The glyphs are outlined paths generated from the Fontsource IBM Plex Mono 600 file (OFL) by `src/assets/brand/glyphs.py` (fontTools), never hand-drawn and never `<text>`, since SVG favicons cannot load web fonts. The paths are committed in `src/assets/brand/rj-paths.json`, so only a font change needs Python again.
+- **Files:** `public/favicon.svg` (the master, any size), `public/favicon.ico` (16 and 32, PNG entries), `public/favicon-180.png` (apple touch icon, full-bleed ink square, no transparency), all written by `src/assets/brand/build.mjs`. Linked with `rel="icon"` for the SVG and ICO and `rel="apple-touch-icon"` for the PNG. There is no web manifest.
 - **Colors:** the SVG cannot read CSS custom properties, so it carries the two token values as literals. A unit test checks that every hex value in `public/favicon.svg` and `src/assets/brand/*.svg` equals a token in `tokens.css`.
-- **At 16 px:** each letter is about 6 px wide with a stem of about 1 px. It is legible but plain; that is the intended weight.
+- **At 16 px:** each letter is about 7 px wide with a stem of about 1.5 px. It is legible but plain; that is the intended weight.
 
 ---
 
@@ -652,7 +651,7 @@ Screenshots at 390 are the R-602 item 6 baseline.
 - `src/styles/tokens.css` (#20, Design Lead): sections 1 to 4 and 10.
 - Base and print styles, fonts (#21, Frontend): sections 2, 4, 9.1, 10 and 12.
 - Components and pages (Phase 2, Frontend): sections 6 to 8, 11.
-- Brand assets (graph-paper tile, favicon, OG image): files named in section 13, produced in later PRs.
+- Brand assets: favicon set and OG image shipped in #203 (section 13, `src/assets/brand/`). The graph-paper tile is `src/assets/graph-paper.svg`.
 - Reference screenshots of each page at 320, 390, 768 and 1280, and the print previews, are added to `docs/design/` after Phase 2 builds the pages, because they cannot exist before.
 
 ### 15.2 Deliberate details a reviewer can check

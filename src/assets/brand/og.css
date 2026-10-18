@@ -1,0 +1,64 @@
+/*
+  Source for public/og.png (design spec 13.1). Rendered by build.mjs at 1200 by 630, device scale 1.
+  Colors are tokens: build.mjs injects tokens.css and the font files before it takes the screenshot.
+  Sizes are px on purpose: this is a fixed-size image, not a page.
+*/
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html,
+body {
+  width: 1200px;
+  height: 630px;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 1200px;
+  height: 630px;
+  padding: 64px;
+}
+
+/* Top rule, role line, name: the hero (spec 7.2) scaled up. */
+.top {
+  border-top: 4px solid var(--ink);
+  padding-top: 32px;
+}
+
+.role {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-regular);
+  font-size: 40px;
+  line-height: 1.2;
+  color: var(--muted);
+}
+
+.name {
+  margin-top: 40px;
+  margin-left: -8px;
+  font-family: var(--font-serif);
+  font-weight: var(--weight-medium);
+  font-size: 224px;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+
+/* Bottom rule and domain, anchored to the lower margin. */
+.foot {
+  border-top: 4px solid var(--ink);
+  padding-top: 24px;
+}
+
+.domain {
+  font-family: var(--font-mono);
+  font-weight: var(--weight-medium);
+  font-size: 32px;
+  line-height: 1.2;
+}
