@@ -4,9 +4,18 @@
 //
 // HEADERS_TEST_DIR points the test at another build directory (default: dist). The self-test uses it
 // to show that a mutated build fails.
-import { spawn, type ChildProcess } from 'node:child_process';
-import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { spawn, spawnSync, type ChildProcess } from 'node:child_process';
+import {
+  mkdirSync,
+  mkdtempSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  statSync,
+  writeFileSync,
+} from 'node:fs';
 import { createServer } from 'node:net';
+import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { expect, test } from '@playwright/test';
 import {
@@ -178,26 +187,147 @@ test.describe('CSP in a real browser', () => {
 });
 
 test.describe('build output has no inline code (ADR-0015 item 5)', () => {
-  function htmlFiles(dir: string): string[] {
+  function builtFiles(dir: string, ext: string): string[] {
     return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
       const full = join(dir, entry.name);
-      if (entry.isDirectory()) return htmlFiles(full);
-      return entry.name.endsWith('.html') ? [full] : [];
+      if (entry.isDirectory()) return builtFiles(full, ext);
+      return entry.name.endsWith(ext) ? [full] : [];
     });
   }
+  const scan = (ext: string): string[] =>
+    builtFiles(dist, ext).flatMap((file) =>
+      findInlineCode(readFileSync(file, 'utf8')).map((p) => `${file.slice(dist.length)}: ${p}`),
+    );
 
   test('dist/ has HTML to scan', () => {
-    expect(htmlFiles(dist).length).toBeGreaterThan(0);
+    expect(builtFiles(dist, '.html').length).toBeGreaterThan(0);
   });
 
   test('no inline script (JSON-LD excepted), inline style, style attribute or event handler', () => {
-    const problems = htmlFiles(dist).flatMap((file) =>
-      findInlineCode(readFileSync(file, 'utf8')).map((p) => `${file.slice(dist.length)}: ${p}`),
-    );
-    expect(problems).toEqual([]);
+    expect(scan('.html')).toEqual([]);
+  });
+
+  test('built SVG files have no <style>, style attribute, script or handler (issue #249, 156-1)', () => {
+    // The graph-paper tile ships as dist/_astro/*.svg. Under style-src 'self' an SVG loaded as a document
+    // would run its own <style>, so the scan must read SVG as well as HTML.
+    expect(builtFiles(dist, '.svg').length).toBeGreaterThan(0);
+    expect(scan('.svg')).toEqual([]);
   });
 
   test('dist/_headers is present, so the deploy artifact carries the headers', () => {
     expect(statSync(join(dist, '_headers'), { throwIfNoEntry: false })?.isFile()).toBe(true);
+  });
+
+  test('the built print pages exist, so the /print rows below test real pages (issue #249, 156-3)', () => {
+    const prints = builtFiles(join(dist, 'print'), '.html').map((f) => f.slice(dist.length));
+    expect(prints.length).toBeGreaterThan(0);
+  });
+});
+
+test.describe('real /print pages from the build (issue #249, 156-3)', () => {
+  test('each built print page answers 200 with the print headers and has no inline code', async ({
+    request,
+  }) => {
+    const files = readdirSync(join(dist, 'print'), { recursive: true, encoding: 'utf8' })
+      .filter((f) => f.endsWith('index.html'))
+      .sort();
+    expect(files.length).toBeGreaterThan(0);
+    for (const file of files) {
+      const path = `/print/${file.slice(0, -'index.html'.length)}`;
+      for (const url of [path, path.replace(/\/$/, '')]) {
+        const res = await request.get(origin + url, { maxRedirects: 0 });
+        // A bare path may redirect to the slash form; the redirect must still carry the headers.
+        expect([200, 301, 308], url).toContain(res.status());
+        expect(checkRouteHeaders('print', res.headers()), url).toEqual([]);
+      }
+      const body = await (await request.get(origin + path)).text();
+      expect(findInlineCode(body), path).toEqual([]);
+    }
+  });
+});
+
+test.describe('real /for page, built from a synthetic result (issue #249, 156-3)', () => {
+  // No /for page exists in dist/ because result files live outside the repo (ADR-0016). This block makes
+  // one with the real generator, builds it into a temp directory and serves it with the same preview.
+  // Nothing is written inside the repo (R-501, R-502).
+  let work = '';
+  let forServer: ChildProcess | undefined;
+  let forOrigin = '';
+  let slug = '';
+
+  test.beforeAll(async () => {
+    test.setTimeout(240_000);
+    work = mkdtempSync(join(tmpdir(), 'headers-for-'));
+    const apps = join(work, 'applications');
+    mkdirSync(apps);
+    writeFileSync(
+      join(work, 'posting.txt'),
+      'We need an AI Engineer.\nPython, SQL, Docker and Kubernetes are required.\nLangGraph and retrieval augmented generation.\n',
+    );
+    const gen = spawnSync(
+      process.execPath,
+      [
+        'scripts/for.ts',
+        '--company',
+        'Headers Fixture',
+        '--role',
+        'AI Engineer',
+        '--jd',
+        join(work, 'posting.txt'),
+        '--out',
+        apps,
+      ],
+      { encoding: 'utf8' },
+    );
+    expect(gen.status, gen.stderr).toBe(0);
+    slug = readdirSync(apps)[0]?.replace(/\.json$/, '') ?? '';
+    expect(slug).not.toBe('');
+    const out = join(work, 'dist');
+    const build = spawnSync('npx', ['--no-install', 'astro', 'build', '--outDir', out], {
+      env: { ...process.env, APPLICATIONS_DIR: apps },
+      encoding: 'utf8',
+    });
+    expect(build.status, build.stderr).toBe(0);
+    const port = await freePort();
+    forServer = spawn(
+      process.execPath,
+      ['scripts/preview.mjs', '--port', String(port), '--dir', out],
+      {
+        stdio: 'ignore',
+      },
+    );
+    forOrigin = `http://localhost:${port}`;
+    for (let i = 0; i < 50; i++) {
+      try {
+        if ((await fetch(`${forOrigin}/`)).ok) return;
+      } catch {
+        // not up yet
+      }
+      await new Promise((r) => setTimeout(r, 200));
+    }
+    throw new Error('preview did not start in 10 s');
+  });
+
+  test.afterAll(() => {
+    forServer?.kill('SIGKILL');
+    if (work) rmSync(work, { recursive: true, force: true });
+  });
+
+  test('the generated page answers 200 with the for headers, bare and with a slash', async ({
+    request,
+  }) => {
+    for (const url of [`/for/${slug}/`, `/for/${slug}`]) {
+      const res = await request.get(forOrigin + url, { maxRedirects: 0 });
+      expect([200, 301, 308], url).toContain(res.status());
+      expect(checkRouteHeaders('for', res.headers()), url).toEqual([]);
+    }
+    const res = await request.get(`${forOrigin}/for/${slug}/`);
+    expect(res.status()).toBe(200);
+    expect(await res.text()).toContain('Headers Fixture');
+  });
+
+  test('the generated page has no inline code', async ({ request }) => {
+    const html = await (await request.get(`${forOrigin}/for/${slug}/`)).text();
+    expect(findInlineCode(html)).toEqual([]);
   });
 });
