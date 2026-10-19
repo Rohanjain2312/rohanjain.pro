@@ -21,6 +21,10 @@ It accepted these:
 - A venv in the scratchpad for Python checks: `python3 -m venv <scratch>/venv && <scratch>/venv/bin/pip install fonttools brotli`, then `<scratch>/venv/bin/python -I <script>` with the script written by the Write tool. Font cmap checks on the five woff2 files took under a second.
 
 - Also refused: a Bash command line that mentions a path containing `.github` next to other steps. Report the refusal in the review; do not restructure the command to get past the guard.
+- PR #261: `gh` with `--jq` and a `.comments[].body` filter, inside a line that also set a shell variable, ran a `for` loop and printed, was refused as too complex. Plain single `gh` calls worked. Redirect `gh api repos/<o>/<r>/issues/N/comments > <scratch file>` and parse the file in a separate call.
+- PR #261: `gh issue view N --comments` exits 1 with a Projects-classic GraphQL notice. Use `gh api` instead.
+- PR #261: a `cat > file <<'EOF'` heredoc followed by `node file` on one line was refused as too complex. Write the script with the Write tool, then run `node <file>` in its own call.
+- `$TMPDIR` differs by sandbox mode. With `dangerouslyDisableSandbox` set, it resolved to `/var/folders/.../T/`. With the sandbox on, it resolved to `/tmp/claude-501`. Write to the scratchpad path given in the session environment, which works in both modes.
 
 Note: the R-008 hook blocks any file write that contains the em dash character, including memory files. Write dashes as commas, colons or parentheses.
 

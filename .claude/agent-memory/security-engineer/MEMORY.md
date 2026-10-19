@@ -25,3 +25,4 @@
 - [CI gate review](ci_gate_review_checklist.md): PR #135 review-gate probes: self-edited YAML, parser leniency, labeler gaps, 3000-file cap
 - [PR #187 status workflow](status_workflow_review_pr187.md): approved 0acfd37; status-data unprotected, validate-script probe, CodeQL on PR ref, docs follow-up owed
 - [Phase 6 assessment](phase6_assessment_notes.md): #232 run notes: shared scratchpad, busy ports, Docker daemon off, hook probe results
+- [PR #262 lint bypass](lint_disable_bypass_pr262.md): ESLint disable-rule self-suppression, probe method, status.yml same-day failure

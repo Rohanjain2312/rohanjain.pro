@@ -5,6 +5,7 @@ The only things Claude Code cannot do itself. Each item has exact steps. Claude 
 ## Open
 - [ ] Update the GitHub CLI (the installed 2.63.2 cannot edit PR labels): `brew upgrade gh`
 
+
 - [ ] Confirm the availability line the site shows. `src/content/site.json` says "Available now", taken from the mockup; no source states it (R-005). Reply with the exact text you want, or "none" to hide it.
 
 - [ ] Two numbers in your résumé have no source in the Evidence Ledger, so `resume.json` leaves them out (R-005, PR #137): "109M params" and "all 3 planted interactions ranked top 3 of 190 pairs". The site claim "10-prompt check" (medical LLM project) also has no source QA could find (PR #152). To keep any of them, reply with the repo file or notebook that shows each number. Otherwise nothing is needed.
