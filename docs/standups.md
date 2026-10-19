@@ -71,3 +71,8 @@ One entry at the start and end of each session (skill `session-protocol`).
 - Done: merged #260 to #264 (Phase 6 Low fixes), swept agent memory, wrote the Phase 6 gate record; `node scripts/phase-gate.mjs 6` passes.
 - Doing: release `v0.9.0` after merge, renew the interaction limit.
 - Blockers: none. The build stops until the client completes the Phase 7 steps.
+
+## 2026-10-19 launch (Supervisor)
+- Done: Phase 6 gate and `v0.9.0`; client answers recorded; Phase 7 setup (PRs #276, #280, #282, #285, #286, #288, #290); client ran the setup command and the deploy-setup command; `v0.9.1` published; first deploy green. Live checks: 200 on apex, `www` and `*.pages.dev`; HSTS and CSP present; no `Set-Cookie`; DNSSEC validates; three résumé PDFs 200.
+- Doing: launch checks (runbook section 7), beacon check, `v1.0.0`.
+- Blockers: none.
