@@ -149,7 +149,7 @@ Run the launch checklist in `docs/spec/12-operations.md`. Specifically:
   1. First deploy and all smoke tests above use `SITE_TAG=v0.9.1` (the release candidate, section 4; not `v0.9.0`).
   2. If every check passes, publish `v1.0.0` (`docs/runbooks/releases.md`); the SBOM attaches to the release.
   3. Set `SITE_TAG` to `v1.0.0` and deploy again; confirm the live site matches. Later deploys keep using `v1.0.0` until the next release.
-- Real 5-second test (skill `external-validation`) passed, or failures fixed and re-tested.
+- The real 5-second test and recruiter ratings were dropped by the client (ADR-0035); the Reader Advocate's simulated 5-second test stands.
 - Submit HSTS preload only after 30 stable days (Phase 8).
 
 ## 8. Rollback
