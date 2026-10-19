@@ -1,16 +1,19 @@
 # Security headers. Policy of record: docs/spec/08-security.md 8.2, rationale in docs/security/headers.md.
 # Owned by Security. Applied by Cloudflare Pages and emulated by `npm run preview`.
 #
-# Phase 7 only (do not add earlier):
-#   - Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-#   - Cloudflare Web Analytics origins in script-src and connect-src
+# Phase 7 (issue #283):
+#   - Strict-Transport-Security. Do not submit to the preload list before 30 stable days (docs/security/headers.md).
+#   - script-src allows the Cloudflare Web Analytics beacon, the one third-party script. Cloudflare injects it at
+#     the edge (automatic setup), so the site has no script tag for it. connect-src stays 'self': the automatic
+#     beacon reports to this domain's /cdn-cgi/rum. Sources and the beacon check: docs/security/headers.md.
 #
 # No 'unsafe-inline', no 'unsafe-eval', no hashes (R-505). The build must emit no inline
 # script or style. The only inline element allowed is <script type="application/ld+json">,
 # which is data and is not executed under script-src.
 
 /*
-  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src https://*.hf.space; frame-ancestors 'none'; base-uri 'none'; form-action 'none'; manifest-src 'self'; require-trusted-types-for 'script'; upgrade-insecure-requests
+  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  Content-Security-Policy: default-src 'none'; script-src 'self' https://static.cloudflareinsights.com/beacon.min.js https://static.cloudflareinsights.com/beacon.min.js/; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src https://*.hf.space; frame-ancestors 'none'; base-uri 'none'; form-action 'none'; manifest-src 'self'; require-trusted-types-for 'script'; upgrade-insecure-requests
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
