@@ -8,10 +8,10 @@ The only things Claude Code cannot do itself. Each item has exact steps. Claude 
 
 - [ ] Optional, does not block the build: recruiter fit ratings (skill `external-validation`, after Phase 3). Send at least 3 recruiters or hiring managers the 10 postings in `docs/validation/phase-3-rating-packet.md` (the team prepares this file with the postings only; the engine's verdicts are not in it) plus a screenshot of the home page top (`npm run shots`, file `.shots/home-1280-fold.png`; the résumé PDF arrives in Phase 4). Message: "Here are 10 made-up job postings and a picture of a candidate's page. For each posting, pick one: Strong fit, Good fit with gaps, or Not a strong fit. Go with your first judgement." Paste the ratings back without names (R-901). The test passes when the engine matches the majority on at least 7 of 10 and never says "Strong fit" where the majority says "Not a strong fit". Nothing is needed from you if you skip this.
 
-- [ ] Phase 7, after v0.9.0 (does not block earlier work). Steps are in `docs/runbooks/launch.md` section 1: (1) Cloudflare account with passkey or 2FA, add `rohanjain.pro`, and send the two nameservers it shows; (2) Porkbun: turn DNSSEC off, set those nameservers, and later paste one DS record; (3) create one Cloudflare setup token from the prepared link and run the prepared command that uses it once on your computer (it sets up DNS and creates a narrow deploy token for GitHub, ADR-0032); revoke the setup token after launch.
+- [ ] Phase 7 (`v0.9.0` is tagged; the build is stopped until this is done). Steps are in `docs/runbooks/launch.md` section 1: (1) Cloudflare account with passkey or 2FA, add `rohanjain.pro`, and send the two nameservers it shows; (2) Porkbun: turn DNSSEC off, set those nameservers, and later paste one DS record; (3) create one Cloudflare setup token from the prepared link and run the prepared command that uses it once on your computer (it sets up DNS and creates a narrow deploy token for GitHub, ADR-0032); revoke the setup token after launch.
 
 ## Optional (speed)
-- [ ] To let the build resume on its own after usage limits (`scripts/autopilot.sh`, #116), install the Claude Code command-line tool. In Terminal run `brew install --cask claude-code`, then `claude --version` to check. The desktop app's copy cannot run from Terminal.
+- [ ] To let the build resume on its own after usage limits (`scripts/autopilot.sh`, #116), install the Claude Code command-line tool. Homebrew is not installed on your Mac, so skip this unless you want it; if you do, ask in chat and Claude Code will give you exact steps that do not need Homebrew. The desktop app's copy cannot run from Terminal.
 
 ## Accepted risks (no action needed)
 - Your speed decision (ADR-0026): each PR gets one combined review, Security only for workflow and header changes, and no audits of reviews or agent instructions. CI and the claims check remain.
@@ -29,6 +29,9 @@ The only things Claude Code cannot do itself. Each item has exact steps. Claude 
   After this, Claude Code cannot change repository settings or the project board. When it needs one of those, it adds the exact command to this file for you to run.
 
 ## Done
+- [x] Availability line confirmed as "Available now" (2026-10-19, `src/content/site.json`).
+- [x] Résumé numbers "109M params" and "all 3 planted interactions ranked top 3 of 190 pairs" taken from your résumé (2026-10-19, PR #272); the unsourced "10-prompt check" was removed instead.
+- [x] Firefox dropped as a target (2026-10-19, ADR-0034). `brew upgrade gh` dropped: Homebrew is not installed and the upgrade was optional.
 - [x] Signing-key permission removed again (2026-10-16, verified with `gh auth status`).
 - [x] Passkey or 2FA turned on for GitHub (2026-10-16).
 - [x] GitHub CLI given the `project` and `write:ssh_signing_key` permissions (2026-10-16). Claude Code uploaded the signing key, created the project board and turned the signed-commit rule back on.
