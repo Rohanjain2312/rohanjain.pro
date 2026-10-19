@@ -78,7 +78,9 @@
   font-weight: var(--weight-medium);
   text-decoration: none;
   overflow-wrap: anywhere;
-  border: 0;
+
+  /* Invisible normally; forced colors turns it into a visible boundary (a11y audit A-2). */
+  border: var(--rule-w) solid transparent;
   background: var(--ink);
   color: var(--paper);
   cursor: pointer;

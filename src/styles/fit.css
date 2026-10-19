@@ -17,7 +17,7 @@
 /* Buttons that share the .btn metrics with links */
 
 button.btn {
-  border: 0;
+  border: var(--rule-w) solid transparent;
   cursor: pointer;
 }
 
@@ -435,5 +435,13 @@ html:has(.sheet-dialog[open]) {
 
   .sheet {
     padding: var(--space-48) var(--space-56);
+  }
+}
+
+/* Forced colors: as for the demo dialog (audit A-3). */
+@media (forced-colors: active) {
+  .sheet-dialog__column {
+    border: var(--rule-w) solid CanvasText;
+    background: Canvas;
   }
 }

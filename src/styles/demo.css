@@ -150,3 +150,11 @@ body:has(dialog[open]) {
   color: var(--muted);
   font-size: var(--fs-sm);
 }
+
+/* Forced colors: the dialog surface is transparent, so give the column a system surface and border (audit A-3). */
+@media (forced-colors: active) {
+  .demo__column {
+    border: var(--rule-w) solid CanvasText;
+    background: Canvas;
+  }
+}
