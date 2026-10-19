@@ -32,7 +32,7 @@ Functional and non-functional requirements. Acceptance criteria in issues trace 
 | N-04 | Responsive from 320 px to 1920 px. No horizontal scroll at any width. |
 | N-05 | Availability after launch: 99.9% monthly (inherits Cloudflare's edge). |
 | N-06 | Security: see `docs/spec/08-security.md` |
-| N-07 | Privacy: no personal data collected from visitors. No cookies. |
+| N-07 | Privacy: no cookies and no advertising or marketing scripts. Visits are counted only by cookieless Cloudflare Web Analytics (ADR-0008); the host keeps request logs. The site collects no personal data itself: no accounts, no forms, the fit-check text stays in the browser. |
 | N-08 | Maintainability: TypeScript strict mode; no `any`; 90%+ line coverage on `src/lib/`. |
 | N-09 | Reproducibility: pinned Node LTS (`.nvmrc`), lockfile committed, deterministic builds. |
 | N-10 | Local first: `npm run dev` and `npm run preview` give the full site on `localhost` with production headers emulated. |
