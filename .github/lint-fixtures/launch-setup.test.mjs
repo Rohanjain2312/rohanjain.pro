@@ -1,7 +1,13 @@
 // Self-test for the launch setup script (ADR-0032, issue #275). Uses a mocked fetch; nothing touches the network.
 import assert from 'node:assert/strict';
+import { chmodSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { test } from 'node:test';
 import {
+  SetupError,
+  ghCheck,
+  ghSecretSet,
   SETUP_PERMISSIONS,
   buildLink,
   dnsPlan,
@@ -16,7 +22,7 @@ const ZONE = 'b'.repeat(32);
 const SECRET = 'setup-token-SECRET-value';
 const DEPLOY = 'deploy-token-SECRET-value';
 
-function mock({ zoneStatus = 'active', existing = [], failOn = null, groups } = {}) {
+function mock({ zoneStatus = 'active', existing = [], failOn = null, groups, tokens = [] } = {}) {
   const calls = [];
   const fetchFn = async (url, init) => {
     const path = url.replace('https://api.cloudflare.com/client/v4', '');
@@ -32,7 +38,8 @@ function mock({ zoneStatus = 'active', existing = [], failOn = null, groups } = 
     if (path.endsWith('/dnssec')) return ok({ ds: 'rohanjain.pro. 3600 IN DS 1 13 2 ABCD' });
     if (path.endsWith('/rum/site_info')) return ok({ site_tag: 'tag123' });
     if (path.endsWith('/permission_groups')) return ok(groups ?? [{ id: 'g1', name: 'Pages Write' }, { id: 'g2', name: 'DNS Write' }]);
-    if (path.endsWith(`/accounts/${ACCOUNT}/tokens`)) return ok({ value: DEPLOY });
+    if (method === 'GET' && path.endsWith(`/accounts/${ACCOUNT}/tokens`)) return ok(tokens);
+    if (path.endsWith(`/accounts/${ACCOUNT}/tokens`)) return ok({ value: DEPLOY, id: 'tok123' });
     return ok({});
   };
   return { fetchFn, calls };
@@ -47,6 +54,7 @@ function run(opts = {}, mockOpts = {}) {
     token: SECRET,
     accountId: ACCOUNT,
     log: (l) => logs.push(l),
+    check: () => true,
     setSecret: async (name, value, o) => secrets.push({ name, value, repo: o.repo }),
     now: () => new Date('2026-10-20T00:00:00Z'),
     ...opts,
@@ -167,10 +175,153 @@ test('dry run sends nothing and prints the calls without a token', async () => {
 
 test('argument parsing', () => {
   assert.deepEqual(parseArgs(['--dry-run']), { dryRun: true, link: false });
-  assert.equal(parseArgs(['--link', '--account', 'x', '--zone', 'y']).zone, 'y');
-  assert.throws(() => parseArgs(['--token', 'x']), /Unknown argument/);
+  assert.equal(parseArgs(['--link', '--account', ACCOUNT, '--zone', ZONE]).zone, ZONE);
+  assert.throws(() => parseArgs(['--token', 'x']), /Unexpected argument/);
 });
 
 test('the hidden prompt refuses a non-interactive stdin', async () => {
   await assert.rejects(promptHidden('Token', { input: { isTTY: false }, output: { write() {} } }), /interactive/);
+});
+
+test('error text never repeats input', () => {
+  for (const bad of [
+    ['--token=FAKE-SECRET'],
+    ['FAKE-SECRET'],
+    ['--account'],
+    ['--account', 'FAKE-SECRET'],
+    ['--zone', 'FAKE-SECRET'],
+    ['--dry-run', '--account', 'FAKE-SECRET'],
+    ['--repo', 'FAKE SECRET'],
+  ]) {
+    assert.throws(() => parseArgs(bad), (e) => !e.message.includes('FAKE') && e.message.length > 0);
+  }
+  assert.equal(parseArgs(['--dry-run', '--account', ACCOUNT]).account, ACCOUNT);
+});
+
+test('no request body, URL or log line contains the setup token, and dry-run output has no secret', async () => {
+  const { promise, calls, logs } = run();
+  await promise;
+  for (const c of calls) assert.ok(!JSON.stringify(c.body ?? '').includes(SECRET) && !c.path.includes(SECRET));
+  assert.ok(logs.every((l) => !l.includes(SECRET)));
+  const dry = [];
+  await runSetup({ token: SECRET, accountId: ACCOUNT, dryRun: true, log: (l) => dry.push(l), fetchFn: async () => {} });
+  assert.ok(dry.every((l) => !l.includes(SECRET) && !l.includes(DEPLOY)));
+});
+
+test('only GET, POST and PATCH are ever sent: nothing is deleted', async () => {
+  const { promise, calls } = run();
+  await promise;
+  assert.ok(calls.length > 20);
+  assert.ok(calls.every((c) => ['GET', 'POST', 'PATCH'].includes(c.method)));
+});
+
+test('the deploy token request carries Pages edit only, nothing from the setup scope', async () => {
+  const groups = [
+    { id: 'dns', name: 'DNS Write' },
+    { id: 'pages', name: 'Pages Write' },
+    { id: 'zs', name: 'Zone Settings Write' },
+    { id: 'tok', name: 'Account API Tokens Write' },
+  ];
+  const { promise, calls } = run({}, { groups });
+  await promise;
+  const posts = calls.filter((c) => c.method === 'POST' && c.path === `/accounts/${ACCOUNT}/tokens`);
+  assert.equal(posts.length, 1);
+  assert.equal(posts[0].body.policies.length, 1);
+  const [policy] = posts[0].body.policies;
+  assert.equal(policy.effect, 'allow');
+  assert.deepEqual(policy.permission_groups, [{ id: 'pages' }]);
+  assert.deepEqual(policy.resources, { [`com.cloudflare.api.account.${ACCOUNT}`]: '*' });
+});
+
+test('an existing deploy token is not duplicated; its name and id are reported', async () => {
+  const tokens = [{ name: 'rohanjain.pro pages deploy', id: 'old999', expires_on: '2027-01-01T00:00:00Z' }];
+  const { promise, calls, secrets } = run({}, { tokens });
+  const { failures } = await promise;
+  assert.ok(!calls.some((c) => c.method === 'POST' && c.path === `/accounts/${ACCOUNT}/tokens`));
+  assert.equal(secrets.length, 0);
+  assert.match(failures[0], /already exists \(id old999/);
+});
+
+test('the new token name and id are printed, never its value', async () => {
+  const { promise, logs } = run();
+  await promise;
+  assert.ok(logs.some((l) => l.includes('rohanjain.pro pages deploy') && l.includes('tok123')));
+  assert.ok(logs.every((l) => !l.includes(DEPLOY)));
+});
+
+test('preflight stops before any Cloudflare call when gh or the environment is missing', async () => {
+  for (const [label, check, pattern] of [
+    ['no gh', () => false, /not installed/],
+    ['no environment', (args) => args[0] === '--version', /production environment/],
+  ]) {
+    const { promise, calls } = run({ check });
+    await assert.rejects(promise, pattern, label);
+    assert.equal(calls.length, 0, label);
+  }
+});
+
+test('a failed secret store is reported in the summary with the token id', async () => {
+  const { promise, logs } = run({
+    setSecret: async () => {
+      throw new SetupError('Could not store CLOUDFLARE_API_TOKEN: gh exited with 1');
+    },
+  });
+  const { failures } = await promise;
+  assert.match(failures.join(), /store secrets/);
+  assert.ok(logs.some((l) => l.includes('tok123')));
+  assert.ok(logs.at(-1).includes('failed step'));
+});
+
+function fakeGh(script) {
+  const dir = mkdtempSync(join(tmpdir(), 'fakegh-'));
+  writeFileSync(join(dir, 'gh'), script);
+  chmodSync(join(dir, 'gh'), 0o755);
+  return dir;
+}
+
+test('ghSecretSet: the value arrives on stdin only, not in argv or the environment', async () => {
+  const dir = fakeGh(`#!/bin/sh
+d="$(dirname "$0")"
+printf '%s\\n' "$@" > "$d/argv"
+env > "$d/env"
+cat > "$d/stdin"
+`);
+  const oldPath = process.env.PATH;
+  process.env.PATH = `${dir}:${oldPath}`;
+  try {
+    await ghSecretSet('CLOUDFLARE_API_TOKEN', DEPLOY, { repo: 'o/r' });
+  } finally {
+    process.env.PATH = oldPath;
+  }
+  const argv = readFileSync(join(dir, 'argv'), 'utf8').trim().split('\n');
+  assert.deepEqual(argv, ['secret', 'set', 'CLOUDFLARE_API_TOKEN', '--env', 'production', '--repo', 'o/r']);
+  assert.equal(readFileSync(join(dir, 'stdin'), 'utf8'), DEPLOY);
+  assert.ok(!readFileSync(join(dir, 'env'), 'utf8').includes(DEPLOY));
+});
+
+test('ghSecretSet turns a missing gh and a bad exit into SetupError without the value', async () => {
+  const oldPath = process.env.PATH;
+  const safe = (e) => e instanceof SetupError && !e.message.includes(DEPLOY);
+  process.env.PATH = mkdtempSync(join(tmpdir(), 'nogh-'));
+  try {
+    await assert.rejects(ghSecretSet('X', DEPLOY, { repo: 'o/r' }), safe);
+  } finally {
+    process.env.PATH = oldPath;
+  }
+  const dir = fakeGh('#!/bin/sh\nexit 3\n');
+  process.env.PATH = `${dir}:${oldPath}`;
+  try {
+    await assert.rejects(ghSecretSet('X', DEPLOY, { repo: 'o/r' }), (e) => safe(e) && /exited with 3/.test(e.message));
+  } finally {
+    process.env.PATH = oldPath;
+  }
+});
+
+test('ghCheck is false when gh cannot run', () => {
+  const boom = () => {
+    throw new Error('x');
+  };
+  assert.equal(ghCheck(['--version'], { spawnSyncFn: boom }), false);
+  assert.equal(ghCheck(['--version'], { spawnSyncFn: () => ({ status: 0 }) }), true);
+  assert.equal(ghCheck(['api', 'x'], { spawnSyncFn: () => ({ status: 1 }) }), false);
 });

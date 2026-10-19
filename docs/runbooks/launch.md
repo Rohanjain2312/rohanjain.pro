@@ -12,7 +12,7 @@ Each step lists what to do and what to send back.
    1. Open https://dash.cloudflare.com/sign-up and create a free account with the email you use for this project.
    2. Turn on a passkey or two-factor sign-in: top right, My Profile, Authentication.
    3. Choose Add a domain, enter `rohanjain.pro`, pick the Free plan. Cloudflare shows two nameservers, for example `name.ns.cloudflare.com`. Keep that page open.
-   4. Tell Claude Code the two nameservers.
+   4. Tell Claude Code the two nameservers, the Zone ID and the Account ID. Both IDs are on the right side of the domain overview page in Cloudflare. They are not secrets.
 2. Porkbun.
    1. Sign in at https://porkbun.com, open your domain list and open the details for `rohanjain.pro`.
    2. Turn DNSSEC off if it is on. It must be off before the nameservers change.
@@ -23,7 +23,7 @@ Each step lists what to do and what to send back.
 3. One setup token (ADR-0032).
    1. Open the template link Claude Code gives you. It creates a setup token with the permissions listed in section 5. Set a short expiry (a few days). Choose Continue, then Create token. Copy the token once.
    2. In Terminal, run the one command Claude Code prepares. It asks you to paste the token and the Account ID (shown on the right side of the domain overview page in Cloudflare). The token is used only in that Terminal session. It is never stored in GitHub.
-   3. The command applies the DNS records, DNSSEC, CAA, email records and Web Analytics (section 6). It then creates a second token with Pages edit only, for the one Pages project, and stores that second token and the Account ID as secrets of the `production` environment with `gh secret set`.
+   3. The command applies the DNS records, DNSSEC, CAA, email records and Web Analytics (section 6). It then creates a second token with Pages edit only (account-wide for Pages, as in section 5), and stores that second token and the Account ID as secrets of the `production` environment with `gh secret set`.
    4. Close the terminal tab.
    5. After launch, Claude Code gives you the steps to revoke the setup token (Cloudflare, My Profile, API Tokens, the setup token, Delete). DNS changes later need a new setup token.
 
@@ -91,13 +91,13 @@ Sources (all Cloudflare documentation, read 2026-10-19):
 
 The setup command is `.github/scripts/launch-setup.mjs` (no dependencies, tests in `.github/lint-fixtures/launch-setup.test.mjs`). It cannot live in `scripts/` because Platform does not own that folder (R-112).
 
-Template link. The format is documented [1]: `https://dash.cloudflare.com/profile/api-tokens?permissionGroupKeys=<url-encoded JSON array of {key,type}>&accountId=<id>&zoneId=<id>&name=<name>`. The template has no expiry parameter, so the client sets the expiry (a few days) in the form. Claude Code builds the link with the account and zone IDs (not secrets, shown in the zone overview; the client sends them back in step 1.4):
+Template link. The format is documented [1]: `https://dash.cloudflare.com/profile/api-tokens?permissionGroupKeys=<url-encoded JSON array of {key,type}>&accountId=<id>&zoneId=<id>&name=<name>`. The template has no expiry parameter, so the client sets the expiry (a few days) in the form. Claude Code builds the link with the account and zone IDs (not secrets, shown in the zone overview; the client sends them back in step 1.1.4):
 
 `node .github/scripts/launch-setup.mjs --link --account <account_id> --zone <zone_id>`
 
 Check that the form shows the five permissions, the one account and the one zone before sending the link to the client.
 
-Run order: `--dry-run` first (prints every API call, sends nothing, asks for no token); Security reviews the output; then the client runs the command without flags. The token and Account ID come from prompts (the token prompt is hidden and refuses piped input). The script is safe to re-run, skips records that exist, and never deletes. Conflicting records that Cloudflare imported from Porkbun (parking A or CNAME records on the apex or `www`) make the matching `POST` fail; the script reports it and continues. Claude Code reads the failure list the client pastes back and decides.
+Run order: `--dry-run` first (prints every API call, sends nothing, asks for no token); Security reviews the output; then the client runs the command without flags. The token and Account ID come from prompts (the token prompt is hidden and refuses piped input). The script is safe to re-run, skips records that exist, and never deletes. Conflicting records that Cloudflare imported from Porkbun (parking A or CNAME records on the apex or `www`) make the matching `POST` fail; the script reports it and continues. Claude Code reads the failure list the client pastes back and decides. Before any Cloudflare change the script checks that `gh` runs and that the `production` environment exists (section 2 creates it first). If a token named `rohanjain.pro pages deploy` already exists it makes no second one and reports the id; delete the old one in Cloudflare and run again. It skips any existing apex SPF record, so Porkbun-imported SPF text is left for Claude Code to review. It prints the new token name and id, never the value.
 
 Deploy token. Created by the setup command with the setup token. Pages edit only (Account, Cloudflare Pages, Write, key `page` edit), on the one account (Cloudflare documents the account as the resource, not a single project), 90-day expiry. Only this token and the Account ID are stored, with `gh secret set` into the `production` environment. The deploy job reads only these two secrets. Rotation is in `docs/spec/12-operations.md`, `rotate-secrets.md`.
 
@@ -111,7 +111,7 @@ Set after the zone is Active, by the setup command with the setup token (section
 
 | Type | Name | Value | Note |
 |---|---|---|---|
-| CNAME (flattened) | `@` | the Pages project hostname | created when the custom domain is added |
+| CNAME (flattened) | `@` | the Pages project hostname | created by the setup command; skipped if the custom-domain step already created it |
 | CNAME | `www` | `@` or redirect rule | redirect to the apex |
 | MX | `@` | `0 .` | null MX |
 | TXT | `@` | `v=spf1 -all` | |

@@ -9,7 +9,7 @@
 //
 // Options: --project <name> (Pages project, default rohanjain-pro), --repo <owner/name>.
 // Every step is safe to re-run: records that already exist are skipped. The script never deletes anything.
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { createInterface } from 'node:readline';
 import { pathToFileURL } from 'node:url';
 
@@ -107,18 +107,33 @@ export function makeClient({ fetchFn, token, dryRun, log }) {
   };
 }
 
-// Pipes the value to `gh secret set` on stdin, so it is never an argument.
+// Pipes the value to the gh command on stdin, so it is never an argument or an environment variable.
+// Every failure (missing gh, closed pipe, non-zero exit) becomes a SetupError, so the summary still prints.
 export function ghSecretSet(name, value, { repo, spawnFn = spawn } = {}) {
   return new Promise((resolve, reject) => {
-    const child = spawnFn('gh', ['secret', 'set', name, '--env', 'production', '--repo', repo], {
-      stdio: ['pipe', 'inherit', 'inherit'],
-    });
-    child.on('error', reject);
-    child.on('close', (code) =>
-      code === 0 ? resolve() : reject(new SetupError(`gh secret set ${name} exited with ${code}`)),
-    );
+    const fail = (why) => reject(new SetupError(`Could not store ${name}: ${why}`));
+    let child;
+    try {
+      child = spawnFn('gh', ['secret', 'set', name, '--env', 'production', '--repo', repo], {
+        stdio: ['pipe', 'inherit', 'inherit'],
+      });
+    } catch {
+      return fail('gh could not be started');
+    }
+    child.on('error', () => fail('gh could not be started'));
+    child.stdin.on('error', () => fail('gh closed its input'));
+    child.on('close', (code) => (code === 0 ? resolve() : fail(`gh exited with ${code}`)));
     child.stdin.end(value);
   });
+}
+
+// Read-only gh check. Returns true when gh runs and exits 0. Output is discarded.
+export function ghCheck(args, { spawnSyncFn = spawnSync } = {}) {
+  try {
+    return spawnSyncFn('gh', args, { stdio: 'ignore' }).status === 0;
+  } catch {
+    return false;
+  }
 }
 
 export async function runSetup({
@@ -130,6 +145,7 @@ export async function runSetup({
   dryRun = false,
   log = console.log,
   setSecret = ghSecretSet,
+  check = ghCheck,
   now = () => new Date(),
 }) {
   const call = makeClient({ fetchFn, token, dryRun, log });
@@ -144,6 +160,24 @@ export async function runSetup({
       return undefined;
     }
   };
+
+  // Before the first Cloudflare change: the secrets must have somewhere to go (no secret is read or written here).
+  const envPath = `repos/${repo}/environments/production`;
+  if (dryRun) {
+    log('[dry-run] gh --version');
+    log(`[dry-run] gh api ${envPath}`);
+  } else {
+    if (!check(['--version'])) {
+      throw new SetupError(
+        'The gh command is not installed or not on PATH. Install it and run gh auth login.',
+      );
+    }
+    if (!check(['api', envPath])) {
+      throw new SetupError(
+        `The production environment of ${repo} is not readable (gh not signed in, or the environment does not exist). Nothing was changed. Claude Code creates it first (docs/runbooks/launch.md section 2).`,
+      );
+    }
+  }
 
   const zones = await call('GET', `/zones?name=${DOMAIN}&account.id=${accountId}`, null, [
     { id: '<zone_id>', status: 'active' },
@@ -172,7 +206,18 @@ export async function runSetup({
 
   const existing = await call('GET', `/zones/${zoneId}/dns_records?per_page=500`, null, []);
   const have = new Set((existing ?? []).map(recordKey));
+  // A second SPF record is a permanent error for receivers, so any existing apex SPF record counts as present.
+  const hasSpf = (existing ?? []).some(
+    (r) =>
+      r.type === 'TXT' &&
+      String(r.name).toLowerCase() === DOMAIN &&
+      unquote(r.content).startsWith('v=spf1'),
+  );
   for (const record of dnsPlan(target)) {
+    if (hasSpf && record.type === 'TXT' && record.name === DOMAIN) {
+      log('skip (apex SPF record exists)');
+      continue;
+    }
     if (have.has(recordKey(record))) {
       log(`skip (exists) ${recordKey(record)}`);
       continue;
@@ -205,8 +250,17 @@ export async function runSetup({
   );
   if (rum?.site_tag) log(`Web Analytics site tag: ${rum.site_tag}`);
 
-  // Deploy token: Pages edit only, 90 days. Fails closed if the permission group cannot be found.
-  const deployToken = await step('deploy token', async () => {
+  // Deploy token: Pages edit only, 90 days. Fails closed if the permission group cannot be found
+  // or if a token with this name already exists (its value cannot be read back).
+  const tokenName = `${DOMAIN} pages deploy`;
+  const deploy = await step('deploy token', async () => {
+    const tokens = await call('GET', `/accounts/${accountId}/tokens`, null, []);
+    const old = (tokens ?? []).find((t) => t.name === tokenName);
+    if (old) {
+      throw new SetupError(
+        `A token named "${tokenName}" already exists (id ${old.id}, expires ${old.expires_on ?? 'never'}). Its value cannot be read back, so no second token was made and the secrets were not changed. If the secrets are missing, delete that token in Cloudflare (My Profile, API Tokens) and run this again.`,
+      );
+    }
     const groups = await call('GET', `/accounts/${accountId}/tokens/permission_groups`, null, [
       { id: '<pages_group_id>', name: PAGES_GROUP_NAMES[0] },
     ]);
@@ -217,7 +271,7 @@ export async function runSetup({
       'POST',
       `/accounts/${accountId}/tokens`,
       {
-        name: `${DOMAIN} pages deploy`,
+        name: tokenName,
         policies: [
           {
             effect: 'allow',
@@ -227,11 +281,15 @@ export async function runSetup({
         ],
         expires_on: expires,
       },
-      { value: '<deploy token>' },
+      { value: '<deploy token>', id: '<token id>' },
     );
     if (!result?.value) throw new SetupError('Token created but the response had no value');
-    return result.value;
+    log(
+      `Created deploy token "${tokenName}" (id ${result.id}). If storing the secrets fails, delete it in Cloudflare.`,
+    );
+    return result;
   });
+  const deployToken = deploy?.value;
 
   if (dryRun) {
     log(
@@ -293,20 +351,36 @@ function promptLine(label) {
   );
 }
 
+const idPattern = /^[0-9a-f]{32}$/;
+const projectPattern = /^[a-z0-9][a-z0-9-]{0,57}$/;
+const repoPattern = /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+$/;
+const valueFlags = {
+  '--account': ['Account ID', idPattern],
+  '--zone': ['Zone ID', idPattern],
+  '--project': ['project name', projectPattern],
+  '--repo': ['repository', repoPattern],
+};
+
+// Error text never repeats input: a pasted secret must not come back out in a message (or a shared dry-run).
 export function parseArgs(argv) {
   const out = { dryRun: false, link: false };
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
     if (a === '--dry-run') out.dryRun = true;
     else if (a === '--link') out.link = true;
-    else if (['--account', '--zone', '--project', '--repo'].includes(a))
-      out[a.slice(2)] = argv[++i];
-    else throw new SetupError(`Unknown argument ${a}`);
+    else if (Object.hasOwn(valueFlags, a)) {
+      const [label, pattern] = valueFlags[a];
+      const v = argv[++i];
+      if (v === undefined || !pattern.test(v)) throw new SetupError(`${a} needs a valid ${label}.`);
+      out[a.slice(2)] = v;
+    } else {
+      throw new SetupError(
+        'Unexpected argument. Allowed: --link, --dry-run, --account, --zone, --project, --repo.',
+      );
+    }
   }
   return out;
 }
-
-const idPattern = /^[0-9a-f]{32}$/;
 
 async function main() {
   const args = parseArgs(process.argv.slice(2));
@@ -336,7 +410,11 @@ async function main() {
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
   main().catch((err) => {
-    console.error(err instanceof SetupError ? err.message : `Unexpected error: ${err.message}`);
+    console.error(
+      err instanceof SetupError
+        ? err.message
+        : `Unexpected error (${err.name}). Nothing was printed that could contain a secret.`,
+    );
     process.exit(1);
   });
 }
