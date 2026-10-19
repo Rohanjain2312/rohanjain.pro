@@ -87,6 +87,7 @@ Totals: 99 claims. 76 verified, 22 verified-note, 0 mismatch, 1 unsourced. See t
 | `settle-brier-before` | `0.213` | Blog line 105 "Brier score went from 0.213 to 0.035 after calibration"; Resume bullet 3 | verified | 2026-10-16 |
 | `settle-brier-after` | `0.035` | Blog lines 94 and 105; Resume bullet 3 | verified | 2026-10-16 |
 | `settle-shap-correlation` | `0.96` | Blog line 114 "rank correlation 0.96"; figure `reference/figures/settle_shap.png` subtitle; Resume bullet 3 | verified | 2026-10-16 |
+| `settle-shap-planted-rank` | `3 of 190` | Resume, Projects, Settlement Fail Predictor bullet 3, "all 3 planted interactions ranked top 3 of 190 pairs" (client-decided, R-302, ADR-0033; client confirmed in chat 2026-10-19). No repo source found; the résumé value is the claim | verified-note | 2026-10-19 |
 | `settle-dates` | `Oct 2026` | Repo commits 2026-10-08 to 2026-10-10 | verified | 2026-10-16 |
 | `settle-pr-auc-svm` | `0.319` | Blog `docs/blog/predicting-trade-settlement-fails.md` line 93, results table, row "RBF SVM", setup "Class weights": PR-AUC 0.319 (22% of fails in the riskiest 2%, Brier 0.036). Table is labelled test period, synthetic data (lines 94-95). Display "RBF SVM 0.319" matches the three decimals | verified | 2026-10-17 |
 | `settle-pr-auc-lr` | `0.305` | Blog line 91, row "Logistic regression", setup "No resampling": PR-AUC 0.305 (21%, Brier 0.037). Same table, test period, synthetic data. Display "logistic regression PR-AUC 0.305" matches the three decimals | verified | 2026-10-17 |
@@ -105,6 +106,7 @@ Totals: 99 claims. 76 verified, 22 verified-note, 0 mismatch, 1 unsourced. See t
 
 | Claim ID | Value | Source checked | Result | Date |
 |---|---|---|---|---|
+| `fc-params` | `109M` | Resume, Projects, FinCompress bullet 1, "109M params" (client-decided, R-302, ADR-0033; client confirmed in chat 2026-10-19). No repo source found; the résumé value is the claim | verified-note | 2026-10-19 |
 | `fc-size-ratio` | `9.1x` | Repo README line 47 "9.1x smaller"; Resume bullet 1. 437.9 over 47.7 is 9.18, so 9.1x is truncated and understates slightly | verified-note | 2026-10-16 |
 | `fc-size-before` | `437.9 MB` | Repo README line 44; `results/benchmark_results.csv` teacher size_mb 437.95; Resume says 438 MB (rounded) | verified | 2026-10-16 |
 | `fc-size-after` | `47.7 MB` | Repo README line 47; Resume bullet 1 | verified | 2026-10-16 |
@@ -161,7 +163,6 @@ Totals: 99 claims. 76 verified, 22 verified-note, 0 mismatch, 1 unsourced. See t
 | `med-lora-params` | `1.14` | README lines 47 and 56 "1.14% (83.9M / 7.3B)" | verified | 2026-10-16 |
 | `med-format-tuned` | `100` | README lines 21 and 48 "Format Adherence: 100% (vs 0% base model)". The repo holds no results file and no sample size for this figure | verified-note | 2026-10-16 |
 | `med-format-base` | `0` | README line 48, same statement and same caveat | verified-note | 2026-10-16 |
-| `med-prompts` | `10` | No source found. README never states a 10-prompt check. `evaluation/evaluate_model.py` lines 90 and 250 only set a default `num_samples` of 10; `evaluation/manual_evaluation.py` lists 5 prompts. No recorded run | unsourced | 2026-10-16 |
 | `med-dates` | `Jan 2026` | Repo commits 2026-01-09 to 2026-01-12 | verified | 2026-10-16 |
 
 ### GraphBench (repo graphbench README)
@@ -188,7 +189,8 @@ Totals: 99 claims. 76 verified, 22 verified-note, 0 mismatch, 1 unsourced. See t
 ## Summary
 
 - Open mismatch issues: none. The rows for #140 to #146 were re-verified in the #170 pass (see below).
-- Unsourced: `med-prompts`.
+- Unsourced: none. `med-prompts` ("10-prompt check") had no source and was removed from `claims.json` under R-005 in #269; it has no row.
+- Client-decided in #269 (2026-10-19): `fc-params` and `settle-shap-planted-rank`, from the résumé (R-302, ADR-0033).
 - Re-verification for #170 (2026-10-16). The résumé and client decisions are valid sources that override repo values (R-302 and the Evidence Ledger), so a claim that matches the résumé is `verified-note` with the repo value in the source column, not `mismatch`. Rows re-verified against `src/content/claims.json` as restored by PR #172 (head 1b50df1), which returns these claims to their values at commit 595c0bb: `goldman-tenure`, `goldman-tenure-years`, `loan-v2-subgraphs`, `loan-v2-deploy`, `fc-pruning-heads`, `fc-pruning-f1-gain`, `mr-baselines`, `mr-f1`. The tariff claims `tariff-rulings-eval` and `tariff-dates` keep the PR #165 wording and are `verified` against the repo README and commit dates. Résumé checked: `reference/resume/Rohan_Resume_v26.docx`. Repo heads checked (unchanged since the first pass): FinCompress 442af31, customs-court 324f4b1, transformer-market-regime 6946b7b, loan-servicing-agent 0920ab4. Claim values checked against `claims.json` at 1b50df1 (on top of `main` 7148fe1).
 - Rows added for #183 (2026-10-17): `settle-pr-auc-svm`, `settle-pr-auc-lr`, `fc-f1-baseline`, `fc-f1-cost`, `mr-baseline-accuracy`, `mr-baseline-mcc`, `mr-test-window`. Each was read from the cited source (blog table, FinCompress README Results table, transformer-market-regime README table and split section), not from App/Data's notes. Value and display text match the source to the stated decimals. Repo heads at the check: FinCompress 442af31, transformer-market-regime 6946b7b, trade-settlement-fail-predictor 3b74de3 (all unchanged since the first pass). `fc-pruning-peak-f1` and `fc-pruning-peak-share` were removed from `claims.json` at 287fc37 and have no rows.
 - The default check fails on missing, stale or malformed rows and warns on open findings. `node tests/fixtures/claims/check-verification-log.mjs --require-clean` also fails on open findings; use it at the phase gate.
