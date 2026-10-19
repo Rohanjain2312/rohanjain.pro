@@ -34,11 +34,12 @@ Passkeys or 2FA: GitHub is done (2026-10-16). Cloudflare is step 1.2. Porkbun ne
 - Confirm the Phase 6 gate record, tag `v0.9.0`, and a green `npm run verify` on the tag.
 - Copy `.github/templates/production-deploy.yml` to `.github/workflows/deploy.yml` in `Rohanjain2312/rohanjain.pro-applications` (private, already created, ADR-0016). Do not create or push to it from an agent worktree without the Supervisor-only exception.
 - In that repo set variables: `gh variable set SITE_TAG --body v0.9.0 --repo Rohanjain2312/rohanjain.pro-applications` and `CF_PAGES_PROJECT`. The project name is a choice made at launch (suggested: `rohanjain-pro`); it is not recorded anywhere yet.
-- Create the `production` environment and restrict it to `main` (ADR-0032). Two calls, in this order:
-  1. `gh api -X PUT repos/Rohanjain2312/rohanjain.pro-applications/environments/production --input - <<< '{"deployment_branch_policy":{"protected_branches":false,"custom_branch_policies":true}}'`
-  2. `gh api -X POST repos/Rohanjain2312/rohanjain.pro-applications/environments/production/deployment-branch-policies -f name=main -f type=branch`
+- The `production` environment, limited to `main` (ADR-0032), is created by the setup command (`.github/scripts/launch-setup.mjs`) with the client's own `gh`, before any Cloudflare change (R-509: agents do not write to the private repo). It runs these calls, with the bodies below, which were checked on 2026-10-20 against https://docs.github.com/en/rest/deployments/environments (PUT) and https://docs.github.com/en/rest/deployments/branch-policies (POST and list):
+  1. Read `repos/Rohanjain2312/rohanjain.pro-applications/environments/production`. Only on a 404 does it `PUT` the same path with `{"deployment_branch_policy":{"protected_branches":false,"custom_branch_policies":true}}` (a `PUT` on an existing environment would reset its settings).
+  2. `POST .../environments/production/deployment-branch-policies` with `name=main` and `type=branch` (needs `custom_branch_policies` true, which is why step 1 comes first).
+  3. Read the policy list back; it must be exactly one entry, `main` of type `branch`.
 
-  The second call is confirmed in the GitHub REST docs (it needs `custom_branch_policies` true, which is why the first call comes first). The JSON body of the first call is from memory of the same docs and is unverified: check it against https://docs.github.com/en/rest/deployments/environments at launch, then read the policy back with `gh api repos/Rohanjain2312/rohanjain.pro-applications/environments/production/deployment-branch-policies`. Environments in private repos may need a paid GitHub plan. If the calls fail, do not fall back silently: record it for Security. The fallback is repository secrets with no other workflow in that repo, dispatch limited to `main`, and `environment: production` removed from the deploy job. Only the deploy job reads the secrets.
+  Idempotent: an environment that already has the main-only policy is left alone; one with any other policy stops the run with no change, for Claude Code to review. `--dry-run` prints the calls. If GitHub refuses (environments may need a paid plan for private repos), the run stops before any Cloudflare change and says so. Do not fall back silently: record it for Security. The fallback to put to Security is repository secrets with no other workflow in that repo, dispatch limited to `main`, and `environment: production` removed from the deploy job. Only the deploy job reads the secrets.
 - Security reviews the copied workflow. The template passed `ci-checks.mjs pins` (all actions pinned).
 - Run a dry run with a fixture result (section 3).
 
@@ -149,6 +150,5 @@ Rollback never needs the client.
 
 - The Pages project name.
 - The items listed as still unverified in section 5.
-- The JSON body of the environment update call (section 2).
 - Whether the private repo's GitHub plan supports environments.
 - Whether wrangler `4.149.0` deploys cleanly with install scripts disabled. First deploy confirms.
