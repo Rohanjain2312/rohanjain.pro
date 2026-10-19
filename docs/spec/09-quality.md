@@ -55,4 +55,4 @@ Claude Code builds the golden test set itself; the client is not asked.
 Procedure and categories: skill `seeded-defect-audit`. Audit 1 ran at Phase 1; no later audits (R-704 retired, ADR-0026).
 
 ### 9.7 External validation
-5-second and first-click test, recruiter fit ratings, and reply-rate tracking: skill `external-validation`. Pass criteria are success criterion 9 in `docs/spec/01-product.md`.
+Reply-rate tracking after launch: skill `external-validation`. The real 5-second test and recruiter fit ratings were dropped by the client (ADR-0035); success criterion 9 in `docs/spec/01-product.md` states what stands instead.

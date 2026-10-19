@@ -11,7 +11,7 @@ Status: accepted · 2026-10-19 · Supervisor (R-004), from the client's instruct
 
 ## Consequences
 - No client action remains for validation or the redirect.
-- If a redirect is wanted later, add one Redirect Rule (`https://www.*` to `https://${1}`, 301) with a new setup token that has the rules permission.
+- If a redirect is wanted later, add one Redirect Rule with a new setup token that has the rules permission; the recipe and the unverified permission key are in runbook section 4.
 - The `external-validation` skill stays in the repo for reference; nobody is asked to run it.
 
 ## Alternatives

@@ -27,7 +27,7 @@ Owners: Platform (pipeline), Design Lead + Frontend (tokens, spec), App/Data (co
 Owners: Frontend (UI), App/Data (wiring)
 - Hero, results strip, production section with both folds, selected work, more projects, background fold, contact (with phone), footer, 404, privacy page.
 - Static and content-driven; claims check passing.
-**Gate:** design review passes the anti-slop checklist at 390/768/1280 px; Reader Advocate's simulated 5-second test passes; zero axe violations; Lighthouse budgets met locally; claims check and copy lint green. The real 5-second test packet is ready in `docs/needs-client.md` (does not block).
+**Gate:** design review passes the anti-slop checklist at 390/768/1280 px; Reader Advocate's simulated 5-second test passes; zero axe violations; Lighthouse budgets met locally; claims check and copy lint green.
 
 ### Phase 3: Fit check and brief
 Owners: App/Data (engine, golden drafts), QA (golden set, rubric, tests), Frontend (UI), Design Lead (brief layout)
@@ -56,7 +56,7 @@ Owners: Security (lead), all roles
 - Cross-browser runs in Playwright (Chromium, WebKit, mobile emulation; Firefox is not a target, ADR-0034).
 - Phase 7 fully prepared: `deploy.yml` (previews) and the production workflow in the private repo with the `status-data` fetch (ADR-0027), Cloudflare config, DNS record plan, launch runbook, and the client's short launch steps in `docs/needs-client.md`.
 - Tag `v0.9.0` (release candidate). Write `docs/handoff.md`: how to run locally, what is done, what launch needs.
-- Fold in any real 5-second or fit-rating results received; failures become issues and are fixed here.
+- Fold in any 5-second or fit-rating results the client volunteers (the real tests were dropped, ADR-0035); failures become issues and are fixed here.
 **Gate:** zero open Critical/High/Medium findings; all budgets met; release candidate tagged. **The build stops here until the client completes the Phase 7 steps.**
 
 ### Phase 7: Production launch (after the client buys the domain)

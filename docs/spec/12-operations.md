@@ -31,10 +31,10 @@ Imagined launch-day failures, ranked by likelihood, with who catches each before
 
 | # | Failure | Caught by (role: check) | Before v2.3 |
 |---|---|---|---|
-| 1 | The fit check flatters: broad aliases make most AI postings "Strong fit" | QA: rubric set before the engine, alias audit, property tests, mutation score; external: recruiter fit ratings | Partial (builder set its own expected answers) |
+| 1 | The fit check flatters: broad aliases make most AI postings "Strong fit" | QA: rubric set before the engine, alias audit, property tests, mutation score (the recruiter ratings were dropped, ADR-0035) | Partial (builder set its own expected answers) |
 | 2 | Tests pass but don't test: trivial assertions, snapshots and baselines updated to match bugs | QA: mutation testing, acceptance tests from criteria; Design Lead approves baselines | No owner |
 | 3 | A number is wrong, overstated or inconsistent across site and PDFs | App/Data: claims check; QA: claim re-verification and copy lint; Reader: cross-page consistency | Partial (ledger checked by its author) |
-| 4 | A recruiter on a phone can't say who he is after 5 seconds | Reader Advocate: simulated test; external: real 5-second and first-click test | No owner |
+| 4 | A recruiter on a phone can't say who he is after 5 seconds | Reader Advocate: simulated test (the real test was dropped, ADR-0035) | No owner |
 | 5 | Process theater: approvals recorded without a real review, or the same model agreeing with itself | Review rules in 2.11 (isolation, SHA and agent ID, read-only reviewers, model split); QA audit of 20% of PRs; seeded-defect audits | No owner |
 | 6 | The site looks generic or AI-made | Design Lead: R-602 in `.claude/agents/design-lead.md` on a different model than the builders; external: 5-second test comments | Partial (same model judging its own spec) |
 | 7 | Copy problems: em dashes, hype, work authorization mentioned, mismatched title or location | QA: copy lint; Reader Advocate | Partial (no mechanical check) |

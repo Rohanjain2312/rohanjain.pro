@@ -65,7 +65,7 @@ State after the client's setup run: zone Active, DNS, DNSSEC, Pages project `roh
 - Headers come from `public/_headers` inside `dist`. Do not duplicate them in Cloudflare rules. HSTS and the Web Analytics origins are added to `_headers` by Security (issue #283); the first deploy waits for that change.
 - Cloudflare Web Analytics is created by the setup command with `auto_install`. Do not add a cookie.
 - Always HTTPS, Automatic HTTPS rewrites and minimum TLS 1.2 are set by the setup command.
-- `www` to apex 301. `public/_redirects` cannot do this: Cloudflare's Pages redirects page (https://developers.cloudflare.com/pages/configuration/redirects/) lists domain-level redirects as not supported and documents the source as a file path. The documented route is a Redirect Rule: https://developers.cloudflare.com/rules/url-forwarding/examples/redirect-www-to-root/ (request URL wildcard pattern `https://www.*`, target `https://${1}`, status 301, preserve query string). Until it exists, `www` serves the same site. Creating the rule needs a token with "Zone > Single Redirect > Edit" (https://developers.cloudflare.com/rules/url-forwarding/single-redirects/create-api/); the template key for it, and the rulesets API call, are unverified (R-005), so the script does not do it. Decision for the Supervisor: either the client adds the rule in the dashboard (Rules, Redirect Rules, using the pattern above; a client-only step to add to the list) or Claude Code adds the permission to a new setup link once the key is verified. The `www` redirect is not a blocker for the first deploy.
+- `www` to apex 301. `public/_redirects` cannot do this: Cloudflare's Pages redirects page (https://developers.cloudflare.com/pages/configuration/redirects/) lists domain-level redirects as not supported and documents the source as a file path. The documented route is a Redirect Rule: https://developers.cloudflare.com/rules/url-forwarding/examples/redirect-www-to-root/ (request URL wildcard pattern `https://www.*`, target `https://${1}`, status 301, preserve query string). Decision (ADR-0035): no rule is added; `www` serves the same site, with the canonical and `og:url` on the apex. Creating the rule needs a token with "Zone > Single Redirect > Edit" (https://developers.cloudflare.com/rules/url-forwarding/single-redirects/create-api/); the template key for it, and the rulesets API call, are unverified (R-005), so the script does not do it. Decision for the Supervisor: either the client adds the rule in the dashboard (Rules, Redirect Rules, using the pattern above; a client-only step to add to the list) or Claude Code adds the permission to a new setup link once the key is verified. The `www` redirect is not a blocker for the first deploy.
 
 First deploy tag. Decision: not `v0.9.0`. It predates content fixes and the Phase 7 headers change. The first deploy uses a release candidate `v0.9.1`, published by the Supervisor (`docs/runbooks/releases.md`) from `main` after Security's `_headers` change (#283) is merged and `npm run verify` is green on it. Security accepts it before the first deploy (section 7, order). `v1.0.0` follows only after every check in section 7 passes. The deploy workflow accepts any `vX.Y.Z` tag and reads it from `SITE_TAG`.
 
@@ -119,7 +119,7 @@ Deploy token. Created by the setup command with the setup token. Pages edit only
 
 Still unverified (R-005): the `edit` level for `account_settings` and the acceptance of `account_api_tokens` by the user-token form (table above); that Cloudflare can limit a Pages token to one project (the documented resource is the account, so the deploy token is account-wide for Pages and can touch every Pages project in this account; the account has only this one); the `subdomain` field of the Pages project response (the script falls back to `<project>.pages.dev`); and whether Cloudflare accepts `.` as null MX content. Fallback if a token cannot create another token: a second prepared link and a second client-created token with Pages edit only. In the same change, update `docs/needs-client.md` and CLAUDE.md client-only item 3 (Supervisor-owned).
 
-The `www` to apex 301 is not done by the script: a proxied CNAME serves the site on `www`, and the redirect is a separate step (a rules permission is not in the setup token). `public/_redirects` cannot do it (domain-level redirects are not supported); the options are in section 4.
+The `www` to apex 301 is not done by the script and is not planned (ADR-0035): a proxied CNAME serves the site on `www`, with the canonical on the apex. `public/_redirects` cannot do it (domain-level redirects are not supported); the options are in section 4.
 
 ## 6. DNS record plan
 
@@ -128,7 +128,7 @@ Set after the zone is Active, by the setup command with the setup token (section
 | Type | Name | Value | Note |
 |---|---|---|---|
 | CNAME (flattened) | `@` | the Pages project hostname | created by the setup command; skipped if the custom-domain step already created it |
-| CNAME | `www` | `@` or redirect rule | redirect to the apex |
+| CNAME | `www` | `@` | serves the site; canonical on the apex (no redirect rule, ADR-0035) |
 | MX | `@` | `0 .` | null MX |
 | TXT | `@` | `v=spf1 -all` | |
 | TXT | `_dmarc` | `v=DMARC1; p=reject; adkim=s; aspf=s` | |
