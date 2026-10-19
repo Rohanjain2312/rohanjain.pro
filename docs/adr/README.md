@@ -37,3 +37,4 @@ Format: context, decision, consequences, alternatives. New ADRs take the next nu
 | [0031](0031-claims-check-on-for-pages.md) | Claims check on /for pages: counts line exempt, proof text checked |
 | [0032](0032-cloudflare-token-scope.md) | Cloudflare token scope: one-time setup token, narrow Pages-only deploy token |
 | [0033](0033-client-values-override-repo.md) | Client-decided values override repo values (R-302) |
+| [0034](0034-chrome-first-no-firefox.md) | Chrome-first browser support; Firefox is not a target |

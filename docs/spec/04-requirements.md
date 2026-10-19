@@ -28,7 +28,7 @@ Functional and non-functional requirements. Acceptance criteria in issues trace 
 |---|---|
 | N-01 | Performance: LCP under 1.8 s and CLS under 0.05 on a mid-range phone over 4G; total JS under 30 KB gzipped on the home page; home page HTML+CSS under 60 KB gzipped (excluding fonts and images). |
 | N-02 | Accessibility: WCAG 2.2 AA. Zero axe violations. Full keyboard operability. Visible focus. Touch targets 44 px. Contrast 4.5:1 for body text. |
-| N-03 | Browser support: last 2 versions of Chrome, Edge, Firefox, Safari; iOS Safari 16+; Android Chrome. |
+| N-03 | Browser support: last 2 versions of Chrome, Edge, Safari (Firefox is not a target, ADR-0034); iOS Safari 16+; Android Chrome. |
 | N-04 | Responsive from 320 px to 1920 px. No horizontal scroll at any width. |
 | N-05 | Availability after launch: 99.9% monthly (inherits Cloudflare's edge). |
 | N-06 | Security: see `docs/spec/08-security.md` |

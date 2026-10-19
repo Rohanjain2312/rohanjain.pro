@@ -53,7 +53,7 @@ Owners: Frontend + Design Lead (figures UI), App/Data (figures data), Platform (
 Owners: Security (lead), all roles
 - Full local security assessment (`docs/spec/08-security.md` §8.9).
 - Accessibility audit; performance tuning; SEO (favicon set and OG image, JSON-LD, sitemap, robots, canonical with the future domain). A `status-data` branch ruleset (no deletion, no non-fast-forward) is added before the Phase 7 deploy fetches that branch.
-- Cross-browser runs in Playwright (Chromium, Firefox, WebKit, mobile emulation).
+- Cross-browser runs in Playwright (Chromium, WebKit, mobile emulation; Firefox is not a target, ADR-0034).
 - Phase 7 fully prepared: `deploy.yml` (previews) and the production workflow in the private repo with the `status-data` fetch (ADR-0027), Cloudflare config, DNS record plan, launch runbook, and the client's short launch steps in `docs/needs-client.md`.
 - Tag `v0.9.0` (release candidate). Write `docs/handoff.md`: how to run locally, what is done, what launch needs.
 - Fold in any real 5-second or fit-rating results received; failures become issues and are fixed here.
