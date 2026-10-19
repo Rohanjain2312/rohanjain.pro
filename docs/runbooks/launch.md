@@ -25,15 +25,16 @@ Each step lists what to do and what to send back.
    2. In Terminal, run the one command Claude Code prepares. It asks you to paste the token and the Account ID (shown on the right side of the domain overview page in Cloudflare). The token is used only in that Terminal session. It is never stored in GitHub.
    3. The command applies the DNS records, DNSSEC, CAA, email records and Web Analytics (section 6). It then creates a second token with Pages edit only (account-wide for Pages, as in section 5), and stores that second token and the Account ID as secrets of the `production` environment with `gh secret set`.
    4. Close the terminal tab.
-   5. After launch, Claude Code gives you the steps to revoke the setup token (Cloudflare, My Profile, API Tokens, the setup token, Delete). DNS changes later need a new setup token.
+   5. Second command, after Claude Code says the release candidate tag is published (section 4). Run `node .github/scripts/launch-deploy-setup.mjs`. It needs no Cloudflare token. It sets two variables on the private applications repo and adds the deploy workflow file there. Claude Code gives you the exact command (it first runs with `--dry-run` for review). Only if the command says the file write was refused, run `gh auth refresh -s workflow` once and run it again.
+6. After launch, Claude Code gives you the steps to revoke the setup token (Cloudflare, My Profile, API Tokens, the setup token, Delete). DNS changes later need a new setup token.
 
 Passkeys or 2FA: GitHub is done (2026-10-16). Cloudflare is step 1.2. Porkbun needs 2FA too: Account, Security.
 
 ## 2. Before the client starts (Claude Code)
 
 - Confirm the Phase 6 gate record, tag `v0.9.0`, and a green `npm run verify` on the tag.
-- Copy `.github/templates/production-deploy.yml` to `.github/workflows/deploy.yml` in `Rohanjain2312/rohanjain.pro-applications` (private, already created, ADR-0016). Do not create or push to it from an agent worktree without the Supervisor-only exception.
-- In that repo set variables: `gh variable set SITE_TAG --body v0.9.0 --repo Rohanjain2312/rohanjain.pro-applications` and `CF_PAGES_PROJECT`. The project name is a choice made at launch (suggested: `rohanjain-pro`); it is not recorded anywhere yet.
+- The deploy workflow and variables are added by the second client command, `.github/scripts/launch-deploy-setup.mjs` (section 4), because the guard-bash hook stops agents from writing to `Rohanjain2312/rohanjain.pro-applications` (private, ADR-0016). Do not create or push to it from an agent worktree without the Supervisor-only exception.
+- Variables, set by that command: `SITE_TAG` (the first-deploy tag, section 4) and `CF_PAGES_PROJECT=rohanjain-pro` (the project the setup command created).
 - The `production` environment, limited to `main` (ADR-0032), is created by the setup command (`.github/scripts/launch-setup.mjs`) with the client's own `gh`, before any Cloudflare change (the guard-bash hook stops agents from writing to the private repo, so the client's run is the place for it). It runs these calls, with the bodies below, which were checked on 2026-10-20 against https://docs.github.com/en/rest/deployments/environments (PUT) and https://docs.github.com/en/rest/deployments/branch-policies (POST and list):
   1. Read `repos/Rohanjain2312/rohanjain.pro-applications/environments/production`. Only when GitHub answers "not found" (HTTP 404) does it `PUT` the same path with `{"deployment_branch_policy":{"protected_branches":false,"custom_branch_policies":true}}` (the page documents `PUT` as "create or update", so the script never sends it for an environment that already exists).
   2. `POST .../environments/production/deployment-branch-policies` with `name=main` and `type=branch` (needs `custom_branch_policies` true, which is why step 1 comes first).
@@ -54,15 +55,29 @@ The private workflow builds in GitHub Actions and uploads `dist`. Cloudflare Pag
 - No raw result file is ever uploaded. The `dist` artifact keeps one day and holds rendered pages only. The repo is private, so its logs and artifacts are private.
 - Monthly cleanup: `list-expired` runs `npm run for -- --list-expired` (names only, nothing deleted). `remove-expired` validates names, deletes those files, pushes to `main`, and the build job then redeploys.
 - Test with no result file: git does not track empty directories, so the private repo has no `applications/` directory until a result file exists. Before adding the fixture, run `workflow_dispatch` once with no result file. `list-expired` must pass with "expired files: 0" (the step creates the directory), `remove-expired` and `build` must run, and the build must succeed with no `/for` pages. The rollback command in section 8 depends on this.
-- Test before launch: add one fixture result to the private repo (generate it with `npm run for` against a made-up posting), run the workflow with `SITE_TAG` set, and check that `/for/<slug>` is in the deployed preview and that the claims step passes. Only the first real run proves the wrangler step, because no Cloudflare deploy token exists yet.
+- Test before launch: add one fixture result to the private repo (generate it with `npm run for` against a made-up posting), run the workflow with `SITE_TAG` set, and check that `/for/<slug>` is in the deployed preview and that the claims step passes. Only the first real run proves the wrangler step with the deploy token stored by the setup command.
 
 ## 4. Cloudflare Pages
 
-- Create the Pages project as a direct-upload project (no Git connection): wrangler creates it on the first deploy, or `npx wrangler pages project create <name> --production-branch main`.
-- Add the custom domain `rohanjain.pro` in the project. Cloudflare creates the apex record. Add `www` as a second custom domain or a redirect rule to the apex.
-- Headers come from `public/_headers` inside `dist`. Do not duplicate them in Cloudflare rules. HSTS and the Web Analytics origins are added to `_headers` in Phase 7 only (see the comment at the top of that file); Security owns the change.
-- Turn on Cloudflare Web Analytics for the site. Do not add a cookie. Add its origins to `script-src` and `connect-src` in `_headers` (Security).
-- Always HTTPS and Automatic HTTPS rewrites on; minimum TLS 1.2.
+State after the client's setup run: zone Active, DNS, DNSSEC, Pages project `rohanjain-pro` with `rohanjain.pro` and `www.rohanjain.pro` as custom domains, and the two deploy secrets in the `production` environment. A re-run of the setup command skips what exists: Cloudflare error codes 8000002 (Pages project), 8000018 (Pages domain) and 10023 (Web Analytics) mean "already there" and are logged as skips, not failures.
+
+- Pages is a direct-upload project (no Git connection). The workflow deploys `dist` with a pinned wrangler.
+- Headers come from `public/_headers` inside `dist`. Do not duplicate them in Cloudflare rules. HSTS and the Web Analytics origins are added to `_headers` by Security (issue #283); the first deploy waits for that change.
+- Cloudflare Web Analytics is created by the setup command with `auto_install`. Do not add a cookie.
+- Always HTTPS, Automatic HTTPS rewrites and minimum TLS 1.2 are set by the setup command.
+- `www` to apex 301. `public/_redirects` cannot do this: Cloudflare's Pages redirects page (https://developers.cloudflare.com/pages/configuration/redirects/) lists domain-level redirects as not supported and documents the source as a file path. The documented route is a Redirect Rule: https://developers.cloudflare.com/rules/url-forwarding/examples/redirect-www-to-root/ (request URL wildcard pattern `https://www.*`, target `https://${1}`, status 301, preserve query string). Until it exists, `www` serves the same site. Creating the rule needs a token with "Zone > Single Redirect > Edit" (https://developers.cloudflare.com/rules/url-forwarding/single-redirects/create-api/); the template key for it, and the rulesets API call, are unverified (R-005), so the script does not do it. Decision for the Supervisor: either the client adds the rule in the dashboard (Rules, Redirect Rules, using the pattern above; a client-only step to add to the list) or Claude Code adds the permission to a new setup link once the key is verified. The `www` redirect is not a blocker for the first deploy.
+
+First deploy tag. Decision: not `v0.9.0`. It predates content fixes and the Phase 7 headers change. The first deploy uses a release candidate `v0.9.1`, published by the Supervisor (`docs/runbooks/releases.md`) from `main` after Security's `_headers` change (#283) is merged and `npm run verify` is green on it. Security accepts it before the first deploy (section 7, order). `v1.0.0` follows only after every check in section 7 passes. The deploy workflow accepts any `vX.Y.Z` tag and reads it from `SITE_TAG`.
+
+First-deploy steps, in order:
+
+1. Supervisor publishes `v0.9.1` (needs #283 merged).
+2. Client runs `node .github/scripts/launch-deploy-setup.mjs --dry-run`, Claude Code and Security read the output, then the client runs it without `--dry-run`. It stops, changing nothing, when no published release `v0.9.1` exists or when `deploy.yml` already exists and differs. If the file write is refused, the client runs `gh auth refresh -s workflow` and runs it again. Its calls: `GET releases/tags/<tag>` (https://docs.github.com/en/rest/releases/releases), `GET` and `PUT` on `contents/.github/workflows/deploy.yml` (create needs `message` and base64 `content`; `sha` only when updating, https://docs.github.com/en/rest/repos/contents), and `gh variable set NAME --body VALUE --repo R` (https://cli.github.com/manual/gh_variable_set).
+3. Security reviews the workflow now in the private repo (it is the template).
+4. No-result-file run first (section 3): `gh workflow run deploy.yml --repo Rohanjain2312/rohanjain.pro-applications`. `list-expired` must print "expired files: 0", `build` must succeed with no `/for` pages, `deploy` must go green. This is also the first test of wrangler `4.149.0` with install scripts disabled.
+5. Open https://rohanjain.pro and the `*.pages.dev` URL. Run the checks in section 7 (headers, Lighthouse, axe, DNS, analytics, status line).
+6. Fixture `/for` page test (section 3), then remove the fixture.
+7. Rollback test (section 8), then publish `v1.0.0` and redeploy with `SITE_TAG=v1.0.0`.
 
 ## 5. API tokens (ADR-0032)
 
@@ -104,7 +119,7 @@ Deploy token. Created by the setup command with the setup token. Pages edit only
 
 Still unverified (R-005): the `edit` level for `account_settings` and the acceptance of `account_api_tokens` by the user-token form (table above); that Cloudflare can limit a Pages token to one project (the documented resource is the account, so the deploy token is account-wide for Pages and can touch every Pages project in this account; the account has only this one); the `subdomain` field of the Pages project response (the script falls back to `<project>.pages.dev`); and whether Cloudflare accepts `.` as null MX content. Fallback if a token cannot create another token: a second prepared link and a second client-created token with Pages edit only. In the same change, update `docs/needs-client.md` and CLAUDE.md client-only item 3 (Supervisor-owned).
 
-The `www` to apex 301 is not done by the script: a proxied CNAME serves the site on `www`, and the redirect is a separate step (a rules permission is not in the setup token). Platform adds it to `public/_redirects` (absolute-URL redirect, to be verified in Cloudflare's Pages redirects documentation) in a follow-up.
+The `www` to apex 301 is not done by the script: a proxied CNAME serves the site on `www`, and the redirect is a separate step (a rules permission is not in the setup token). `public/_redirects` cannot do it (domain-level redirects are not supported); the options are in section 4.
 
 ## 6. DNS record plan
 
@@ -131,7 +146,7 @@ Run the launch checklist in `docs/spec/12-operations.md`. Specifically:
 - The status line shows (ADR-0027).
 - Rollback tested once (section 8).
 - Order. The tag `v1.0.0` does not exist until it is published, and the workflow checks out `SITE_TAG`, so it cannot deploy `v1.0.0` first.
-  1. First deploy and all smoke tests above use `SITE_TAG=v0.9.0` (or the release candidate tag, if one was cut after v0.9.0 and Security accepted it).
+  1. First deploy and all smoke tests above use `SITE_TAG=v0.9.1` (the release candidate, section 4; not `v0.9.0`).
   2. If every check passes, publish `v1.0.0` (`docs/runbooks/releases.md`); the SBOM attaches to the release.
   3. Set `SITE_TAG` to `v1.0.0` and deploy again; confirm the live site matches. Later deploys keep using `v1.0.0` until the next release.
 - Real 5-second test (skill `external-validation`) passed, or failures fixed and re-tested.
@@ -141,7 +156,7 @@ Run the launch checklist in `docs/spec/12-operations.md`. Specifically:
 
 Rollback never needs the client.
 
-1. Fastest: redeploy the previous tag. `gh workflow run deploy.yml --repo Rohanjain2312/rohanjain.pro-applications -f tag=v0.9.0` (use the last good tag). This rebuilds and deploys in about the build time.
+1. Fastest: redeploy the previous tag. `gh workflow run deploy.yml --repo Rohanjain2312/rohanjain.pro-applications -f tag=<last good tag>` (for example `v0.9.1`, or `v1.0.0` once published). This rebuilds and deploys in about the build time.
 2. Instant (dashboard or API): in Cloudflare Pages, Deployments, pick the last good deployment, Rollback. The deploy token (Pages edit) should allow it; if not, the client does it from the dashboard.
 3. Leaked or wrong `/for` page: delete the file in the private repo and push to `main`; the workflow redeploys. Pages are `Cache-Control: no-store`.
 4. After any rollback, set `SITE_TAG` back to the good tag so the next push does not redeploy the bad one.

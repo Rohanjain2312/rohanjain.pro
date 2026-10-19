@@ -33,7 +33,7 @@
     "verify": "node scripts/verify.mjs",
     "lint": "eslint . --max-warnings 0",
     "lint:css": "stylelint \"src/**/*.{css,astro,html}\" --allow-empty-input",
-    "gates:test": "node --test .github/lint-fixtures/ci-gates.test.mjs .github/lint-fixtures/pr-process.test.mjs .github/lint-fixtures/status.test.mjs .github/lint-fixtures/lighthouse.test.mjs .github/lint-fixtures/launch-setup.test.mjs",
+    "gates:test": "node --test .github/lint-fixtures/ci-gates.test.mjs .github/lint-fixtures/pr-process.test.mjs .github/lint-fixtures/status.test.mjs .github/lint-fixtures/lighthouse.test.mjs .github/lint-fixtures/launch-setup.test.mjs .github/lint-fixtures/launch-deploy-setup.test.mjs",
     "lint:html": "node .github/scripts/html-validate.mjs",
     "lint:selftest": "node --test .github/lint-fixtures/lint-rules.test.mjs",
     "format": "prettier --write .",

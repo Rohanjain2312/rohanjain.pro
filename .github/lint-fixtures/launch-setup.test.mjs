@@ -46,15 +46,22 @@ function fakeApi({ get, list = [{ id: 1, name: 'main', type: 'branch' }], put = 
   return { api, writes };
 }
 
-function mock({ zoneStatus = 'active', existing = [], failOn = null, groups, tokens = [] } = {}) {
+function mock({
+  zoneStatus = 'active',
+  existing = [],
+  failOn = null,
+  failCode = 1004,
+  groups,
+  tokens = [],
+} = {}) {
   const calls = [];
   const fetchFn = async (url, init) => {
     const path = url.replace('https://api.cloudflare.com/client/v4', '');
     const method = init.method;
     calls.push({ method, path, body: init.body ? JSON.parse(init.body) : null, auth: init.headers.Authorization });
     const ok = (result) => ({ ok: true, status: 200, json: async () => ({ success: true, result }) });
-    if (failOn && path.includes(failOn)) {
-      return { ok: false, status: 400, json: async () => ({ success: false, errors: [{ code: 1004, message: 'bad' }] }) };
+    if (failOn && path.endsWith(failOn)) {
+      return { ok: false, status: 400, json: async () => ({ success: false, errors: [{ code: failCode, message: 'bad' }] }) };
     }
     if (path.startsWith('/zones?')) return ok([{ id: ZONE, status: zoneStatus }]);
     if (path.includes('/dns_records?')) return ok(existing);
@@ -454,4 +461,43 @@ test('environment: the read-back after the POST is checked, not assumed', async 
     );
     assert.equal(f.writes.length, 2);
   }
+});
+
+test('already-exists errors skip the step instead of failing (issue #284)', async () => {
+  for (const [failOn, failCode] of [
+    ['/pages/projects', 8000002],
+    ['/domains', 8000018],
+    ['/rum/site_info', 10023],
+  ]) {
+    const { promise, logs } = run({}, { failOn, failCode });
+    const { failures } = await promise;
+    assert.deepEqual(failures, [], failOn);
+    assert.ok(logs.some((l) => l.startsWith('skip (already exists)')), failOn);
+  }
+});
+
+test('each skip code applies only to its own step: the other two codes fail it', async () => {
+  const steps = [
+    ['/pages/projects', 8000002],
+    ['/domains', 8000018],
+    ['/rum/site_info', 10023],
+  ];
+  for (const [failOn, own] of steps) {
+    for (const [, other] of steps.filter(([, code]) => code !== own)) {
+      const { promise, logs } = run({}, { failOn, failCode: other });
+      const { failures } = await promise;
+      assert.equal(failures.length > 0, true, `${failOn} must fail on ${other}`);
+      assert.ok(!logs.some((l) => l.startsWith('skip (already exists)')), `${failOn} skipped ${other}`);
+    }
+  }
+});
+
+test('a different error code on the same step still fails', async () => {
+  const { promise } = run({}, { failOn: '/rum/site_info', failCode: 10024 });
+  assert.equal((await promise).failures.length, 1);
+});
+
+test('the skip codes apply only to their own step', async () => {
+  const { promise } = run({}, { failOn: '/dnssec', failCode: 8000002 });
+  assert.equal((await promise).failures.length, 1);
 });
