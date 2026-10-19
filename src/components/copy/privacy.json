@@ -5,9 +5,9 @@
   },
   "label": "privacy",
   "heading": "What this site collects",
-  "updated": "2026-10-17",
+  "updated": "2026-10-19",
   "updatedLabel": "last updated",
-  "intro": "This page lists what the site collects and what it does not. The site itself sets no cookies and stores nothing about you.",
+  "intro": "This page lists what the site collects and what it does not. The site sets no cookies and stores nothing in your browser.",
   "groups": [
     {
       "label": "collected",
@@ -15,6 +15,10 @@
         {
           "term": "Request logs at the host",
           "text": "The host that serves the pages processes standard request logs, which can include your IP address. The site does not read them."
+        },
+        {
+          "term": "Page-visit counts",
+          "text": "Cloudflare Web Analytics counts visits to pages. Cloudflare runs it. It records page load timing, the page path, the referring site, your country, device type, browser and operating system. It sets no cookie and stores nothing in your browser. Cloudflare says it does not track individual visitors across the sites that use it."
         },
         {
           "term": "Live demos",
@@ -36,7 +40,7 @@
         },
         {
           "term": "Tracking",
-          "text": "There are no advertising or marketing scripts and no third-party trackers on the site."
+          "text": "There are no advertising or marketing scripts. The only third-party script is the Cloudflare Web Analytics beacon described above."
         }
       ]
     }
