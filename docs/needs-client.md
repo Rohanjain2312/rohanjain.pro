@@ -3,12 +3,6 @@
 The only things Claude Code cannot do itself. Each item has exact steps. Claude Code keeps working on everything else meanwhile (R-003).
 
 ## Open
-- [ ] Update the GitHub CLI (the installed 2.63.2 cannot edit PR labels): `brew upgrade gh`
-
-
-- [ ] Confirm the availability line the site shows. `src/content/site.json` says "Available now", taken from the mockup; no source states it (R-005). Reply with the exact text you want, or "none" to hide it.
-
-- [ ] Two numbers in your résumé have no source in the Evidence Ledger, so `resume.json` leaves them out (R-005, PR #137): "109M params" and "all 3 planted interactions ranked top 3 of 190 pairs". The site claim "10-prompt check" (medical LLM project) also has no source QA could find (PR #152). To keep any of them, reply with the repo file or notebook that shows each number. Otherwise nothing is needed.
 
 - [ ] Optional, does not block the build: the real 5-second test (skill `external-validation`). Pick at least 5 people who recruit or hire for technical roles, or who work as engineers. In the project folder run `npm run browsers:install` once, then `npm run shots`, then send each person the two files `.shots/home-390-fold.png` (phone size) and `.shots/home-1280-fold.png` (laptop size; give each person one of the two) with this message: "Look at this picture for 5 seconds, then answer without opening it again. Without scrolling: (1) What is this person's role? (2) Name one thing they have done. (3) How would you contact them?" Do not explain the page first. (This is the plain-file version of the test: the 5 seconds rely on the person's honesty; if you would rather use a free form with timed images, such as Google Forms or Lyssna, the questions are the same.) Send results without names (R-901): paste each person's three answers in chat or into `docs/validation/phase-2-five-second.md`. The test passes when at least 4 of 5 name the role and one proof point. The first-click question ("Where would you get his résumé?") waits until the "View résumé" button ships in Phase 4 and is asked in the Phase 6 repeat. Nothing is needed from you if you skip this.
 
