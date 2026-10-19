@@ -2,6 +2,7 @@
 // 'unsafe-inline' must produce a failure. No browser and no server needed.
 import { expect, test } from '@playwright/test';
 import {
+  BEACON_URLS,
   COMMON_HEADERS,
   EXPECTED_CSP,
   ROUTES,
@@ -25,18 +26,20 @@ function good(kind: RouteKind): HeaderMap {
 }
 
 test.describe('route headers', () => {
-  for (const kind of ['home', 'for', 'print'] as const) {
+  for (const kind of ['home', 'for', 'print', 'notfound'] as const) {
     test(`a correct ${kind} response passes`, () => {
       expect(checkRouteHeaders(kind, good(kind))).toEqual([]);
     });
   }
 
   test('every route path maps to a kind', () => {
-    expect(new Set(ROUTES.map((r) => r.kind))).toEqual(new Set(['home', 'for', 'print']));
+    expect(new Set(ROUTES.map((r) => r.kind))).toEqual(
+      new Set(['home', 'for', 'print', 'notfound']),
+    );
     expect(ROUTES.map((r) => r.path)).toEqual(expect.arrayContaining(['/for', '/print']));
   });
 
-  for (const kind of ['home', 'for', 'print'] as const) {
+  for (const kind of ['home', 'for', 'print', 'notfound'] as const) {
     for (const name of Object.keys(expectedHeaders(kind)).concat('content-security-policy')) {
       test(`${kind}: removing ${name} fails`, () => {
         const headers = good(kind);
@@ -73,14 +76,35 @@ test.describe('route headers', () => {
     ).not.toEqual([]);
   });
 
-  test('HSTS is neither required nor rejected before Phase 7', () => {
-    expect(checkRouteHeaders('home', good('home'))).toEqual([]);
-    const withHsts = {
-      ...good('home'),
-      'strict-transport-security': 'max-age=63072000; includeSubDomains; preload',
-    };
-    expect(checkRouteHeaders('home', withHsts)).toEqual([]);
-    expect(Object.keys(COMMON_HEADERS)).not.toContain('strict-transport-security');
+  test('HSTS is required on every route kind, 404 included, and is typed from the spec', () => {
+    const want = 'max-age=63072000; includeSubDomains; preload';
+    expect(COMMON_HEADERS['strict-transport-security']).toBe(want);
+    for (const kind of ['home', 'for', 'print', 'notfound'] as const) {
+      expect(expectedHeaders(kind)['strict-transport-security'], kind).toBe(want);
+      expect(checkRouteHeaders(kind, good(kind)), kind).toEqual([]);
+    }
+    expect(ROUTES.filter((r) => r.status === 404).map((r) => r.kind)).toEqual(
+      expect.arrayContaining(['notfound', 'for']),
+    );
+  });
+
+  test('a missing or weakened HSTS fails on every route kind', () => {
+    for (const kind of ['home', 'for', 'print', 'notfound'] as const) {
+      const missing = good(kind);
+      delete missing['strict-transport-security'];
+      expect(checkRouteHeaders(kind, missing), `${kind} missing`).not.toEqual([]);
+      for (const weak of [
+        'max-age=63072000; includeSubDomains',
+        'max-age=63072000; preload',
+        'max-age=300; includeSubDomains; preload',
+        'max-age=31536000; includeSubDomains; preload',
+        'max-age=63072000; includeSubDomains; preload; max-age=63072000; includeSubDomains; preload',
+        '',
+      ]) {
+        const headers = { ...good(kind), 'strict-transport-security': weak };
+        expect(checkRouteHeaders(kind, headers), `${kind} "${weak}"`).not.toEqual([]);
+      }
+    }
   });
 });
 
@@ -109,6 +133,75 @@ test.describe('CSP', () => {
     });
   }
 
+  test('script-src is typed from the spec: self plus the two exact beacon URLs', () => {
+    expect([...(EXPECTED_CSP['script-src'] ?? [])]).toEqual([
+      "'self'",
+      'https://static.cloudflareinsights.com/beacon.min.js',
+      'https://static.cloudflareinsights.com/beacon.min.js/',
+    ]);
+    expect(EXPECTED_CSP['connect-src']).toEqual(["'self'"]);
+  });
+
+  test('any extra script origin fails', () => {
+    for (const extra of [
+      'https://example.com',
+      'https://example.com/a.js',
+      'https://static.cloudflareinsights.com',
+      'https://static.cloudflareinsights.com/',
+      'https://static.cloudflareinsights.com/other.js',
+      'https://static.cloudflareinsights.com/beacon.min.js/x',
+      'https://static.cloudflareinsights.com/beacon.min.js?x=1',
+      'http://static.cloudflareinsights.com/beacon.min.js',
+      'https://cloudflareinsights.com/beacon.min.js',
+      'https://static.cloudflareinsights.com:8443/beacon.min.js',
+      'https://cdn.jsdelivr.net',
+      'https:',
+      'http:',
+      'data:',
+      'blob:',
+      "'wasm-unsafe-eval'",
+    ]) {
+      const mutated = csp.replace("script-src 'self'", `script-src 'self' ${extra}`);
+      expect(mutated, extra).not.toBe(csp);
+      expect(checkCsp(mutated), extra).not.toEqual([]);
+    }
+  });
+
+  test('a wildcard in script-src fails with a wildcard message', () => {
+    for (const wild of [
+      '*',
+      '*.cloudflareinsights.com',
+      'https://*.cloudflareinsights.com',
+      'https://*.cloudflareinsights.com/beacon.min.js',
+      'https://*',
+    ]) {
+      const problems = checkCsp(csp.replace("script-src 'self'", `script-src 'self' ${wild}`));
+      expect(problems.join('\n'), wild).toMatch(/script-src contains a wildcard/);
+    }
+    const swapped = csp.replace(BEACON_URLS[0] ?? '', 'https://*.cloudflareinsights.com');
+    expect(swapped).not.toBe(csp);
+    expect(checkCsp(swapped).join('\n')).toMatch(/script-src contains a wildcard/);
+  });
+
+  test('a missing beacon URL or a missing trailing-slash form fails', () => {
+    for (const url of BEACON_URLS) {
+      const mutated = csp.replace(` ${url};`, ';').replace(` ${url} `, ' ');
+      expect(mutated, url).not.toBe(csp);
+      expect(checkCsp(mutated), url).not.toEqual([]);
+    }
+    const bare = csp.replace(` ${BEACON_URLS[0]}`, '').replace(` ${BEACON_URLS[1]}`, '');
+    expect(bare).toContain("script-src 'self';");
+    expect(checkCsp(bare)).not.toEqual([]);
+  });
+
+  test('the beacon URL is not accepted in any other directive', () => {
+    for (const directive of ['connect-src', 'default-src', 'img-src', 'frame-src', 'style-src']) {
+      const mutated = csp.replace(`${directive} `, `${directive} ${BEACON_URLS[0]} `);
+      expect(mutated, directive).not.toBe(csp);
+      expect(checkCsp(mutated), directive).not.toEqual([]);
+    }
+  });
+
   test("adding 'unsafe-inline' to style-src fails", () => {
     expect(
       checkCsp(csp.replace("style-src 'self'", "style-src 'self' 'unsafe-inline'")),
@@ -117,7 +210,7 @@ test.describe('CSP', () => {
 
   test('the word in a comment is not a source (headers.md: parse the value, do not grep the file)', () => {
     expect(checkCsp(csp)).toEqual([]);
-    expect(parseCsp(csp).directives.get('script-src')).toEqual(["'self'"]);
+    expect(parseCsp(csp).directives.get('script-src')).toEqual(["'self'", ...BEACON_URLS]);
   });
 
   test('a missing, extra, repeated or changed directive fails', () => {

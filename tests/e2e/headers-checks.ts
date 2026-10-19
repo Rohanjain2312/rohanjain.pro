@@ -2,16 +2,26 @@
 // Source of truth: docs/spec/08-security.md 8.2 and docs/security/headers.md. These values are typed from
 // the spec. They are never read from public/_headers, so a wrong _headers file cannot define its own pass.
 //
-// Phase 7 changes this file in the same PR that changes _headers:
-//   - add Strict-Transport-Security (not required before Phase 7)
-//   - add the Cloudflare Web Analytics origins to script-src and connect-src
+// Phase 7 (issue #283) changed this file in the same PR that changed _headers:
+//   - Strict-Transport-Security is required on every route, 404 included (8.2)
+//   - script-src allows the Cloudflare Web Analytics beacon by exact URL, and nothing else. connect-src stays
+//     'self': the automatic beacon reports to the site's own /cdn-cgi/rum (8.2)
 
 export type HeaderMap = Record<string, string>;
+
+/**
+ * The one third-party script (8.2). Exact URLs, no host wildcard. The trailing-slash form is in the spec on
+ * purpose, so both are expected and a missing one fails.
+ */
+export const BEACON_URLS: readonly string[] = [
+  'https://static.cloudflareinsights.com/beacon.min.js',
+  'https://static.cloudflareinsights.com/beacon.min.js/',
+];
 
 /** Exact CSP from the spec. Each directive maps to its sorted source list. */
 export const EXPECTED_CSP: Readonly<Record<string, readonly string[]>> = {
   'default-src': ["'none'"],
-  'script-src': ["'self'"],
+  'script-src': ["'self'", ...BEACON_URLS],
   'style-src': ["'self'"],
   'img-src': ["'self'", 'data:'],
   'font-src': ["'self'"],
@@ -39,6 +49,7 @@ const FORBIDDEN_SOURCES: readonly RegExp[] = [
 
 /** Sent on every route (8.2). Lowercase names. */
 export const COMMON_HEADERS: Readonly<Record<string, string>> = {
+  'strict-transport-security': 'max-age=63072000; includeSubDomains; preload',
   'x-content-type-options': 'nosniff',
   'x-frame-options': 'DENY',
   'referrer-policy': 'strict-origin-when-cross-origin',
@@ -47,16 +58,22 @@ export const COMMON_HEADERS: Readonly<Record<string, string>> = {
   'cross-origin-resource-policy': 'same-origin',
 };
 
-export type RouteKind = 'home' | 'for' | 'print';
+export type RouteKind = 'home' | 'for' | 'print' | 'notfound';
 
 export interface Route {
   path: string;
   kind: RouteKind;
+  /** When set, the response status must equal it. */
+  status?: number;
 }
 
 /** Bare and trailing-slash forms: `/for/*` does not match `/for` (headers.md). */
 export const ROUTES: readonly Route[] = [
   { path: '/', kind: 'home' },
+  // The 404 page matches only `/*`, so it must still carry HSTS, the CSP and the common headers.
+  { path: '/no-such-page-qa', kind: 'notfound', status: 404 },
+  // An unknown /for page matches `/for/*`: 404 with the for headers and HSTS.
+  { path: '/for/no-such-slug-qa', kind: 'for', status: 404 },
   { path: '/for', kind: 'for' },
   { path: '/for/', kind: 'for' },
   { path: '/for/acme', kind: 'for' },
@@ -97,6 +114,11 @@ export function checkCsp(value: string | undefined): string[] {
         problems.push(`CSP ${name} contains forbidden source ${token}`);
       }
     }
+  }
+  // The beacon is the only third-party script source and it is an exact URL. A wildcard in script-src
+  // (`*`, `https://*.example.com`, `*.example.com`) is never allowed. frame-src keeps its own wildcard host.
+  for (const token of directives.get('script-src') ?? []) {
+    if (token.includes('*')) problems.push(`CSP script-src contains a wildcard: ${token}`);
   }
   for (const [name, want] of Object.entries(EXPECTED_CSP)) {
     const got = directives.get(name);
