@@ -104,15 +104,16 @@ describe('engine against the rubric: golden postings', () => {
 });
 
 /**
- * The four known list-level differences between the engine and the rubric (docs/qa/fit-rubric.md, section
+ * The five known list-level differences between the engine and the rubric (docs/qa/fit-rubric.md, section
  * "Accepted list-level differences"). Each moves no verdict. A new difference, or one of these closing, fails
  * the test, so the table is updated with the rubric and never drifts on its own.
  */
 const ACCEPTED_LIST_DIFFERENCES: Record<
   string,
-  { engineGapOnly?: string[]; rubricGapOnly?: string[] }
+  { engineGapOnly?: string[]; rubricGapOnly?: string[]; rubricProvenOnly?: string[] }
 > = {
   'adj-be': { rubricGapOnly: ['REST APIs'] },
+  'ai-01': { rubricProvenOnly: ['Tool calling'] },
   'ds-04': { engineGapOnly: ['PhD'] },
   'ml-02': { rubricGapOnly: ['Ray'] },
   'neg-hw': { engineGapOnly: ['Embedded firmware', 'Robotics'], rubricGapOnly: ['C', 'Verilog'] },
@@ -150,9 +151,10 @@ describe('engine against the rubric: proven and gap lists', () => {
       expect(listDifferences(report, e)).toEqual(ACCEPTED_LIST_DIFFERENCES[id] ?? {});
     },
   );
-  it('accepts exactly four postings, each with a reason in the rubric', () => {
+  it('accepts exactly five postings, each with a reason in the rubric', () => {
     expect(Object.keys(ACCEPTED_LIST_DIFFERENCES).sort()).toEqual([
       'adj-be',
+      'ai-01',
       'ds-04',
       'ml-02',
       'neg-hw',
