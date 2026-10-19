@@ -2,7 +2,7 @@ name: branch-name
 
 # Branch name is <role>/<issue>-<slug> (R-103).
 # Runs on pull_request, never pull_request_target. The script comes from the base commit of the PR, so a PR cannot
-# weaken its own check. Until the script exists on main (this PR, #14), the step below falls back to the PR head copy.
+# weaken its own check.
 # PR text (title, body, branch) is read by the script through the API and is never placed in a shell command.
 on:
   pull_request:
@@ -28,16 +28,6 @@ jobs:
           ref: ${{ github.event.pull_request.base.sha }}
           path: trusted
           persist-credentials: false
-      - name: Bootstrap fallback (only while the script is missing on the base branch)
-        env:
-          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-          REPO: ${{ github.repository }}
-        run: |
-          if [ ! -f trusted/.github/scripts/pr-process.mjs ]; then
-            echo "pr-process.mjs is not on the base branch yet. Using the PR head copy."
-            git -C trusted fetch --depth=1 "https://github.com/$REPO" "$HEAD_SHA"
-            git -C trusted checkout FETCH_HEAD -- .github/scripts/pr-process.mjs .github/labeler.json
-          fi
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: trusted/.nvmrc

@@ -9,22 +9,26 @@ const NAMED_COLORS =
     ' ',
   );
 
+// 95-L4: property names and units are case-insensitive in CSS, so every pattern carries the i flag.
 const COLOR_PROPS =
-  /^(color|background|background-color|border(-[a-z]+)*|outline|outline-color|fill|stroke|stop-color|caret-color|accent-color|text-decoration|text-decoration-color|column-rule|column-rule-color|--.*)$/;
+  /^(color|background|background-color|background-image|border(-[a-z]+)*|outline|outline-color|fill|stroke|stop-color|flood-color|lighting-color|caret-color|accent-color|scrollbar-color|text-decoration|text-decoration-color|text-emphasis|text-emphasis-color|column-rule|column-rule-color|-webkit-text-fill-color|-webkit-text-stroke|-webkit-text-stroke-color|-webkit-tap-highlight-color|--.*)$/i;
+// Every custom property is checked for long durations, whatever its name.
 const MOTION_PROPS =
-  /^(transition|transition-duration|transition-delay|animation|animation-duration|animation-delay|--.*(dur|delay|transition|animation|motion).*)$/;
+  /^(transition|transition-duration|transition-delay|animation|animation-duration|animation-delay|--.*)$/i;
 
 const namedColor = new RegExp(`(?<![\\w-])(${NAMED_COLORS.join('|')})(?![\\w-])`, 'i');
-// Any duration above 200 ms, written in s or ms.
+// Any duration above 200 ms, written in s or ms, in any letter case.
 const longDuration =
-  /(?<![\d.])(?:0?\.(?:2\d*[1-9]|[3-9]\d*)|[1-9]\d*(?:\.\d+)?)s\b|(?<![\d.])(?:20[1-9]|2[1-9]\d|[3-9]\d\d|\d{4,}|200\.\d*[1-9])(?:\.\d+)?ms\b/;
+  /(?<![\d.])(?:0?\.(?:2\d*[1-9]|[3-9]\d*)|[1-9]\d*(?:\.\d+)?)s\b|(?<![\d.])(?:20[1-9]|2[1-9]\d|[3-9]\d\d|\d{4,}|200\.\d*[1-9])(?:\.\d+)?ms\b/i;
 
+// Decision (95-L4): data: URLs are allowed in url(). The CSP img-src permits data: and no style uses one.
 const message = (prop, value) =>
-  MOTION_PROPS.test(prop)
+  longDuration.test(value)
     ? `R-608: motion must be 200 ms or less ("${prop}: ${value}").`
     : `R-601: colors come only from tokens; use var(--token), not a named color ("${prop}: ${value}").`;
 
 export default {
+  ignoreDisables: true, // 95-L1: a disable comment cannot switch off a project rule.
   extends: [require.resolve('stylelint-config-standard')],
   overrides: [
     { files: ['**/*.astro', '**/*.html'], customSyntax: 'postcss-html' },
@@ -72,6 +76,11 @@ export default {
       { message },
     ],
     // Plain, predictable CSS; the standard config's stylistic picks that fight the token names are relaxed.
+    // -webkit-mask-* has no unprefixed twin that works in every supported browser (components.css).
+    'property-no-vendor-prefix': [
+      true,
+      { ignoreProperties: ['-webkit-mask-image', '-webkit-mask-repeat', '-webkit-mask-size'] },
+    ],
     'custom-property-pattern': null,
     'selector-class-pattern': null,
     'keyframes-name-pattern': null,

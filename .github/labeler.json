@@ -4,7 +4,17 @@
     ".github/workflows/**",
     ".github/scripts/**",
     ".github/labeler.json",
-    "public/_headers"
+    ".github/dependabot.yml",
+    ".github/dependabot.yaml",
+    ".github/actions/**",
+    "public/_headers",
+    "public/_redirects",
+    "public/_routes.json",
+    "functions/**",
+    "wrangler.*",
+    ".nvmrc",
+    ".gitleaksignore",
+    "lint-staged.config.*"
   ],
   "needs:design-review": [],
   "needs:qa-review": ["**"],

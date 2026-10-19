@@ -22,11 +22,11 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - name: Action pins and read-only permissions, before any setup-node step (R-504)
+        run: node .github/scripts/ci-checks.mjs pins
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
-      - name: Action pins and read-only permissions (R-504)
-        run: node .github/scripts/ci-checks.mjs pins
       - name: No private applications tracked (R-501)
         run: node .github/scripts/ci-checks.mjs applications
       - name: Docs lint (R-806)
@@ -44,6 +44,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - name: Action pins and read-only permissions, before any setup-node step (R-504)
+        run: node .github/scripts/ci-checks.mjs pins
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
@@ -71,6 +73,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - name: Action pins and read-only permissions, before any setup-node step (R-504)
+        run: node .github/scripts/ci-checks.mjs pins
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
@@ -79,15 +83,11 @@ jobs:
         run: npm ci --ignore-scripts
       - name: Content validation
         run: npm run validate:content
-      - name: Claims check (R-301)
-        run: |
-          if ls scripts/check-claims.* >/dev/null 2>&1; then
-            node scripts/check-claims.*
-          else
-            echo "R-301: scripts/check-claims is not present yet (issue #26). Passing trivially."
-          fi
       - name: Copy lint, source (R-007, R-008, R-010, R-601, R-603)
         run: npm run lint:copy
+      - name: Claims check (R-301)
+        if: ${{ !cancelled() }}
+        run: npm run check:claims
       - name: Copy lint self-test
         run: node --test tests/fixtures/copy/lint-copy.test.mjs
 
@@ -99,6 +99,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - name: Action pins and read-only permissions, before any setup-node step (R-504)
+        run: node .github/scripts/ci-checks.mjs pins
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
@@ -116,6 +118,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - name: Action pins and read-only permissions, before any setup-node step (R-504)
+        run: node .github/scripts/ci-checks.mjs pins
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
@@ -124,7 +128,10 @@ jobs:
         run: npm ci --ignore-scripts
       - name: Playwright browsers (the build renders the resume PDFs)
         run: npm run browsers:install
+      - name: Copy lint, source, before the build runs the claims check (R-007, R-008, R-010, R-601, R-603)
+        run: npm run lint:copy
       - name: Build
+        id: build
         run: npm run build
       - name: Copy lint, build output (R-007, R-008, R-010, R-601, R-603)
         run: npm run lint:copy -- --require-dist
@@ -141,13 +148,14 @@ jobs:
         with:
           args: --no-progress README.md CONTRIBUTING.md
           fail: true
-      - name: Headers test (R-505)
+      - name: Headers test files exist (R-505)
+        # Runs even when the build fails at check-claims, so a header regression shows up in the same run.
+        if: ${{ !cancelled() }}
         run: |
-          if ls tests/e2e/headers* >/dev/null 2>&1; then
-            echo "Headers test runs in the e2e job."
-          else
-            echo "R-505: tests/e2e/headers test is not present yet (issue #29). Passing trivially."
-          fi
+          for f in tests/e2e/headers.spec.ts tests/e2e/headers-checks.spec.ts tests/e2e/headers-checks.ts; do
+            test -f "$f" || { echo "R-505: $f is missing. The headers test runs in the e2e job and must exist."; exit 1; }
+          done
+          echo "Headers test files are present. The e2e job runs them."
       - name: Upload built site
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
@@ -164,6 +172,8 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+      - name: Action pins and read-only permissions, before any setup-node step (R-504)
+        run: node .github/scripts/ci-checks.mjs pins
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc
@@ -191,6 +201,8 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+      - name: Action pins and read-only permissions, before any setup-node step (R-504)
+        run: node .github/scripts/ci-checks.mjs pins
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version-file: .nvmrc

@@ -61,11 +61,16 @@ jobs:
           INCOMING: ${{ runner.temp }}/incoming/status.json
         run: |
           node -e '
-            const s = JSON.parse(require("fs").readFileSync(process.env.INCOMING, "utf8"));
+            const fs = require("fs");
+            const raw = fs.readFileSync(process.env.INCOMING, "utf8");
+            if (raw.length > 16384) { console.error("status.json is larger than 16 KB"); process.exit(1); }
+            const s = JSON.parse(raw);
             const d = /^\d{4}-\d{2}-\d{2}$/;
-            const ok = d.test(s.checkedAt) && d.test(s.lastUpdated) && Array.isArray(s.demos) &&
-              s.demos.every((x) => /^https:\/\/huggingface\.co\/spaces\//.test(x.url) && typeof x.up === "boolean" && d.test(x.checkedAt));
-            if (!ok) { console.error("status.json has an unexpected shape"); process.exit(1); }
+            const only = (o, keys) => o && typeof o === "object" && !Array.isArray(o) && Object.keys(o).sort().join() === keys.join();
+            const ok = only(s, ["checkedAt", "demos", "lastUpdated"]) &&
+              d.test(s.checkedAt) && d.test(s.lastUpdated) && Array.isArray(s.demos) && s.demos.length <= 50 &&
+              s.demos.every((x) => only(x, ["checkedAt", "up", "url"]) && /^https:\/\/huggingface\.co\/spaces\//.test(x.url) && typeof x.up === "boolean" && d.test(x.checkedAt));
+            if (!ok) { console.error("status.json has an unexpected shape or extra keys"); process.exit(1); }
           '
       - name: Commit to status-data
         env:
@@ -73,14 +78,21 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          if git ls-remote --exit-code --heads origin status-data > /dev/null; then
+          # ls-remote --exit-code returns 2 when the branch does not exist and 128 on a real failure.
+          # Only 2 may create the orphan branch; any other failure stops the job.
+          rc=0
+          git ls-remote --exit-code --heads origin status-data > /dev/null || rc=$?
+          if [ "$rc" -eq 0 ]; then
             git fetch --depth=1 origin status-data
             git switch --force -C status-data FETCH_HEAD
-          else
+          elif [ "$rc" -eq 2 ]; then
             git switch --orphan status-data
+          else
+            echo "git ls-remote failed with exit code $rc. Not creating the branch."
+            exit "$rc"
           fi
           git rm -rq --ignore-unmatch . > /dev/null
           cp "$INCOMING" status.json
           git add status.json
           git commit -m "chore(status): daily status data" -m "Agent-Role: platform-engineer"
-          git push origin status-data
+          git push origin HEAD:refs/heads/status-data

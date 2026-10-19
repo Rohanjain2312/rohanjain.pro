@@ -8,7 +8,9 @@ import {
   checkPrHygiene,
   checkReviewGate,
   deriveLabels,
+  escapeLine,
   globToRegExp,
+  incompleteFiles,
   loadLabelerConfig,
   newDependencies,
   parseReviews,
@@ -43,10 +45,15 @@ test('branch-name rejects bad names with R-103', () => {
     assert.match(fails(checkBranchName(basePr({ head: { ref, sha: HEAD } }))), /^R-103 /, ref);
 });
 
-test('branch-name skips bot branches only when the author is a bot', () => {
-  const ref = 'release-please--branches--main';
-  assert.deepEqual(checkBranchName(basePr({ head: { ref, sha: HEAD }, user: { login: 'github-actions[bot]', type: 'Bot' } })).failures, []);
+test('branch-name skips Dependabot branches only when the author is a bot', () => {
+  const ref = 'dependabot/npm_and_yarn/astro-7.5.0';
+  assert.deepEqual(checkBranchName(basePr({ head: { ref, sha: HEAD }, user: { login: 'dependabot[bot]', type: 'Bot' } })).failures, []);
   assert.match(fails(checkBranchName(basePr({ head: { ref, sha: HEAD } }))), /R-103/);
+});
+
+test('branch-name gives release-please no exemption (ADR-0025)', () => {
+  const ref = 'release-please--branches--main';
+  assert.match(fails(checkBranchName(basePr({ head: { ref, sha: HEAD }, user: { login: 'github-actions[bot]', type: 'Bot' } }))), /R-103/);
 });
 
 // --- labeler (#42) -------------------------------------------------------------------------------
@@ -157,9 +164,55 @@ test('hygiene R-701: removed tests are flagged for QA', () => {
   assert.match(fails(checkPrHygiene({ pr: basePr(), files: removed, config: { 'needs:qa-review': [] } })), /R-701/);
 });
 
-test('hygiene skips bot PRs', () => {
-  const pr = basePr({ title: 'chore(main): release 0.2.0', body: '', head: { ref: 'release-please--branches--main', sha: HEAD }, user: { login: 'github-actions[bot]', type: 'Bot' } });
-  assert.deepEqual(checkPrHygiene({ pr, files: [], config }).failures, []);
+test('hygiene skips Dependabot PRs, not release-please PRs', () => {
+  const dep = basePr({ title: 'chore(deps): bump astro', body: '', head: { ref: 'dependabot/npm_and_yarn/astro-7.5.0', sha: HEAD }, user: { login: 'dependabot[bot]', type: 'Bot' } });
+  assert.deepEqual(checkPrHygiene({ pr: dep, files: [], config }).failures, []);
+  const rp = basePr({ title: 'chore(main): release 0.2.0', body: '', head: { ref: 'release-please--branches--main', sha: HEAD }, user: { login: 'github-actions[bot]', type: 'Bot' } });
+  assert.match(fails(checkPrHygiene({ pr: rp, files: [], config })), /R-104/);
+});
+
+test('hygiene R-104: an unpaired code fence before Closes hides the line', () => {
+  assert.match(fails(hygiene({ body: '```\nunclosed\nCloses #14\n' })), /R-104/);
+  assert.deepEqual(hygiene({ body: '```\nx\n```\nCloses #14\n' }).failures, []);
+});
+
+test('globs: a path with a newline still matches ** (s flag)', () => {
+  assert.ok(globToRegExp('docs/**').test('docs/a\nb.md'));
+  assert.ok(globToRegExp('**').test('a\nb'));
+});
+
+test('labeler: the hook guard and no design or reader label', () => {
+  assert.ok(deriveLabels([file('.claude/hooks/guard-bash.mjs')], config).includes('needs:qa-review'));
+  for (const p of ['.claude/hooks/guard-bash.mjs', 'src/components/Hero.astro', 'public/_headers', 'tests/visual/a-snapshots/home.png', 'src/styles/tokens.css'])
+    for (const l of deriveLabels([file(p)], config)) assert.ok(!['needs:design-review', 'needs:reader-review'].includes(l), `${p}: ${l}`);
+});
+
+for (const p of [
+  '.github/dependabot.yml',
+  '.github/dependabot.yaml',
+  '.github/actions/setup/action.yml',
+  'public/_redirects',
+  'public/_routes.json',
+  'functions/api/x.ts',
+  'wrangler.toml',
+  'wrangler.jsonc',
+  '.nvmrc',
+  '.gitleaksignore',
+  'lint-staged.config.mjs',
+])
+  test(`labeler: ${p} needs security review (135-L6)`, () => {
+    assert.ok(deriveLabels([file(p)], config).includes('needs:security-review'));
+  });
+
+test('escapeLine keeps one printed line as one line (135-L7)', () => {
+  assert.equal(escapeLine('a\r\n::error::x 100%'), 'a%0D%0A::error::x 100%25');
+  assert.equal(escapeLine('plain'), 'plain');
+});
+
+test('incompleteFiles fails closed when the file list is short (135-L5)', () => {
+  assert.match(incompleteFiles({ changed_files: 3001 }, new Array(3000).fill(file('a'))), /^R-209 /);
+  assert.equal(incompleteFiles({ changed_files: 2 }, [file('a'), file('b')]), null);
+  assert.equal(incompleteFiles({}, []), null);
 });
 
 // --- review-gate ---------------------------------------------------------------------------------

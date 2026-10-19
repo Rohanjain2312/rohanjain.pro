@@ -5,6 +5,7 @@
 import { spawnSync } from 'node:child_process';
 import { mkdirSync, writeFileSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
+import { createServer } from 'node:net';
 
 const cwd = process.cwd();
 const stateDir = join(process.env.CLAUDE_PROJECT_DIR || cwd, '.claude', 'state');
@@ -36,8 +37,25 @@ const steps = [
   ['restore tracked screenshots', 'git', ['checkout', '--', 'tests/visual/screenshots']],
 ];
 
+// Each run asks the OS for free ports, so a second session's suite cannot take them (190-s).
+// The Playwright configs read PW_PORT (frontend suite, browser matrix) and PW_E2E_PORT (e2e suite).
+const freePort = () =>
+  new Promise((resolvePort, reject) => {
+    const server = createServer();
+    server.on('error', reject);
+    server.listen(0, '127.0.0.1', () => {
+      const { port } = server.address();
+      server.close(() => resolvePort(port));
+    });
+  });
+const env = {
+  ...process.env,
+  PW_PORT: String(await freePort()),
+  PW_E2E_PORT: String(await freePort()),
+};
+
 function run(cmd, args) {
-  return spawnSync(cmd, args, { cwd, stdio: 'inherit', shell: false });
+  return spawnSync(cmd, args, { cwd, stdio: 'inherit', shell: false, env });
 }
 
 rmSync(stamp, { force: true });

@@ -3,8 +3,9 @@
 //   pins          R-504  every `uses:` is pinned to a 40-char commit SHA; each workflow sets `permissions: read-all` at top level; no pull_request_target
 //   applications  R-501  the repo tracks nothing under src/content/applications/ except .gitkeep (ADR-0016)
 import { spawnSync } from 'node:child_process';
-import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, realpathSync } from 'node:fs';
 import { join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 export function checkPins(root) {
   const failures = [];
@@ -67,7 +68,8 @@ export function checkApplications(root) {
     );
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Compare real paths: a symlinked argv[1] must still run the checks instead of exiting 0 silently (127-3).
+if (process.argv[1] && realpathSync(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const [cmd, flag, dir] = process.argv.slice(2);
   const root = flag === '--root' ? dir : process.cwd();
   const fn = { pins: checkPins, applications: checkApplications }[cmd];

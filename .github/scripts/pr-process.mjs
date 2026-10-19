@@ -61,12 +61,10 @@ const SIZE_EXEMPT = new Set(['package-lock.json']);
 
 const prefixes = Object.values(PREFIX);
 
-// A bot PR (release-please, Dependabot) is exempt from the naming rules. Both the author type and the branch prefix must match.
+// A Dependabot PR is exempt from the naming rules. Both the author type and the branch prefix must match.
+// release-please is gone (ADR-0025), so its PRs get no exemption.
 export function isBotPr(pr) {
-  return (
-    pr.user?.type === 'Bot' &&
-    (/^release-please--/.test(pr.head.ref) || /^dependabot\//.test(pr.head.ref))
-  );
+  return pr.user?.type === 'Bot' && /^dependabot\//.test(pr.head.ref);
 }
 
 // --- Globs and labeler -------------------------------------------------------------------------
@@ -87,7 +85,8 @@ export function globToRegExp(glob) {
     else if (c === '?') re += '[^/]';
     else re += c.replace(/[.+^${}()|[\]\\]/g, '\\$&');
   }
-  return new RegExp(`^${re}$`);
+  // The s flag lets `.` match a newline, so a path with a newline cannot slip past `**`.
+  return new RegExp(`^${re}$`, 's');
 }
 
 export function loadLabelerConfig(path) {
@@ -149,8 +148,10 @@ export function parseTitle(title) {
   return m ? { role: m[1], type: m[2], scope: m[3], summary: m[4], issue: Number(m[5]) } : null;
 }
 
+const UNPAIRED_FENCE = /```[\s\S]*?(?:```|$)/g;
 export function closesIssues(body) {
-  const text = stripHtmlComments(body ?? '').replace(/```[\s\S]*?```/g, '');
+  // An unterminated fence runs to the end of the text, as in Markdown.
+  const text = stripHtmlComments(body ?? '').replace(UNPAIRED_FENCE, '');
   return [...text.matchAll(/^Closes #(\d+)[ \t]*$/gm)].map((m) => Number(m[1]));
 }
 
@@ -290,7 +291,7 @@ export function checkPrHygiene({ pr, files, config, basePkg = null, headPkg = nu
 
 // --- review-gate (R-201, R-202, R-207, R-208, R-609) ---------------------------------------------
 
-const FENCE = /```[\s\S]*?```/g;
+const FENCE = /```[\s\S]*?(?:```|$)/g;
 const FILE_EVIDENCE =
   /\b[\w-]+\.(?:md|mjs|cjs|js|ts|tsx|json|ya?ml|css|astro|png|jpe?g|toml|html|sh|txt|lock)\b/;
 const CODE_EVIDENCE = /`[^`\n]+`/;
@@ -381,10 +382,8 @@ export function checkReviewGate({ pr, files, comments, config, owner }) {
   for (const role of ROLES) {
     const b = latest.get(role);
     const need = required.has(role);
-    const why =
-      role === 'design-lead' && derived.includes('needs:design-review') ? 'R-609/R-201' : 'R-201';
     if (!b) {
-      if (need) failures.push(`${why} ${role} review is required and none was posted.`);
+      if (need) failures.push(`R-201 ${role} review is required and none was posted.`);
       continue;
     }
     if (b.problems.length) {
@@ -425,6 +424,23 @@ export function checkReviewGate({ pr, files, comments, config, owner }) {
     `required reviews: ${[...required].join(', ')}; approved: ${[...approved].join(', ') || 'none'}.`,
   );
   return { failures, notes };
+}
+
+// --- output and file-list safety ---------------------------------------------------------------
+
+// PR-derived text (branch, title, reviewer names) can carry a newline. GitHub reads "::error::" workflow
+// commands from the start of any log line, so one printed line must stay one line. Same escapes as the
+// workflow command format: % first, then CR and LF.
+export function escapeLine(text) {
+  return String(text).replace(/%/g, '%25').replace(/\r/g, '%0D').replace(/\n/g, '%0A');
+}
+
+// The files API stops at 3000 files. A list shorter than the PR's own count would hide paths from the
+// labeler and the size check, so the checks fail closed (R-109, R-209).
+export function incompleteFiles(pr, files) {
+  if (typeof pr.changed_files === 'number' && files.length < pr.changed_files)
+    return `R-209 the file list has ${files.length} entries but the PR changes ${pr.changed_files} files. The checks cannot see every path, so this PR fails. Split it.`;
+  return null;
 }
 
 // --- gh access -----------------------------------------------------------------------------------
@@ -482,6 +498,11 @@ function main(argv) {
   if (cmd === 'branch-name') result = checkBranchName(pr);
   else {
     const files = ghPages(`repos/${repo}/pulls/${number}/files`);
+    const incomplete = incompleteFiles(pr, files);
+    if (incomplete) {
+      console.error(escapeLine(incomplete));
+      return 1;
+    }
     const config = loadLabelerConfig(labelerPath());
     if (cmd === 'review-gate') {
       const comments = ghPages(`repos/${repo}/issues/${number}/comments`);
@@ -500,15 +521,15 @@ function main(argv) {
           console.log(`labeler: added ${missing.join(', ')} (R-209)`);
         } catch (e) {
           // Dependabot and fork PRs get a read-only token. review-gate derives the same labels from paths, so this is not fatal.
-          console.log(`labeler: could not add ${missing.join(', ')}: ${e.message}`);
+          console.log(escapeLine(`labeler: could not add ${missing.join(', ')}: ${e.message}`));
         }
       } else console.log('labeler: labels already match changed paths (R-209)');
       return 0;
     }
   }
-  for (const n of result.notes) console.log(`note: ${n}`);
+  for (const n of result.notes) console.log(escapeLine(`note: ${n}`));
   if (result.failures.length) {
-    for (const f of result.failures) console.error(f);
+    for (const f of result.failures) console.error(escapeLine(f));
     console.error(`${cmd} FAILED (${result.failures.length}). Rules: docs/rules.md.`);
     return 1;
   }
@@ -520,7 +541,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   try {
     process.exit(main(process.argv.slice(2)));
   } catch (e) {
-    console.error(`pr-process error: ${e.message}`);
+    console.error(escapeLine(`pr-process error: ${e.message}`));
     process.exit(1);
   }
 }
