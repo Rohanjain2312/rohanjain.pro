@@ -87,6 +87,7 @@ Totals: 99 claims. 76 verified, 22 verified-note, 0 mismatch, 1 unsourced. See t
 | `settle-brier-before` | `0.213` | Blog line 105 "Brier score went from 0.213 to 0.035 after calibration"; Resume bullet 3 | verified | 2026-10-16 |
 | `settle-brier-after` | `0.035` | Blog lines 94 and 105; Resume bullet 3 | verified | 2026-10-16 |
 | `settle-shap-correlation` | `0.96` | Blog line 114 "rank correlation 0.96"; figure `reference/figures/settle_shap.png` subtitle; Resume bullet 3 | verified | 2026-10-16 |
+| `settle-shap-planted-rank` | `3 of 190` | Resume, Projects, Settlement Fail Predictor bullet 3, "all 3 planted interactions ranked top 3 of 190 pairs" (client-decided, R-302, ADR-0033; client confirmed in chat 2026-10-19). No repo source found; the résumé value is the claim | verified-note | 2026-10-19 |
 | `settle-dates` | `Oct 2026` | Repo commits 2026-10-08 to 2026-10-10 | verified | 2026-10-16 |
 | `settle-pr-auc-svm` | `0.319` | Blog `docs/blog/predicting-trade-settlement-fails.md` line 93, results table, row "RBF SVM", setup "Class weights": PR-AUC 0.319 (22% of fails in the riskiest 2%, Brier 0.036). Table is labelled test period, synthetic data (lines 94-95). Display "RBF SVM 0.319" matches the three decimals | verified | 2026-10-17 |
 | `settle-pr-auc-lr` | `0.305` | Blog line 91, row "Logistic regression", setup "No resampling": PR-AUC 0.305 (21%, Brier 0.037). Same table, test period, synthetic data. Display "logistic regression PR-AUC 0.305" matches the three decimals | verified | 2026-10-17 |
@@ -105,6 +106,7 @@ Totals: 99 claims. 76 verified, 22 verified-note, 0 mismatch, 1 unsourced. See t
 
 | Claim ID | Value | Source checked | Result | Date |
 |---|---|---|---|---|
+| `fc-params` | `109M` | Resume, Projects, FinCompress bullet 1, "109M params" (client-decided, R-302, ADR-0033; client confirmed in chat 2026-10-19). No repo source found; the résumé value is the claim | verified-note | 2026-10-19 |
 | `fc-size-ratio` | `9.1x` | Repo README line 47 "9.1x smaller"; Resume bullet 1. 437.9 over 47.7 is 9.18, so 9.1x is truncated and understates slightly | verified-note | 2026-10-16 |
 | `fc-size-before` | `437.9 MB` | Repo README line 44; `results/benchmark_results.csv` teacher size_mb 437.95; Resume says 438 MB (rounded) | verified | 2026-10-16 |
 | `fc-size-after` | `47.7 MB` | Repo README line 47; Resume bullet 1 | verified | 2026-10-16 |

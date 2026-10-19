@@ -211,8 +211,13 @@
           "claimIds": []
         },
         {
-          "text": "Calibrated scores on validation (Brier 0.213 to 0.035) and checked GPU TreeSHAP against planted ground truth (SHAP rank correlation 0.96); shipped an interactive Streamlit demo on Hugging Face Spaces",
-          "claimIds": ["settle-brier-before", "settle-brier-after", "settle-shap-correlation"]
+          "text": "Calibrated scores on validation (Brier 0.213 to 0.035) and checked GPU TreeSHAP against planted ground truth (SHAP rank correlation 0.96, all 3 planted interactions ranked top 3 of 190 pairs); shipped an interactive Streamlit demo on Hugging Face Spaces",
+          "claimIds": [
+            "settle-brier-before",
+            "settle-brier-after",
+            "settle-shap-correlation",
+            "settle-shap-planted-rank"
+          ]
         }
       ]
     },
@@ -234,8 +239,14 @@
       ],
       "bullets": [
         {
-          "text": "Compressed FinBERT (financial sentiment) 9.1x from 437.9 MB to 47.7 MB via INT8 PTQ/QAT, knowledge distillation, and structured pruning across 7 benchmarked variants",
-          "claimIds": ["fc-size-ratio", "fc-size-before", "fc-size-after", "fc-variants"]
+          "text": "Compressed FinBERT (109M params, financial sentiment) 9.1x from 437.9 MB to 47.7 MB via INT8 PTQ/QAT, knowledge distillation, and structured pruning across 7 benchmarked variants",
+          "claimIds": [
+            "fc-params",
+            "fc-size-ratio",
+            "fc-size-before",
+            "fc-size-after",
+            "fc-variants"
+          ]
         },
         {
           "text": "Found that pruning 50% of attention heads improved val Macro F1 by +0.9 points; published weights to HuggingFace Hub with GitHub Actions CI/CD",

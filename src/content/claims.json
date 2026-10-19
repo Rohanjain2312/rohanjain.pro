@@ -322,6 +322,13 @@
     "verifiedOn": "2026-10-15"
   },
   {
+    "id": "settle-shap-planted-rank",
+    "value": "3 of 190",
+    "display": "all 3 planted interactions ranked top 3 of 190 pairs",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-19"
+  },
+  {
     "id": "settle-shap-correlation",
     "value": 0.96,
     "display": "SHAP rank correlation 0.96",
@@ -384,6 +391,13 @@
     "source": "Résumé, client-confirmed; repo FinCompress",
     "sourceUrl": "https://github.com/Rohanjain2312/FinCompress",
     "verifiedOn": "2026-10-15"
+  },
+  {
+    "id": "fc-params",
+    "value": "109M",
+    "display": "109M params",
+    "source": "Résumé, client-confirmed",
+    "verifiedOn": "2026-10-19"
   },
   {
     "id": "fc-size-before",
