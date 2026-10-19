@@ -76,7 +76,16 @@ export function recordKey(r) {
   return `${r.type}|${String(r.name).toLowerCase()}|${body}`;
 }
 
-export class SetupError extends Error {}
+export class SetupError extends Error {
+  constructor(message, codes = []) {
+    super(message);
+    this.codes = codes;
+  }
+}
+
+// Cloudflare error codes that mean "already there" (seen on a real re-run, issue #284): Pages project 8000002,
+// Pages custom domain 8000018, Web Analytics site 10023. These steps are skipped, not failed.
+export const ALREADY_EXISTS = { pagesProject: 8000002, pagesDomain: 8000018, webAnalytics: 10023 };
 
 // Sends nothing in dry-run. Returns the parsed `result`. The token goes only in the Authorization header.
 export function makeClient({ fetchFn, token, dryRun, log }) {
@@ -101,7 +110,10 @@ export function makeClient({ fetchFn, token, dryRun, log }) {
       const msg =
         (json?.errors ?? []).map((e) => `${e.code}: ${e.message}`).join('; ') ||
         `HTTP ${res.status}`;
-      throw new SetupError(`${method} ${path} failed: ${msg}`);
+      throw new SetupError(
+        `${method} ${path} failed: ${msg}`,
+        (json?.errors ?? []).map((e) => e.code),
+      );
     }
     return json.result;
   };
@@ -235,11 +247,15 @@ export async function runSetup({
 }) {
   const call = makeClient({ fetchFn, token, dryRun, log });
   const failures = [];
-  const step = async (label, fn) => {
+  const step = async (label, fn, skipCode) => {
     try {
       return await fn();
     } catch (err) {
       if (!(err instanceof SetupError)) throw err;
+      if (skipCode && err.codes.includes(skipCode)) {
+        log(`skip (already exists) ${label}`);
+        return undefined;
+      }
       failures.push(`${label}: ${err.message}`);
       log(`FAILED ${label}: ${err.message}`);
       return undefined;
@@ -264,18 +280,23 @@ export async function runSetup({
   const zoneId = zone.id;
 
   // Pages project and custom domains. The project hostname is read from the response (field unverified).
-  const created = await step('pages project', () =>
-    call(
-      'POST',
-      `/accounts/${accountId}/pages/projects`,
-      { name: project, production_branch: 'main' },
-      { subdomain: `${project}.pages.dev` },
-    ),
+  const created = await step(
+    'pages project',
+    () =>
+      call(
+        'POST',
+        `/accounts/${accountId}/pages/projects`,
+        { name: project, production_branch: 'main' },
+        { subdomain: `${project}.pages.dev` },
+      ),
+    ALREADY_EXISTS.pagesProject,
   );
   const target = created?.subdomain ?? `${project}.pages.dev`;
   for (const name of [DOMAIN, `www.${DOMAIN}`]) {
-    await step(`pages domain ${name}`, () =>
-      call('POST', `/accounts/${accountId}/pages/projects/${project}/domains`, { name }),
+    await step(
+      `pages domain ${name}`,
+      () => call('POST', `/accounts/${accountId}/pages/projects/${project}/domains`, { name }),
+      ALREADY_EXISTS.pagesDomain,
     );
   }
 
@@ -315,13 +336,16 @@ export async function runSetup({
   );
   if (dnssec?.ds) log(`DNSSEC DS record (give to the client for Porkbun): ${dnssec.ds}`);
 
-  const rum = await step('web analytics', () =>
-    call(
-      'POST',
-      `/accounts/${accountId}/rum/site_info`,
-      { host: DOMAIN, zone_tag: zoneId, auto_install: true },
-      { site_tag: '<site_tag>' },
-    ),
+  const rum = await step(
+    'web analytics',
+    () =>
+      call(
+        'POST',
+        `/accounts/${accountId}/rum/site_info`,
+        { host: DOMAIN, zone_tag: zoneId, auto_install: true },
+        { site_tag: '<site_tag>' },
+      ),
+    ALREADY_EXISTS.webAnalytics,
   );
   if (rum?.site_tag) log(`Web Analytics site tag: ${rum.site_tag}`);
 
