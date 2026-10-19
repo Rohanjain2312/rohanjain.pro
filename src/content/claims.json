@@ -686,14 +686,6 @@
     "verifiedOn": "2026-10-15"
   },
   {
-    "id": "med-prompts",
-    "value": 10,
-    "display": "10-prompt check",
-    "source": "Repo medical-llm-finetuning",
-    "sourceUrl": "https://github.com/Rohanjain2312/medical-llm-finetuning",
-    "verifiedOn": "2026-10-15"
-  },
-  {
     "id": "med-dates",
     "value": "Jan 2026",
     "display": "Jan 2026",

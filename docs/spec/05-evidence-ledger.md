@@ -21,7 +21,7 @@ App/Data Engineer turns this into `claims.json`. Where the client chose the rés
 | TariffAgent | 82.5% exact 10-digit on 40 rulings dated after 2026-07-01 vs 15.0% zero-shot; 44,139 CBP rulings; 8 MCP tools; Sep 2026 | Repo `customs-court` README |
 | Self-Healing Code Agent | 3 of 8 tasks first try, 7 of 8 after self-repair, on its own 8-task benchmark; Feb to Aug 2026 | Repo `Self-Healing-Code-Agent` README |
 | Market Regime Classifier | 81.78% accuracy, 0.480 MCC, outperforming 6 baseline architectures; 88.4% F1 with optimized thresholds under 68/32 class imbalance; 24 years of S&P 500 data; Nov to Dec 2025 | Résumé, client-confirmed (repo note: README F1 72.70%); repo `transformer-market-regime` |
-| Medical LLM | Mistral 7B, LoRA on 1.14% of parameters, 100% format adherence vs 0% base on a 10-prompt check; Jan 2026 | Repo `medical-llm-finetuning` |
+| Medical LLM | Mistral 7B, LoRA on 1.14% of parameters, 100% format adherence vs 0% base (the "10-prompt check" was removed under R-005: no source; claim `med-prompts` deleted); Jan 2026 | Repo `medical-llm-finetuning` |
 | GraphBench | GNN-RAG 5.0% vs GraphRAG 3.2% exact match on 500 HotpotQA questions; pip `graphbench-kg`; Mar to Aug 2026 | Repo `graphbench` README |
 | IEEE paper | MLP-ELM, 95% accuracy, 6,400+ MRI scans, 17% better than baselines | Résumé, client-confirmed |
 | Education | MS Applied ML, University of Maryland, Aug 2024 to May 2026; B.Tech ECE, PES University, Aug 2017 to May 2021 | Résumé, client-confirmed |
