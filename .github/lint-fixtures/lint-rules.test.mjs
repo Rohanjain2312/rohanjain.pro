@@ -7,6 +7,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { ESLint } from 'eslint';
 import stylelint from 'stylelint';
+import { findProtectedDirective } from '../../eslint.config.mjs';
 
 const dir = import.meta.dirname;
 const eslint = new ESLint();
@@ -38,12 +39,15 @@ async function assertMessageHas(fixture, virtualPath, text) {
   );
 }
 
-// A disable with no rule list, or a `/* eslint rule: off */` config comment, can turn off any rule.
-function findBlanketDisables(text) {
-  return (
-    /eslint-disable(?:-next-line|-line)?[ \t]*(?:\*\/|\r?\n|$|--)/.test(text) ||
-    /\/\*\s*eslint\s+[\w@/-]+\s*:/.test(text)
-  );
+// Text scan: every comment that is an ESLint directive naming a protected rule (or this guard) is a hit, in any
+// position of a list. A comment can switch the ESLint guard off, so the scan is what cannot be bypassed.
+function findDirectiveHits(text, file = '') {
+  const hits = [];
+  for (const m of text.matchAll(/\/\*([\s\S]*?)\*\/|\/\/([^\n]*)/g)) {
+    const hit = findProtectedDirective(m[1] ?? m[2], file);
+    if (hit) hits.push(hit);
+  }
+  return hits;
 }
 
 function* walk(path) {
@@ -102,22 +106,31 @@ describe('ESLint R-405', () => {
     });
   }
 
-  // A blanket disable also hides the rule that would report it, so a text scan backs the ESLint rule.
-  it('disable-block.js is caught by the text scan (R-405)', () => {
-    const text = readFileSync(resolve(dir, 'eslint/disable-block.js'), 'utf8');
-    assert.ok(findBlanketDisables(text), 'R-405: blanket eslint-disable not detected');
-  });
+  // The four probes from the Security review of #262, plus the blanket form. Each is caught by the text scan.
+  for (const [f, name] of [
+    ['disable-block.js', '(all rules)'],
+    ['disable-line-list.js', 'no-restricted-syntax'],
+    ['disable-self-first.js', 'local/no-protected-disable'],
+    ['config-quoted.js', 'no-restricted-syntax'],
+    ['config-local-quoted.js', 'local/no-protected-disable'],
+  ]) {
+    it(`${f} is caught by the text scan for ${name} (R-405)`, () => {
+      const text = readFileSync(resolve(dir, `eslint/${f}`), 'utf8');
+      assert.ok(findDirectiveHits(text, `src/${f}`).includes(name), `R-405: ${name} not detected`);
+    });
+  }
 
-  it('no source file carries a blanket eslint-disable or an eslint config comment (R-405)', () => {
+  it('no source file carries a directive naming a protected rule, or a blanket disable (R-405)', () => {
     const root = resolve(dir, '../..');
     const hits = [];
     for (const top of ['src', 'scripts', 'tests', '.github', 'public']) {
       for (const file of walk(resolve(root, top))) {
         if (file.includes('lint-fixtures')) continue;
-        if (findBlanketDisables(readFileSync(file, 'utf8'))) hits.push(file.slice(root.length + 1));
+        const rel = file.slice(root.length + 1);
+        if (findDirectiveHits(readFileSync(file, 'utf8'), rel).length) hits.push(rel);
       }
     }
-    assert.deepEqual(hits, [], 'R-405: blanket eslint-disable or /* eslint rule: off */ in these files');
+    assert.deepEqual(hits, [], 'R-405: directive comments naming protected rules in these files');
   });
 
   it('a disable comment for a rule that is not a project rule is allowed', async () => {

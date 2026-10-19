@@ -132,40 +132,45 @@ const r401Syntax = [
   },
 ];
 
-// 95-L1: an inline comment must not switch off a project rule. Only rules that carry a project rule are
-// protected; other rules (such as the fs heuristic) may still be disabled with a reason.
+// 95-L1: an inline comment must not switch off a project rule. Protected rules are the ones that carry a
+// project rule, and this rule itself. Other rules (such as the fs heuristic) may still be disabled with a reason.
+// A comment that names a protected rule at ANY position of its list is rejected, as is a blanket disable.
+// The same function backs the text scan in .github/lint-fixtures/lint-rules.test.mjs, because a comment can
+// also switch this rule off, which no ESLint rule can report.
 const PROTECTED =
-  /^(no-restricted-|no-eval$|no-implied-eval$|no-new-func$|jsx-a11y\/|astro\/|local\/)/;
+  /^(no-restricted-[\w-]+|no-eval|no-implied-eval|no-new-func|jsx-a11y\/[\w-]+|astro\/[\w/-]+|local\/[\w-]+)$/;
+export function findProtectedDirective(commentText, file = '') {
+  const text = commentText.trim();
+  // Temporary: the one old comment in JsonLd.astro (Frontend must delete it; the config block below already
+  // drops its set:html selector). Only this exact form in this exact file passes.
+  if (
+    /(^|\/)src\/components\/JsonLd\.astro$/.test(file.split('\\').join('/')) &&
+    /^eslint-disable-next-line no-restricted-syntax(\s--\s|$)/.test(text)
+  )
+    return null;
+  const directive = /^eslint-(?:disable|enable)(?:-next-line|-line)?(?=\s|$)([\s\S]*)$/.exec(text);
+  const config = /^eslint\s+([\s\S]+)$/.exec(text);
+  let tokens;
+  if (directive) {
+    const list = directive[1].split(/\s--\s/)[0].trim();
+    if (!list) return '(all rules)';
+    tokens = list.split(/[\s,]+/);
+  } else if (config) {
+    tokens = config[1].split(/[\s,:]+/);
+  } else return null;
+  return tokens.map((t) => t.replace(/^["']|["']$/g, '')).find((t) => PROTECTED.test(t)) ?? null;
+}
 const noProtectedDisable = {
   meta: { type: 'problem', schema: [] },
   create(context) {
     return {
       Program() {
         for (const comment of context.sourceCode.getAllComments()) {
-          const text = comment.value.trim();
-          const directive = /^eslint-(disable|enable)(-next-line|-line)?(?=\s|$)([\s\S]*)$/.exec(
-            text,
-          );
-          const config = comment.type === 'Block' ? /^eslint\s+([\s\S]+)$/.exec(text) : null;
-          let rules = null;
-          if (directive) {
-            rules = directive[3]
-              .split(/\s--\s/)[0]
-              .split(',')
-              .map((r) => r.trim())
-              .filter(Boolean);
-            if (directive[1] === 'enable') continue;
-            // A blanket disable (no rule list) switches off every rule, including the protected ones.
-            if (rules.length === 0) rules = ['(all rules)'];
-          } else if (config) {
-            rules = config[1].split(/[\s,]+/).map((r) => r.replace(/:.*$/, ''));
-          }
-          if (!rules) continue;
-          const hit = rules.find((r) => r === '(all rules)' || PROTECTED.test(r));
+          const hit = findProtectedDirective(comment.value, context.filename);
           if (hit) {
             context.report({
               loc: comment.loc,
-              message: `R-405: an inline comment cannot disable "${hit}". Fix the code or add a config exception in eslint.config.mjs.`,
+              message: `R-405: an inline comment cannot name "${hit}". Fix the code or add a config exception in eslint.config.mjs.`,
             });
           }
         }
@@ -189,6 +194,9 @@ export default tseslint.config(
       '.github/lint-fixtures/',
     ],
   },
+  // Temporary: JsonLd.astro still carries an old, now unused disable comment (Frontend owns it). Set this back
+  // to the default ('warn') once the comment is deleted and the exception in findProtectedDirective is removed.
+  { linterOptions: { reportUnusedDisableDirectives: 'off' } },
   { plugins: { local: { rules: { 'no-protected-disable': noProtectedDisable } } } },
   js.configs.recommended,
   tseslint.configs.recommended,
@@ -247,9 +255,14 @@ export default tseslint.config(
   },
   {
     // JsonLd emits build-time site content (not user input) as script text; "<" is escaped by jsonLdText and
-    // the CSP never runs JSON. Astro has no other way to emit it, so this one file may carry its own comment.
+    // the CSP never runs JSON. Astro has no other way to emit it. Only the set:html selector is dropped here.
     files: ['src/components/JsonLd.astro'],
-    rules: { 'local/no-protected-disable': 'off' },
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        ...r405.filter((r) => !r.message.startsWith('R-405: set:html')),
+      ],
+    },
   },
   {
     // 95-L3: every file type in the engine folder, not only js, mjs and ts.
