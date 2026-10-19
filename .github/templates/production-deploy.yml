@@ -7,7 +7,7 @@
 # result files. It calls the public repo's own scripts and does not copy their logic.
 #
 # Secrets (secrets of the `production` environment of the private repo): CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID.
-# CLOUDFLARE_API_TOKEN is the deploy token: Pages edit only, for the one Pages project (ADR-0032). The broad setup
+# CLOUDFLARE_API_TOKEN is the deploy token: Pages edit only, account-wide for Pages (ADR-0032). The broad setup
 # token is never stored in GitHub. The `production` environment allows deployment from `main` only (deployment
 # branch policy, docs/runbooks/launch.md section 2).
 # Variables: SITE_TAG (release tag to deploy, for example v1.0.0), CF_PAGES_PROJECT (Pages project name).
