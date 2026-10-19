@@ -5,7 +5,6 @@ The only things Claude Code cannot do itself. Each item has exact steps. Claude 
 ## Open
 - [ ] Update the GitHub CLI (the installed 2.63.2 cannot edit PR labels): `brew upgrade gh`
 
-- [ ] Before Phase 7, on a normal computer (the agent sandbox cannot start Firefox): in the project folder run `npm run browsers:install` once, then `npm run test:browsers`. Paste the result in chat. Failures become issues.
 
 - [ ] Confirm the availability line the site shows. `src/content/site.json` says "Available now", taken from the mockup; no source states it (R-005). Reply with the exact text you want, or "none" to hide it.
 
