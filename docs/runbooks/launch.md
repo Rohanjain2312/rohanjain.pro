@@ -21,7 +21,7 @@ Each step lists what to do and what to send back.
    5. In Cloudflare, wait for the status "Active" (minutes to a few hours). Cloudflare also emails you.
    6. Later, Claude Code gives you one DS record (four values). Paste it into the DNSSEC box at Porkbun. This is the only second visit to Porkbun.
 3. One setup token (ADR-0032).
-   1. Open the template link Claude Code gives you. It creates a setup token with the permissions listed in section 5. Choose Continue, then Create token. Copy the token once.
+   1. Open the template link Claude Code gives you. It creates a setup token with the permissions listed in section 5. Set a short expiry (a few days). Choose Continue, then Create token. Copy the token once.
    2. In Terminal, run the one command Claude Code prepares. It asks you to paste the token and the Account ID (shown on the right side of the domain overview page in Cloudflare). The token is used only in that Terminal session. It is never stored in GitHub.
    3. The command applies the DNS records, DNSSEC, CAA, email records and Web Analytics (section 6). It then creates a second token with Pages edit only, for the one Pages project, and stores that second token and the Account ID as secrets of the `production` environment with `gh secret set`.
    4. Close the terminal tab.
@@ -69,18 +69,41 @@ Two tokens. The deploy secret is never the broad one (`docs/spec/08-security.md`
 
 Setup token. Created by the client from a prepared link, scoped to the one account and the one zone, short expiry (set it to a few days). Used once from the client's Terminal. Never stored in GitHub. Revoked after launch. Permissions:
 
-| Use | Permission | Template key (verify in the Cloudflare permission reference at launch) |
-|---|---|---|
-| DNS records, CAA, email records | Zone, DNS, Edit | `dns` edit |
-| Zone settings, DNSSEC | Zone, Zone Settings, Edit; Zone, DNSSEC, Edit | `zone_settings` edit; DNSSEC key not documented |
-| Web Analytics | Account, Web Analytics, Edit | not documented |
-| Create the deploy token | Account API Tokens, Edit (name unverified) | not documented |
+| Use | Permission (Cloudflare name) | Template key | Status |
+|---|---|---|---|
+| DNS records, CAA, email records, DNSSEC | Zone, DNS, Write | `dns` edit | Key and name verified [1][2]. The DNSSEC endpoint lists "DNS Write" as its only accepted permission [3]; there is no separate DNSSEC permission. |
+| Zone settings (HTTPS, TLS) | Zone, Zone Settings, Write | `zone_settings` edit | Verified [1][2][4] |
+| Web Analytics | Account, Account Settings, Write | `account_settings` edit | Endpoint lists "Account Settings Write" [5]. There is no "Web Analytics" permission group in the reference. Key verified [1]; `edit` as the level for it is assumed. |
+| Pages project and custom domains | Account, Cloudflare Pages, Write | `page` edit | Key and names verified [1][2][6][7] |
+| Create the deploy token | Account, Account API Tokens, Write | `account_api_tokens` edit | Creation endpoint lists "Account API Tokens Write" [8]; the guide says to create the token with "Account > Account API Tokens > Edit" [9]. Key verified [1]. Whether the user-token template form accepts it is unverified until the client opens the link. |
 
-Deploy token. Created by the setup command with the setup token. Pages edit only (Account, Cloudflare Pages, Edit, key `page` edit), for the one Pages project, 90-day expiry. Only this token and the Account ID are stored, with `gh secret set` into the `production` environment. The deploy job reads only these two secrets. Rotation is in `docs/spec/12-operations.md`, `rotate-secrets.md`.
+Sources (all Cloudflare documentation, read 2026-10-19):
 
-Unverified (R-005): the Cloudflare permission names and keys for creating a token from a token, and for DNSSEC and Web Analytics. Phase 7 checks them first, before anything is sent to the client. Fallback if a token cannot create another token: a second prepared link and a second client-created token with Pages edit only. In the same change, update `docs/needs-client.md` and CLAUDE.md client-only item 3 (Supervisor-owned).
+1. Template URL format and keys: https://developers.cloudflare.com/fundamentals/api/how-to/account-owned-token-template/
+2. Permission names: https://developers.cloudflare.com/fundamentals/api/reference/permissions/
+3. DNSSEC edit: https://developers.cloudflare.com/api/resources/dns/subresources/dnssec/methods/edit/
+4. Zone setting edit: https://developers.cloudflare.com/api/resources/zones/subresources/settings/methods/edit/
+5. Web Analytics site create: https://developers.cloudflare.com/api/resources/rum/subresources/site_info/methods/create/
+6. Pages project create: https://developers.cloudflare.com/api/resources/pages/subresources/projects/methods/create/
+7. Pages domain add: https://developers.cloudflare.com/api/resources/pages/subresources/projects/subresources/domains/methods/create/
+8. Token create: https://developers.cloudflare.com/api/resources/accounts/subresources/tokens/methods/create/
+9. Creating tokens through the API: https://developers.cloudflare.com/fundamentals/api/how-to/create-via-api/
 
-Template link format: `https://dash.cloudflare.com/profile/api-tokens?permissionGroupKeys=<url-encoded JSON array of {key,type}>&name=rohanjain.pro%20setup`. Claude Code builds and checks the link at launch.
+The setup command is `.github/scripts/launch-setup.mjs` (no dependencies, tests in `.github/lint-fixtures/launch-setup.test.mjs`). It cannot live in `scripts/` because Platform does not own that folder (R-112).
+
+Template link. The format is documented [1]: `https://dash.cloudflare.com/profile/api-tokens?permissionGroupKeys=<url-encoded JSON array of {key,type}>&accountId=<id>&zoneId=<id>&name=<name>`. The template has no expiry parameter, so the client sets the expiry (a few days) in the form. Claude Code builds the link with the account and zone IDs (not secrets, shown in the zone overview; the client sends them back in step 1.4):
+
+`node .github/scripts/launch-setup.mjs --link --account <account_id> --zone <zone_id>`
+
+Check that the form shows the five permissions, the one account and the one zone before sending the link to the client.
+
+Run order: `--dry-run` first (prints every API call, sends nothing, asks for no token); Security reviews the output; then the client runs the command without flags. The token and Account ID come from prompts (the token prompt is hidden and refuses piped input). The script is safe to re-run, skips records that exist, and never deletes. Conflicting records that Cloudflare imported from Porkbun (parking A or CNAME records on the apex or `www`) make the matching `POST` fail; the script reports it and continues. Claude Code reads the failure list the client pastes back and decides.
+
+Deploy token. Created by the setup command with the setup token. Pages edit only (Account, Cloudflare Pages, Write, key `page` edit), on the one account (Cloudflare documents the account as the resource, not a single project), 90-day expiry. Only this token and the Account ID are stored, with `gh secret set` into the `production` environment. The deploy job reads only these two secrets. Rotation is in `docs/spec/12-operations.md`, `rotate-secrets.md`.
+
+Still unverified (R-005): the `edit` level for `account_settings` and the acceptance of `account_api_tokens` by the user-token form (table above); that Cloudflare can limit a Pages token to one project (the documented resource is the account, so the deploy token is account-wide for Pages and can touch every Pages project in this account; the account has only this one); the `subdomain` field of the Pages project response (the script falls back to `<project>.pages.dev`); and whether Cloudflare accepts `.` as null MX content. Fallback if a token cannot create another token: a second prepared link and a second client-created token with Pages edit only. In the same change, update `docs/needs-client.md` and CLAUDE.md client-only item 3 (Supervisor-owned).
+
+The `www` to apex 301 is not done by the script: a proxied CNAME serves the site on `www`, and the redirect is a separate step (a rules permission is not in the setup token). Platform adds it to `public/_redirects` (absolute-URL redirect, to be verified in Cloudflare's Pages redirects documentation) in a follow-up.
 
 ## 6. DNS record plan
 
@@ -125,7 +148,7 @@ Rollback never needs the client.
 ## Unknowns recorded, not guessed (R-005)
 
 - The Pages project name.
-- The Cloudflare permission names and keys for DNSSEC, Web Analytics and creating a token from a token (section 5).
+- The items listed as still unverified in section 5.
 - The JSON body of the environment update call (section 2).
 - Whether the private repo's GitHub plan supports environments.
 - Whether wrangler `4.149.0` deploys cleanly with install scripts disabled. First deploy confirms.
