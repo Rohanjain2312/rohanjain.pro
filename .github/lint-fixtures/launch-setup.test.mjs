@@ -442,3 +442,14 @@ test('ghApiRun never throws and returns the exit status', () => {
   assert.equal(ghApiRun(['a'], { spawnSyncFn: boom }).status, null);
   assert.equal(ghApiRun(['a'], { spawnSyncFn: () => ({ status: 0, stdout: 'ok' }) }).stdout, 'ok');
 });
+
+test('environment: the read-back after the POST is checked, not assumed', async () => {
+  for (const list of [[], [{ name: 'dev', type: 'branch' }]]) {
+    const f = fakeApi({ get: {}, list });
+    await assert.rejects(
+      ensureEnvironment({ ...envArgs, ghApi: f.api }),
+      /did not read back as main only/,
+    );
+    assert.equal(f.writes.length, 2);
+  }
+});

@@ -148,7 +148,7 @@ export function ghApiRun(args, { input, spawnSyncFn = spawnSync } = {}) {
 
 // Creates the `production` environment limited to `main`, or confirms it already is. Calls and bodies are from
 // docs.github.com/en/rest/deployments/environments and .../branch-policies (see docs/runbooks/launch.md section 2).
-// The PUT runs only when the environment is absent (a PUT on an existing one would reset its settings).
+// The PUT runs only when the environment is absent: GitHub documents it as "create or update", so it is never sent for an existing one.
 export async function ensureEnvironment({ repo, ghApi, log, dryRun }) {
   const base = `repos/${repo}/environments/production`;
   const putBody = JSON.stringify({
@@ -156,7 +156,7 @@ export async function ensureEnvironment({ repo, ghApi, log, dryRun }) {
   });
   if (dryRun) {
     log(
-      `[dry-run] gh api ${base} (read; created only if it answers 404, policy added if none yet)`,
+      `[dry-run] gh api ${base} (read; created only if it answers HTTP 404, policy added if none yet)`,
     );
     log(`[dry-run] gh api -X PUT ${base} --input - ${putBody}`);
     log(`[dry-run] gh api -X POST ${base}/deployment-branch-policies -f name=main -f type=branch`);
