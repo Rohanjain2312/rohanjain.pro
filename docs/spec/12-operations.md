@@ -36,7 +36,7 @@ Imagined launch-day failures, ranked by likelihood, with who catches each before
 | 3 | A number is wrong, overstated or inconsistent across site and PDFs | App/Data: claims check; QA: claim re-verification and copy lint; Reader: cross-page consistency | Partial (ledger checked by its author) |
 | 4 | A recruiter on a phone can't say who he is after 5 seconds | Reader Advocate: simulated test (the real test was dropped, ADR-0035) | No owner |
 | 5 | Process theater: approvals recorded without a real review, or the same model agreeing with itself | Review rules in 2.11 (isolation, SHA and agent ID, read-only reviewers, model split); QA audit of 20% of PRs; seeded-defect audits | No owner |
-| 6 | The site looks generic or AI-made | Design Lead: R-602 in `.claude/agents/design-lead.md` on a different model than the builders; external: 5-second test comments | Partial (same model judging its own spec) |
+| 6 | The site looks generic or AI-made | Design Lead: R-602 in `.claude/agents/design-lead.md` on a different model than the builders; the real 5-second test was dropped, ADR-0035 | Partial (same model judging its own spec) |
 | 7 | Copy problems: em dashes, hype, work authorization mentioned, mismatched title or location | QA: copy lint; Reader Advocate | Partial (no mechanical check) |
 | 8 | Security hole: XSS in the fit check, weakened CSP, unpinned Action, leaked posting text | Security: review and `docs/spec/08-security.md` §8.9; tools: CodeQL, gitleaks, ZAP, OSV; QA: rendering property test | Owned |
 | 9 | The build stalls on usage limits or extra roles burn the budget | Supervisor: skill `session-protocol`; cost controls in 2.11 | Owned, risk raised by new roles |
