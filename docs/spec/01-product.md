@@ -14,7 +14,7 @@ A personal portfolio site whose only job is to get Rohan Jain hired as an ML Eng
 6. Security headers grade A+ (securityheaders.com) and Mozilla Observatory A+ at production launch.
 7. Running cost is the domain renewal only, excluding the client's Claude plan.
 8. The site does not look AI-generated. It passes the Design Lead's anti-slop review (R-602 in `.claude/agents/design-lead.md`).
-9. Real readers confirm it (skill `external-validation`): at least 4 of 5 people name Rohan's role and one proof point after a 5-second look, and the fit check agrees with the recruiter majority on at least 7 of 10 postings, never saying "Strong fit" where the majority says "Not a strong fit".
+9. Readers confirm it: the Reader Advocate's simulated 5-second test and the golden-set rubric stand as the validation. The real 5-second test and recruiter ratings were dropped by the client (ADR-0035).
 
 ### 1.3 Non-goals
 - No blog, CMS, login, comments, contact form, newsletter or database in v1.

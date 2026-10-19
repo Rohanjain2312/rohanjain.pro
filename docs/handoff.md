@@ -71,4 +71,4 @@ After launch, log every application. Without the log, the team cannot tell wheth
 
 ## 7. Open items still on your side
 
-See `docs/needs-client.md`. The optional real 5-second test and recruiter fit ratings improve the site but do not block launch.
+See `docs/needs-client.md`. The real 5-second test and recruiter fit ratings were dropped (ADR-0035).

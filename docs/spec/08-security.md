@@ -57,7 +57,7 @@ Résumé PDFs are indexable (client decision).
 ### 8.7 DNS and domain hardening (Phase 7)
 - DNSSEC enabled; CAA records for the CAs Cloudflare uses.
 - No email on the domain: null MX (`0 .`), SPF `v=spf1 -all`, DMARC `v=DMARC1; p=reject; adkim=s; aspf=s`.
-- `www` 301 to apex; HTTPS only.
+- HTTPS only. `www` serves the same site with the canonical on the apex (ADR-0035); no redirect rule.
 
 ### 8.8 Privacy
 - No cookies; cookieless analytics only (Phase 7); no fingerprinting.
