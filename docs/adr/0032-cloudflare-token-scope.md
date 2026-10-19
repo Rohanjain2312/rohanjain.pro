@@ -8,7 +8,7 @@ The Phase 7 runbook (PR #254) defined one broad Cloudflare token (Pages, DNS, Zo
 ## Decision
 - The client creates one setup token from a prepared link. It is used once, from the client's Terminal, by a prepared command. It is never stored in GitHub.
 - That command creates the Pages project and its custom domains, applies DNS, DNSSEC, CAA, email-hardening records and Web Analytics, then creates a second token with Pages edit only, and stores that second token and the account ID as the GitHub secrets with `gh secret set`.
-- The client revokes the setup token after launch. Claude Code gives the exact steps.
+- The client deletes the setup token as soon as the setup run has succeeded (done 2026-10-19), not after launch. Claude Code gives the exact steps.
 - The `production` environment allows deployment from `main` only.
 - Unverified (R-005): the Cloudflare permission names needed to create a token from a token. Phase 7 checks this first. If a token cannot create another token, the fallback is a second prepared link and a second token, and `docs/needs-client.md` and CLAUDE.md item 3 are updated in the same change.
 

@@ -26,7 +26,7 @@ Each step lists what to do and what to send back.
    3. The command applies the DNS records, DNSSEC, CAA, email records and Web Analytics (section 6). It then creates a second token with Pages edit only (account-wide for Pages, as in section 5), and stores that second token and the Account ID as secrets of the `production` environment with `gh secret set`.
    4. Close the terminal tab.
    5. Second command, after Claude Code says the release candidate tag is published (section 4). Run `node .github/scripts/launch-deploy-setup.mjs`. It needs no Cloudflare token. It sets two variables on the private applications repo and adds the deploy workflow file there. Claude Code gives you the exact command (it first runs with `--dry-run` for review). Only if the command says the file write was refused, run `gh auth refresh -s workflow` once and run it again.
-6. After launch, Claude Code gives you the steps to revoke the setup token (Cloudflare, My Profile, API Tokens, the setup token, Delete). DNS changes later need a new setup token.
+6. As soon as the setup run has succeeded, delete the setup token (Cloudflare, My Profile, API Tokens, the setup token, Delete). Done on 2026-10-19. DNS changes later need a new setup token.
 
 Passkeys or 2FA: GitHub is done (2026-10-16). Cloudflare is step 1.2. Porkbun needs 2FA too: Account, Security.
 
@@ -83,7 +83,7 @@ First-deploy steps, in order:
 
 Two tokens. The deploy secret is never the broad one (`docs/spec/08-security.md`: deploy token is Pages edit only).
 
-Setup token. Created by the client from a prepared link, scoped to the one account and the one zone, short expiry (set it to a few days). Used once from the client's Terminal. Never stored in GitHub. Revoked after launch. Permissions:
+Setup token. Created by the client from a prepared link, scoped to the one account and the one zone, short expiry (set it to a few days). Used once from the client's Terminal. Never stored in GitHub. Deleted as soon as the setup run has succeeded. Permissions:
 
 | Use | Permission (Cloudflare name) | Template key | Status |
 |---|---|---|---|

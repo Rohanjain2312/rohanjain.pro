@@ -32,7 +32,7 @@ Three short steps, details and exact commands in `docs/runbooks/launch.md` secti
 
 1. Create a free Cloudflare account with a passkey or 2FA, and add `rohanjain.pro`.
 2. At Porkbun, turn DNSSEC off, replace the nameservers with the two Cloudflare shows, and later paste one DS record.
-3. Create one Cloudflare setup token from a prepared link and run the prepared command that uses it once on your computer. It sets up DNS and creates a narrow deploy token for GitHub (ADR-0032). Revoke the setup token after launch.
+3. Create one Cloudflare setup token from a prepared link and run the prepared command that uses it once on your computer. It sets up DNS and creates a narrow deploy token for GitHub (ADR-0032). Delete the setup token as soon as the run has succeeded.
 
 Claude Code does the rest: DNS records, DNSSEC, CAA, email-hardening records, deploy, analytics, external header scans, smoke tests and tag `v1.0.0`.
 
