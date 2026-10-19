@@ -63,6 +63,8 @@ export const analyze: Analyze = (text, skills, extras, evidence) => {
   const provenSkills: { name: string; evidence: readonly string[] }[] = [];
   const familyCounts: Record<RoleFamily, number> = { ai: 0, ml: 0, ds: 0 };
 
+  // Matching rule: each skill is tested on its own terms. There is no longest-match rule, so two skills whose terms
+  // overlap ("Docker" and "Docker Compose") both count. Skill names and aliases must not repeat another skill's name.
   const hits = matcher.skills.filter(({ terms }) => matchesAny(haystack, terms));
   const extraHits = matcher.extras.filter(({ terms }) => matchesAny(haystack, terms));
   // Plain-English skill names count only beside proven technical matches (issue #243).

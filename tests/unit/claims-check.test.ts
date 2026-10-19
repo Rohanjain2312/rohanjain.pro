@@ -57,6 +57,35 @@ describe('visibleText', () => {
   });
 });
 
+describe('visibleText hardening (issue #248)', () => {
+  it('strips nested comments, script blocks and tags until the text is stable', () => {
+    expect(visibleText('<!<!-- x -->-- 4242 -->ok')).not.toContain('4242');
+    expect(visibleText('<scr<script>x</script>ipt>alert(4343)</script>ok')).not.toContain('4343');
+    expect(visibleText('<sc<b>ript>ok')).not.toContain('<');
+  });
+  it('decodes &copy; so a footer year passes', () => {
+    expect(checkHtml('/', page('<footer>&copy; 2026 Fake Name</footer>'), allowed)).toEqual([]);
+  });
+  it('reads value only on input and button, not on option, meter, data, radio or hidden', () => {
+    const t = visibleText(
+      '<option value="9191">A</option><meter value="9292"></meter><data value="9393">x</data><input type="radio" value="9494"><input type="submit" value="Send 111"><button value=\'Go 111\'>b</button>',
+    );
+    for (const n of ['9191', '9292', '9393', '9494']) expect(t).not.toContain(n);
+    expect(t).toContain('Send 111');
+    expect(t).toContain('Go 111');
+  });
+  it('reads unquoted attribute values', () => {
+    expect(visibleText('<img alt=Chart7777 src=a.png>')).toContain('Chart7777');
+    expect(checkHtml('/', page('<img alt=Chart-777 src=a.png>'), allowed)).toHaveLength(1);
+  });
+  it('does not treat a count after a month name as a year', () => {
+    expect(checkHtml('/', page('<p>Served March 2000 customers.</p>'), allowed)).toHaveLength(1);
+    expect(checkHtml('/', page('<p>Jan 2021 to Jun 2024, and March 1999.</p>'), allowed)).toEqual(
+      [],
+    );
+  });
+});
+
 describe('extractNumbers', () => {
   it('finds integers, decimals and comma groups', () => {
     expect(extractNumbers('3.1M trades, 6,400+ scans, 0.333 and 10.').map((f) => f.raw)).toEqual([

@@ -1,4 +1,3 @@
-/* eslint-disable security/detect-non-literal-fs-filename -- Node-side code writes to the directory the client chose. */
 // Writes one result file. Never overwrites: an existing slug is retried with a new suffix.
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
@@ -13,10 +12,12 @@ export function writeResult(
   bytes?: (n: number) => Uint8Array,
   attempts = 5,
 ): string | undefined {
+  // eslint-disable-next-line security/detect-non-literal-fs-filename -- dir is the directory the client chose.
   mkdirSync(dir, { recursive: true });
   for (let i = 0; i < attempts; i++) {
     const slug = makeSlug(company, bytes);
     try {
+      // eslint-disable-next-line security/detect-non-literal-fs-filename -- the name is dir plus a generated slug.
       writeFileSync(join(dir, `${slug}.json`), `${JSON.stringify(result, null, 2)}\n`, {
         flag: 'wx',
       });

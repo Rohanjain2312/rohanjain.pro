@@ -45,6 +45,9 @@ describe.each(cases)('%s schema', (_name, schema, valid) => {
 describe('field rules', () => {
   it('rejects bad dates and non-https URLs', () => {
     expect(claimSchema.safeParse({ ...c.claims[0], verifiedOn: '01/01/2000' }).success).toBe(false);
+    for (const bad of ['2000-13-45', '2000-02-30', '2001-02-29'])
+      expect(claimSchema.safeParse({ ...c.claims[0], verifiedOn: bad }).success, bad).toBe(false);
+    expect(claimSchema.safeParse({ ...c.claims[0], verifiedOn: '2000-02-29' }).success).toBe(true);
     expect(claimSchema.safeParse({ ...c.claims[1], sourceUrl: 'http://example.com' }).success).toBe(
       false,
     );

@@ -16,6 +16,7 @@ const ENTITIES: Record<string, string> = {
   mdash: '-',
   times: 'x',
   rarr: '->',
+  copy: '©',
 };
 
 function decodeEntities(s: string): string {
@@ -31,7 +32,37 @@ function decodeEntities(s: string): string {
 
 const BLOCK_TAGS =
   /<\/?(?:address|article|aside|blockquote|br|dd|div|dl|dt|figcaption|figure|footer|h[1-6]|header|hr|li|main|nav|ol|p|pre|section|table|td|th|tr|ul)\b[^>]*>/i;
-const ATTR_TEXT = /\s(?:alt|aria-label|title|placeholder|value)\s*=\s*(?:"([^"]*)"|'([^']*)')/gi;
+// Attribute values a visitor can read. Quoted or unquoted. `value` is handled apart (see attrTexts).
+const ATTR_TEXT =
+  /\s(alt|aria-label|title|placeholder|value)\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s"'=<>`]+))/gi;
+// `value` is visible text only on these tags, and not for choice or hidden input types.
+const VALUE_TAG = /^<(?:input|button)\b/i;
+const VALUE_HIDDEN_TYPE = /\stype\s*=\s*["']?(?:radio|checkbox|hidden|range|color|file|image)\b/i;
+
+/** Strip until the text stops changing, so "<!<!---->--" cannot leave a comment behind. */
+function stripRepeated(
+  s: string,
+  re: RegExp,
+  replacer: (match: string) => string = () => '',
+): string {
+  let prev: string;
+  let cur = s;
+  do {
+    prev = cur;
+    cur = cur.replace(re, replacer);
+  } while (cur !== prev);
+  return cur;
+}
+
+function attrTexts(tag: string): string[] {
+  const out: string[] = [];
+  for (const m of tag.matchAll(ATTR_TEXT)) {
+    if (m[1]?.toLowerCase() === 'value' && (!VALUE_TAG.test(tag) || VALUE_HIDDEN_TYPE.test(tag)))
+      continue;
+    out.push(m[2] ?? m[3] ?? m[4] ?? '');
+  }
+  return out;
+}
 
 // Private-use markers wrap the content of <time> elements so the date check can see them.
 const TIME_OPEN = '\uE000';
@@ -42,16 +73,15 @@ const TIME_CLOSE = '\uE001';
  * placeholder and value attribute values. Skips script, style, template, comments and the rest of head.
  */
 export function visibleText(html: string): string {
-  let s = html.replace(/<!--[\s\S]*?-->/g, '');
+  let s = stripRepeated(html, /<!--[\s\S]*?-->/g);
   const title = /<title\b[^>]*>([\s\S]*?)<\/title\s*>/i.exec(s)?.[1];
   s = s.replace(/<head\b[\s\S]*?<\/head>/gi, '');
   if (title !== undefined) s = `<p>${title}</p>${s}`;
-  s = s.replace(/<(script|style|template)\b[\s\S]*?<\/\1\s*>/gi, '');
+  s = stripRepeated(s, /<(script|style|template)\b[\s\S]*?<\/\1\s*>/gi);
   s = s.replace(/<time\b[^>]*>([\s\S]*?)<\/time\s*>/gi, `${TIME_OPEN}$1${TIME_CLOSE}`);
-  s = s.replace(/<[^>]*>/g, (tag) => {
+  s = stripRepeated(s, /<[^>]*>/g, (tag) => {
     if (/\stype\s*=\s*["']?hidden\b/i.test(tag)) return '';
-    const attrs: string[] = [];
-    for (const m of tag.matchAll(ATTR_TEXT)) attrs.push(m[1] ?? m[2] ?? '');
+    const attrs = attrTexts(tag);
     const sep = BLOCK_TAGS.test(tag) ? '\n' : '';
     return sep + (attrs.length ? ` ${attrs.join(' ')} ` : '');
   });
@@ -109,10 +139,12 @@ function inDateSpan(text: string, f: Found): boolean {
 function isYear(text: string, f: Found): boolean {
   if (!/^(19|20)\d{2}$/.test(f.raw)) return false;
   const before = text.slice(Math.max(0, f.index - 24), f.index);
-  const after = text.slice(f.index + f.raw.length, f.index + f.raw.length + 8);
+  const after = text.slice(f.index + f.raw.length, f.index + f.raw.length + 24);
   const open = before.lastIndexOf(TIME_OPEN);
   if (open >= 0 && before.indexOf(TIME_CLOSE, open) < 0) return true;
   const clean = before.replace(/[\uE000\uE001]/g, '');
+  // "Served March 2000 customers": a month then a number then a plural noun is a count, not a year.
+  if (DATE_BEFORE[0]?.test(clean) && /^\s+[a-z]{3,}s\b/i.test(after)) return false;
   return DATE_BEFORE.some((r) => r.test(clean)) || DATE_AFTER.some((r) => r.test(after));
 }
 

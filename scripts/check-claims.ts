@@ -1,7 +1,7 @@
 // Usage: node scripts/check-claims.ts [--dist <dir>] [--content <dir>] [--require-dist]
 // R-301: every number in the visible text of built HTML maps to a claim in claims.json.
 // Exits 1 and names the page, the number and the nearest text. Without dist/ it skips, unless --require-dist.
-// PDF text is checked once the PDF generator lands (docs/spec/06-architecture.md section 5.8).
+// PDF text is checked at generation: scripts/resume-pdf.ts calls checkHtml on the PDF text (docs/spec/06-architecture.md section 5.8).
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { join, relative, resolve } from 'node:path';
 import {
