@@ -17,15 +17,19 @@ const mailtoLinks = (html: string) =>
     ...html.matchAll(new RegExp(`<a [^>]*href="mailto:${escaped}[?"][^>]*>[\\s\\S]*?</a>`, 'g')),
   ].map((m) => ({ text: m[0], at: m.index ?? 0 }));
 
-/** Text outside <script> and <head> that contains the address, apart from inside mailto hrefs. */
+/** True when `at` is inside an element named `tag` (case-insensitive; checks the last open and close tag before it). */
+const inside = (lower: string, at: number, tag: string) =>
+  Math.max(lower.lastIndexOf(`<${tag}>`, at), lower.lastIndexOf(`<${tag} `, at)) >
+  lower.lastIndexOf(`</${tag}>`, at);
+
+/** Every position of the address outside <head>, <script> and <noscript>. No markup is removed or rewritten. */
 const addressUses = (html: string) => {
-  const body = html
-    .replace(/<head[\s\S]*?<\/head>/, '')
-    .replace(/<script[\s\S]*?<\/script>/g, '')
-    .replace(/<noscript[\s\S]*?<\/noscript>/g, '');
-  return [...body.matchAll(new RegExp(escaped, 'g'))]
-    .map((m) => m.index ?? 0)
-    .map((at) => ({ at, body }));
+  const lower = html.toLowerCase();
+  const uses: number[] = [];
+  for (let at = html.indexOf(EMAIL); at !== -1; at = html.indexOf(EMAIL, at + 1)) {
+    if (!['head', 'script', 'noscript'].some((t) => inside(lower, at, t))) uses.push(at);
+  }
+  return uses;
 };
 
 /** True when `at` sits between an open and its close marker. */
@@ -53,9 +57,8 @@ for (const p of pages) {
     // Visible text (résumé contact line, brief contact line) is wrapped too.
     const uses = addressUses(html);
     expect(uses.length).toBeGreaterThan(0);
-    for (const u of uses) {
-      const ctx = u.body.slice(Math.max(0, u.at - 60), u.at + 60);
-      expect(wrapped(u.body, u.at), ctx).toBe(true);
+    for (const at of uses) {
+      expect(wrapped(html, at), html.slice(Math.max(0, at - 60), at + 60)).toBe(true);
     }
   });
 }
