@@ -341,7 +341,8 @@ export async function runSetup({
     ]);
     const group = (groups ?? []).find((g) => PAGES_GROUP_NAMES.includes(g.name));
     if (!group) throw new SetupError(`No permission group named ${PAGES_GROUP_NAMES.join(' or ')}`);
-    const expires = new Date(now().getTime() + 90 * 86400000).toISOString();
+    // Cloudflare accepts 2005-12-30T01:02:03Z only: no milliseconds (#281).
+    const expires = new Date(now().getTime() + 90 * 86400000).toISOString().replace(/\.\d+Z$/, 'Z');
     const result = await call(
       'POST',
       `/accounts/${accountId}/tokens`,

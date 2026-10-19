@@ -143,7 +143,9 @@ test('deploy token is Pages edit only, one group, 90 days, on the one account', 
   assert.equal(create.body.policies.length, 1);
   assert.deepEqual(create.body.policies[0].permission_groups, [{ id: 'g1' }]);
   assert.deepEqual(Object.keys(create.body.policies[0].resources), [`com.cloudflare.api.account.${ACCOUNT}`]);
-  assert.equal(create.body.expires_on, '2027-01-18T00:00:00.000Z');
+  // Cloudflare rejects milliseconds (#281): the format is 2005-12-30T01:02:03Z.
+  assert.equal(create.body.expires_on, '2027-01-18T00:00:00Z');
+  assert.match(create.body.expires_on, /^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$/);
 });
 
 test('records that already exist are skipped, quoted TXT included', async () => {
