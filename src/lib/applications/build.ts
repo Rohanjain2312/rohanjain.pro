@@ -1,7 +1,7 @@
 // Turns an engine Report into the stored result. Copies only the curated fields (R-502).
 import type { Report } from '../fitcheck/types.ts';
 import { addDays, utcDate } from './expiry.ts';
-import { applicationResultSchema, type ApplicationResult } from './schema.ts';
+import { applicationResultSchema, MAX_LIST_ENTRIES, type ApplicationResult } from './schema.ts';
 
 export function buildResult(
   report: Report,
@@ -25,6 +25,7 @@ export function buildResult(
       matchCount: r.matchCount,
       tags: r.tags,
     })),
-    gaps: report.gaps,
+    // counts.gaps keeps the full number; the list is cut to the schema bound.
+    gaps: report.gaps.slice(0, MAX_LIST_ENTRIES),
   });
 }

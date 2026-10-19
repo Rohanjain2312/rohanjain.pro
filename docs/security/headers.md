@@ -17,7 +17,16 @@ Policy of record for `public/_headers`. Source: `docs/spec/08-security.md` 8.2. 
 | `base-uri`                  | `'none'`             | Blocks `<base>` injection.                                                                  |
 | `form-action`               | `'none'`             | The site has no form posts.                                                                 |
 | `manifest-src`              | `'self'`             | Web manifest from the same origin.                                                          |
+| `require-trusted-types-for` | `'script'`           | Blocks string-to-code DOM sinks (`innerHTML`, `eval`, script `src`) unless a policy approves. |
 | `upgrade-insecure-requests` | n/a                  | Upgrades any stray `http:` subresource.                                                     |
+
+### Trusted Types (issue #241, 232-L1)
+
+`require-trusted-types-for 'script'` is on. It is defence in depth: `src/` has no DOM sink (no `innerHTML`, `outerHTML`, `insertAdjacent*`, `document.write`, `eval`, `new Function`, `set:html`). The code uses `textContent`, `replaceChildren`, `setAttribute('sandbox', ...)` and `iframe.src`; none of these is a Trusted Types sink, so no policy is needed and the CSP has no `trusted-types` directive.
+
+Checked on 2026-10-18 in Chromium against `npm run preview` with the real header: the Frontend suite (`npm run test:frontend`, `tests/component`, 105 passed) and a probe that loaded `/`, `/privacy/`, `/for/`, `/404.html` and `/print/resume/ml/`, ran the fit check, opened the brief, demo and résumé dialogs and loaded the demo iframe. No console error, page error or `securitypolicyviolation` event came from Trusted Types. Browsers without Trusted Types (Firefox, older Safari) ignore the directive; the other directives still apply.
+
+Rule for new code: a new sink needs a Security review first and, if unavoidable, a named `trusted-types` policy.
 
 ### Inline rule
 

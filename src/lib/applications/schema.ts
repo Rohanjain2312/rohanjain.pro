@@ -5,10 +5,12 @@ import { z } from 'astro/zod';
 
 const shortText = z.string().trim().min(1).max(200);
 const proofText = z.string().trim().min(1).max(600);
-const isoDate = z
-  .string()
-  .regex(/^\d{4}-\d{2}-\d{2}$/, 'expected YYYY-MM-DD')
-  .refine((s) => !Number.isNaN(Date.parse(`${s}T00:00:00Z`)), 'not a real date');
+// z.iso.date() checks the calendar: it rejects 2000-13-45 and 2000-02-30.
+const isoDate = z.iso.date('expected a real date as YYYY-MM-DD');
+/** Skill names, tags and gaps. Short on purpose: no room to store job description text. */
+const itemText = z.string().trim().min(1).max(80);
+/** Most entries any list in a result may hold. */
+export const MAX_LIST_ENTRIES = 30;
 const httpsUrl = z.url({ protocol: /^https$/, hostname: /.+/ }).max(300);
 
 /** `<company-kebab>-<6 base32 chars>`. The slug is the file name, not a field in the file. */
@@ -26,13 +28,13 @@ export const applicationVerdictKey = z.enum(['strong', 'good', 'weak', 'none']);
 
 export const applicationEvidenceRowSchema = z
   .object({
-    id: shortText,
-    name: shortText,
+    id: itemText,
+    name: itemText,
     proof: proofText,
     href: httpsUrl.optional(),
     linkLabel: shortText.optional(),
     matchCount: z.number().int().nonnegative().max(1000),
-    tags: z.array(shortText).max(8),
+    tags: z.array(itemText).max(8),
   })
   .strict();
 
@@ -50,7 +52,7 @@ export const applicationResultSchema = z
       })
       .strict(),
     evidenceRows: z.array(applicationEvidenceRowSchema).max(4),
-    gaps: z.array(shortText).max(100),
+    gaps: z.array(itemText).max(MAX_LIST_ENTRIES),
   })
   .strict()
   .refine((r) => r.expires > r.created, {

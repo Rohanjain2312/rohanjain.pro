@@ -32,6 +32,7 @@ if (panel) {
     b.dataset['project'] = a.dataset['project'] ?? '';
     b.setAttribute('aria-pressed', 'false');
     b.addEventListener('click', () => {
+      // Focus stays on the toggle on purpose (audit A-5): it is an on/off control (aria-pressed), so Enter again undoes it.
       select(selected === b.dataset['project'] ? null : (b.dataset['project'] ?? null));
     });
     a.replaceWith(b);

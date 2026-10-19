@@ -53,6 +53,8 @@ test.describe('demo dialog', () => {
     await expect(frame).toHaveAttribute('referrerpolicy', 'no-referrer');
     await expect(frame).toHaveAttribute('loading', 'lazy');
     await expect(frame).toHaveAttribute('title', /FinCompress/);
+    // Audit A-1: focus moves to the demo when the load button hides.
+    await expect(page.locator('[data-demo-stage]')).toBeFocused();
     await page.keyboard.press('Escape');
     await expect(page.getByRole('dialog')).toBeHidden();
     await expect(page.locator('iframe')).toHaveCount(0);

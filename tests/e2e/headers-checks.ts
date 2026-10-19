@@ -21,6 +21,7 @@ export const EXPECTED_CSP: Readonly<Record<string, readonly string[]>> = {
   'base-uri': ["'none'"],
   'form-action': ["'none'"],
   'manifest-src': ["'self'"],
+  'require-trusted-types-for': ["'script'"],
   'upgrade-insecure-requests': [],
 };
 
