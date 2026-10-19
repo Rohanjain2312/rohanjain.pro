@@ -6,6 +6,8 @@ import { join } from 'node:path';
 import { test } from 'node:test';
 import {
   SetupError,
+  ensureEnvironment,
+  ghApiRun,
   ghCheck,
   ghSecretSet,
   SETUP_PERMISSIONS,
@@ -21,6 +23,28 @@ const ACCOUNT = 'a'.repeat(32);
 const ZONE = 'b'.repeat(32);
 const SECRET = 'setup-token-SECRET-value';
 const DEPLOY = 'deploy-token-SECRET-value';
+
+// A fake `gh api`. `state` is what the GET of the environment and its policies answer; writes are recorded.
+const MAIN_ENV = JSON.stringify({ deployment_branch_policy: { protected_branches: false, custom_branch_policies: true } });
+const policies = (list) => JSON.stringify({ total_count: list.length, branch_policies: list });
+function fakeApi({ get, list = [{ id: 1, name: 'main', type: 'branch' }], put = 0, post = 0 } = {}) {
+  const writes = [];
+  let created = false;
+  const api = (args, opts = {}) => {
+    const write = args[0] === '-X';
+    if (write) {
+      writes.push({ args, input: opts.input });
+      if (args[1] === 'PUT') created = put === 0;
+      return { status: args[1] === 'PUT' ? put : post, stdout: '', stderr: 'gh: HTTP 422' };
+    }
+    if (args[0].endsWith('/deployment-branch-policies')) {
+      return { status: 0, stdout: policies(created || !get ? list : []), stderr: '' };
+    }
+    if (get && !created) return { status: 1, stdout: '', stderr: 'gh: HTTP 404', ...get };
+    return { status: 0, stdout: MAIN_ENV, stderr: '' };
+  };
+  return { api, writes };
+}
 
 function mock({ zoneStatus = 'active', existing = [], failOn = null, groups, tokens = [] } = {}) {
   const calls = [];
@@ -55,6 +79,7 @@ function run(opts = {}, mockOpts = {}) {
     accountId: ACCOUNT,
     log: (l) => logs.push(l),
     check: () => true,
+    ghApi: fakeApi().api,
     setSecret: async (name, value, o) => secrets.push({ name, value, repo: o.repo }),
     now: () => new Date('2026-10-20T00:00:00Z'),
     ...opts,
@@ -252,9 +277,10 @@ test('the new token name and id are printed, never its value', async () => {
 test('preflight stops before any Cloudflare call when gh or the environment is missing', async () => {
   for (const [label, check, pattern] of [
     ['no gh', () => false, /not installed/],
-    ['no environment', (args) => args[0] === '--version', /production environment/],
+    ['no environment', () => true, /production environment/],
   ]) {
-    const { promise, calls } = run({ check });
+    const ghApi = label === 'no environment' ? fakeApi({ get: { status: 1, stderr: 'gh: HTTP 401' } }).api : undefined;
+    const { promise, calls } = run({ check, ...(ghApi ? { ghApi } : {}) });
     await assert.rejects(promise, pattern, label);
     assert.equal(calls.length, 0, label);
   }
@@ -324,4 +350,106 @@ test('ghCheck is false when gh cannot run', () => {
   assert.equal(ghCheck(['--version'], { spawnSyncFn: boom }), false);
   assert.equal(ghCheck(['--version'], { spawnSyncFn: () => ({ status: 0 }) }), true);
   assert.equal(ghCheck(['api', 'x'], { spawnSyncFn: () => ({ status: 1 }) }), false);
+});
+
+const envArgs = { repo: 'o/r', log: () => {}, dryRun: false };
+
+test('environment: exists with main only, nothing is written', async () => {
+  const f = fakeApi();
+  await ensureEnvironment({ ...envArgs, ghApi: f.api });
+  assert.deepEqual(f.writes, []);
+});
+
+test('environment: missing, so PUT then POST, with the documented bodies, then read back', async () => {
+  const f = fakeApi({ get: {} });
+  const logs = [];
+  await ensureEnvironment({ ...envArgs, ghApi: f.api, log: (l) => logs.push(l) });
+  assert.deepEqual(f.writes[0].args, ['-X', 'PUT', 'repos/o/r/environments/production', '--input', '-']);
+  assert.deepEqual(JSON.parse(f.writes[0].input), {
+    deployment_branch_policy: { protected_branches: false, custom_branch_policies: true },
+  });
+  assert.deepEqual(f.writes[1].args, [
+    '-X',
+    'POST',
+    'repos/o/r/environments/production/deployment-branch-policies',
+    '-f',
+    'name=main',
+    '-f',
+    'type=branch',
+  ]);
+  assert.match(logs.join(), /created, main only/);
+});
+
+test('environment: another policy stops without writing', async () => {
+  for (const list of [[{ name: 'dev', type: 'branch' }], [{ name: 'main', type: 'tag' }], [{ name: 'main', type: 'branch' }, { name: 'x', type: 'branch' }]]) {
+    const f = fakeApi({ list });
+    await assert.rejects(ensureEnvironment({ ...envArgs, ghApi: f.api }), /different deployment policy/);
+    assert.deepEqual(f.writes, []);
+  }
+});
+
+test('environment: custom policies on but none yet (earlier partial run) only adds main', async () => {
+  const f = fakeApi({ list: [] });
+  const api = (args, opts) => {
+    const r = f.api(args, opts);
+    return r;
+  };
+  let added = false;
+  await ensureEnvironment({
+    ...envArgs,
+    ghApi: (args, opts) => {
+      if (args[0] === '-X') added = true;
+      if (args[0].endsWith('/deployment-branch-policies') && !args[0].startsWith('-')) {
+        return { status: 0, stdout: policies(added ? [{ name: 'main', type: 'branch' }] : []), stderr: '' };
+      }
+      return api(args, opts);
+    },
+  });
+  assert.equal(f.writes.length, 1);
+  assert.equal(f.writes[0].args[1], 'POST');
+});
+
+test('environment: GitHub refusing the PUT stops with the fallback pointer', async () => {
+  const f = fakeApi({ get: {}, put: 1 });
+  await assert.rejects(ensureEnvironment({ ...envArgs, ghApi: f.api }), /unavailable for private repos[\s\S]*section 2/);
+  assert.equal(f.writes.length, 1);
+});
+
+test('environment: unreadable (not signed in) stops without writing', async () => {
+  const f = fakeApi({ get: { stderr: 'gh: HTTP 401' } });
+  await assert.rejects(ensureEnvironment({ ...envArgs, ghApi: f.api }), /could not be read/);
+  assert.deepEqual(f.writes, []);
+});
+
+test('environment: a refusal stops the whole run before any Cloudflare call', async () => {
+  const f = fakeApi({ get: {}, put: 1 });
+  const { promise, calls } = run({ ghApi: f.api });
+  await assert.rejects(promise, /could not be created/);
+  assert.equal(calls.length, 0);
+});
+
+test('environment: dry run prints both calls and runs nothing', async () => {
+  const logs = [];
+  await ensureEnvironment({ ...envArgs, dryRun: true, log: (l) => logs.push(l), ghApi: () => assert.fail('no gh call') });
+  assert.ok(logs.some((l) => l.includes('-X PUT repos/o/r/environments/production')));
+  assert.ok(logs.some((l) => l.includes('-X POST') && l.includes('name=main -f type=branch')));
+});
+
+test('ghApiRun never throws and returns the exit status', () => {
+  const boom = () => {
+    throw new Error('x');
+  };
+  assert.equal(ghApiRun(['a'], { spawnSyncFn: boom }).status, null);
+  assert.equal(ghApiRun(['a'], { spawnSyncFn: () => ({ status: 0, stdout: 'ok' }) }).stdout, 'ok');
+});
+
+test('environment: the read-back after the POST is checked, not assumed', async () => {
+  for (const list of [[], [{ name: 'dev', type: 'branch' }]]) {
+    const f = fakeApi({ get: {}, list });
+    await assert.rejects(
+      ensureEnvironment({ ...envArgs, ghApi: f.api }),
+      /did not read back as main only/,
+    );
+    assert.equal(f.writes.length, 2);
+  }
 });

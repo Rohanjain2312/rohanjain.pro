@@ -136,6 +136,90 @@ export function ghCheck(args, { spawnSyncFn = spawnSync } = {}) {
   }
 }
 
+// Runs `gh api` with an optional JSON body on stdin. Returns { status, stdout, stderr }. Never throws.
+export function ghApiRun(args, { input, spawnSyncFn = spawnSync } = {}) {
+  try {
+    const r = spawnSyncFn('gh', ['api', ...args], { input, encoding: 'utf8' });
+    return { status: r.status, stdout: r.stdout ?? '', stderr: r.stderr ?? '' };
+  } catch {
+    return { status: null, stdout: '', stderr: '' };
+  }
+}
+
+// Creates the `production` environment limited to `main`, or confirms it already is. Calls and bodies are from
+// docs.github.com/en/rest/deployments/environments and .../branch-policies (see docs/runbooks/launch.md section 2).
+// The PUT runs only when the environment is absent: GitHub documents it as "create or update", so it is never sent for an existing one.
+export async function ensureEnvironment({ repo, ghApi, log, dryRun }) {
+  const base = `repos/${repo}/environments/production`;
+  const putBody = JSON.stringify({
+    deployment_branch_policy: { protected_branches: false, custom_branch_policies: true },
+  });
+  if (dryRun) {
+    log(
+      `[dry-run] gh api ${base} (read; created only if it answers HTTP 404, policy added if none yet)`,
+    );
+    log(`[dry-run] gh api -X PUT ${base} --input - ${putBody}`);
+    log(`[dry-run] gh api -X POST ${base}/deployment-branch-policies -f name=main -f type=branch`);
+    log(`[dry-run] gh api ${base}/deployment-branch-policies (read back)`);
+    return;
+  }
+  // 'missing' | 'main' (custom policy with only main) | 'empty' (custom policies on, none added yet) | 'other' | 'unreadable'
+  const state = () => {
+    const env = ghApi([base]);
+    if (env.status !== 0) return /HTTP 404/.test(env.stderr) ? 'missing' : 'unreadable';
+    let policy;
+    try {
+      policy = JSON.parse(env.stdout).deployment_branch_policy;
+    } catch {
+      return 'other';
+    }
+    if (policy?.custom_branch_policies !== true || policy.protected_branches !== false)
+      return 'other';
+    const list = ghApi([`${base}/deployment-branch-policies`]);
+    try {
+      const bp = JSON.parse(list.stdout).branch_policies;
+      if (list.status !== 0) return 'unreadable';
+      if (bp.length === 0) return 'empty';
+      return bp.length === 1 && bp[0].name === 'main' && bp[0].type === 'branch' ? 'main' : 'other';
+    } catch {
+      return 'unreadable';
+    }
+  };
+  const stop = (why) =>
+    new SetupError(
+      `The production environment of ${repo} ${why} Nothing was changed in Cloudflare.`,
+    );
+  let now = state();
+  if (now === 'main') return log('production environment exists, main only');
+  if (now === 'other')
+    throw stop(
+      'exists with a different deployment policy. Claude Code reviews it before this runs again.',
+    );
+  if (now === 'unreadable') throw stop('could not be read (gh not signed in, or no access).');
+  if (now === 'missing') {
+    const put = ghApi(['-X', 'PUT', base, '--input', '-'], { input: putBody });
+    if (put.status !== 0) {
+      throw stop(
+        'could not be created (environments may be unavailable for private repos on this plan). See docs/runbooks/launch.md section 2 for the fallback; Security decides.',
+      );
+    }
+  }
+  const post = ghApi([
+    '-X',
+    'POST',
+    `${base}/deployment-branch-policies`,
+    '-f',
+    'name=main',
+    '-f',
+    'type=branch',
+  ]);
+  if (post.status !== 0)
+    throw stop('exists but the main-only policy could not be added. Run again.');
+  now = state();
+  if (now !== 'main') throw stop('did not read back as main only.');
+  log('production environment created, main only');
+}
+
 export async function runSetup({
   fetchFn = fetch,
   token,
@@ -146,6 +230,7 @@ export async function runSetup({
   log = console.log,
   setSecret = ghSecretSet,
   check = ghCheck,
+  ghApi = ghApiRun,
   now = () => new Date(),
 }) {
   const call = makeClient({ fetchFn, token, dryRun, log });
@@ -162,22 +247,12 @@ export async function runSetup({
   };
 
   // Before the first Cloudflare change: the secrets must have somewhere to go (no secret is read or written here).
-  const envPath = `repos/${repo}/environments/production`;
-  if (dryRun) {
-    log('[dry-run] gh --version');
-    log(`[dry-run] gh api ${envPath}`);
-  } else {
-    if (!check(['--version'])) {
-      throw new SetupError(
-        'The gh command is not installed or not on PATH. Install it and run gh auth login.',
-      );
-    }
-    if (!check(['api', envPath])) {
-      throw new SetupError(
-        `The production environment of ${repo} is not readable (gh not signed in, or the environment does not exist). Nothing was changed. Claude Code creates it first (docs/runbooks/launch.md section 2).`,
-      );
-    }
+  if (!dryRun && !check(['--version'])) {
+    throw new SetupError(
+      'The gh command is not installed or not on PATH. Install it and run gh auth login.',
+    );
   }
+  await ensureEnvironment({ repo, ghApi, log, dryRun });
 
   const zones = await call('GET', `/zones?name=${DOMAIN}&account.id=${accountId}`, null, [
     { id: '<zone_id>', status: 'active' },
