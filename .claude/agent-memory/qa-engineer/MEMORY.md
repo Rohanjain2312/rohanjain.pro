@@ -48,3 +48,5 @@
 - [Five-second fallback (PR #204)](project-five-second-fallback-pr204.md): when an instrument changes, check each pass clause the new method cannot measure (first click)
 - [Re-review negative control](feedback-rereview-negative-control.md): run the defect check on the requested-changes SHA too; it must flag the old defect (PR #207).
 - [Memory sweep review checks](feedback-memory-sweep-review-checks.md): PR #207 sweep: every memory file needs an index line; checker recipe; guard-evasion wording.
+- [Tracker pointers and ticks (PR #261)](feedback-tracker-pointer-and-tick-evidence.md): check each ticked "done" at head and each "Lows on #N" pointer against issue N's comments.
+- [PR #261 Phase 6 text Lows](project-pr261-phase6-text-lows.md): CHANGES REQUESTED at d61ea84 (memory sweep tick, partly-done 163-af); recheck list for the next head.

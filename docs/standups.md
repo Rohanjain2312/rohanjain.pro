@@ -66,3 +66,8 @@ One entry at the start and end of each session (skill `session-protocol`).
 - Done: Phase 3 closed (`v0.3.0`); Phase 4: #216 plan, #217 hook exception and private repo, #218 `npm run for`, #219 résumé dialog, PDFs and `/for` pages. Gate record written.
 - Next: merge the memory sweep and gate PRs, release `v0.4.0`, start Phase 6.
 - Blockers: none. Client: nothing required; optional 5-second test and recruiter rating packets in `docs/needs-client.md`.
+
+## 2026-10-19 end (Supervisor)
+- Done: merged #260 to #264 (Phase 6 Low fixes), swept agent memory, wrote the Phase 6 gate record; `node scripts/phase-gate.mjs 6` passes.
+- Doing: release `v0.9.0` after merge, renew the interaction limit.
+- Blockers: none. The build stops until the client completes the Phase 7 steps.
