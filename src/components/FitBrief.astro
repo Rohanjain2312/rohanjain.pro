@@ -33,7 +33,11 @@ const { copy, title, contact, background } = Astro.props;
         <h2 class="sheet__title" id="brief-title" data-brief-title>
           {title}
         </h2>
-        <p class="sheet__contact">{contact.join(' · ')}</p>
+        <p class="sheet__contact">
+          <!--email_off-->
+          {contact.join(' · ')}
+          <!--/email_off-->
+        </p>
       </header>
       <p class="sheet__verdict">
         <strong data-brief-verdict></strong>
