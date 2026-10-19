@@ -476,6 +476,22 @@ test('already-exists errors skip the step instead of failing (issue #284)', asyn
   }
 });
 
+test('each skip code applies only to its own step: the other two codes fail it', async () => {
+  const steps = [
+    ['/pages/projects', 8000002],
+    ['/domains', 8000018],
+    ['/rum/site_info', 10023],
+  ];
+  for (const [failOn, own] of steps) {
+    for (const [, other] of steps.filter(([, code]) => code !== own)) {
+      const { promise, logs } = run({}, { failOn, failCode: other });
+      const { failures } = await promise;
+      assert.equal(failures.length > 0, true, `${failOn} must fail on ${other}`);
+      assert.ok(!logs.some((l) => l.startsWith('skip (already exists)')), `${failOn} skipped ${other}`);
+    }
+  }
+});
+
 test('a different error code on the same step still fails', async () => {
   const { promise } = run({}, { failOn: '/rum/site_info', failCode: 10024 });
   assert.equal((await promise).failures.length, 1);

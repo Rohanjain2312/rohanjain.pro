@@ -25,7 +25,8 @@ Each step lists what to do and what to send back.
    2. In Terminal, run the one command Claude Code prepares. It asks you to paste the token and the Account ID (shown on the right side of the domain overview page in Cloudflare). The token is used only in that Terminal session. It is never stored in GitHub.
    3. The command applies the DNS records, DNSSEC, CAA, email records and Web Analytics (section 6). It then creates a second token with Pages edit only (account-wide for Pages, as in section 5), and stores that second token and the Account ID as secrets of the `production` environment with `gh secret set`.
    4. Close the terminal tab.
-   5. After launch, Claude Code gives you the steps to revoke the setup token (Cloudflare, My Profile, API Tokens, the setup token, Delete). DNS changes later need a new setup token.
+   5. Second command, after Claude Code says the release candidate tag is published (section 4). Run `node .github/scripts/launch-deploy-setup.mjs`. It needs no Cloudflare token. It sets two variables on the private applications repo and adds the deploy workflow file there. Claude Code gives you the exact command (it first runs with `--dry-run` for review). Only if the command says the file write was refused, run `gh auth refresh -s workflow` once and run it again.
+6. After launch, Claude Code gives you the steps to revoke the setup token (Cloudflare, My Profile, API Tokens, the setup token, Delete). DNS changes later need a new setup token.
 
 Passkeys or 2FA: GitHub is done (2026-10-16). Cloudflare is step 1.2. Porkbun needs 2FA too: Account, Security.
 
@@ -54,7 +55,7 @@ The private workflow builds in GitHub Actions and uploads `dist`. Cloudflare Pag
 - No raw result file is ever uploaded. The `dist` artifact keeps one day and holds rendered pages only. The repo is private, so its logs and artifacts are private.
 - Monthly cleanup: `list-expired` runs `npm run for -- --list-expired` (names only, nothing deleted). `remove-expired` validates names, deletes those files, pushes to `main`, and the build job then redeploys.
 - Test with no result file: git does not track empty directories, so the private repo has no `applications/` directory until a result file exists. Before adding the fixture, run `workflow_dispatch` once with no result file. `list-expired` must pass with "expired files: 0" (the step creates the directory), `remove-expired` and `build` must run, and the build must succeed with no `/for` pages. The rollback command in section 8 depends on this.
-- Test before launch: add one fixture result to the private repo (generate it with `npm run for` against a made-up posting), run the workflow with `SITE_TAG` set, and check that `/for/<slug>` is in the deployed preview and that the claims step passes. Only the first real run proves the wrangler step, because no Cloudflare deploy token exists yet.
+- Test before launch: add one fixture result to the private repo (generate it with `npm run for` against a made-up posting), run the workflow with `SITE_TAG` set, and check that `/for/<slug>` is in the deployed preview and that the claims step passes. Only the first real run proves the wrangler step with the deploy token stored by the setup command.
 
 ## 4. Cloudflare Pages
 
@@ -118,7 +119,7 @@ Deploy token. Created by the setup command with the setup token. Pages edit only
 
 Still unverified (R-005): the `edit` level for `account_settings` and the acceptance of `account_api_tokens` by the user-token form (table above); that Cloudflare can limit a Pages token to one project (the documented resource is the account, so the deploy token is account-wide for Pages and can touch every Pages project in this account; the account has only this one); the `subdomain` field of the Pages project response (the script falls back to `<project>.pages.dev`); and whether Cloudflare accepts `.` as null MX content. Fallback if a token cannot create another token: a second prepared link and a second client-created token with Pages edit only. In the same change, update `docs/needs-client.md` and CLAUDE.md client-only item 3 (Supervisor-owned).
 
-The `www` to apex 301 is not done by the script: a proxied CNAME serves the site on `www`, and the redirect is a separate step (a rules permission is not in the setup token). Platform adds it to `public/_redirects` (absolute-URL redirect, to be verified in Cloudflare's Pages redirects documentation) in a follow-up.
+The `www` to apex 301 is not done by the script: a proxied CNAME serves the site on `www`, and the redirect is a separate step (a rules permission is not in the setup token). `public/_redirects` cannot do it (domain-level redirects are not supported); the options are in section 4.
 
 ## 6. DNS record plan
 
@@ -155,7 +156,7 @@ Run the launch checklist in `docs/spec/12-operations.md`. Specifically:
 
 Rollback never needs the client.
 
-1. Fastest: redeploy the previous tag. `gh workflow run deploy.yml --repo Rohanjain2312/rohanjain.pro-applications -f tag=v0.9.0` (use the last good tag). This rebuilds and deploys in about the build time.
+1. Fastest: redeploy the previous tag. `gh workflow run deploy.yml --repo Rohanjain2312/rohanjain.pro-applications -f tag=<last good tag>` (for example `v0.9.1`, or `v1.0.0` once published). This rebuilds and deploys in about the build time.
 2. Instant (dashboard or API): in Cloudflare Pages, Deployments, pick the last good deployment, Rollback. The deploy token (Pages edit) should allow it; if not, the client does it from the dashboard.
 3. Leaked or wrong `/for` page: delete the file in the private repo and push to `main`; the workflow redeploys. Pages are `Cache-Control: no-store`.
 4. After any rollback, set `SITE_TAG` back to the good tag so the next push does not redeploy the bad one.
