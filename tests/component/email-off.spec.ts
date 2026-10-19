@@ -2,7 +2,8 @@
 // <!--email_off--> ... <!--/email_off--> comment markers for this:
 // https://developers.cloudflare.com/waf/tools/scrape-shield/email-address-obfuscation/
 // These tests read the BUILT html, because the build must keep the comments and a plain mailto link.
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { expect, test } from '@playwright/test';
 
 const EMAIL = (JSON.parse(readFileSync('src/content/site.json', 'utf8')) as { email: string })
@@ -74,4 +75,55 @@ test('the phone number is plain text and a tel link, which Cloudflare does not r
   const html = readFileSync('dist/index.html', 'utf8');
   expect(html).toMatch(/<a [^>]*href="tel:\+1\d{10}"/);
   expect(html).toMatch(/\(\d{3}\) \d{3}-\d{4}/);
+});
+
+/** Every html file under `dir`, found by walking the directory. */
+const htmlFiles = (dir: string): string[] =>
+  readdirSync(dir, { withFileTypes: true }).flatMap((e) =>
+    e.isDirectory()
+      ? htmlFiles(join(dir, e.name))
+      : e.name.endsWith('.html')
+        ? [join(dir, e.name)]
+        : [],
+  );
+
+/** Start and end of each marker pair, or an error text when the markers do not alternate open, close, open, close. */
+const markerPairs = (html: string): { pairs: [number, number][]; error?: string } => {
+  const pairs: [number, number][] = [];
+  let open = -1;
+  for (let at = html.indexOf('<!--'); at !== -1; at = html.indexOf('<!--', at + 1)) {
+    if (html.startsWith(OPEN, at)) {
+      if (open !== -1) return { pairs, error: `open marker at ${at} inside an open pair` };
+      open = at;
+    } else if (html.startsWith(CLOSE, at)) {
+      if (open === -1) return { pairs, error: `close marker at ${at} with no open marker` };
+      pairs.push([open, at]);
+      open = -1;
+    }
+  }
+  return open === -1 ? { pairs } : { pairs, error: `open marker at ${open} never closed` };
+};
+
+test('every built page: each mailto: sits inside a marker pair and the markers balance', () => {
+  const files = htmlFiles('dist');
+  expect(files.length).toBeGreaterThan(3);
+  let mailtos = 0;
+  for (const file of files) {
+    const html = readFileSync(file, 'utf8');
+    const { pairs, error } = markerPairs(html);
+    expect(error, file).toBeUndefined();
+    expect(html.split(OPEN).length, `${file}: open and close counts`).toBe(
+      html.split(CLOSE).length,
+    );
+    const lower = html.toLowerCase();
+    for (let at = lower.indexOf('mailto:'); at !== -1; at = lower.indexOf('mailto:', at + 1)) {
+      mailtos++;
+      const ok = pairs.some(([a, b]) => a < at && at < b);
+      expect(ok, `${file}: mailto at ${at}: ${html.slice(Math.max(0, at - 40), at + 60)}`).toBe(
+        true,
+      );
+    }
+  }
+  // The home page alone has the hero, contact and forward links.
+  expect(mailtos).toBeGreaterThanOrEqual(3);
 });
