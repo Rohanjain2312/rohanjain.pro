@@ -26,7 +26,13 @@ const mailto = `mailto:${email}?subject=${encodeURIComponent(copy.emailSubject)}
   <p class="contact__line">{copy.line}</p>
   <div class="contact__row">
     <!-- prettier-ignore -->
-    <a class="btn btn--inverted" href={mailto}>{local}<wbr />{domain}</a>
+    <!--email_off-->
+    <a class="btn btn--inverted" href={mailto}>
+      {local}
+      <wbr />
+      {domain}
+    </a>
+    <!--/email_off-->
     <!-- [html-validate-disable-next tel-non-breaking -- the number is kept on one line with white-space: nowrap; non-breaking characters would copy into dialers as odd characters and the hyphen is not in the font subset] -->
     <!-- prettier-ignore -->
     <a class="text-link text-link--nowrap" href={telHref(phone)}>{formatPhone(phone)}</a>

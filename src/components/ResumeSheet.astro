@@ -27,7 +27,11 @@ const Head = `h${level + 1}` as 'h2' | 'h3';
 <article class="sheet resume">
   <header class="sheet__head">
     <Name class="sheet__title resume__name">{view.name}</Name>
-    <p class="sheet__contact">{view.contact}</p>
+    <p class="sheet__contact">
+      <!--email_off-->
+      {view.contact}
+      <!--/email_off-->
+    </p>
     <p class="sheet__contact">
       {view.profiles.map((p, i) => (
         <>

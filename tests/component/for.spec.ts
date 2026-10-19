@@ -25,6 +25,7 @@ const POSTING = [
 let work = '';
 let live = '';
 let expired = '';
+let distDir = '';
 let server: ChildProcess | undefined;
 
 test.describe.configure({ mode: 'serial' });
@@ -66,6 +67,7 @@ test.beforeAll(async () => {
   writeFileSync(join(apps, old), JSON.stringify(data));
 
   const dist = join(work, 'dist');
+  distDir = dist;
   const build = spawnSync('npx', ['astro', 'build', '--outDir', dist], {
     env: { ...process.env, APPLICATIONS_DIR: apps },
     encoding: 'utf8',
@@ -93,6 +95,13 @@ test.afterAll(() => {
 test('slugs follow the pattern', () => {
   expect(live).toMatch(SLUG_PATTERN);
   expect(expired).toMatch(SLUG_PATTERN);
+});
+
+test('live page: the mailto link is wrapped in email_off markers in the built HTML', () => {
+  const html = readFileSync(join(distDir, 'for', live, 'index.html'), 'utf8');
+  expect(html).toMatch(
+    /<!--email_off--><a [^>]*href="mailto:rohanjain2312@gmail\.com\?[^"]*"[^>]*>[^<]*<\/a><!--\/email_off-->/,
+  );
 });
 
 test('live page: content from the result, noindex in meta and header', async ({ page }) => {
