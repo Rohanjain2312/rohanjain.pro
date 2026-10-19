@@ -73,9 +73,10 @@ test.afterAll(() => {
 });
 
 test.describe('security headers by route (8.2)', () => {
-  for (const { path, kind } of ROUTES) {
-    test(`${path} (${kind})`, async ({ request }) => {
+  for (const { path, kind, status } of ROUTES) {
+    test(`${path} (${kind}${status ? `, ${status}` : ''})`, async ({ request }) => {
       const res = await request.get(origin + path, { maxRedirects: 0 });
+      if (status) expect(res.status()).toBe(status);
       expect(checkRouteHeaders(kind, res.headers())).toEqual([]);
     });
   }

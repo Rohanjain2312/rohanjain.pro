@@ -26,3 +26,5 @@
 - [PR #187 status workflow](status_workflow_review_pr187.md): approved 0acfd37; status-data unprotected, validate-script probe, CodeQL on PR ref, docs follow-up owed
 - [Phase 6 assessment](phase6_assessment_notes.md): #232 run notes: shared scratchpad, busy ports, Docker daemon off, hook probe results
 - [PR #262 lint bypass](lint_disable_bypass_pr262.md): ESLint disable-rule self-suppression, probe method, status.yml same-day failure
+- [PR #276 launch setup](launch_setup_review_pr276.md): token handling clean; CHANGES REQUESTED for arg echo, orphan deploy token, stale "one project" wording
+- [Phase 7 headers (#283)](headers_phase7_pr283.md): HSTS plus beacon script-src; R-112 split with QA and Supervisor; first-deploy checks

@@ -18,9 +18,9 @@ Threat model, headers, input handling, supply chain, secrets, accounts, DNS, pri
 
 ### 8.2 HTTP security headers (`public/_headers`, emulated locally in `npm run preview`)
 All routes:
-- `Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src https://*.hf.space; frame-ancestors 'none'; base-uri 'none'; form-action 'none'; manifest-src 'self'; require-trusted-types-for 'script'; upgrade-insecure-requests`
-  Add the Cloudflare Web Analytics origins in Phase 7 only. No `'unsafe-inline'`, no `'unsafe-eval'`, no hashes. The build emits no inline script or style; the one exception is the JSON-LD `<script type="application/ld+json">` data block, which is data, not code, and is not executed under `script-src`.
-- `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload` (Phase 7; submit to the preload list after 30 stable days).
+- `Content-Security-Policy: default-src 'none'; script-src 'self' https://static.cloudflareinsights.com/beacon.min.js https://static.cloudflareinsights.com/beacon.min.js/; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-src https://*.hf.space; frame-ancestors 'none'; base-uri 'none'; form-action 'none'; manifest-src 'self'; require-trusted-types-for 'script'; upgrade-insecure-requests`
+  The Cloudflare Web Analytics beacon is allowed in `script-src` by exact URL (Phase 7, `docs/security/headers.md`); `connect-src` stays `'self'` because the automatic injection reports to the site's own `/cdn-cgi/rum`. No `'unsafe-inline'`, no `'unsafe-eval'`, no hashes. The build emits no inline script or style; the one exception is the JSON-LD `<script type="application/ld+json">` data block, which is data, not code, and is not executed under `script-src`.
+- `Strict-Transport-Security: max-age=63072000; includeSubDomains; preload` (Phase 7, sent on every route; submit to the preload list after 30 stable days).
 - `X-Content-Type-Options: nosniff`
 - `X-Frame-Options: DENY`
 - `Referrer-Policy: strict-origin-when-cross-origin`
