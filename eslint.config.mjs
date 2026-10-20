@@ -139,15 +139,8 @@ const r401Syntax = [
 // also switch this rule off, which no ESLint rule can report.
 const PROTECTED =
   /^(no-restricted-[\w-]+|no-eval|no-implied-eval|no-new-func|jsx-a11y\/[\w-]+|astro\/[\w/-]+|local\/[\w-]+)$/;
-export function findProtectedDirective(commentText, file = '') {
+export function findProtectedDirective(commentText) {
   const text = commentText.trim();
-  // Temporary: the one old comment in JsonLd.astro (Frontend must delete it; the config block below already
-  // drops its set:html selector). Only this exact form in this exact file passes.
-  if (
-    /(^|\/)src\/components\/JsonLd\.astro$/.test(file.split('\\').join('/')) &&
-    /^eslint-disable-next-line no-restricted-syntax(\s--\s|$)/.test(text)
-  )
-    return null;
   const directive = /^eslint-(?:disable|enable)(?:-next-line|-line)?(?=\s|$)([\s\S]*)$/.exec(text);
   const config = /^eslint\s+([\s\S]+)$/.exec(text);
   let tokens;
@@ -166,7 +159,7 @@ const noProtectedDisable = {
     return {
       Program() {
         for (const comment of context.sourceCode.getAllComments()) {
-          const hit = findProtectedDirective(comment.value, context.filename);
+          const hit = findProtectedDirective(comment.value);
           if (hit) {
             context.report({
               loc: comment.loc,
@@ -194,9 +187,6 @@ export default tseslint.config(
       '.github/lint-fixtures/',
     ],
   },
-  // Temporary: JsonLd.astro still carries an old, now unused disable comment (Frontend owns it). Set this back
-  // to the default ('warn') once the comment is deleted and the exception in findProtectedDirective is removed.
-  { linterOptions: { reportUnusedDisableDirectives: 'off' } },
   { plugins: { local: { rules: { 'no-protected-disable': noProtectedDisable } } } },
   js.configs.recommended,
   tseslint.configs.recommended,

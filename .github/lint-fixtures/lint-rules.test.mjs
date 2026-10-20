@@ -41,10 +41,10 @@ async function assertMessageHas(fixture, virtualPath, text) {
 
 // Text scan: every comment that is an ESLint directive naming a protected rule (or this guard) is a hit, in any
 // position of a list. A comment can switch the ESLint guard off, so the scan is what cannot be bypassed.
-function findDirectiveHits(text, file = '') {
+function findDirectiveHits(text) {
   const hits = [];
   for (const m of text.matchAll(/\/\*([\s\S]*?)\*\/|\/\/([^\n]*)/g)) {
-    const hit = findProtectedDirective(m[1] ?? m[2], file);
+    const hit = findProtectedDirective(m[1] ?? m[2]);
     if (hit) hits.push(hit);
   }
   return hits;
