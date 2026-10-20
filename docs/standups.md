@@ -76,3 +76,8 @@ One entry at the start and end of each session (skill `session-protocol`).
 - Done: Phase 6 gate and `v0.9.0`; client answers recorded; Phase 7 setup (PRs #276, #280, #282, #285, #286, #288, #290); client ran the setup command and the deploy-setup command; `v0.9.1` published; first deploy green. Live checks: 200 on apex, `www` and `*.pages.dev`; HSTS and CSP present; no `Set-Cookie`; DNSSEC validates; three résumé PDFs 200.
 - Doing: launch checks (runbook section 7), beacon check, `v1.0.0`.
 - Blockers: none.
+
+## 2026-10-19 end (Supervisor)
+- Done: Phase 7. Live site on `v1.0.1`; found and fixed the Cloudflare email rewriting (PRs #297, #299); privacy copy (#288); ADR-0034 and ADR-0035; lint cleanup (#301); cross-browser matrix run; Phase 7 gate record and memory sweep.
+- Doing: Phase 8 is next; nothing needs the client.
+- Blockers: none.
