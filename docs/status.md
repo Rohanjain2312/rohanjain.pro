@@ -8,7 +8,7 @@ Resume pointer. Updated after every issue (R-802). Read at every session start.
   Every PR needs review-gate: reviews with the full 40-character head SHA and a Findings section, the label `approved:supervisor` after the Supervisor review, and a title and body naming the same issue (`Closes #N`). A new head cancels earlier approvals.
 
 - **Progress notes (2026-10-18):** The full WebKit and mobile-emulation matrix has not run anywhere; Firefox is not a target (ADR-0034). Lows from all reviews are on #233 (reopened).
-- **Open PRs:** Dependabot #296 (needs a Security review, R-209; #97 was closed by Dependabot).
+- **Open PRs:** none. Dependabot #296 (prettier, prettier-plugin-astro, typescript-eslint) was reviewed by Security and QA and merged on 2026-10-20; #97 was closed by Dependabot. New Dependabot PRs get a Security review (R-209).
 - **Open findings:** none at Medium or higher. Lows: #233 backlog.
 - **Blocked on client:** nothing. The real 5-second test and recruiter ratings were dropped (ADR-0035); the setup token is deleted; DNSSEC validates.
 - **Process:** subagents on sonnet (haiku for chores), no opus; up to eight agents at a time (ADR-0022, supersedes the ADR-0020 cap). Subagents leave agent memory uncommitted (#104); before removing a worktree, copy its memory into `supervisor/107-memory`. Run `npm ci` in the main checkout after a merge that changes the lockfile (nested worktrees resolve its `tsconfig.json`). Run `gh pr ready` from the PR's worktree. Before approving, check the PR merges with current main and no new verify gate landed since its run. Agents do not run `npm run hooks:install` (PR #109 decision). An owner may push fixes to its own files onto another role's PR branch from a detached checkout (PR #85 decision).
