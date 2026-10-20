@@ -63,7 +63,7 @@ Owners: Security (lead), all roles
 Owners: Platform (execution), Supervisor, Security
 - Client steps (the only manual part, listed in `docs/needs-client.md`): create a free Cloudflare account and add `rohanjain.pro`; at Porkbun, replace the nameservers with the two Cloudflare nameservers shown; create a Cloudflare API token from a provided template link and paste it into one `gh secret set` command Claude Code prepares.
 - Claude Code then: connects DNS records, enables DNSSEC, CAA, email-hardening records, deploys from the private applications repo (ADR-0016; `deploy.yml` here builds previews only), enables analytics, verifies headers with external scanners, runs production smoke tests, tags `v1.0.0`.
-**Gate:** smoke tests green; headers A+; analytics receiving data; the simulated 5-second test passed (Reader Advocate); the real 5-second test and recruiter ratings were dropped by the client (ADR-0035).
+**Gate:** smoke tests green; headers checked live and by the e2e spec (the external A+ grade could not be obtained, see `docs/gates/phase-7.md`); analytics receiving data; the simulated 5-second test passed (Reader Advocate); the real 5-second test and recruiter ratings were dropped by the client (ADR-0035).
 
 ### Phase 8: Operate
 Owner: Platform with Supervisor

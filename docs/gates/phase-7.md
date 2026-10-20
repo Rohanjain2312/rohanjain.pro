@@ -5,7 +5,7 @@ Date: 2026-10-19. Criteria from `docs/spec/11-phases.md` (Phase 7) and skill `ph
 ## Phase 7 gate criteria
 | Criterion | Result | Evidence |
 |---|---|---|
-| Smoke tests green | Pass | First deploy run 39325108319 and the `v1.0.1` run 39334126303 on `Rohanjain2312/rohanjain.pro-applications`: list-expired, remove-expired, build (claims check, output guard) and deploy all succeeded. Live checks with `curl` on 2026-10-19: apex, `www`, `*.pages.dev` and `/privacy/` return 200; the three résumé PDFs return 200; `/for/` returns 404; no `Set-Cookie`; `http://` redirects to HTTPS |
+| Smoke tests green | Pass | Deploy runs 39325108319 (`v0.9.1`), 39334126303 (`v1.0.0`) and 39339567064 (`v1.0.1`) on `Rohanjain2312/rohanjain.pro-applications`: list-expired, remove-expired, build (claims check, output guard) and deploy all succeeded. Live checks with `curl` on 2026-10-19: apex, `www`, `*.pages.dev` and `/privacy/` return 200; the three résumé PDFs return 200; `/for/` returns 404; no `Set-Cookie`; `http://` redirects to HTTPS |
 | Headers | Pass, not graded externally | `Strict-Transport-Security`, the strict CSP with the exact Cloudflare beacon URLs, `X-Content-Type-Options` and `Referrer-Policy` are on all hosts (`curl -sI`); PR #286 and the headers e2e spec. securityheaders.com answered 403 to the Supervisor's `curl`, so no external letter grade was obtained |
 | Analytics receiving data | Pass | The beacon loads from `static.cloudflareinsights.com/beacon.min.js/<version>` (allowed by the second CSP entry) and `/cdn-cgi/rum` answers 204 (Lighthouse network log, 2026-10-19) |
 | Simulated 5-second test passed | Pass | Reader Advocate, Phase 2 gate (`docs/gates/phase-2.md`) |
