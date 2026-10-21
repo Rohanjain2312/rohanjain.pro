@@ -13,7 +13,7 @@ import {
   type ClaimLike,
   type Finding,
 } from '../src/lib/claims/check.ts';
-import { claimsAllowlistSchema, claimsSchema, siteSchema } from '../src/lib/content/schemas.ts';
+import { claimsAllowlistSchema, claimsSchema } from '../src/lib/content/schemas.ts';
 
 const args = process.argv.slice(2);
 const opt = (name: string, fallback: string): string => {
@@ -50,11 +50,10 @@ function htmlFiles(dir: string): string[] {
 }
 
 const claims = claimsSchema.parse(readJson('claims.json')) as ClaimLike[];
-const site = siteSchema.parse(readJson('site.json'));
 const allowlist = existsSync(join(contentDir, 'claims-allowlist.json'))
   ? (claimsAllowlistSchema.parse(readJson('claims-allowlist.json')) as AllowEntry[])
   : [];
-const allowed = buildClaimIndex(claims, [site.phone]);
+const allowed = buildClaimIndex(claims);
 
 const findings: Finding[] = [];
 const files = htmlFiles(dist).sort();

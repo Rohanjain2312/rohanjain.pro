@@ -5,6 +5,16 @@
     "reason": "status code and traceback decoration"
   },
   {
+    "page": "/404",
+    "number": "1",
+    "reason": "traceback decoration (line 1 of the sample traceback)"
+  },
+  {
+    "page": "/",
+    "number": "01",
+    "reason": "list index label on the production card, not a claim"
+  },
+  {
     "page": "/",
     "number": "9.1",
     "reason": "Client-decided résumé sentence 'Compressed FinBERT ... 9.1x from 437.9 MB to 47.7 MB' (R-302). Claim fc-size-ratio is displayed as '9.1x smaller' on the site."

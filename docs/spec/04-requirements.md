@@ -18,7 +18,7 @@ Functional and non-functional requirements. Acceptance criteria in issues trace 
 | F-11 | Custom 404 page ("Run crashed. Loss is NaN.") per mockup. |
 | F-12 | SEO: title, description, canonical, Open Graph and Twitter cards, generated OG image, `sitemap.xml`, `robots.txt`, JSON-LD `Person` schema. |
 | F-13 | Privacy page: what is and is not collected (no cookies, cookieless analytics, fit-check text never leaves the browser). |
-| F-14 | Contact details: email (`rohanjain2312@gmail.com`) and phone (`+1 240 495 9682`, displayed as `(240) 495-9682`, `tel:` link) in the contact section, résumé view, résumé PDFs and the one-page brief. LinkedIn, GitHub, Hugging Face and Medium (`https://medium.com/@rohanjain2312`, labeled "Writing") links in the contact section and footer. Project write-ups hosted on Medium (for example FinCompress) link to their articles. The Medium profile is also listed in the JSON-LD `sameAs`. |
+| F-14 | Contact details: email (`jainrohan2312@gmail.com`) in the contact section, résumé view, résumé PDFs and the one-page brief. LinkedIn, GitHub, Hugging Face and Medium (`https://medium.com/@rohanjain2312`, labeled "Writing") links in the contact section and footer. Project write-ups hosted on Medium (for example FinCompress) link to their articles. The Medium profile is also listed in the JSON-LD `sameAs`. |
 | F-15 | Résumé PDFs: three versions (AI Engineer, ML Engineer, Data Scientist) generated at build time from `src/content/resume.json` using the Design Lead's print layout, so the PDFs always match the site. |
 | F-16 | Location line everywhere: "New York, NY". |
 | F-17 | No photo in v1. The hero has a documented, hidden slot so a photo can be added later by dropping one file in and flipping one content flag. |

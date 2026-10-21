@@ -28,7 +28,6 @@ import {
   claimsSchema,
   resumeSchema,
   rolesSchema,
-  siteSchema,
 } from '../src/lib/content/schemas.ts';
 import { extractPdfText } from './pdf-text.ts';
 
@@ -45,7 +44,6 @@ const readJson = (name: string): unknown =>
   JSON.parse(readFileSync(join(contentDir, name), 'utf8'));
 const roles = rolesSchema.parse(readJson('roles.json'));
 const resume = resumeSchema.parse(readJson('resume.json'));
-const site = siteSchema.parse(readJson('site.json'));
 const claims = claimsSchema.parse(readJson('claims.json')) as ClaimLike[];
 const allowlist = existsSync(join(contentDir, 'claims-allowlist.json'))
   ? (claimsAllowlistSchema.parse(readJson('claims-allowlist.json')) as AllowEntry[])
@@ -130,7 +128,7 @@ const browser = await chromium.launch();
 
 try {
   mkdirSync(out, { recursive: true });
-  const index = buildClaimIndex(claims, [site.phone]);
+  const index = buildClaimIndex(claims);
   const must = [
     resume.header.name,
     resume.header.email,

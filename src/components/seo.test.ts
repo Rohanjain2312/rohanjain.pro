@@ -26,7 +26,7 @@ describe('personJsonLd', () => {
 });
 
 describe('phone number (R-305)', () => {
-  it('is absent from the JSON-LD, whatever the formatting', () => {
+  it('is absent from the JSON-LD', () => {
     const person = personJsonLd({
       site: site as Site,
       resume: resume as unknown as Resume,
@@ -35,8 +35,7 @@ describe('phone number (R-305)', () => {
       description: 'Text',
     });
     expect(person).not.toHaveProperty('telephone');
-    const digits = (t: string) => t.replace(/\D/g, '');
-    expect(digits(jsonLdText(person))).not.toContain(digits(site.phone));
+    expect(jsonLdText(person)).not.toMatch(/telephone/i);
   });
 });
 

@@ -128,11 +128,10 @@ test.describe('home content', () => {
     await expect(page.locator('.rows .row')).toHaveCount(projects.length - featured.length);
   });
 
-  test('contact has the email, the phone and four profile links', async ({ page }) => {
+  test('contact has the email and four profile links', async ({ page }) => {
     await page.goto('/');
     const contact = page.locator('#contact');
-    await expect(contact.locator('a[href^="mailto:rohanjain2312@gmail.com"]')).toHaveCount(1);
-    await expect(contact.locator('a[href="tel:+12404959682"]')).toHaveText('(240) 495-9682');
+    await expect(contact.locator('a[href^="mailto:jainrohan2312@gmail.com"]')).toHaveCount(1);
     await expect(contact.locator('a[href^="https://"]')).toHaveCount(4);
     await expect(contact.locator('a', { hasText: 'Writing' })).toHaveAttribute(
       'href',

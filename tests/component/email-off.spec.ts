@@ -71,10 +71,9 @@ test('home: the built html keeps a plain mailto link and no Cloudflare-encoded l
   expect(html).not.toContain('email-decode');
 });
 
-test('the phone number is plain text and a tel link, which Cloudflare does not rewrite', () => {
+test('the home page has no tel link', () => {
   const html = readFileSync('dist/index.html', 'utf8');
-  expect(html).toMatch(/<a [^>]*href="tel:\+1\d{10}"/);
-  expect(html).toMatch(/\(\d{3}\) \d{3}-\d{4}/);
+  expect(html).not.toMatch(/href="tel:/);
 });
 
 /** Every html file under `dir`, found by walking the directory. */

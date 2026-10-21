@@ -27,7 +27,7 @@ Review this file at every phase gate and whenever a trust boundary changes (new 
 | A8 | Build and CI pipeline: npm dependencies, GitHub Actions, Playwright | A compromised dependency changes A1 or A2 | Integrity: high |
 | A9 | Cloudflare account, Pages project, API token (Phase 7) | Controls what is served on the domain | All: high |
 | A10 | Domain `rohanjain.pro` at Porkbun, DNS at Cloudflare (Phase 7) | Takeover means full impersonation | Integrity: high |
-| A11 | Client contact details (`site.json`: email, phone) | Spam and scraping | Confidentiality: low (client accepts phone exposure) |
+| A11 | Client contact details (`site.json`: email) | Spam and scraping | Confidentiality: low |
 | A12 | Agent instructions and memory (`CLAUDE.md`, `.claude/`, `.claude/agent-memory/`) | Loaded into every future session; a poisoned file persists | Integrity: high |
 
 ## 3. Actors
@@ -150,7 +150,7 @@ Data flows:
 | 6.2 | T | Clickjacking | `frame-ancestors 'none'`, `X-Frame-Options: DENY` | R-505 | phase-1 |
 | 6.3 | I | Referrer or cross-origin leaks | `Referrer-Policy`, COOP, CORP, `Permissions-Policy` | R-505 | phase-1 |
 | 6.4 | T, E | Hugging Face iframe abuses the page | Created only on click; `sandbox`; `*.hf.space` only in `frame-src`; `referrerpolicy="no-referrer"`; COOP same-origin | R-512 CSP and e2e tests | phase-5 |
-| 6.5 | I | Phone scraped | Shown as text and `tel:` link only, never in JSON-LD or meta tags | R-305 | phase-2; accepted by client (RR-5) |
+| 6.5 | I | Phone scraped | No phone number is published anywhere (client decision 2026-10-20) | R-305 | phase-2; accepted by client (RR-5) |
 | 6.6 | I | Tracking of visitors | No cookies; cookieless Cloudflare analytics only; privacy page | ADR-0008, R-903 | phase-7 |
 | 6.7 | T | Downgrade or SSL stripping | HSTS with preload, `upgrade-insecure-requests` | §8.2 | phase-7 |
 | 6.8 | S | Work authorization stated by mistake | Hook and copy lint | R-007 | active; copy lint phase-1 |
@@ -265,7 +265,7 @@ One Medium finding from this threat model is open (TM-5, #251). Medium findings 
 | RR-2 | A steered agent with the shared token can forge approvals or edit the ruleset outside the hooked commands | GitHub cannot tell roles apart; hooks are tripwires (ADR-0018) | supervisor | each phase gate |
 | RR-3 | All reviewers are Claude models and may share blind spots; no opus is used, so Security reviews of hooks have no model diversity (ADR-0022) | Model family is fixed and tiers no longer differ; offset by context separation, machine checks, seeded-defect audits and external validation | supervisor | each phase gate |
 | RR-4 | A compromised dependency that passes audit and OSV can still alter the build | No scanner catches every malicious release; cooldown and `ignore-scripts` reduce, not remove, the risk | security-engineer | monthly review |
-| RR-5 | Phone number exposed to scrapers | Client decision for reachability; mitigated by keeping it out of structured data | client (accepted), security-engineer monitors | Phase 6 |
+| RR-5 | Phone number exposed to scrapers | Closed 2026-10-20: the phone number was removed from the site, the repo and the PDFs | client (accepted), security-engineer monitors | Phase 6 |
 | RR-6 | Look-alike domains and phishing in the client's name | Not preventable at reasonable cost | client, security-engineer | Phase 7 |
 | RR-7 | Third-party Hugging Face demo content can change at any time | Outside our control; sandboxed, click to load, own origin | frontend-engineer, security-engineer | Phase 5 and 6 |
 | RR-8 | Closed 2026-10-16. The signed-commit rule (R-107) is back on (PR #68, #33 closed) and the client removed `write:ssh_signing_key` from the shared token (scopes: gist, project, read:org, repo, workflow). Kept as history: `4d29441` stays the one allowed unsigned commit (closed #38) | none | supervisor | each phase gate: `gh auth status` must not list the scope |

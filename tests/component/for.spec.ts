@@ -100,7 +100,7 @@ test('slugs follow the pattern', () => {
 test('live page: the mailto link is wrapped in email_off markers in the built HTML', () => {
   const html = readFileSync(join(distDir, 'for', live, 'index.html'), 'utf8');
   expect(html).toMatch(
-    /<!--email_off--><a [^>]*href="mailto:rohanjain2312@gmail\.com\?[^"]*"[^>]*>[^<]*<\/a><!--\/email_off-->/,
+    /<!--email_off--><a [^>]*href="mailto:jainrohan2312@gmail\.com\?[^"]*"[^>]*>[^<]*<\/a><!--\/email_off-->/,
   );
 });
 
@@ -121,9 +121,9 @@ test('live page: content from the result, noindex in meta and header', async ({ 
     'href',
     '/resume/Rohan-Jain-ML-Engineer.pdf',
   );
-  await expect(page.getByRole('link', { name: /rohanjain2312@gmail.com/ })).toHaveAttribute(
+  await expect(page.getByRole('link', { name: /jainrohan2312@gmail.com/ })).toHaveAttribute(
     'href',
-    /^mailto:rohanjain2312@gmail\.com\?subject=Northwind%20Fixture%3A%20Staff%20Widget%20Engineer$/,
+    /^mailto:jainrohan2312@gmail\.com\?subject=Northwind%20Fixture%3A%20Staff%20Widget%20Engineer$/,
   );
   await expect(page.getByRole('link', { name: /see everything else/ })).toHaveAttribute(
     'href',

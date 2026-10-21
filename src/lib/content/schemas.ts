@@ -116,7 +116,6 @@ export const resumeSchema = z
         name: nonEmpty,
         location: nonEmpty,
         email: z.email(),
-        phone: nonEmpty,
         links: z.array(linkSchema),
       })
       .strict(),
@@ -169,7 +168,6 @@ export const siteSchema = z
     location: nonEmpty,
     availability: nonEmpty,
     email: z.email(),
-    phone: nonEmpty,
     profiles: z
       .object({ linkedin: httpsUrl, github: httpsUrl, huggingface: httpsUrl, medium: httpsUrl })
       .strict(),

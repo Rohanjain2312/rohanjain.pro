@@ -97,7 +97,7 @@ describe('extractNumbers', () => {
   });
 
   it('skips digits that belong to names', () => {
-    const t = 'S3 v2 rohanjain2312@gmail.com jaroh23 file.v3 x_9';
+    const t = 'S3 v2 jainrohan2312@gmail.com jaroh23 file.v3 x_9';
     expect(extractNumbers(t)).toEqual([]);
   });
 
@@ -334,8 +334,7 @@ describe('resume.json against claims.json (R-301, R-005)', () => {
     display: string;
   }[];
   const resume = read('resume.json');
-  const site = read('site.json');
-  const ok = claimNumbers(claimsReal, [site.phone]);
+  const ok = claimNumbers(claimsReal);
   const bullets: { text: string; claimIds: string[] }[] = [
     ...resume.experience.flatMap((e: any) => e.bullets),
     ...resume.projects.flatMap((p: any) => p.bullets),
