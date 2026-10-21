@@ -19,7 +19,7 @@ import DemoDialog from '../components/DemoDialog.astro';
 import { loadStatusFile } from '../components/status-file.ts';
 import { buildTimeline, loadRoles, loadSite } from '../components/data.ts';
 import { loadEvidence } from '../lib/content/load.ts';
-import { fill, formatPhone, lowerFirst } from '../components/lib.ts';
+import { fill, lowerFirst } from '../components/lib.ts';
 import { briefTitle } from '../components/fit-view.ts';
 import type { FitCopy } from '../components/fit-copy.ts';
 import copy from '../components/copy/home.json';
@@ -60,12 +60,7 @@ const defaultRole = roleList.find((r) => r.id === 'ml') ?? roleList[0];
 if (!defaultRole) throw new Error('roles.json is empty.');
 const resumeHref = `/resume/${defaultRole.pdfFile}`;
 const pdfLinks = roleList.map((r) => ({ label: r.title, href: `/resume/${r.pdfFile}` }));
-const briefContact = [
-  site.email,
-  formatPhone(site.phone),
-  site.location,
-  lowerFirst(site.availability),
-];
+const briefContact = [site.email, site.location, lowerFirst(site.availability)];
 
 // Education lines come from resume.json; each takes its dates from the claim named here.
 const educationClaims = ['edu-umd', 'edu-pes'];
@@ -135,7 +130,6 @@ const person = personJsonLd({
     />
     <Contact
       email={site.email}
-      phone={site.phone}
       profiles={site.profiles}
       resumeHref={resumeHref}
       resumeLabel={copy.resume.open}

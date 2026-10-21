@@ -68,17 +68,12 @@ test('home carries one JSON-LD Person block built from the site content', async 
   expect(person.url).toBe(ORIGIN);
 });
 
-test('the phone number is in no JSON-LD block and no meta tag (R-305)', async ({ page }) => {
-  const site = JSON.parse(readFileSync('src/content/site.json', 'utf8'));
-  const digits = (t: string) => t.replace(/\D/g, '');
+test('the home page has no telephone field and no tel link (R-305)', async ({ page }) => {
   await page.goto('/');
   const ld = (await page.locator('script[type="application/ld+json"]').textContent()) ?? '';
-  const metas = await page
-    .locator('head meta')
-    .evaluateAll((els) => els.map((e) => e.getAttribute('content') ?? ''));
   expect(ld.length).toBeGreaterThan(0);
-  expect(metas.length).toBeGreaterThan(0);
-  for (const text of [ld, ...metas]) expect(digits(text)).not.toContain(digits(site.phone));
+  expect(ld).not.toMatch(/telephone/i);
+  await expect(page.locator('a[href^="tel:"]')).toHaveCount(0);
 });
 
 test('only the home page has JSON-LD', async ({ page }) => {

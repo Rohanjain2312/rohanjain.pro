@@ -85,7 +85,7 @@ Stack, repository layout, content model, engine and generator specs, and the ADR
 - `roles.json`: `{ id: "ai"|"ml"|"ds", title, summary, pdfFile }`.
 - `figures.json`: `{ id, projectId, kind: "image"|"bars", src?, alt, bars?, axisLabel, caption, note, claimIds[] }`.
 - `resume.json`: header, education, skills groups, experience bullets, projects, publication; each bullet references claim IDs.
-- `site.json`: name, location ("New York, NY"), availability ("available now"), email, phone, profile links (LinkedIn, GitHub, Hugging Face, Medium), `showPhoto: false`.
+- `site.json`: name, location ("New York, NY"), availability ("available now"), email, profile links (LinkedIn, GitHub, Hugging Face, Medium), `showPhoto: false`.
 - `applications/<slug>.json` (in the private `APPLICATIONS_DIR`, ADR-0016): `{ slug, company, roleTitle, createdOn, expiresOn, verdict, provenSkills[], gaps[], evidenceRows[], roleFamily }`. Never contains job description text.
 
 ### 5.4 Fit-check engine specification (App/Data Engineer)

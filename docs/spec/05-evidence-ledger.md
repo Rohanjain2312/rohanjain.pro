@@ -25,6 +25,6 @@ App/Data Engineer turns this into `claims.json`. Where the client chose the rés
 | GraphBench | GNN-RAG 5.0% vs GraphRAG 3.2% exact match on 500 HotpotQA questions; pip `graphbench-kg`; Mar to Aug 2026 | Repo `graphbench` README |
 | IEEE paper | MLP-ELM, 95% accuracy, 6,400+ MRI scans, 17% better than baselines | Résumé, client-confirmed |
 | Education | MS Applied ML, University of Maryland, Aug 2024 to May 2026; B.Tech ECE, PES University, Aug 2017 to May 2021 | Résumé, client-confirmed |
-| Contact | rohanjain2312@gmail.com; +1 240 495 9682; New York, NY; linkedin.com/in/jaroh23; github.com/Rohanjain2312; huggingface.co/rohanjain2312; medium.com/@rohanjain2312 | Client-confirmed |
+| Contact | jainrohan2312@gmail.com; New York, NY; linkedin.com/in/jaroh23; github.com/Rohanjain2312; huggingface.co/rohanjain2312; medium.com/@rohanjain2312 | Client-confirmed |
 
 Where the site and mockup differ from these client decisions (FinCompress pruning figure, Market Regime F1, Goldman tenure, location), the client decisions win. The Supervisor updates the figure captions accordingly (for example, the FinCompress pruning figure caption describes the chart without contradicting the résumé claim).

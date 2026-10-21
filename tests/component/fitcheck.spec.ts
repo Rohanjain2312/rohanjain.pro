@@ -397,7 +397,7 @@ test.describe('brief dialog', () => {
       /^CANDIDATE BRIEF · [A-Z][a-z]{2} \d{4}$/i,
     );
     await expect(dialog.locator('.sheet__contact')).toHaveText(
-      'rohanjain2312@gmail.com · (240) 495-9682 · New York, NY · available now',
+      'jainrohan2312@gmail.com · New York, NY · available now',
     );
     await expect(dialog.locator('[data-brief-verdict]')).toHaveText(
       await page.locator('[data-fit-verdict]').innerText(),

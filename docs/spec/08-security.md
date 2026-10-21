@@ -14,7 +14,7 @@ Threat model, headers, input handling, supply chain, secrets, accounts, DNS, pri
 | XSS / injection | Pasted JD or company name rendered as HTML | Escaped rendering only, banned sinks, strict CSP, Trusted Types where supported |
 | Clickjacking | Site framed by a hostile page | `frame-ancestors 'none'`, `X-Frame-Options: DENY` |
 | Third-party risk | HF iframe | Click to load, sandbox, single allowed origin; self-hosted fonts |
-| Personal data exposure | Phone number scraped by bots | Accepted by the client for reachability. Phone shown as text with a `tel:` link, not in JSON-LD, not in `<meta>` tags, so it is less exposed to bulk scrapers |
+| Personal data exposure | Phone number scraped by bots | Closed: no phone number is published anywhere (client decision 2026-10-20) |
 
 ### 8.2 HTTP security headers (`public/_headers`, emulated locally in `npm run preview`)
 All routes:

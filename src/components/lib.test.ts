@@ -4,11 +4,9 @@ import {
   claimMap,
   compareStart,
   fill,
-  formatPhone,
   lowerFirst,
   splitEmail,
   startOf,
-  telHref,
   yearSpan,
 } from './lib.ts';
 
@@ -56,16 +54,6 @@ describe('yearSpan', () => {
     expect(yearSpan('Aug 2024 to May 2026')).toBe('2024 to 2026');
     expect(yearSpan('Aug 2017 to May 2021')).toBe('2017 to 2021');
     expect(yearSpan('Oct 2026')).toBe('2026');
-  });
-});
-
-describe('phone', () => {
-  it('formats and links a US number', () => {
-    expect(formatPhone('+1 240 495 9682')).toBe('(240) 495-9682');
-    expect(telHref('+1 240 495 9682')).toBe('tel:+12404959682');
-  });
-  it('rejects a number it cannot format', () => {
-    expect(() => formatPhone('12345')).toThrow(/Cannot format/);
   });
 });
 

@@ -42,7 +42,7 @@ Imagined launch-day failures, ranked by likelihood, with who catches each before
 | 9 | The build stalls on usage limits or extra roles burn the budget | Supervisor: skill `session-protocol`; cost controls in 2.11 | Owned, risk raised by new roles |
 | 10 | The features don't change outcomes: nobody uses the fit check, `/for` links don't lift replies, demos are asleep or links break | Reader Advocate: reply-rate tracking and link-open counts; Platform: lychee and status workflow; Frontend: demo fallbacks | Partial (links owned, outcomes not) |
 
-Other risks kept from v2.2: account takeover (passkeys, registrar lock), phone spam (not in structured data), scope creep (Supervisor, ADRs), and repo READMEs that differ from client-chosen résumé values (follow-up issues to align them).
+Other risks kept from v2.2: account takeover (passkeys, registrar lock), scope creep (Supervisor, ADRs), and repo READMEs that differ from client-chosen résumé values (follow-up issues to align them).
 
 ## Out of scope for v1 (backlog)
 - LLM-assisted requirement extraction in the fit check (needs a server, rate limiting and a prompt-injection review).

@@ -51,7 +51,7 @@ Every "must" and "never" in this project lives here, with exactly one home. 87 r
 | R-302 | No claim is stronger than its source. Client decisions override repo values (see the content rule file). | `.claude/rules/content.md` | judgment; QA verification (R-303) | prose |
 | **R-303** ★ | Every claim has a QA verification entry in docs/qa/claims-verification.md before it ships. | here | CI completeness check | phase-1 |
 | **R-304** ★ | No placeholders, TODOs, lorem ipsum or bracketed fill-ins in built pages or PDFs. | here | CI scan of build output | phase-2 |
-| **R-305** ★ | The phone number never appears in JSON-LD or meta tags. | here | CI test on build output | phase-2 |
+| **R-305** ★ | No phone number appears on the site or in the repo; JSON-LD has no telephone field. | here | CI test on build output | phase-2 |
 | R-306 | Tenure reads "~4 years at Goldman Sachs"; "3.5+ years of production experience" appears only in role summaries, never side by side without the distinction. | `.claude/rules/content.md` | judgment; Reader Advocate review | prose |
 | **R-401** ★ | The fit-check engine is pure: no DOM, network, storage, clock or randomness in src/lib/fitcheck/. | here | ESLint restricted globals; property tests | phase-1 |
 | **R-402** ★ | Never build a RegExp from user input; patterns are precompiled from aliases. | here | ESLint no-restricted-syntax in runtime engine code; ReDoS test | phase-3 |

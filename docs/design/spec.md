@@ -50,7 +50,7 @@ These are content fixes owned by App/Data and the Supervisor. They are listed so
 | Market Regime "61.16% baseline", "MCC 0.480 vs -0.036", axis "Sep 2022 to Oct 2025" | L395, L509 | 81.78% and 0.480 are in the ledger; 61.16%, -0.036 and the date axis are not. 88.4% F1 (ledger) appears nowhere in the mockup |
 | Project dates disagree between timeline, tiles and lists (Market Regime Nov vs Dec 2025, GraphBench Mar vs Aug 2026, FinCompress Feb vs Mar 2026, Self-Healing Feb 2026 vs ledger Feb to Aug 2026) | L481 to L512 | `projects.json` `dateRange`. 7.10 says which date each surface shows |
 | Goldman tenure shown only as a date range | L76, L310 | Where tenure is stated in words it reads "~4 years at Goldman Sachs" (R-306) |
-| Contact section has no phone and no Medium link | L260 to L270 | F-14 adds phone `(240) 495-9682` as a `tel:` link and Medium labeled "Writing" |
+| Contact section has no phone and no Medium link | L260 to L270 | F-14 adds Medium labeled "Writing" |
 | Location | L46 | Already "New York, NY" (F-16). No change |
 
 ---
@@ -400,7 +400,7 @@ Fold, count 5. Rows: flex wrap, gap 4 24 (2 and 20 snap), padding 8 0 (10 snaps)
 ### 7.11 Contact (L260 to L270)
 - `--ink` band, `--paper` text, padding 24 (below 768) or 40 (768 and up), column, gap 16. H2 "Have a role in mind?" at `--fs-h2` (ADR 12). Line `--fs-body` in `--on-ink-muted` at `--measure-narrow`.
 - Two rows, each flex wrap, gap 8 24 (Q-32, DL):
-  1. Inverted solid with the email (breaks after `@`), text link with the phone `(240) 495-9682` (`tel:`, F-14), text link "View résumé" (button with JS; link to the ML Engineer PDF without).
+  1. Inverted solid with the email (breaks after `@`), text link "View résumé" (button with JS; link to the ML Engineer PDF without).
   2. Text links: LinkedIn ↗, GitHub ↗, Hugging Face ↗, Writing ↗ (F-14).
 - Text links on ink are `--paper` with a `--rule-strong` underline (L266).
 
@@ -519,7 +519,7 @@ Screenshots at 390 are the R-602 item 6 baseline.
 | Selected work | one card per row; demo opens as a dialog | same |
 | Figures | timeline scrolls in its region; tiles one per row; panel keeps the 24 bleed | tiles 272 wide |
 | Check fit | samples wrap, each 48 high; textarea full width; report: verdict box above the note, rows stacked | same |
-| Contact | padding 24; row 1 wraps: email, then phone and résumé; row 2 links | email breaks after `@` |
+| Contact | padding 24; row 1 wraps: email, then résumé; row 2 links | email breaks after `@` |
 | Dialogs | overlay padding 16; sheet padding 24; toolbar sticky; tabs on one row | tabs on two rows |
 | `/for` | top bar wraps to two lines; H1 40; verdict box above the paragraph; topics stack | H1 38 |
 | 404 | H1 36; traceback wraps | H1 34 |
@@ -539,7 +539,7 @@ Screenshots at 390 are the R-602 item 6 baseline.
 ### 12.1 Résumé PDF (three variants; F-15, Q-49, Q-50)
 - Rendered by Playwright from `/print/resume/[role]` (noindex). Single column, one to two pages, selectable text, fonts embedded. Only the summary differs between variants.
 - Order: header, summary, Education, Skills, Work experience, Projects, Publication (L288 to L332).
-- Header: name serif 32 / 600 / 1.1; 1.5 px `--ink` rule under the header block, padding-bottom 16. Contact is two lines of mono `--fs-xs`: line 1 "New York, NY · (240) 495-9682 · rohanjain2312@gmail.com"; line 2 the profile **URLs as the link text** (`linkedin.com/in/jaroh23 · github.com/Rohanjain2312 · huggingface.co/rohanjain2312`). This satisfies "URLs printed after links" without printing each URL twice; the PDF links stay clickable (Q-49, DL). The dialog shows the same lines.
+- Header: name serif 32 / 600 / 1.1; 1.5 px `--ink` rule under the header block, padding-bottom 16. Contact is two lines of mono `--fs-xs`: line 1 "New York, NY · jainrohan2312@gmail.com"; line 2 the profile **URLs as the link text** (`linkedin.com/in/jaroh23 · github.com/Rohanjain2312 · huggingface.co/rohanjain2312`). This satisfies "URLs printed after links" without printing each URL twice; the PDF links stay clickable (Q-49, DL). The dialog shows the same lines.
 - Section heads: mono `--fs-xs`, uppercase, 0.08em, `--ink` in print (Q-50, DL).
 - Role lines: left text serif `--fs-md`; right dates mono `--fs-xs` right-aligned; flex wrap, gap 8. Body serif `--fs-md` / 1.5. Bullets indented 16 (18 snaps), gap 4.
 - Breaks: each job, project and publication stays whole (`break-inside: avoid`); a section head stays with its first line (`break-after: avoid`); `orphans: 3; widows: 3`. Page 2 has no running header or page number.
@@ -548,7 +548,7 @@ Screenshots at 390 are the R-602 item 6 baseline.
 ### 12.2 One-page brief (F-06, Q-51)
 - Printed through the browser dialog from the brief view. It must fit one Letter page in Chromium and WebKit (Phase 3 gate).
 - Only the sheet prints; the page, sections, backdrop and toolbar are hidden. Sheet padding is 0 because the page margin supplies 18 mm.
-- Order and type (L344 to L368): header block (label "CANDIDATE BRIEF · date" mono `--fs-xs`; title serif 30 / 600 / 1.15; contact mono `--fs-xs`: email · phone · New York, NY · available now; 1.5 px `--ink` rule below); verdict line (verdict serif `--fs-h3` bold, counts mono `--fs-xs`; **bold text, not a filled box**); role summary; Evidence; Where I would need ramp-up (omitted when none); Background; provenance line mono `--fs-xs`. Gap 16.
+- Order and type (L344 to L368): header block (label "CANDIDATE BRIEF · date" mono `--fs-xs`; title serif 30 / 600 / 1.15; contact mono `--fs-xs`: email · New York, NY · available now; 1.5 px `--ink` rule below); verdict line (verdict serif `--fs-h3` bold, counts mono `--fs-xs`; **bold text, not a filled box**); role summary; Evidence; Where I would need ramp-up (omitted when none); Background; provenance line mono `--fs-xs`. Gap 16.
 - **Title length (issue #56):** company and role title are each capped at 80 characters (7.9). The title takes `overflow-wrap: anywhere` and wraps. At 80 plus 80 characters it runs to about 4 lines at 30 px on the 680 px column (estimate; Phase 3 measures it). The title never shrinks or truncates.
 - **Overflow (ADR 11):** rows cap at 4, tag lines at 6, the gaps line truncates with a count. The Phase 3 one-page test uses the worst case: a 160-character title plus the maximum rows. If it still overflows, the pre-approved lever is body `--fs-md` 15 to 14 px. Nothing else changes before the Design Lead is asked.
 

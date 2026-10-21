@@ -1,7 +1,6 @@
 // View model for the résumé sheet (design spec 12.1). One builder serves the dialog and the print route, so
 // the PDF and the dialog cannot drift. Content comes from resume.json and projects.json (R-005, R-301).
 import type { Resume } from '../lib/content/schemas.ts';
-import { formatPhone } from './lib.ts';
 
 export type RoleEntry = { id: string; title: string; summary: string; pdfFile: string };
 export type ProjectName = { id: string; name: string; dateRange: string };
@@ -9,7 +8,7 @@ type Link = { label: string; url: string };
 
 export type ResumeView = {
   name: string;
-  /** "New York, NY · (240) 495-9682 · email" */
+  /** "New York, NY · email" */
   contact: string;
   /** Profile URLs as link text: "linkedin.com/in/jaroh23". */
   profiles: { text: string; url: string }[];
@@ -35,7 +34,7 @@ export function buildResumeView(resume: Resume, projects: readonly ProjectName[]
   const h = resume.header;
   return {
     name: h.name,
-    contact: [h.location, formatPhone(h.phone), h.email].join(' · '),
+    contact: [h.location, h.email].join(' · '),
     profiles: h.links.map((l) => ({ text: bareUrl(l.url), url: l.url })),
     education: resume.education.map((e) => ({ ...e })),
     skills: resume.skillGroups.map((g) => ({ label: g.label, text: g.skills.join(', ') })),

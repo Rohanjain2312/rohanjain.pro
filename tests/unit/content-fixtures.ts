@@ -80,7 +80,6 @@ export function validContent(): { [K in keyof RawContent]-?: any } {
         name: 'Fake Person',
         location: 'Nowhere',
         email: 'fake@example.com',
-        phone: '000-000-0000',
         links: [link],
       },
       education: [
@@ -106,7 +105,6 @@ export function validContent(): { [K in keyof RawContent]-?: any } {
       location: 'Nowhere',
       availability: 'fake',
       email: 'fake@example.com',
-      phone: '000-000-0000',
       profiles: {
         linkedin: 'https://example.com/l',
         github: 'https://example.com/g',

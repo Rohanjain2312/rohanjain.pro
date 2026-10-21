@@ -148,7 +148,7 @@ function isYear(text: string, f: Found): boolean {
   return DATE_BEFORE.some((r) => r.test(clean)) || DATE_AFTER.some((r) => r.test(after));
 }
 
-/** Set of canonical numbers that appear in claim values and displays, plus extra text such as the phone number. */
+/** Set of canonical numbers that appear in claim values and displays, plus any extra text. */
 export function claimNumbers(claims: ClaimLike[], extraText: string[] = []): Set<string> {
   const set = new Set<string>();
   const texts = [...claims.flatMap((c) => [String(c.value), c.display]), ...extraText];
@@ -164,7 +164,7 @@ type Entry = { display: string; stems: string[] };
 /** Claims keyed by canonical number, so each occurrence can be matched to a claim that mentions it. */
 export type ClaimIndex = { byNumber: Map<string, Entry[]>; global: Set<string> };
 
-/** Extra text such as the phone number is allowed anywhere. */
+/** Extra text is allowed anywhere. */
 export function buildClaimIndex(claims: ClaimLike[], extraText: string[] = []): ClaimIndex {
   const byNumber = new Map<string, Entry[]>();
   for (const c of claims) {

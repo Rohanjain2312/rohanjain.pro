@@ -49,10 +49,6 @@
   justify-content: center;
 }
 
-.text-link--nowrap {
-  white-space: nowrap;
-}
-
 .footer-link,
 .row__link {
   font-size: var(--fs-xs);

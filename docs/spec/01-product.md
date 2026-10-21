@@ -40,7 +40,7 @@ A personal portfolio site whose only job is to get Rohan Jain hired as an ML Eng
 | 2 | Location | New York, NY, everywhere. |
 | 3 | Work authorization | Not stated anywhere. |
 | 4 | Photo | Text only for now; hidden slot for later. |
-| 5 | Phone | Show it wherever contact details appear (contact section, résumé view and PDFs, brief). |
+| 5 | Phone | Not published anywhere (client decision 2026-10-20). |
 | 6 | Repo visibility | Public. |
 | 7 | Handwriting font | No. Use Newsreader italic. |
 | 8 | Résumé conflicts | Use résumé values: FinCompress 50% of heads, +0.9 Macro F1; Market Regime 88.4% F1; Goldman ~4 years. |

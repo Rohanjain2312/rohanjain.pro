@@ -83,19 +83,6 @@ export function yearSpan(range: string): string {
   return first === last ? first : `${first} to ${last}`;
 }
 
-/** "+1 240 495 9682" becomes "(240) 495-9682". Throws on anything that is not a 10-digit US number. */
-export function formatPhone(phone: string): string {
-  const d = phone.replace(/\D/g, '');
-  const n = d.length === 11 && d.startsWith('1') ? d.slice(1) : d;
-  if (n.length !== 10) throw new Error(`Cannot format phone "${phone}".`);
-  return `(${n.slice(0, 3)}) ${n.slice(3, 6)}-${n.slice(6)}`;
-}
-
-export function telHref(phone: string): string {
-  const d = phone.replace(/\D/g, '');
-  return `tel:+${d.length === 10 ? `1${d}` : d}`;
-}
-
 /** Link text for an e-mail address with a break opportunity after the "@" (design spec 5.2). */
 export function splitEmail(email: string): [string, string] {
   const at = email.indexOf('@');

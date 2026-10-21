@@ -20,7 +20,7 @@ The hero, results strip and contact are not vetoed. No work-authorization mentio
 - The third hero number (82.5% vs 15% zero-shot) is TariffAgent's, but its card under "More projects" shows no number.
 - The hero says "ML and AI Engineer" while the job entry says "Data Scientist".
 - "Mentored 3 interns to full-time offers" appears three times.
-- The location is New York, NY, but the phone is a 240 (Maryland) number and the MS is at Maryland.
+- The location is New York, NY, and the MS is at Maryland.
 - The 390 px fold cuts the credentials line mid-sentence.
 - "Real numbers" in "Four projects, real numbers" reads slightly defensive.
 - The phone number appears only in the final contact block.
