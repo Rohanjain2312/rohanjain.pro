@@ -253,8 +253,7 @@ describe('scripts/check-claims.ts', () => {
         location: 'Nowhere',
         availability: 'Never',
         email: 'fake@example.com',
-        phone: '+1 555 010 0199',
-        profiles: {
+                profiles: {
           linkedin: 'https://example.com/l',
           github: 'https://example.com/g',
           huggingface: 'https://example.com/h',

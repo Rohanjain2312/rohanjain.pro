@@ -25,7 +25,7 @@ Owners: Platform (pipeline), Design Lead + Frontend (tokens, spec), App/Data (co
 
 ### Phase 2: Core pages (with Phase 5 folded in, ADR-0026)
 Owners: Frontend (UI), App/Data (wiring)
-- Hero, results strip, production section with both folds, selected work, more projects, background fold, contact (with phone), footer, 404, privacy page.
+- Hero, results strip, production section with both folds, selected work, more projects, background fold, contact, footer, 404, privacy page.
 - Static and content-driven; claims check passing.
 **Gate:** design review passes the anti-slop checklist at 390/768/1280 px; Reader Advocate's simulated 5-second test passes; zero axe violations; Lighthouse budgets met locally; claims check and copy lint green.
 
