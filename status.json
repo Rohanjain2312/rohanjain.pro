@@ -1,16 +1,16 @@
 {
-  "checkedAt": "2026-11-07",
+  "checkedAt": "2026-11-08",
   "lastUpdated": "2026-10-10",
   "demos": [
     {
       "url": "https://huggingface.co/spaces/rohanjain2312/FinCompress",
-      "up": false,
-      "checkedAt": "2026-11-07"
+      "up": true,
+      "checkedAt": "2026-11-08"
     },
     {
       "url": "https://huggingface.co/spaces/rohanjain2312/trade-settlement-fail-predictor-demo",
-      "up": false,
-      "checkedAt": "2026-11-07"
+      "up": true,
+      "checkedAt": "2026-11-08"
     }
   ]
 }
