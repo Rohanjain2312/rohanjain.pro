@@ -43,7 +43,7 @@
     "hooks:test": "node --test .husky/test/hooks.test.mjs"
   },
   "dependencies": {
-    "astro": "7.4.0"
+    "astro": "7.4.7"
   },
   "devDependencies": {
     "@astrojs/check": "0.9.10",
